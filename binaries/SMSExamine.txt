@@ -1,0 +1,85 @@
+-------------------
+
+ SMS Examine V1.2a
+
+-------------------
+
+SMS Examine is a Z80 disassembler for Sega 8 bit consoles (SMS/GG/...).
+Unlike other disassemblers it analyzes the program flow of the ROM and
+decides which parts of it are code and which are data.
+
+The disassembled code is for WLA DX. In most cases it can be recompiled
+without any changes. The code file has the <name of the ROM file> + '.asm'.
+WLA DX 8.0+ needs a link file which is saved with the extension '.link'.
+
+Data parts, which have a size of more than 1kb, are saved in binary files
+called <ROM name> + '.dat.' + <address >> 10>, unless you enable option -nb.
+
+File extensions are exchanged instead of attached, if you disable
+long filenames (option -dlf).
+
+The names of the labels are '_LABEL_' + <address> + '_' + <number>.
+The names of data part labels (in case you use option -dl) are
+'_DATA_' + <address>.
+
+The current executable is for win32, but the program is fully portable.
+Contact me if you want a version for another OS.
+
+Use this program at your own risk. I'm not responsible for any damage.
+However, I'm sure that it's not dangerous to use it.
+
+You can visit the official homepage at:
+	http://www.smspower.org/martin/smsexamine
+
+Send comments and suggestions to:
+	Martin Konrad / mkon@gmx.de
+  
+  
+Patch file format
+-----------------
+Patch files are standard ASCII text files.
+To set an address in ROM, use 'addr = <address>'.
+To write bytes to this address, use 'write xx, xx, ...'.
+You can use ';' for comments (until the end of a line).
+All numbers must be in hex format.
+
+ ____________
+/ Thanks to /
+============
+  Zoop
+  Ville Helin
+  Eric Quinn
+  Charles Mac Donald
+
+ ________________
+/ Related links /
+================
+  http://www.smspower.org/martin/smsexamine -- SMS Examine homepage
+  http://www.smspower.org/martin/68kexamine -- 68k Examine homepage
+
+  http://www.smspower.org/dev               -- S8-Dev and SDSC homepage
+  http://www.hut.fi/~vhelin/wla.html        -- WLA DX homepage
+  http://cgfm2.emuviews.com                 -- Charles Mac Donald's homepage
+
+ __________
+/ Changes /
+==========
+[1.2a] - a bit more accurate
+       - added SDSC Tag extraction
+
+[1.1] - ported everything to C++, commandline-interface instead of a windows one
+      - data output is a little bit better
+      - added option to avoid creating binaries (-nb)
+      - added banking support (-b, -bc and -lb)
+      - added I/O-port access log (-io)
+      - added direct RAM access log (-ram)
+      - added data labels support (-dl)
+      - data parts with only null-bytes are not dumped anymore, if they are at the end of a bank
+      - value of HL in JP (HL) can now be detected
+      - added an option to disable long filenames (-dlf)
+      - added bad code detection
+      - added function analyzer (-f)
+      - added support for self-modifying code (-smc), which makes Micro Machines better, but not perfect
+      - added auto-creation of a WLA DX 8.0+ linkfile
+
+[1.0] - first public release

@@ -1,0 +1,1375 @@
+;============================================
+;==================== 00 ====================
+;============================================
+;-------------------- 00 --------------------
+        nop
+bc      ld   bc, ##
+        ld   (bc), a
+bc      inc  bc
+b       inc  b
+b       dec  b
+b       ld   b, #
+a       rlca
+a       ex   af, af'
+hl      add  hl, bc
+a       ld   a, (bc)
+bc      dec  bc
+c       inc  c
+c       dec  c
+c       ld   c, #
+a       rrca
+;-------------------- 10 --------------------
+>       djnz +
+de      ld   de, ##
+        ld   (de), a
+de      inc  de
+d       inc  d
+d       dec  d
+d       ld   d, #
+a       rla
+>=      jr   +
+hl      add  hl, de
+a       ld   a, (de)
+de      dec  de
+e       inc  e
+e       dec  e
+e       ld   e, #
+a       rra
+;-------------------- 20 --------------------
+>       jr   nz, +
+hl      ld   hl, ##
+W       ld   (##), hl
+hl      inc  hl
+h       inc  h
+h       dec  h
+h       ld   h, #
+a       daa
+>       jr   z, +
+hl      add  hl, hl
+hlW     ld   hl, (##)
+hl      dec  hl
+l       inc  l
+l       dec  l
+L       ld   l, #
+a       cpl
+;-------------------- 30 --------------------
+>       jr   nc, +
+s       ld   sp, ##
+B       ld   (##), a
+s       inc  sp
+        inc  (hl)
+        dec  (hl)
+        ld   (hl), #
+        scf
+>       jr   c, +
+hl      add  hl, sp
+aB      ld   a, (##)
+s       dec  sp
+a       inc  a
+a       dec  a
+a       ld   a, #
+        ccf
+;-------------------- 40 --------------------
+        ld   b, b
+b       ld   b, c
+b       ld   b, d
+b       ld   b, e
+b       ld   b, h
+b       ld   b, l
+b       ld   b, (hl)
+b       ld   b, a
+c       ld   c, b
+        ld   c, c
+c       ld   c, d
+c       ld   c, e
+c       ld   c, h
+c       ld   c, l
+c       ld   c, (hl)
+c       ld   c, a
+;-------------------- 50 --------------------
+d       ld   d, b
+d       ld   d, c
+        ld   d, d
+d       ld   d, e
+d       ld   d, h
+d       ld   d, l
+d       ld   d, (hl)
+d       ld   d, a
+e       ld   e, b
+e       ld   e, c
+e       ld   e, d
+        ld   e, e
+e       ld   e, h
+e       ld   e, l
+e       ld   e, (hl)
+e       ld   e, a
+;-------------------- 60 --------------------
+h       ld   h, b
+h       ld   h, c
+h       ld   h, d
+h       ld   h, e
+        ld   h, h
+h       ld   h, l
+h       ld   h, (hl)
+h       ld   h, a
+l       ld   l, b
+l       ld   l, c
+l       ld   l, d
+l       ld   l, e
+l       ld   l, h
+        ld   l, l
+l       ld   l, (hl)
+l       ld   l, a
+;-------------------- 70 --------------------
+        ld   (hl), b
+        ld   (hl), c
+        ld   (hl), d
+        ld   (hl), e
+        ld   (hl), h
+        ld   (hl), l
+=       halt
+        ld   (hl), a
+a       ld   a, b
+a       ld   a, c
+a       ld   a, d
+a       ld   a, e
+a       ld   a, h
+a       ld   a, l
+a       ld   a, (hl)
+        ld   a, a
+;-------------------- 80 --------------------
+a       add  a, b
+a       add  a, c
+a       add  a, d
+a       add  a, e
+a       add  a, h
+a       add  a, l
+a       add  a, (hl)
+a       add  a, a
+a       adc  a, b
+a       adc  a, c
+a       adc  a, d
+a       adc  a, e
+a       adc  a, h
+a       adc  a, l
+a       adc  a, (hl)
+a       adc  a, a
+;-------------------- 90 --------------------
+a       sub  b
+a       sub  c
+a       sub  d
+a       sub  e
+a       sub  h
+a       sub  l
+a       sub  (hl)
+a       sub  a
+a       sbc  a, b
+a       sbc  a, c
+a       sbc  a, d
+a       sbc  a, e
+a       sbc  a, h
+a       sbc  a, l
+a       sbc  a, (hl)
+a       sbc  a, a
+;-------------------- A0 --------------------
+a       and  b
+a       and  c
+a       and  d
+a       and  e
+a       and  h
+a       and  l
+a       and  (hl)
+        and  a
+a       xor  b
+a       xor  c
+a       xor  d
+a       xor  e
+a       xor  h
+a       xor  l
+a       xor  (hl)
+a       xor  a
+;-------------------- B0 --------------------
+a       or   b
+a       or   c
+a       or   d
+a       or   e
+a       or   h
+a       or   l
+a       or   (hl)
+        or   a
+        cp   b
+        cp   c
+        cp   d
+        cp   e
+        cp   h
+        cp   l
+        cp   (hl)
+        cp   a
+;-------------------- C0 --------------------
+\       ret  nz
+bcs     pop  bc
+>       jp   nz, *
+>=      jp   *
+!       call nz, *
+s       push bc
+a       add  a, #
+        rst  $0
+\       ret  z
+\=      ret
+>       jp   z, *
+        ?
+!       call z, *
+!=      call *
+a       adc  a, #
+        rst  $8
+;-------------------- D0 --------------------
+\       ret  nc
+des     pop  de
+>       jp   nc, *
+        out  (#), a
+!       call nc, *
+s       push de
+a       sub  #
+        rst  $10
+\       ret  c
+bcdehl  exx
+>       jp   c, *
+a       in   a, (#)
+!       call c, *
+        ?
+a       sbc  a, #
+        rst  $18
+;-------------------- E0 --------------------
+\       ret  po
+hls     pop  hl
+>       jp   po, *
+hl      ex   (sp), hl
+!       call po, *
+s       push hl
+a       and  #
+        rst  $20
+\       ret  pe
+=       jp   (hl)
+>       jp   pe, *
+dehl    ex   de, hl
+!       call pe, *
+        ?
+a       xor  #
+        rst  $28
+;-------------------- F0 --------------------
+\       ret  p
+as      pop  af
+>       jp   p, *
+        di
+!       call p, *
+s       push af
+a       or   #
+        rst  $30
+\       ret  m
+s       ld   sp, hl
+>       jp   m, *
+        ei
+!       call m, *
+        ?
+        cp   #
+        rst  $38
+;============================================
+;==================== CB ====================
+;============================================
+;-------------------- 00 --------------------
+b       rlc  b
+c       rlc  c
+d       rlc  d
+e       rlc  e
+h       rlc  h
+l       rlc  l
+        rlc  (hl)
+a       rlc  a
+b       rrc  b
+c       rrc  c
+d       rrc  d
+e       rrc  e
+h       rrc  h
+l       rrc  l
+        rrc  (hl)
+a       rrc  a
+;-------------------- 10 --------------------
+b       rl   b
+c       rl   c
+d       rl   d
+e       rl   e
+h       rl   h
+l       rl   l
+        rl   (hl)
+a       rl   a
+b       rr   b
+c       rr   c
+d       rr   d
+e       rr   e
+h       rr   h
+l       rr   l
+        rr   (hl)
+a       rr   a
+;-------------------- 20 --------------------
+b       sla  b
+c       sla  c
+d       sla  d
+e       sla  e
+h       sla  h
+l       sla  l
+        sla  (hl)
+a       sla  a
+b       sra  b
+c       sra  c
+d       sra  d
+e       sra  e
+h       sra  h
+l       sra  l
+        sra  (hl)
+a       sra  a
+;-------------------- 30 --------------------
+b       sll  b
+c       sll  c
+d       sll  d
+e       sll  e
+h       sll  h
+l       sll  l
+        sll  (hl)
+a       sll  a
+b       srl  b
+c       srl  c
+d       srl  d
+e       srl  e
+h       srl  h
+l       srl  l
+        srl  (hl)
+a       srl  a
+;-------------------- 40 --------------------
+        bit  0, b
+        bit  0, c
+        bit  0, d
+        bit  0, e
+        bit  0, h
+        bit  0, l
+        bit  0, (hl)
+        bit  0, a
+        bit  1, b
+        bit  1, c
+        bit  1, d
+        bit  1, e
+        bit  1, h
+        bit  1, l
+        bit  1, (hl)
+        bit  1, a
+;-------------------- 50 --------------------
+        bit  2, b
+        bit  2, c
+        bit  2, d
+        bit  2, e
+        bit  2, h
+        bit  2, l
+        bit  2, (hl)
+        bit  2, a
+        bit  3, b
+        bit  3, c
+        bit  3, d
+        bit  3, e
+        bit  3, h
+        bit  3, l
+        bit  3, (hl)
+        bit  3, a
+;-------------------- 60 --------------------
+        bit  4, b
+        bit  4, c
+        bit  4, d
+        bit  4, e
+        bit  4, h
+        bit  4, l
+        bit  4, (hl)
+        bit  4, a
+        bit  5, b
+        bit  5, c
+        bit  5, d
+        bit  5, e
+        bit  5, h
+        bit  5, l
+        bit  5, (hl)
+        bit  5, a
+;-------------------- 70 --------------------
+        bit  6, b
+        bit  6, c
+        bit  6, d
+        bit  6, e
+        bit  6, h
+        bit  6, l
+        bit  6, (hl)
+        bit  6, a
+        bit  7, b
+        bit  7, c
+        bit  7, d
+        bit  7, e
+        bit  7, h
+        bit  7, l
+        bit  7, (hl)
+        bit  7, a
+;-------------------- 80 --------------------
+b       res  0, b
+c       res  0, c
+d       res  0, d
+e       res  0, e
+h       res  0, h
+l       res  0, l
+        res  0, (hl)
+a       res  0, a
+b       res  1, b
+c       res  1, c
+d       res  1, d
+e       res  1, e
+h       res  1, h
+l       res  1, l
+        res  1, (hl)
+a       res  1, a
+;-------------------- 90 --------------------
+b       res  2, b
+c       res  2, c
+d       res  2, d
+e       res  2, e
+h       res  2, h
+l       res  2, l
+        res  2, (hl)
+a       res  2, a
+b       res  3, b
+c       res  3, c
+d       res  3, d
+e       res  3, e
+h       res  3, h
+l       res  3, l
+        res  3, (hl)
+a       res  3, a
+;-------------------- A0 --------------------
+b       res  4, b
+c       res  4, c
+d       res  4, d
+e       res  4, e
+h       res  4, h
+l       res  4, l
+        res  4, (hl)
+a       res  4, a
+b       res  5, b
+c       res  5, c
+d       res  5, d
+e       res  5, e
+h       res  5, h
+l       res  5, l
+        res  5, (hl)
+a       res  5, a
+;-------------------- B0 --------------------
+b       res  6, b
+c       res  6, c
+d       res  6, d
+e       res  6, e
+h       res  6, h
+l       res  6, l
+        res  6, (hl)
+a       res  6, a
+b       res  7, b
+c       res  7, c
+d       res  7, d
+e       res  7, e
+h       res  7, h
+l       res  7, l
+        res  7, (hl)
+a       res  7, a
+;-------------------- C0 --------------------
+b       set  0, b
+c       set  0, c
+d       set  0, d
+e       set  0, e
+h       set  0, h
+l       set  0, l
+        set  0, (hl)
+a       set  0, a
+b       set  1, b
+c       set  1, c
+d       set  1, d
+e       set  1, e
+h       set  1, h
+l       set  1, l
+        set  1, (hl)
+a       set  1, a
+;-------------------- D0 --------------------
+b       set  2, b
+c       set  2, c
+d       set  2, d
+e       set  2, e
+h       set  2, h
+l       set  2, l
+        set  2, (hl)
+a       set  2, a
+b       set  3, b
+c       set  3, c
+d       set  3, d
+e       set  3, e
+h       set  3, h
+l       set  3, l
+        set  3, (hl)
+a       set  3, a
+;-------------------- E0 --------------------
+b       set  4, b
+c       set  4, c
+d       set  4, d
+e       set  4, e
+h       set  4, h
+l       set  4, l
+        set  4, (hl)
+a       set  4, a
+b       set  5, b
+c       set  5, c
+d       set  5, d
+e       set  5, e
+h       set  5, h
+l       set  5, l
+        set  5, (hl)
+a       set  5, a
+;-------------------- F0 --------------------
+b       set  6, b
+c       set  6, c
+d       set  6, d
+e       set  6, e
+h       set  6, h
+l       set  6, l
+        set  6, (hl)
+a       set  6, a
+b       set  7, b
+c       set  7, c
+d       set  7, d
+e       set  7, e
+h       set  7, h
+l       set  7, l
+        set  7, (hl)
+a       set  7, a
+;============================================
+;==================== ED ====================
+;============================================
+;-------------------- 00 --------------------
+        .db  $ED, $00
+        .db  $ED, $01
+        .db  $ED, $02
+        .db  $ED, $03
+        .db  $ED, $04
+        .db  $ED, $05
+        .db  $ED, $06
+        .db  $ED, $07
+        .db  $ED, $08
+        .db  $ED, $09
+        .db  $ED, $0A
+        .db  $ED, $0B
+        .db  $ED, $0C
+        .db  $ED, $0D
+        .db  $ED, $0E
+        .db  $ED, $0F
+;-------------------- 10 --------------------
+        .db  $ED, $10
+        .db  $ED, $11
+        .db  $ED, $12
+        .db  $ED, $13
+        .db  $ED, $14
+        .db  $ED, $15
+        .db  $ED, $16
+        .db  $ED, $17
+        .db  $ED, $18
+        .db  $ED, $19
+        .db  $ED, $1A
+        .db  $ED, $1B
+        .db  $ED, $1C
+        .db  $ED, $1D
+        .db  $ED, $1E
+        .db  $ED, $1F
+;-------------------- 20 --------------------
+        .db  $ED, $20
+        .db  $ED, $21
+        .db  $ED, $22
+        .db  $ED, $23
+        .db  $ED, $24
+        .db  $ED, $25
+        .db  $ED, $26
+        .db  $ED, $27
+        .db  $ED, $28
+        .db  $ED, $29
+        .db  $ED, $2A
+        .db  $ED, $2B
+        .db  $ED, $2C
+        .db  $ED, $2D
+        .db  $ED, $2E
+        .db  $ED, $2F
+;-------------------- 30 --------------------
+        .db  $ED, $30
+        .db  $ED, $31
+        .db  $ED, $32
+        .db  $ED, $33
+        .db  $ED, $34
+        .db  $ED, $35
+        .db  $ED, $36
+        .db  $ED, $37
+        .db  $ED, $38
+        .db  $ED, $39
+        .db  $ED, $3A
+        .db  $ED, $3B
+        .db  $ED, $3C
+        .db  $ED, $3D
+        .db  $ED, $3E
+        .db  $ED, $3F
+;-------------------- 40 --------------------
+b       in   b, (c)
+        out  (c), b
+hl      sbc  hl, bc
+W       ld   (##), bc
+a       neg
+\=      retn
+        im   0
+        ld   i, a
+c       in   c, (c)
+        out  (c), c
+hl      adc  hl, bc
+bcW     ld   bc, (##)
+a       %p%neg
+\=      reti
+        im   0/1
+        ld   r, a
+;-------------------- 50 --------------------
+d       in   d, (c)
+        out  (c), d
+hl      sbc  hl, de
+W       ld   (##), de
+a       %p%neg
+\=      %p%retn
+        im   1
+a       ld   a, i
+e       in   e, (c)
+        out  (c), e
+hl      adc  hl, de
+deW     ld   de, (##)
+a       %p%neg
+\=      %p%retn
+        im   2
+a       ld   a, r
+;-------------------- 60 --------------------
+h       in   h, (c)
+        out  (c), h
+hl      sbc  hl, hl
+W       ld   (##), hl
+a       %p%neg
+\=      %p%retn
+        %p%im   0
+a       rrd
+l       in   l, (c)
+        out  (c), l
+hl      adc  hl, hl
+hlW     ld   hl, (##)
+a       %p%neg
+\=      %p%retn
+        im   0/1
+a       rld
+;-------------------- 70 --------------------
+        in   (c)
+        out  (c), 0
+hl      sbc  hl, sp
+W       ld   (##), sp
+a       %p%neg
+\=      %p%retn
+        %p%im   1
+        .db  $ED, $77
+a       in   a, (c)
+        out  (c), a
+hl      adc  hl, sp
+sW      ld   sp, (##)
+a       %p%neg
+\=      %p%retn
+        %p%im   2
+        .db  $ED, $7F
+;-------------------- 80 --------------------
+        .db  $ED, $80
+        .db  $ED, $81
+        .db  $ED, $82
+        .db  $ED, $83
+        .db  $ED, $84
+        .db  $ED, $85
+        .db  $ED, $86
+        .db  $ED, $87
+        .db  $ED, $88
+        .db  $ED, $89
+        .db  $ED, $8A
+        .db  $ED, $8B
+        .db  $ED, $8C
+        .db  $ED, $8D
+        .db  $ED, $8E
+        .db  $ED, $8F
+;-------------------- 90 --------------------
+        .db  $ED, $90
+        .db  $ED, $91
+        .db  $ED, $92
+        .db  $ED, $93
+        .db  $ED, $94
+        .db  $ED, $95
+        .db  $ED, $96
+        .db  $ED, $97
+        .db  $ED, $98
+        .db  $ED, $99
+        .db  $ED, $9A
+        .db  $ED, $9B
+        .db  $ED, $9C
+        .db  $ED, $9D
+        .db  $ED, $9E
+        .db  $ED, $9F
+;-------------------- A0 --------------------
+dehlbc  ldi
+hlbc    cpi
+hlb     ini
+hlb     outi
+        .db  $ED, $A4
+        .db  $ED, $A5
+        .db  $ED, $A6
+        .db  $ED, $A7
+dehlbc  ldd
+hlbc    cpd
+hlb     ind
+hlb     outd
+        .db  $ED, $AC
+        .db  $ED, $AD
+        .db  $ED, $AE
+        .db  $ED, $AF
+;-------------------- B0 --------------------
+dehlbc  ldir
+hlbc    cpir
+hlb     inir
+hlb     otir
+        .db  $ED, $B4
+        .db  $ED, $B5
+        .db  $ED, $B6
+        .db  $ED, $B7
+dehlbc  lddr
+hlbc    cpdr
+hlb     indr
+hlb     otdr
+        .db  $ED, $BC
+        .db  $ED, $BD
+        .db  $ED, $BE
+        .db  $ED, $BF
+;-------------------- C0 --------------------
+        .db  $ED, $C0
+        .db  $ED, $C1
+        .db  $ED, $C2
+        .db  $ED, $C3
+        .db  $ED, $C4
+        .db  $ED, $C5
+        .db  $ED, $C6
+        .db  $ED, $C7
+        .db  $ED, $C8
+        .db  $ED, $C9
+        .db  $ED, $CA
+        .db  $ED, $CB
+        .db  $ED, $CC
+        .db  $ED, $CD
+        .db  $ED, $CE
+        .db  $ED, $CF
+;-------------------- D0 --------------------
+        .db  $ED, $D0
+        .db  $ED, $D1
+        .db  $ED, $D2
+        .db  $ED, $D3
+        .db  $ED, $D4
+        .db  $ED, $D5
+        .db  $ED, $D6
+        .db  $ED, $D7
+        .db  $ED, $D8
+        .db  $ED, $D9
+        .db  $ED, $DA
+        .db  $ED, $DB
+        .db  $ED, $DC
+        .db  $ED, $DD
+        .db  $ED, $DE
+        .db  $ED, $DF
+;-------------------- E0 --------------------
+        .db  $ED, $E0
+        .db  $ED, $E1
+        .db  $ED, $E2
+        .db  $ED, $E3
+        .db  $ED, $E4
+        .db  $ED, $E5
+        .db  $ED, $E6
+        .db  $ED, $E7
+        .db  $ED, $E8
+        .db  $ED, $E9
+        .db  $ED, $EA
+        .db  $ED, $EB
+        .db  $ED, $EC
+        .db  $ED, $ED
+        .db  $ED, $EE
+        .db  $ED, $EF
+;-------------------- F0 --------------------
+        .db  $ED, $F0
+        .db  $ED, $F1
+        .db  $ED, $F2
+        .db  $ED, $F3
+        .db  $ED, $F4
+        .db  $ED, $F5
+        .db  $ED, $F6
+        .db  $ED, $F7
+        .db  $ED, $F8
+        .db  $ED, $F9
+        .db  $ED, $FA
+        .db  $ED, $FB
+        .db  $ED, $FC
+        .db  $ED, $FD
+        .db  $ED, $FE
+        .db  $ED, $FF
+;============================================
+;================== DD/FD ===================
+;============================================
+;-------------------- 00 --------------------
+        %p%.db  $00
+        %p%.db  $01
+        %p%.db  $02
+        %p%.db  $03
+        %p%.db  $04
+        %p%.db  $05
+        %p%.db  $06
+        %p%.db  $07
+        %p%.db  $08
+i       add  i?, bc
+        %p%.db  $0A
+        %p%.db  $0B
+        %p%.db  $0C
+        %p%.db  $0D
+        %p%.db  $0E
+        %p%.db  $0F
+;-------------------- 10 --------------------
+        %p%.db  $10
+        %p%.db  $11
+        %p%.db  $12
+        %p%.db  $13
+        %p%.db  $14
+        %p%.db  $15
+        %p%.db  $16
+        %p%.db  $17
+        %p%.db  $18
+i       add  i?, de
+        %p%.db  $1A
+        %p%.db  $1B
+        %p%.db  $1C
+        %p%.db  $1D
+        %p%.db  $1E
+        %p%.db  $1F
+;-------------------- 20 --------------------
+        %p%.db  $20
+i       ld   i?, ##
+W       ld (##), i?
+i       inc  i?
+i       inc  i?h
+i       dec  i?h
+i       ld   i?h, #
+        %p%.db  $27
+        %p%.db  $28
+i       add  i?, i?
+iW      ld   i?, (##)
+i       dec  i?
+i       inc  i?l
+i       dec  i?l
+i       ld   i?l, #
+        %p%.db  $2F
+;-------------------- 30 --------------------
+        %p%.db  $30
+        %p%.db  $31
+        %p%.db  $32
+        %p%.db  $33
+        inc  (i?)
+        dec  (i?)
+        ld   (i?), #
+        %p%.db  $37
+        %p%.db  $38
+i       add  i?, sp
+        %p%.db  $3A
+        %p%.db  $3B
+        %p%.db  $3C
+        %p%.db  $3D
+        %p%.db  $3E
+        %p%.db  $3F
+;-------------------- 40 --------------------
+        %p%.db  $40
+        %p%.db  $41
+        %p%.db  $42
+        %p%.db  $43
+b       ld   b, i?h
+b       ld   b, i?l
+b       ld   b, (i?)
+        %p%.db  $47
+        %p%.db  $48
+        %p%.db  $49
+        %p%.db  $4A
+        %p%.db  $4B
+c       ld   c, i?h
+c       ld   c, i?l
+c       ld   c, (i?)
+        %p%.db  $4F
+;-------------------- 50 --------------------
+        %p%.db  $50
+        %p%.db  $51
+        %p%.db  $52
+        %p%.db  $53
+d       ld   d, i?h
+d       ld   d, i?l
+d       ld   d, (i?)
+        %p%.db  $57
+        %p%.db  $58
+        %p%.db  $59
+        %p%.db  $5A
+        %p%.db  $5B
+e       ld   e, i?h
+e       ld   e, i?l
+e       ld   e, (i?)
+        %p%.db  $5F
+;-------------------- 60 --------------------
+i       ld   i?h, b
+i       ld   i?h, c
+i       ld   i?h, d
+i       ld   i?h, e
+i       ld   i?h, i?h
+        ld   i?h, i?l
+h       ld   h, (i?)
+i       ld   i?h, a
+i       ld   i?l, b
+i       ld   i?l, c
+i       ld   i?l, d
+i       ld   i?l, e
+i       ld   i?l, i?h
+        ld   i?l, i?l
+l       ld   l, (i?)
+i       ld   i?l, a
+;-------------------- 70 --------------------
+        ld   (i?), b
+        ld   (i?), c
+        ld   (i?), d
+        ld   (i?), e
+        ld   (i?), h
+        ld   (i?), l
+        %p%.db  $76
+        ld   (i?), a
+        %p%.db  $78
+        %p%.db  $79
+        %p%.db  $7A
+        %p%.db  $7B
+a       ld   a, i?h
+a       ld   a, i?l
+a       ld   a, (i?)
+        %p%.db  $7F
+;-------------------- 80 --------------------
+        %p%.db  $80
+        %p%.db  $81
+        %p%.db  $82
+        %p%.db  $83
+a       add  a, i?h
+a       add  a, i?l
+a       add  a, (i?)
+        %p%.db  $87
+        %p%.db  $88
+        %p%.db  $89
+        %p%.db  $8A
+        %p%.db  $8B
+a       adc  a, i?h
+a       adc  a, i?l
+a       adc  a, (i?)
+        %p%.db  $8F
+;-------------------- 90 --------------------
+        %p%.db  $90
+        %p%.db  $91
+        %p%.db  $92
+        %p%.db  $93
+a       sub  i?h
+a       sub  i?l
+a       sub  (i?)
+        %p%.db  $97
+        %p%.db  $98
+        %p%.db  $99
+        %p%.db  $9A
+        %p%.db  $9B
+a       sbc  a, i?h
+a       sbc  a, i?l
+a       sbc  a, (i?)
+        %p%.db  $9F
+;-------------------- A0 --------------------
+        %p%.db  $A0
+        %p%.db  $A1
+        %p%.db  $A2
+        %p%.db  $A3
+a       and  i?h
+a       and  i?l
+a       and  (i?)
+        %p%.db  $A7
+        %p%.db  $A8
+        %p%.db  $A9
+        %p%.db  $AA
+        %p%.db  $AB
+a       xor  i?h
+a       xor  i?l
+a       xor  (i?)
+        %p%.db  $AF
+;-------------------- B0 --------------------
+        %p%.db  $B0
+        %p%.db  $B1
+        %p%.db  $B2
+        %p%.db  $B3
+a       or   i?h
+a       or   i?l
+a       or   (i?)
+        %p%.db  $B7
+        %p%.db  $B8
+        %p%.db  $B9
+        %p%.db  $BA
+        %p%.db  $BB
+        cp   i?h
+        cp   i?l
+        cp   (i?)
+        %p%.db  $BF
+;-------------------- C0 --------------------
+        %p%.db  $C0
+        %p%.db  $C1
+        %p%.db  $C2
+        %p%.db  $C3
+        %p%.db  $C4
+        %p%.db  $C5
+        %p%.db  $C6
+        %p%.db  $C7
+        %p%.db  $C8
+        %p%.db  $C9
+        %p%.db  $CA
+        %p%.db  $CB
+        %p%.db  $CC
+        %p%.db  $CD
+        %p%.db  $CE
+        %p%.db  $CF
+;-------------------- D0 --------------------
+        %p%.db  $D0
+        %p%.db  $D1
+        %p%.db  $D2
+        %p%.db  $D3
+        %p%.db  $D4
+        %p%.db  $D5
+        %p%.db  $D6
+        %p%.db  $D7
+        %p%.db  $D8
+        %p%.db  $D9
+        %p%.db  $DA
+        %p%.db  $DB
+        %p%.db  $DC
+        %p%.db  $DD
+        %p%.db  $DE
+        %p%.db  $DF
+;-------------------- E0 --------------------
+        %p%.db  $E0
+i       pop  i?
+        %p%.db  $E2
+i       ex   (sp), ix
+        %p%.db  $E4
+s       push i?
+        %p%.db  $E6
+        %p%.db  $E7
+        %p%.db  $E8
+=       jp   (I?)
+        %p%.db  $EA
+        %p%.db  $EB
+        %p%.db  $EC
+        %p%.db  $ED
+        %p%.db  $EE
+        %p%.db  $EF
+;-------------------- F0 --------------------
+        %p%.db  $F0
+        %p%.db  $F1
+        %p%.db  $F2
+        %p%.db  $F3
+        %p%.db  $F4
+        %p%.db  $F5
+        %p%.db  $F6
+        %p%.db  $F7
+        %p%.db  $F8
+s       ld   sp, i?
+        %p%.db  $FA
+        %p%.db  $FB
+        %p%.db  $FC
+        %p%.db  $FD
+        %p%.db  $FE
+        %p%.db  $FF
+;============================================
+;================ DD/FD + CB ================
+;============================================
+;-------------------- 00 --------------------
+b       ld   b, rlc (i?)
+c       ld   c, rlc (i?)
+d       ld   d, rlc (i?)
+e       ld   e, rlc (i?)
+h       ld   h, rlc (i?)
+l       ld   l, rlc (i?)
+        rlc  (i?)
+a       ld   a, rlc (i?)
+b       ld   b, rrc (i?)
+c       ld   c, rrc (i?)
+d       ld   d, rrc (i?)
+e       ld   e, rrc (i?)
+h       ld   h, rrc (i?)
+l       ld   l, rrc (i?)
+        rrc  (i?)
+a       ld   a, rrc (i?)
+;-------------------- 10 --------------------
+b       ld   b, rl (i?)
+c       ld   c, rl (i?)
+d       ld   d, rl (i?)
+e       ld   e, rl (i?)
+h       ld   h, rl (i?)
+l       ld   l, rl (i?)
+        rl   (i?)
+a       ld   a, rl (i?)
+b       ld   b, rr (i?)
+c       ld   c, rr (i?)
+d       ld   d, rr (i?)
+e       ld   e, rr (i?)
+h       ld   h, rr (i?)
+l       ld   l, rr (i?)
+        rr   (i?)
+a       ld   a, rr (i?)
+;-------------------- 20 --------------------
+b       ld   b, sla (i?)
+c       ld   c, sla (i?)
+d       ld   d, sla (i?)
+e       ld   e, sla (i?)
+h       ld   h, sla (i?)
+l       ld   l, sla (i?)
+        sla  (i?)
+a       ld   a, sla (i?)
+b       ld   b, sra (i?)
+c       ld   c, sra (i?)
+d       ld   d, sra (i?)
+e       ld   e, sra (i?)
+h       ld   h, sra (i?)
+l       ld   l, sra (i?)
+        sra  (i?)
+a       ld   a, sra (i?)
+;-------------------- 30 --------------------
+b       ld   b, sll (i?)
+c       ld   c, sll (i?)
+d       ld   d, sll (i?)
+e       ld   e, sll (i?)
+h       ld   h, sll (i?)
+l       ld   l, sll (i?)
+        sll  (i?)
+a       ld   a, sll (i?)
+b       ld   b, srl (i?)
+c       ld   c, srl (i?)
+d       ld   d, srl (i?)
+e       ld   e, srl (i?)
+h       ld   h, srl (i?)
+l       ld   l, srl (i?)
+        srl  (i?)
+a       ld   a, srl (i?)
+;-------------------- 40 --------------------
+        bit  0, (i?)
+        bit  0, (i?)
+        bit  0, (i?)
+        bit  0, (i?)
+        bit  0, (i?)
+        bit  0, (i?)
+        bit  0, (i?)
+        bit  0, (i?)
+        bit  1, (i?)
+        bit  1, (i?)
+        bit  1, (i?)
+        bit  1, (i?)
+        bit  1, (i?)
+        bit  1, (i?)
+        bit  1, (i?)
+        bit  1, (i?)
+;-------------------- 50 --------------------
+        bit  2, (i?)
+        bit  2, (i?)
+        bit  2, (i?)
+        bit  2, (i?)
+        bit  2, (i?)
+        bit  2, (i?)
+        bit  2, (i?)
+        bit  2, (i?)
+        bit  3, (i?)
+        bit  3, (i?)
+        bit  3, (i?)
+        bit  3, (i?)
+        bit  3, (i?)
+        bit  3, (i?)
+        bit  3, (i?)
+        bit  3, (i?)
+;-------------------- 60 --------------------
+        bit  4, (i?)
+        bit  4, (i?)
+        bit  4, (i?)
+        bit  4, (i?)
+        bit  4, (i?)
+        bit  4, (i?)
+        bit  4, (i?)
+        bit  4, (i?)
+        bit  5, (i?)
+        bit  5, (i?)
+        bit  5, (i?)
+        bit  5, (i?)
+        bit  5, (i?)
+        bit  5, (i?)
+        bit  5, (i?)
+        bit  5, (i?)
+;-------------------- 70 --------------------
+        bit  6, (i?)
+        bit  6, (i?)
+        bit  6, (i?)
+        bit  6, (i?)
+        bit  6, (i?)
+        bit  6, (i?)
+        bit  6, (i?)
+        bit  6, (i?)
+        bit  7, (i?)
+        bit  7, (i?)
+        bit  7, (i?)
+        bit  7, (i?)
+        bit  7, (i?)
+        bit  7, (i?)
+        bit  7, (i?)
+        bit  7, (i?)
+;-------------------- 80 --------------------
+b       ld   b, res 0, (i?)
+c       ld   c, res 0, (i?)
+d       ld   d, res 0, (i?)
+e       ld   e, res 0, (i?)
+h       ld   h, res 0, (i?)
+l       ld   l, res 0, (i?)
+        res  0, (i?)
+a       ld   a, res 0, (i?)
+b       ld   b, res 1, (i?)
+c       ld   c, res 1, (i?)
+d       ld   d, res 1, (i?)
+e       ld   e, res 1, (i?)
+h       ld   h, res 1, (i?)
+l       ld   l, res 1, (i?)
+        res  1, (i?)
+a       ld   a, res 1, (i?)
+;-------------------- 90 --------------------
+b       ld   b, res 2, (i?)
+c       ld   c, res 2, (i?)
+d       ld   d, res 2, (i?)
+e       ld   e, res 2, (i?)
+h       ld   h, res 2, (i?)
+l       ld   l, res 2, (i?)
+        res  2, (i?)
+a       ld   a, res 2, (i?)
+b       ld   b, res 3, (i?)
+c       ld   c, res 3, (i?)
+d       ld   d, res 3, (i?)
+e       ld   e, res 3, (i?)
+h       ld   h, res 3, (i?)
+l       ld   l, res 3, (i?)
+        res  3, (i?)
+a       ld   a, res 3, (i?)
+;-------------------- A0 --------------------
+b       ld   b, res 4, (i?)
+c       ld   c, res 4, (i?)
+d       ld   d, res 4, (i?)
+e       ld   e, res 4, (i?)
+h       ld   h, res 4, (i?)
+l       ld   l, res 4, (i?)
+        res  4, (i?)
+a       ld   a, res 4, (i?)
+b       ld   b, res 5, (i?)
+c       ld   c, res 5, (i?)
+d       ld   d, res 5, (i?)
+e       ld   e, res 5, (i?)
+h       ld   h, res 5, (i?)
+l       ld   l, res 5, (i?)
+        res  5, (i?)
+a       ld   a, res 5, (i?)
+;-------------------- B0 --------------------
+b       ld   b, res 6, (i?)
+c       ld   c, res 6, (i?)
+d       ld   d, res 6, (i?)
+e       ld   e, res 6, (i?)
+h       ld   h, res 6, (i?)
+l       ld   l, res 6, (i?)
+        res  6, (i?)
+a       ld   a, res 6, (i?)
+b       ld   b, res 7, (i?)
+c       ld   c, res 7, (i?)
+d       ld   d, res 7, (i?)
+e       ld   e, res 7, (i?)
+h       ld   h, res 7, (i?)
+l       ld   l, res 7, (i?)
+        res  7, (i?)
+a       ld   a, res 7, (i?)
+;-------------------- C0 --------------------
+b       ld   b, set 0, (i?)
+c       ld   c, set 0, (i?)
+d       ld   d, set 0, (i?)
+e       ld   e, set 0, (i?)
+h       ld   h, set 0, (i?)
+l       ld   l, set 0, (i?)
+        set  0, (i?)
+a       ld   a, set 0, (i?)
+b       ld   b, set 1, (i?)
+c       ld   c, set 1, (i?)
+d       ld   d, set 1, (i?)
+e       ld   e, set 1, (i?)
+h       ld   h, set 1, (i?)
+l       ld   l, set 1, (i?)
+        set  1, (i?)
+a       ld   a, set 1, (i?)
+;-------------------- D0 --------------------
+b       ld   b, set 2, (i?)
+c       ld   c, set 2, (i?)
+d       ld   d, set 2, (i?)
+e       ld   e, set 2, (i?)
+h       ld   h, set 2, (i?)
+l       ld   l, set 2, (i?)
+        set  2, (i?)
+a       ld   a, set 2, (i?)
+b       ld   b, set 3, (i?)
+c       ld   c, set 3, (i?)
+d       ld   d, set 3, (i?)
+e       ld   e, set 3, (i?)
+h       ld   h, set 3, (i?)
+l       ld   l, set 3, (i?)
+        set  3, (i?)
+a       ld   a, set 3, (i?)
+;-------------------- E0 --------------------
+b       ld   b, set 4, (i?)
+c       ld   c, set 4, (i?)
+d       ld   d, set 4, (i?)
+e       ld   e, set 4, (i?)
+h       ld   h, set 4, (i?)
+l       ld   l, set 4, (i?)
+        set  4, (i?)
+a       ld   a, set 4, (i?)
+b       ld   b, set 5, (i?)
+c       ld   c, set 5, (i?)
+d       ld   d, set 5, (i?)
+e       ld   e, set 5, (i?)
+h       ld   h, set 5, (i?)
+l       ld   l, set 5, (i?)
+        set  5, (i?)
+a       ld   a, set 5, (i?)
+;-------------------- F0 --------------------
+b       ld   b, set 6, (i?)
+c       ld   c, set 6, (i?)
+d       ld   d, set 6, (i?)
+e       ld   e, set 6, (i?)
+h       ld   h, set 6, (i?)
+l       ld   l, set 6, (i?)
+        set  6, (i?)
+a       ld   a, set 6, (i?)
+b       ld   b, set 7, (i?)
+c       ld   c, set 7, (i?)
+d       ld   d, set 7, (i?)
+e       ld   e, set 7, (i?)
+h       ld   h, set 7, (i?)
+l       ld   l, set 7, (i?)
+        set  7, (i?)
+a       ld   a, set 7, (i?)
