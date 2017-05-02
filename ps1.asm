@@ -6536,7 +6536,7 @@ LABEL_2F93:
 	ld bc, $0640
 	call LABEL_3AA6
 	pop af
-LABEL_2FA1_:	
+LABEL_2FA1:	
 	ld hl, LABEL_B27_B4AB
 	ld de, $7C80
 	ld ix, $C400
@@ -6855,6 +6855,8 @@ LABEL_31CB:
 LABEL_31CF:
 	ld   a, :Bank12
 	ld   ($FFFF), a
+	
+LABEL_31D4:
 	ld   a, ($C2D3)
 	or   a
 	jp   nz, LABEL_31CB
@@ -9486,30 +9488,54 @@ LABEL_454E:
 	ret
 
 LABEL_467C:
-.db	$CD, $05, $7B, $21
-.db $FF, $FF, $36, $10, $21, $D8, $BA, $11
-.db $00, $58, $CD, $FA, $03, $21, $58, $BD
-.db $11, $00, $7E, $CD, $FA, $03, $21, $FF
-.db $FF, $36, $18, $21, $40, $C2, $11, $41
-.db $C2, $36, $00, $01, $0F, $00, $ED, $B0
-.db $21, $7A, $A5, $01, $10, $00, $ED, $B0
-.db $21, $8A, $A5, $11, $00, $40, $CD, $FA
-.db $03, $21, $84, $A4, $CD, $62, $6B, $AF
-.db $32, $04, $C3, $32, $00, $C3, $32, $D3
-.db $C2, $3E, $0C, $CD, $52, $00, $C3, $FD
-.db $02
+	call LABEL_7B05
+	ld hl, $FFFF
+	ld (hl), :Bank16
+	ld hl, LABEL_B16_BAD8
+	ld de, $5800
+	call LABEL_3FA
+	ld hl, LABEL_B16_BD58
+	ld de, $7E00
+	call LABEL_3FA
+	ld hl, $FFFF
+	ld (hl), :Bank24
+	ld hl, $C240
+	ld de, $C241
+	ld (hl), $00
+	ld bc, $000F
+	ldir
+	ld hl, LABEL_B24_A57A
+	ld bc, $0010
+	ldir
+	ld hl, LABEL_B24_A58A
+	ld de, $4000
+	call LABEL_3FA
+	ld hl, LABEL_B24_A484
+	call LABEL_6B62
+	xor a
+	ld ($C304), a
+	ld ($C300), a
+	ld ($C2D3), a
+	ld a, $0C
+	call LABEL_52
+	jp LABEL_2FD
 
 LABEL_46D1:
-.db	$F5, $CD, $FD, $7A, $F1, $6F, $87
-.db $87, $85, $6F, $26, $00, $11, $1E, $47
-
-LABEL_46E0:
-	add  hl, de
-	ld   a, (hl)
-	ld   ($FFFF), a
-	inc  hl
-	ld   e, (hl)
-LABEL_46E7:
+	push	af
+	call	LABEL_7AFD
+	pop	af
+	ld	l, a
+	add	a, a
+	add	a, a
+	add	a, l
+	ld	l, a
+	ld	h, $00
+	ld	de, LABEL_471E
+	add	hl, de
+	ld	a, (hl)
+	ld	($FFFF), a
+	inc	hl
+	ld	e, (hl)
 	inc  hl
 	ld   d, (hl)
 	inc  hl
@@ -9539,49 +9565,17 @@ LABEL_46E7:
 	jp   LABEL_7B18
 
 
-; Data from 471E to 471F (2 bytes)
-.db $1F, $00
+LABEL_471E:
+.db	$1F, $00, $80, $90, $A8, $1E, $00, $80, $70, $AA, $1E, $62, $8F, $50, $AC, $1E
+.db	$2B, $9C, $30, $AE, $1F, $DB, $8A, $10, $B0, $1D, $2A, $B6, $F0, $B1, $12, $88
+.db	$B3, $D0, $B3, $1E, $4E, $AA, $B0, $B5, $1E, $0C, $B3, $90, $B7
+	
 
-LABEL_4720:
-	add  a, b
-	sub  b
-	xor  b
-	ld   e, $00
-	add  a, b
-	ld   (hl), b
-	xor  d
-	ld   e, $62
-	adc  a, a
-	ld   d, b
-	xor  h
-	ld   e, $2B
-	sbc  a, h
-	jr   nc, LABEL_46E0
-	rra
-	in   a, ($8A)
-	djnz	LABEL_46E7
-	dec  e
-	ld   hl, ($F0B6)
-	or   c
-	ld   (de), a
-	adc  a, b
-	or   e
-	ret  nc
-
-	or   e
-	ld   e, $4E
-	xor  d
-	or   b
-	or   l
-	ld   e, $0C
-	or   e
-	sub  b
-	or   a
 LABEL_474B:
 	ld   a, ($C2DB)
 	or   a
 	jp   z, LABEL_1BE1
-	ld   de, $4771
+	ld   de, LABEL_4773-2
 	call	LABEL_4769
 	ld   a, ($C29E)
 	or   a
@@ -9590,8 +9584,9 @@ LABEL_474B:
 	jp   LABEL_15DC
 
 
-; Data from 4765 to 4768 (4 bytes)
-.db $E1, $C3, "%-"
+LABEL_4765:
+	pop	hl
+	jp	LABEL_2D25
 
 LABEL_4769:
 	ld   l, a
@@ -9605,530 +9600,2129 @@ LABEL_4769:
 	jp   (hl)
 
 
-; Data from 4773 to 5769 (4087 bytes)
-.db $DF, $48, $FC, $48, $22, $49, $28, $49
-.db $2E, $49, $34, $49, $3A, $49, $40, $49
-.db $5A, $49, $60, $49, $66, $49, $73, $49
-.db $91, $49, $97, $49, $9D, $49, $A3, $49
-.db $A9, $49, $AF, $49, $B5, $49, $B5, $49
-.db $E0, $49, $E6, $49, $3E, $4A, $44, $4A
-.db $4A, $4A, $50, $4A, $A9, $4A, $BE, $4A
-.db $D3, $4A, $43, $4B, $52, $4B, $61, $4B
-.db $67, $4B, $6D, $4B, $73, $4B, $79, $4B
-.db $7F, $4B, $85, $4B, $8B, $4B, $91, $4B
-.db $97, $4B, $9D, $4B, $BD, $4B, $D1, $4B
-.db $D7, $4B, $DD, $4B, $E3, $4B, $E9, $4B
-.db $EF, $4B, $F5, $4B, $FB, $4B, $01, $4C
-.db $07, $4C, $0D, $4C, $70, $4C, $74, $4D
-.db $7A, $4D, $9F, $4D, $A5, $4D, $AB, $4D
-.db $D4, $4D, $FB, $4D, $9C, $4E, $B3, $4E
-.db $B9, $4E, $BF, $4E, $C5, $4E, $D9, $4E
-.db $DF, $4E, $E5, $4E, $EB, $4E, $F1, $4E
-.db $F7, $4E, $FD, $4E, $03, $4F, $09, $4F
-.db $0F, $4F, $15, $4F, $34, $4F, $3A, $4F
-.db $40, $4F, $46, $4F, $4C, $4F, $52, $4F
-.db $58, $4F, $71, $4F, $77, $4F, $7D, $4F
-.db $83, $4F, $89, $4F, $8F, $4F, $95, $4F
-.db $9B, $4F, $D8, $4F, $DE, $4F, $E4, $4F
-.db $EA, $4F, $F0, $4F, $F6, $4F, $FC, $4F
-.db $02, $50, $08, $50, $0E, $50, $14, $50
-.db $1A, $50, $20, $50, $26, $50, $2C, $50
-.db $40, $50, $46, $50, $4C, $50, $58, $50
-.db $5E, $50, $64, $50, $6A, $50, $70, $50
-.db $A6, $50, $BA, $50, $C0, $50, $C6, $50
-.db $DA, $50, $01, $51, $07, $51, $0D, $51
-.db $57, $51, $6F, $51, $B1, $51, $D6, $51
-.db $DC, $51, $1D, $52, $49, $52, $70, $52
-.db $84, $52, $8A, $52, $90, $52, $A4, $52
-.db $B2, $52, $B8, $52, $BE, $52, $C4, $52
-.db $CA, $52, $D0, $52, $37, $53, $8F, $4F
-.db $95, $4F, $9B, $4F, $4B, $53, $95, $53
-.db $9B, $53, $A1, $53, $A7, $53, $AD, $53
-.db $B3, $53, $B9, $53, $BF, $53, $01, $54
-.db $30, $54, $D0, $54, $FB, $54, $2F, $55
-.db $35, $55, $35, $55, $38, $55, $95, $55
-.db $A3, $55, $A9, $55, $BB, $55, $CD, $55
-.db $E1, $55, $EF, $55, $19, $56, $66, $56
-.db $9C, $56, $A2, $56, $35, $55, $35, $55
-.db $CD, $56, $D3, $56, $D9, $56, $E9, $56
-.db $F9, $56, $35, $55, $21, $01, $C5, $7E
-.db $B7, $20, $08, $36, $01, $21, $02, $00
-.db $CD, $5A, $57, $21, $06, $00, $CD, $5A
-.db $57, $3E, $C1, $32, $04, $C0, $C3, $6D
-.db $2A, $3A, $02, $C5, $B7, $20, $1A, $21
-.db $08, $00, $CD, $5A, $57, $3E, $38, $32
-.db $C4, $C2, $CD, $9F, $27, $3E, $38, $CD
-.db $2E, $28, $20, $05, $3E, $01, $32, $02
-.db $C5, $21, $10, $00, $C3, $5A, $57, $21
-.db $12, $00, $C3, $5A, $57, $21, $14, $00
-.db $C3, $5A, $57, $21, $16, $00, $C3, $5A
-.db $57, $21, $18, $00, $C3, $5A, $57, $21
-.db $1A, $00, $C3, $5A, $57, $21, $62, $00
-.db $CD, $5A, $57, $CD, $19, $2D, $21, $60
-.db $00, $28, $09, $21, $03, $00, $22, $C5
-.db $C2, $21, $64, $00, $C3, $5A, $57, $21
-.db $1C, $00, $C3, $5A, $57, $21, $1E, $00
-.db $C3, $5A, $57, $3E, $33, $CD, $2E, $28
-.db $28, $13, $21, $20, $00, $C3, $5A, $57
-.db $3E, $33, $CD, $2E, $28, $28, $06, $21
-.db $22, $00, $C3, $5A, $57, $21, $24, $00
-.db $CD, $5A, $57, $3A, $09, $C3, $0F, $3D
-.db $E6, $03, $32, $E9, $C2, $C9, $21, $26
-.db $00, $C3, $5A, $57, $21, $28, $00, $C3
-.db $5A, $57, $21, $2A, $00, $C3, $5A, $57
-.db $21, $2E, $00, $C3, $5A, $57, $21, $30
-.db $00, $C3, $5A, $57, $21, $32, $00, $C3
-.db $5A, $57, $3A, $04, $C5, $FE, $07, $D2
-.db $8C, $4A, $21, $70, $00, $CD, $5A, $57
-.db $CD, $19, $2D, $21, $20, $00, $20, $12
-.db $3E, $34, $CD, $2E, $28, $21, $CE, $00
-.db $20, $08, $3E, $06, $32, $E9, $C2, $21
-.db $24, $00, $C3, $5A, $57, $21, $86, $02
-.db $C3, $5A, $57, $3E, $47, $32, $E6, $C2
-.db $CD, $FE, $5F, $3A, $10, $C4, $B7, $28
-.db $26, $21, $96, $02, $CD, $5A, $57, $CD
-.db $19, $2D, $20, $1B, $3E, $AE, $32, $04
-.db $C0, $3E, $01, $32, $C2, $C2, $21, $28
-.db $B7, $CD, $CF, $31, $21, $00, $00, $22
-.db $10, $C4, $21, $98, $02, $18, $03, $21
-.db $9A, $02, $CD, $5A, $57, $CD, $64, $34
-.db $3A, $F0, $C4, $B7, $28, $12, $3E, $38
-.db $CD, $2E, $28, $28, $0B, $21, $18, $C5
-.db $22, $E1, $C2, $3E, $38, $32, $DF, $C2
-.db $C3, $89, $53, $21, $6A, $00, $C3, $5A
-.db $57, $21, $6C, $00, $C3, $5A, $57, $21
-.db $6E, $00, $C3, $5A, $57, $3A, $04, $C5
-.db $FE, $07, $30, $35, $21, $70, $00, $CD
-.db $5A, $57, $CD, $19, $2D, $28, $06, $21
-.db $20, $00, $C3, $5A, $57, $3E, $34, $CD
-.db $2E, $28, $28, $06, $21, $CE, $00, $C3
-.db $5A, $57, $21, $24, $00, $CD, $5A, $57
-.db $3A, $05, $C3, $FE, $60, $21, $A3, $4A
-.db $20, $03, $21, $A6, $4A, $CD, $7B, $78
-.db $C9, $21, $9E, $01, $CD, $5A, $57, $3E
-.db $34, $CD, $2E, $28, $C0, $C5, $CD, $7F
-.db $27, $C1, $21, $A0, $01, $C3, $5A, $57
-.db $05, $20, $17, $05, $21, $15, $3E, $33
-.db $CD, $2E, $28, $21, $20, $00, $20, $08
-.db $3E, $04, $32, $E9, $C2, $21, $24, $00
-.db $C3, $5A, $57, $3E, $33, $CD, $2E, $28
-.db $21, $22, $00, $20, $08, $3E, $05, $32
-.db $E9, $C2, $21, $24, $00, $C3, $5A, $57
-.db $21, $72, $00, $CD, $5A, $57, $CD, $19
-.db $2D, $28, $06, $21, $7C, $00, $C3, $5A
-.db $57, $21, $74, $00, $CD, $5A, $57, $CD
-.db $19, $2D, $20, $06, $21, $7E, $00, $C3
-.db $5A, $57, $21, $76, $00, $CD, $5A, $57
-.db $CD, $19, $2D, $20, $06, $21, $7E, $00
-.db $C3, $5A, $57, $21, $64, $00, $22, $C5
-.db $C2, $21, $78, $00, $CD, $5A, $57, $CD
-.db $19, $2D, $28, $06, $21, $7C, $00, $C3
-.db $5A, $57, $11, $64, $00, $2A, $E0, $C4
-.db $B7, $ED, $52, $30, $06, $21, $57, $BD
-.db $C3, $CF, $31, $22, $E0, $C4, $21, $7A
-.db $00, $CD, $5A, $57, $3E, $34, $32, $C4
-.db $C2, $CD, $2E, $28, $C8, $C3, $9F, $27
-.db $3A, $F0, $C4, $B7, $21, $34, $00, $28
-.db $03, $21, $3A, $00, $C3, $5A, $57, $3A
-.db $F0, $C4, $B7, $21, $3C, $00, $28, $03
-.db $21, $40, $00, $C3, $5A, $57, $21, $42
-.db $00, $C3, $5A, $57, $21, $44, $00, $C3
-.db $5A, $57, $21, $46, $00, $C3, $5A, $57
-.db $21, $48, $00, $C3, $5A, $57, $21, $4A
-.db $00, $C3, $5A, $57, $21, $4C, $00, $C3
-.db $5A, $57, $21, $4E, $00, $C3, $5A, $57
-.db $21, $50, $00, $C3, $5A, $57, $21, $52
-.db $00, $C3, $5A, $57, $21, $54, $00, $C3
-.db $5A, $57, $21, $56, $00, $CD, $5A, $57
-.db $CD, $19, $2D, $21, $60, $00, $20, $0F
-.db $3E, $2D, $CD, $2E, $28, $28, $05, $21
-.db $04, $C6, $36, $00, $21, $58, $00, $C3
-.db $5A, $57, $21, $5C, $00, $CD, $5A, $57
-.db $CD, $19, $2D, $21, $60, $00, $28, $03
-.db $21, $5E, $00, $C3, $5A, $57, $21, $80
-.db $00, $C3, $5A, $57, $21, $82, $00, $C3
-.db $5A, $57, $21, $84, $00, $C3, $5A, $57
-.db $21, $86, $00, $C3, $5A, $57, $21, $88
-.db $00, $C3, $5A, $57, $21, $8A, $00, $C3
-.db $5A, $57, $21, $8C, $00, $C3, $5A, $57
-.db $21, $8E, $00, $C3, $5A, $57, $21, $90
-.db $00, $C3, $5A, $57, $21, $88, $02, $C3
-.db $5A, $57, $3A, $F0, $C4, $B7, $28, $06
-.db $21, $8A, $02, $C3, $5A, $57, $21, $0A
-.db $00, $22, $C5, $C2, $21, $92, $00, $CD
-.db $5A, $57, $CD, $19, $2D, $20, $06, $21
-.db $94, $00, $C3, $5A, $57, $3E, $38, $CD
-.db $2E, $28, $20, $33, $E5, $21, $96, $00
-.db $CD, $5A, $57, $CD, $19, $2D, $E1, $20
-.db $26, $C5, $CD, $7F, $27, $C1, $21, $9A
-.db $00, $CD, $5A, $57, $CD, $64, $34, $E1
-.db $FD, $21, $10, $C4, $CD, $F1, $16, $3E
-.db $01, $32, $F0, $C4, $3E, $2B, $32, $C4
-.db $C2, $CD, $9F, $27, $C3, $CF, $43, $21
-.db $7C, $00, $C3, $5A, $57, $3A, $16, $C5
-.db $B7, $28, $21, $21, $A6, $02, $CD, $5A
-.db $57, $CD, $64, $34, $E1, $21, $E6, $22
-.db $22, $0C, $C3, $AF, $32, $0A, $C3, $21
-.db $02, $C2, $36, $0B, $CD, $1C, $66, $3E
-.db $85, $C3, $97, $0C, $3E, $35, $CD, $7D
-.db $61, $CD, $6A, $57, $3A, $F0, $C4, $FE
-.db $03, $30, $07, $3E, $37, $CD, $2E, $28
-.db $20, $0C, $21, $9E, $02, $CD, $5A, $57
-.db $21, $AA, $00, $C3, $5A, $57, $21, $A4
-.db $00, $CD, $5A, $57, $C5, $3E, $37, $32
-.db $C4, $C2, $CD, $9F, $27, $C1, $3E, $37
-.db $CD, $2E, $28, $C0, $21, $9C, $02, $CD
-.db $5A, $57, $CD, $05, $7B, $CD, $64, $34
-.db $3E, $20, $32, $9E, $C2, $CD, $47, $3D
-.db $3E, $D0, $32, $00, $C9, $3E, $0C, $CD
-.db $52, $00, $21, $6C, $4D, $11, $40, $C2
-.db $01, $08, $00, $ED, $B0, $CD, $20, $7B
-.db $21, $A0, $02, $CD, $5A, $57, $CD, $64
-.db $34, $3E, $A0, $32, $04, $C0, $CD, $47
-.db $2D, $3E, $4A, $32, $E6, $C2, $CD, $FE
-.db $5F, $3A, $00, $C4, $F5, $3A, $10, $C4
-.db $F5, $3A, $20, $C4, $F5, $CD, $0F, $10
-.db $F1, $32, $20, $C4, $F1, $32, $10, $C4
-.db $F1, $32, $00, $C4, $CD, $05, $7B, $CD
-.db $47, $3D, $3E, $D0, $32, $00, $C9, $3E
-.db $0C, $CD, $52, $00, $CD, $20, $7B, $21
-.db $A2, $02, $CD, $5A, $57, $CD, $05, $7B
-.db $3E, $1D, $32, $9E, $C2, $CD, $47, $3D
-.db $CD, $6D, $2A, $3E, $0C, $CD, $52, $00
-.db $CD, $20, $7B, $3E, $35, $CD, $7D, $61
-.db $CD, $6A, $57, $21, $AA, $00, $C3, $5A
-.db $57, $00, $00, $3F, $00, $00, $00, $00
-.db $00, $21, $B4, $00, $C3, $5A, $57, $21
-.db $B6, $00, $CD, $5A, $57, $CD, $05, $7B
-.db $CD, $64, $34, $3E, $A0, $32, $04, $C0
-.db $CD, $47, $2D, $CD, $6D, $2A, $3E, $C1
-.db $32, $04, $C0, $CD, $20, $7B, $21, $B8
-.db $00, $C3, $5A, $57, $21, $02, $01, $C3
-.db $5A, $57, $21, $06, $01, $C3, $5A, $57
-.db $21, $BA, $00, $CD, $5A, $57, $CD, $19
-.db $2D, $28, $06, $21, $C2, $00, $C3, $5A
-.db $57, $3E, $24, $CD, $2E, $28, $20, $0B
-.db $C5, $CD, $7F, $27, $C1, $21, $BC, $00
-.db $C3, $5A, $57, $21, $0E, $02, $C3, $5A
-.db $57, $21, $BA, $00, $CD, $5A, $57, $CD
-.db $19, $2D, $28, $06, $21, $C2, $00, $C3
-.db $5A, $57, $3E, $24, $CD, $2E, $28, $20
-.db $09, $CD, $7F, $27, $21, $C4, $00, $C3
-.db $5A, $57, $21, $0E, $02, $C3, $5A, $57
-.db $3A, $04, $C5, $B7, $CA, $65, $47, $3E
-.db $34, $CD, $7D, $61, $CD, $6A, $57, $3A
-.db $04, $C5, $FE, $07, $38, $06, $21, $D8
-.db $00, $C3, $5A, $57, $FE, $02, $30, $06
-.db $21, $CA, $00, $C3, $5A, $57, $FE, $03
-.db $30, $36, $21, $B0, $04, $22, $C5, $C2
-.db $21, $8C, $02, $CD, $5A, $57, $CD, $19
-.db $2D, $28, $06, $21, $DA, $00, $C3, $5A
-.db $57, $11, $B0, $04, $2A, $E0, $C4, $B7
-.db $ED, $52, $30, $06, $21, $D0, $00, $C3
-.db $5A, $57, $22, $E0, $C4, $3E, $03, $32
-.db $04, $C5, $21, $90, $02, $C3, $5A, $57
-.db $FE, $05, $30, $0A, $3C, $32, $04, $C5
-.db $21, $92, $02, $C3, $5A, $57, $FE, $06
-.db $30, $17, $3C, $32, $04, $C5, $21, $D2
-.db $00, $CD, $5A, $57, $3E, $32, $CD, $2E
-.db $28, $28, $13, $21, $D6, $00, $CD, $5A
-.db $57, $3E, $32, $CD, $2E, $28, $28, $06
-.db $21, $04, $01, $C3, $5A, $57, $3E, $07
-.db $32, $04, $C5, $21, $94, $02, $C3, $5A
-.db $57, $21, $04, $C5, $7E, $FE, $02, $DA
-.db $65, $47, $3E, $10, $CD, $7D, $61, $CD
-.db $6A, $57, $21, $DC, $00, $C3, $5A, $57
-.db $21, $18, $01, $C3, $5A, $57, $21, $0E
-.db $01, $C3, $5A, $57, $21, $12, $01, $C3
-.db $5A, $57, $21, $14, $01, $CD, $5A, $57
-.db $CD, $19, $2D, $21, $16, $01, $20, $03
-.db $21, $3C, $01, $C3, $5A, $57, $21, $0C
-.db $01, $C3, $5A, $57, $21, $1C, $01, $C3
-.db $5A, $57, $21, $1E, $01, $C3, $5A, $57
-.db $21, $20, $01, $C3, $5A, $57, $21, $26
-.db $01, $C3, $5A, $57, $21, $28, $01, $C3
-.db $5A, $57, $21, $2E, $01, $C3, $5A, $57
-.db $21, $30, $01, $C3, $5A, $57, $21, $32
-.db $01, $C3, $5A, $57, $21, $34, $01, $C3
-.db $5A, $57, $21, $3A, $01, $CD, $5A, $57
-.db $CD, $19, $2D, $21, $3C, $01, $28, $0E
-.db $3A, $07, $C5, $B7, $20, $05, $3E, $01
-.db $32, $07, $C5, $21, $3E, $01, $C3, $5A
-.db $57, $21, $36, $01, $C3, $5A, $57, $21
-.db $66, $01, $C3, $5A, $57, $21, $68, $01
-.db $C3, $5A, $57, $21, $6A, $01, $C3, $5A
-.db $57, $21, $6C, $01, $C3, $5A, $57, $21
-.db $70, $01, $C3, $5A, $57, $21, $72, $01
-.db $CD, $5A, $57, $CD, $19, $2D, $21, $7C
-.db $01, $20, $08, $3E, $01, $32, $08, $C5
-.db $21, $74, $01, $C3, $5A, $57, $21, $7E
-.db $01, $C3, $5A, $57, $21, $80, $01, $C3
-.db $5A, $57, $21, $84, $01, $C3, $5A, $57
-.db $21, $86, $01, $C3, $5A, $57, $21, $88
-.db $01, $C3, $5A, $57, $21, $8C, $01, $C3
-.db $5A, $57, $21, $90, $01, $C3, $5A, $57
-.db $21, $E8, $03, $22, $C5, $C2, $21, $94
-.db $01, $CD, $5A, $57, $CD, $19, $2D, $28
-.db $06, $21, $9C, $01, $C3, $5A, $57, $11
-.db $E8, $03, $2A, $E0, $C4, $B7, $ED, $52
-.db $30, $06, $21, $9A, $01, $C3, $5A, $57
-.db $22, $E0, $C4, $21, $98, $01, $CD, $5A
-.db $57, $3E, $3B, $32, $C4, $C2, $CD, $2E
-.db $28, $C8, $C3, $9F, $27, $21, $A2, $01
-.db $C3, $5A, $57, $21, $A4, $01, $C3, $5A
-.db $57, $21, $A6, $01, $C3, $5A, $57, $21
-.db $AA, $01, $C3, $5A, $57, $21, $B2, $01
-.db $C3, $5A, $57, $21, $B8, $01, $C3, $5A
-.db $57, $21, $BA, $01, $C3, $5A, $57, $21
-.db $BC, $01, $C3, $5A, $57, $21, $BE, $01
-.db $C3, $5A, $57, $21, $C4, $01, $C3, $5A
-.db $57, $21, $C8, $01, $C3, $5A, $57, $21
-.db $CA, $01, $C3, $5A, $57, $21, $CC, $01
-.db $C3, $5A, $57, $21, $D0, $01, $C3, $5A
-.db $57, $21, $D6, $01, $CD, $5A, $57, $CD
-.db $19, $2D, $21, $DA, $01, $28, $03, $21
-.db $D8, $01, $C3, $5A, $57, $21, $DC, $01
-.db $C3, $5A, $57, $21, $DE, $01, $C3, $5A
-.db $57, $21, $0A, $00, $22, $C5, $C2, $21
-.db $E0, $01, $C3, $5A, $57, $21, $E2, $01
-.db $C3, $5A, $57, $21, $E4, $01, $C3, $5A
-.db $57, $21, $E6, $01, $C3, $5A, $57, $21
-.db $E8, $01, $C3, $5A, $57, $21, $90, $01
-.db $22, $C5, $C2, $21, $EA, $01, $CD, $5A
-.db $57, $CD, $19, $2D, $28, $06, $21, $F0
-.db $01, $C3, $5A, $57, $11, $90, $01, $2A
-.db $E0, $C4, $B7, $ED, $52, $30, $06, $21
-.db $F2, $01, $C3, $5A, $57, $22, $E0, $C4
-.db $3E, $01, $32, $09, $C5, $21, $F4, $01
-.db $C3, $5A, $57, $21, $FA, $01, $CD, $5A
-.db $57, $CD, $19, $2D, $21, $FC, $01, $28
-.db $03, $21, $FE, $01, $C3, $5A, $57, $21
-.db $00, $02, $C3, $5A, $57, $21, $02, $02
-.db $C3, $5A, $57, $21, $04, $02, $CD, $5A
-.db $57, $CD, $19, $2D, $21, $06, $02, $28
-.db $03, $21, $08, $02, $C3, $5A, $57, $21
-.db $BA, $00, $CD, $5A, $57, $CD, $19, $2D
-.db $28, $06, $21, $0C, $02, $C3, $5A, $57
-.db $3E, $24, $CD, $2E, $28, $20, $09, $CD
-.db $7F, $27, $21, $0A, $02, $C3, $5A, $57
-.db $21, $0E, $02, $C3, $5A, $57, $21, $10
-.db $02, $C3, $5A, $57, $21, $6A, $02, $C3
-.db $5A, $57, $21, $18, $01, $22, $C5, $C2
-.db $21, $4A, $02, $CD, $5A, $57, $CD, $19
-.db $2D, $28, $06, $21, $E3, $B7, $C3, $CF
-.db $31, $11, $18, $01, $2A, $E0, $C4, $B7
-.db $ED, $52, $30, $06, $21, $57, $BD, $C3
-.db $CF, $31, $3A, $E2, $C4, $FE, $18, $38
-.db $06, $21, $13, $B8, $C3, $CF, $31, $22
-.db $E0, $C4, $21, $0A, $02, $CD, $5A, $57
-.db $3E, $36, $32, $C4, $C2, $CD, $2E, $28
-.db $C8, $C3, $9F, $27, $3E, $08, $32, $E6
-.db $C2, $CD, $FE, $5F, $3A, $F0, $C4, $FE
-.db $03, $21, $AC, $00, $20, $03, $21, $B2
-.db $00, $C3, $5A, $57, $3A, $F0, $C4, $FE
-.db $03, $D2, $65, $47, $3E, $3B, $CD, $7D
-.db $61, $CD, $6A, $57, $21, $AE, $00, $CD
-.db $5A, $57, $3E, $37, $CD, $2E, $28, $C0
-.db $CD, $7F, $27, $E1, $CD, $64, $34, $CD
-.db $25, $2D, $3E, $01, $32, $06, $C5, $FD
-.db $21, $30, $C4, $FD, $36, $0A, $01, $FD
-.db $36, $0B, $11, $CD, $F1, $16, $3E, $03
-.db $32, $F0, $C4, $C3, $61, $44, $21, $04
-.db $C5, $7E, $FE, $02, $D2, $65, $47, $3E
-.db $10, $CD, $7D, $61, $CD, $6A, $57, $21
-.db $04, $C5, $7E, $FE, $01, $11, $DC, $00
-.db $20, $05, $36, $02, $11, $F6, $00, $EB
-.db $C3, $5A, $57, $21, $F8, $00, $C3, $5A
-.db $57, $3A, $04, $C5, $B7, $C2, $65, $47
-.db $3E, $34, $CD, $7D, $61, $CD, $6A, $57
-.db $21, $03, $C5, $7E, $B7, $20, $07, $34
-.db $21, $DE, $00, $C3, $5A, $57, $FE, $01
-.db $20, $07, $34, $21, $E0, $00, $C3, $5A
-.db $57, $21, $E2, $00, $CD, $5A, $57, $CD
-.db $19, $2D, $21, $D4, $00, $20, $08, $21
-.db $04, $C5, $36, $01, $21, $E4, $00, $C3
-.db $5A, $57, $3E, $2E, $32, $E6, $C2, $CD
-.db $FE, $5F, $21, $E6, $00, $CD, $5A, $57
-.db $CD, $19, $2D, $20, $0D, $3E, $33, $CD
-.db $2E, $28, $20, $06, $21, $24, $00, $C3
-.db $5A, $57, $21, $E8, $00, $CD, $5A, $57
-.db $CD, $64, $34, $C3, $89, $53, $21, $BA
-.db $00, $CD, $5A, $57, $CD, $19, $2D, $28
-.db $06, $21, $C2, $00, $C3, $5A, $57, $3E
-.db $24, $CD, $2E, $28, $20, $09, $CD, $7F
-.db $27, $21, $EA, $00, $C3, $5A, $57, $21
-.db $CE, $00, $C3, $5A, $57, $21, $EC, $00
-.db $CD, $5A, $57, $CD, $19, $2D, $21, $3C
-.db $01, $28, $03, $21, $24, $01, $C3, $5A
-.db $57, $21, $EE, $00, $C3, $5A, $57, $21
-.db $F0, $00, $C3, $5A, $57, $21, $F2, $00
-.db $CD, $5A, $57, $CD, $19, $2D, $21, $4C
-.db $01, $28, $03, $21, $3C, $01, $C3, $5A
-.db $57, $3E, $16, $32, $E6, $C2, $CD, $FE
-.db $5F, $21, $F4, $00, $C3, $5A, $57, $21
-.db $FC, $00, $C3, $5A, $57, $21, $FE, $00
-.db $C3, $5A, $57, $21, $00, $01, $C3, $5A
-.db $57, $21, $0A, $01, $C3, $5A, $57, $21
-.db $1A, $02, $C3, $5A, $57, $21, $48, $01
-.db $CD, $5A, $57, $CD, $19, $2D, $28, $06
-.db $21, $52, $01, $C3, $5A, $57, $21, $4E
-.db $01, $CD, $5A, $57, $21, $50, $01, $CD
-.db $5A, $57, $CD, $19, $2D, $20, $E9, $21
-.db $4E, $01, $CD, $5A, $57, $21, $54, $01
-.db $CD, $5A, $57, $CD, $19, $2D, $20, $D8
-.db $21, $4E, $01, $CD, $5A, $57, $21, $56
-.db $01, $CD, $5A, $57, $CD, $19, $2D, $20
-.db $06, $21, $58, $01, $C3, $5A, $57, $21
-.db $5A, $01, $CD, $5A, $57, $CD, $19, $2D
-.db $28, $B6, $21, $5C, $01, $CD, $5A, $57
-.db $3E, $3C, $32, $C4, $C2, $CD, $2E, $28
-.db $C8, $C3, $9F, $27, $21, $60, $01, $CD
-.db $5A, $57, $CD, $19, $2D, $21, $62, $01
-.db $28, $03, $21, $64, $01, $C3, $5A, $57
-.db $3E, $2E, $32, $E6, $C2, $CD, $FE, $5F
-.db $21, $1C, $02, $CD, $5A, $57, $CD, $19
-.db $2D, $20, $22, $3E, $33, $CD, $2E, $28
-.db $20, $1B, $21, $1E, $02, $CD, $5A, $57
-.db $CD, $64, $34, $E1, $21, $9C, $15, $22
-.db $0C, $C3, $3E, $01, $32, $0A, $C3, $21
-.db $02, $C2, $36, $0A, $C9, $21, $E8, $00
-.db $CD, $5A, $57, $CD, $64, $34, $CD, $0F
-.db $10, $3A, $00, $C8, $B7, $C4, $E1, $1B
-.db $E1, $C9, $21, $22, $02, $C3, $5A, $57
-.db $21, $24, $02, $C3, $5A, $57, $21, $26
-.db $02, $C3, $5A, $57, $21, $2E, $02, $C3
-.db $5A, $57, $21, $32, $02, $C3, $5A, $57
-.db $21, $18, $02, $C3, $5A, $57, $21, $14
-.db $02, $C3, $5A, $57, $3E, $2E, $32, $E6
-.db $C2, $CD, $FE, $5F, $21, $9C, $00, $CD
-.db $5A, $57, $CD, $19, $2D, $28, $08, $21
-.db $A2, $00, $CD, $5A, $57, $18, $1D, $3E
-.db $36, $CD, $2E, $28, $20, $10, $C5, $CD
-.db $7F, $27, $C1, $3E, $FF, $32, $11, $C5
-.db $21, $9E, $00, $C3, $5A, $57, $21, $A0
-.db $00, $CD, $5A, $57, $E1, $CD, $64, $34
-.db $CD, $DC, $15, $C3, $8C, $68, $21, $3E
-.db $02, $CD, $5A, $57, $CD, $19, $2D, $28
-.db $06, $21, $46, $02, $C3, $5A, $57, $3E
-.db $3A, $CD, $2E, $28, $20, $11, $CD, $7F
-.db $27, $3E, $2F, $32, $C4, $C2, $CD, $9F
-.db $27, $21, $44, $02, $C3, $5A, $57, $21
-.db $48, $02, $C3, $5A, $57, $3E, $31, $32
-.db $E6, $C2, $CD, $FE, $5F, $3A, $3B, $C4
-.db $47, $3E, $18, $B8, $28, $05, $CD, $2E
-.db $28, $20, $06, $21, $58, $02, $C3, $5A
-.db $57, $3A, $F0, $C4, $FE, $03, $30, $14
-.db $21, $5A, $02, $CD, $5A, $57, $CD, $19
-.db $2D, $21, $5E, $02, $28, $03, $21, $60
-.db $02, $C3, $5A, $57, $21, $4C, $02, $CD
-.db $5A, $57, $3A, $30, $C4, $B7, $20, $06
-.db $21, $A8, $02, $C3, $5A, $57, $21, $4E
-.db $02, $CD, $5A, $57, $CD, $64, $34, $3A
-.db $31, $C4, $F5, $3A, $00, $C4, $F5, $3A
-.db $10, $C4, $F5, $3A, $20, $C4, $F5, $AF
-.db $32, $00, $C4, $32, $10, $C4, $32, $20
-.db $C4, $CD, $0F, $10, $F1, $32, $20, $C4
-.db $F1, $32, $10, $C4, $F1, $32, $00, $C4
-.db $F1, $47, $3A, $31, $C4, $B7, $20, $0F
-.db $78, $32, $31, $C4, $3E, $01, $32, $30
-.db $C4, $21, $56, $02, $C3, $5A, $57, $21
-.db $50, $02, $CD, $5A, $57, $3E, $18, $32
-.db $C4, $C2, $C3, $9F, $27, $3E, $3E, $32
-.db $E6, $C2, $CD, $FE, $5F, $21, $62, $02
-.db $CD, $5A, $57, $CD, $64, $34, $CD, $EF
-.db $54, $3E, $FF, $32, $17, $C5, $21, $66
-.db $02, $C3, $5A, $57, $CD, $0F, $10, $3A
-.db $02, $C2, $FE, $02, $C0, $E1, $E1, $C9
-.db $3A, $16, $C5, $B7, $C2, $65, $47, $3E
-.db $48, $32, $E6, $C2, $CD, $FE, $5F, $21
-.db $6C, $02, $CD, $5A, $57, $CD, $19, $2D
-.db $21, $6E, $02, $28, $03, $21, $70, $02
-.db $CD, $5A, $57, $CD, $64, $34, $CD, $EF
-.db $54, $3E, $01, $32, $16, $C5, $21, $AA
-.db $02, $C3, $5A, $57, $21, $AA, $B7, $C3
-.db $CF, $31, $CD, $25, $2D, $CD, $E1, $1B
-.db $E1, $C9, $21, $69, $B5, $CD, $CF, $31
-.db $C3, $64, $34
+LABEL_4773:
+.dw	LABEL_48DF
+.dw	LABEL_48FC
+.dw	LABEL_4922
+.dw	LABEL_4928
+.dw	LABEL_492E
+.dw	LABEL_4934
+.dw	LABEL_493A
+.dw	LABEL_4940
+.dw LABEL_495A
+.dw	LABEL_4960
+.dw	LABEL_4966
+.dw	LABEL_4973
+.dw	LABEL_4991
+.dw	LABEL_4997
+.dw	LABEL_499D
+.dw	LABEL_49A3
+.dw LABEL_49A9
+.dw	LABEL_49AF
+.dw	LABEL_49B5
+.dw	LABEL_49B5
+.dw	LABEL_49E0
+.dw	LABEL_49E6
+.dw	LABEL_4A3E
+.dw	LABEL_4A44
+.dw LABEL_4A4A
+.dw	LABEL_4A50
+.dw	LABEL_4AA9
+.dw	LABEL_4ABE
+.dw	LABEL_4AD3
+.dw	LABEL_4B43
+.dw	LABEL_4B52
+.dw	LABEL_4B61
+.dw LABEL_4B67
+.dw	LABEL_4B6D
+.dw	LABEL_4B73
+.dw	LABEL_4B79
+.dw	LABEL_4B7F
+.dw	LABEL_4B85
+.dw	LABEL_4B8B
+.dw	LABEL_4B91
+.dw LABEL_4B97
+.dw	LABEL_4B9D
+.dw	LABEL_4BBD
+.dw	LABEL_4BD1
+.dw	LABEL_4BD7
+.dw	LABEL_4BDD
+.dw	LABEL_4BE3
+.dw	LABEL_4BE9
+.dw LABEL_4BEF
+.dw	LABEL_4BF5
+.dw	LABEL_4BFB
+.dw	LABEL_4C01
+.dw	LABEL_4C07
+.dw	LABEL_4C0D
+.dw	LABEL_4C70
+.dw	LABEL_4D74
+.dw LABEL_4D7A
+.dw	LABEL_4D9F
+.dw	LABEL_4DA5
+.dw	LABEL_4DAB
+.dw	LABEL_4DD4
+.dw	LABEL_4DFB
+.dw	LABEL_4E9C
+.dw	LABEL_4EB3
+.dw LABEL_4EB9
+.dw	LABEL_4EBF
+.dw	LABEL_4EC5
+.dw	LABEL_4ED9
+.dw	LABEL_4EDF
+.dw	LABEL_4EE5
+.dw	LABEL_4EEB
+.dw	LABEL_4EF1
+.dw LABEL_4EF7
+.dw	LABEL_4EFD
+.dw	LABEL_4F03
+.dw	LABEL_4F09
+.dw	LABEL_4F0F
+.dw	LABEL_4F15
+.dw	LABEL_4F34
+.dw	LABEL_4F3A
+.dw LABEL_4F40
+.dw	LABEL_4F46
+.dw	LABEL_4F4C
+.dw	LABEL_4F52
+.dw	LABEL_4F58
+.dw	LABEL_4F71
+.dw	LABEL_4F77
+.dw	LABEL_4F7D
+.dw LABEL_4F83
+.dw	LABEL_4F89
+.dw	LABEL_4F8F
+.dw	LABEL_4F95
+.dw	LABEL_4F9B
+.dw	LABEL_4FD8
+.dw	LABEL_4FDE
+.dw	LABEL_4FE4
+.dw LABEL_4FEA
+.dw	LABEL_4FF0
+.dw	LABEL_4FF6
+.dw	LABEL_4FFC
+.dw	LABEL_5002
+.dw	LABEL_5008
+.dw	LABEL_500E
+.dw	LABEL_5014
+.dw LABEL_501A
+.dw	LABEL_5020
+.dw	LABEL_5026
+.dw	LABEL_502C
+.dw	LABEL_5040
+.dw	LABEL_5046
+.dw	LABEL_504C
+.dw	LABEL_5058
+.dw LABEL_505E
+.dw	LABEL_5064
+.dw	LABEL_506A
+.dw	LABEL_5070
+.dw	LABEL_50A6
+.dw	LABEL_50BA
+.dw	LABEL_50C0
+.dw	LABEL_50C6
+.dw LABEL_50DA
+.dw	LABEL_5101
+.dw	LABEL_5107
+.dw	LABEL_510D
+.dw	LABEL_5157
+.dw	LABEL_516F
+.dw	LABEL_51B1
+.dw	LABEL_51D6
+.dw LABEL_51DC
+.dw	LABEL_521D
+.dw	LABEL_5249
+.dw	LABEL_5270
+.dw	LABEL_5284
+.dw	LABEL_528A
+.dw	LABEL_5290
+.dw	LABEL_52A4
+.dw LABEL_52B2
+.dw	LABEL_52B8
+.dw	LABEL_52BE
+.dw	LABEL_52C4
+.dw	LABEL_52CA
+.dw	LABEL_52D0
+.dw	LABEL_5337
+.dw	LABEL_4F8F
+.dw LABEL_4F95
+.dw	LABEL_4F9B
+.dw	LABEL_534B
+.dw	LABEL_5395
+.dw	LABEL_539B
+.dw	LABEL_53A1
+.dw	LABEL_53A7
+.dw	LABEL_53AD
+.dw LABEL_53B3
+.dw	LABEL_53B9
+.dw	LABEL_53BF
+.dw	LABEL_5401
+.dw	LABEL_5430
+.dw	LABEL_54D0
+.dw	LABEL_54FB
+.dw	LABEL_552F
+.dw LABEL_5535
+.dw	LABEL_5535
+.dw	LABEL_5538
+.dw	LABEL_5595
+.dw	LABEL_55A3
+.dw	LABEL_55A9
+.dw	LABEL_55BB
+.dw	LABEL_55CD
+.dw LABEL_55E1
+.dw	LABEL_55EF
+.dw	LABEL_5619
+.dw	LABEL_5666
+.dw	LABEL_569C
+.dw	LABEL_56A2
+.dw	LABEL_5535
+.dw	LABEL_5535
+.dw LABEL_56CD
+.dw	LABEL_56D3
+.dw	LABEL_56D9
+.dw	LABEL_56E9
+.dw	LABEL_56F9
+.dw	LABEL_5535
+
+
+LABEL_48DF:
+	ld hl, $C501
+	ld a, (hl)
+	or a
+	jr nz, +
+	ld (hl), $01
+	ld hl, $0002
+	call LABEL_575A
++:	
+	ld hl, $0006
+	call LABEL_575A
+	ld a, $C1
+	ld ($C004), a
+	jp LABEL_2A6D
+
+LABEL_48FC:
+	ld a, ($C502)
+	or a
+	jr nz, +
+	ld hl, $0008
+	call LABEL_575A
+	ld a, $38
+	ld ($C2C4), a
+	call LABEL_279F
+	ld a, $38
+	call LABEL_282E
+	jr nz, +
+	ld a, $01
+	ld ($C502), a
++:	
+	ld hl, $0010
+	jp LABEL_575A
+
+LABEL_4922:
+	ld	hl, $12
+	jp	LABEL_575A
+
+LABEL_4928:
+	ld	hl, $14
+	jp	LABEL_575A
+
+LABEL_492E:
+	ld	hl, $16
+	jp	LABEL_575A
+
+LABEL_4934:
+	ld	hl, $18
+	jp	LABEL_575A
+
+LABEL_493A:
+	ld	hl, $1A
+	jp	LABEL_575A
+
+LABEL_4940:
+	ld hl, $0062
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $0060
+	jr z, +
+	ld hl, $0003
+	ld ($C2C5), hl
+	ld hl, $0064
++:	
+	jp LABEL_575A
+
+LABEL_495A:
+	ld	hl, $1C
+	jp	LABEL_575A
+
+LABEL_4960:
+	ld	hl, $1E
+	jp	LABEL_575A
+
+LABEL_4966:
+	ld a, $33
+	call LABEL_282E
+	jr z, +
+	ld hl, $0020
+	jp LABEL_575A
+
+LABEL_4973:
+	ld a, $33
+	call LABEL_282E
+	jr z, +
+	ld hl, $0022
+	jp LABEL_575A
+
++:	
+	ld hl, $0024
+	call LABEL_575A
+	ld a, ($C309)
+	rrca
+	dec a
+	and $03
+	ld ($C2E9), a
+	ret
+
+LABEL_4991:
+	ld	hl, $26
+	jp	LABEL_575A
+
+LABEL_4997:
+	ld	hl, $28
+	jp	LABEL_575A
+
+LABEL_499D:
+	ld	hl, $2A
+	jp	LABEL_575A
+
+LABEL_49A3:
+	ld	hl, $2E
+	jp	LABEL_575A
+
+LABEL_49A9:
+	ld	hl, $30
+	jp	LABEL_575A
+
+LABEL_49AF:
+	ld	hl, $32
+	jp	LABEL_575A
+
+LABEL_49B5:
+	ld a, ($C504)
+	cp $07
+	jp nc, LABEL_4A8C
+	ld hl, $0070
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $0020
+	jr nz, +
+	ld a, $34
+	call LABEL_282E
+	ld hl, $00CE
+	jr nz, +
+	ld a, $06
+	ld ($C2E9), a
+	ld hl, $0024
++:	
+	jp LABEL_575A
+
+LABEL_49E0:
+	ld	hl, $286
+	jp	LABEL_575A
+
+LABEL_49E6:
+	ld a, $47
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld a, ($C410)
+	or a
+	jr z, +
+	ld hl, $0296
+	call LABEL_575A
+	call LABEL_2D19
+	jr nz, +
+	ld a, $AE
+	ld ($C004), a
+	ld a, $01
+	ld ($C2C2), a
+	ld hl, LABEL_B12_B728
+	call LABEL_31CF
+	ld hl, $0000
+	ld ($C410), hl
+	ld hl, $0298
+	jr ++
+
++:	
+	ld hl, $029A
+++:	
+	call LABEL_575A
+	call LABEL_3464
+	ld a, ($C4F0)
+	or a
+	jr z, +
+	ld a, $38
+	call LABEL_282E
+	jr z, +
+	ld hl, $C518
+	ld ($C2E1), hl
+	ld a, $38
+	ld ($C2DF), a
++:	
+	jp LABEL_5389
+
+LABEL_4A3E:
+	ld	hl, $6A
+	jp	LABEL_575A
+
+LABEL_4A44:
+	ld	hl, $6C
+	jp	LABEL_575A
+
+LABEL_4A4A:
+	ld	hl, $6E
+	jp	LABEL_575A
+
+LABEL_4A50:
+	ld a, ($C504)
+	cp $07
+	jr nc, LABEL_4A8C
+	ld hl, $0070
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $0020
+	jp LABEL_575A
+
++:	
+	ld a, $34
+	call LABEL_282E
+	jr z, +
+	ld hl, $00CE
+	jp LABEL_575A
+
++:	
+	ld hl, $0024
+	call LABEL_575A
+	ld a, ($C305)
+	cp $60
+	ld hl, LABEL_4AA3
+	jr nz, +
+	ld hl, LABEL_4AA6
++:	
+	call LABEL_787B
+	ret
+
+LABEL_4A8C:	
+	ld hl, $019E
+	call LABEL_575A
+	ld a, $34
+	call LABEL_282E
+	ret nz
+	push bc
+	call LABEL_277F
+	pop bc
+	ld hl, $01A0
+	jp LABEL_575A
+
+LABEL_4AA3:
+.db $05, $20, $17
+
+LABEL_4AA6:
+.db	$05, $21, $15
+
+LABEL_4AA9:
+	ld a, $33
+	call LABEL_282E
+	ld hl, $0020
+	jr nz, +
+	ld a, $04
+	ld ($C2E9), a
+	ld hl, $0024
++:	
+	jp LABEL_575A
+
+LABEL_4ABE:
+	ld a, $33
+	call LABEL_282E
+	ld hl, $0022
+	jr nz, +
+	ld a, $05
+	ld ($C2E9), a
+	ld hl, $0024
++:	
+	jp LABEL_575A
+
+LABEL_4AD3:
+	ld hl, $0072
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $007C
+	jp LABEL_575A
+
++:	
+	ld hl, $0074
+	call LABEL_575A
+	call LABEL_2D19
+	jr nz, +
+	ld hl, $007E
+	jp LABEL_575A
+
++:	
+	ld hl, $0076
+	call LABEL_575A
+	call LABEL_2D19
+	jr nz, +
+	ld hl, $007E
+	jp LABEL_575A
+
++:	
+	ld hl, $64
+	ld ($C2C5), hl
+	ld hl, $0078
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $007C
+	jp LABEL_575A
+
++:	
+	ld de, $0064
+	ld hl, ($C4E0)
+	or a
+	sbc hl, de
+	jr nc, +
+	ld hl, LABEL_B12_BD57
+	jp LABEL_31CF
+
++:	
+	ld ($C4E0), hl
+	ld hl, $007A
+	call LABEL_575A
+	ld a, $34
+	ld ($C2C4), a
+	call LABEL_282E
+	ret z
+	jp LABEL_279F
+
+LABEL_4B43:
+	ld a, ($C4F0)
+	or a
+	ld hl, $0034
+	jr z, +
+	ld hl, $003A
++:	
+	jp LABEL_575A
+
+LABEL_4B52:
+	ld a, ($C4F0)
+	or a
+	ld hl, $003C
+	jr z, +
+	ld hl, $0040
++:	
+	jp LABEL_575A
+
+LABEL_4B61:
+	ld	hl, $42
+	jp	LABEL_575A
+
+LABEL_4B67:
+	ld	hl, $44
+	jp	LABEL_575A
+
+LABEL_4B6D:
+	ld	hl, $46
+	jp	LABEL_575A
+
+LABEL_4B73:
+	ld	hl, $48
+	jp	LABEL_575A
+
+LABEL_4B79:
+	ld	hl, $4A
+	jp	LABEL_575A
+
+LABEL_4B7F:
+	ld	hl, $4C
+	jp	LABEL_575A
+
+LABEL_4B85:
+	ld	hl, $4E
+	jp	LABEL_575A
+
+LABEL_4B8B:
+	ld	hl, $50
+	jp	LABEL_575A
+
+LABEL_4B91:
+	ld	hl, $52
+	jp	LABEL_575A
+
+LABEL_4B97:
+	ld	hl, $54
+	jp	LABEL_575A
+
+LABEL_4B9D:
+	ld hl, $0056
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $0060
+	jr nz, ++
+	ld a, $2D
+	call LABEL_282E
+	jr z, +
+	ld hl, $C604
+	ld (hl), $00
++:	
+	ld hl, $0058
+++:	
+	jp LABEL_575A
+
+LABEL_4BBD:
+	ld hl, $005C
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $0060
+	jr z, +
+	ld hl, $005E
++:	
+	jp LABEL_575A
+
+LABEL_4BD1:
+	ld	hl, $80
+	jp	LABEL_575A
+
+LABEL_4BD7:
+	ld	hl, $82
+	jp	LABEL_575A
+
+LABEL_4BDD:
+	ld	hl, $84
+	jp	LABEL_575A
+
+LABEL_4BE3:
+	ld	hl, $86
+	jp	LABEL_575A
+
+LABEL_4BE9:
+	ld	hl, $88
+	jp	LABEL_575A
+
+LABEL_4BEF:
+	ld	hl, $8A
+	jp	LABEL_575A
+
+LABEL_4BF5:
+	ld	hl, $8C
+	jp	LABEL_575A
+
+LABEL_4BFB:
+	ld	hl, $8E
+	jp	LABEL_575A
+
+LABEL_4C01:
+	ld	hl, $90
+	jp	LABEL_575A
+
+LABEL_4C07:
+	ld	hl, $288
+	jp	LABEL_575A
+
+LABEL_4C0D:
+	ld a, ($C4F0)
+	or a
+	jr z, +
+	ld hl, $028A
+	jp LABEL_575A
+
++:	
+	ld hl, $000A
+	ld ($C2C5), hl
+	ld hl, $0092
+	call LABEL_575A
+	call LABEL_2D19
+	jr nz, +
+	ld hl, $0094
+	jp LABEL_575A
+
++:	
+	ld a, $38
+	call LABEL_282E
+	jr nz, +
+	push hl
+	ld hl, $0096
+	call LABEL_575A
+	call LABEL_2D19
+	pop hl
+	jr nz, +
+	push bc
+	call LABEL_277F
+	pop bc
+	ld hl, $009A
+	call LABEL_575A
+	call LABEL_3464
+	pop hl
+	ld iy, $C410
+	call LABEL_16F1
+	ld a, $01
+	ld ($C4F0), a
+	ld a, $2B
+	ld ($C2C4), a
+	call LABEL_279F
+	jp LABEL_43CF
+
++:	
+	ld hl, $007C
+	jp LABEL_575A
+
+LABEL_4C70:
+	ld a, ($C516)
+	or a
+	jr z, +
+	ld hl, $02A6
+	call LABEL_575A
+	call LABEL_3464
+	pop hl
+	ld hl, $22E6
+	ld ($C30C), hl
+	xor a
+	ld ($C30A), a
+	ld hl, $C202
+	ld (hl), $0B
+	call LABEL_661C
+	ld a, $85
+	jp LABEL_C97
+
++:	
+	ld a, $35
+	call LABEL_617D
+	call LABEL_576A
+	ld a, ($C4F0)
+	cp $03
+	jr nc, +
+	ld a, $37
+	call LABEL_282E
+	jr nz, ++
++:	
+	ld hl, $029E
+	call LABEL_575A
+	ld hl, $00AA
+	jp LABEL_575A
+
+++:	
+	ld hl, $00A4
+	call LABEL_575A
+	push bc
+	ld a, $37
+	ld ($C2C4), a
+	call LABEL_279F
+	pop bc
+	ld a, $37
+	call LABEL_282E
+	ret nz
+	ld hl, $029C
+	call LABEL_575A
+	call LABEL_7B05
+	call LABEL_3464
+	ld a, $20
+	ld ($C29E), a
+	call LABEL_3D47
+	ld a, $D0
+	ld ($C900), a
+	ld a, $0C
+	call LABEL_52
+	ld hl, LABEL_4D6C
+	ld de, $C240
+	ld bc, $0008
+	ldir
+	call LABEL_7B20
+	ld hl, $02A0
+	call LABEL_575A
+	call LABEL_3464
+	ld a, $A0
+	ld ($C004), a
+	call LABEL_2D47
+	ld a, $4A
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld a, ($C400)
+	push af
+	ld a, ($C410)
+	push af
+	ld a, ($C420)
+	push af
+	call LABEL_100F
+	pop af
+	ld ($C420), a
+	pop af
+	ld ($C410), a
+	pop af
+	ld ($C400), a
+	call LABEL_7B05
+	call LABEL_3D47
+	ld a, $D0
+	ld ($C900), a
+	ld a, $0C
+	call LABEL_52
+	call LABEL_7B20
+	ld hl, $02A2
+	call LABEL_575A
+	call LABEL_7B05
+	ld a, $1D
+	ld ($C29E), a
+	call LABEL_3D47
+	call LABEL_2A6D
+	ld a, $0C
+	call LABEL_52
+	call LABEL_7B20
+	ld a, $35
+	call LABEL_617D
+	call LABEL_576A
+	ld hl, $00AA
+	jp LABEL_575A
+
+LABEL_4D6C:
+.db	$00, $00, $3F, $00, $00, $00, $00
+.db $00
+
+LABEL_4D74:
+	ld	hl, $B4
+	jp	LABEL_575A
+
+LABEL_4D7A:
+	ld hl, $00B6
+	call LABEL_575A
+	call LABEL_7B05
+	call LABEL_3464
+	ld a, $A0
+	ld ($C004), a
+	call LABEL_2D47
+	call LABEL_2A6D
+	ld a, $C1
+	ld ($C004), a
+	call LABEL_7B20
+	ld hl, $00B8
+	jp LABEL_575A
+
+LABEL_4D9F:
+	ld	hl, $102
+	jp	LABEL_575A
+
+LABEL_4DA5:
+	ld	hl, $106
+	jp	LABEL_575A
+
+LABEL_4DAB:
+	ld hl, $00BA
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $00C2
+	jp LABEL_575A
+
++:	
+	ld a, $24
+	call LABEL_282E
+	jr nz, +
+	push bc
+	call LABEL_277F
+	pop bc
+	ld hl, $00BC
+	jp LABEL_575A
+
++:	
+	ld hl, $020E
+	jp LABEL_575A
+
+LABEL_4DD4:
+	ld hl, $00BA
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $00C2
+	jp LABEL_575A
+
++:	
+	ld a, $24
+	call LABEL_282E
+	jr nz, +
+	call LABEL_277F
+	ld hl, $00C4
+	jp LABEL_575A
+
++:	
+	ld hl, $020E
+	jp LABEL_575A
+
+LABEL_4DFB:
+	ld a, ($C504)
+	or a
+	jp z, LABEL_4765
+	ld a, $34
+	call LABEL_617D
+	call LABEL_576A
+	ld a, ($C504)
+	cp $07
+	jr c, +
+	ld hl, $00D8
+	jp LABEL_575A
+
++:	
+	cp $02
+	jr nc, +
+	ld hl, $00CA
+	jp LABEL_575A
+
++:	
+	cp $03
+	jr nc, ++
+	ld hl, $04B0
+	ld ($C2C5), hl
+	ld hl, $028C
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $00DA
+	jp LABEL_575A
+
++:	
+	ld de, $04B0
+	ld hl, ($C4E0)
+	or a
+	sbc hl, de
+	jr nc, +
+	ld hl, $00D0
+	jp LABEL_575A
+
++:	
+	ld ($C4E0), hl
+	ld a, $03
+	ld ($C504), a
+	ld hl, $0290
+	jp LABEL_575A
+
+++:	
+	cp $05
+	jr nc, +
+	inc a
+	ld ($C504), a
+	ld hl, $0292
+	jp LABEL_575A
+
++:	
+	cp $06
+	jr nc, +
+	inc a
+	ld ($C504), a
+	ld hl, $00D2
+	call LABEL_575A
+	ld a, $32
+	call LABEL_282E
+	jr z, ++
+	ld hl, $00D6
+	call LABEL_575A
++:	
+	ld a, $32
+	call LABEL_282E
+	jr z, ++
+	ld hl, $0104
+	jp LABEL_575A
+
+++:	
+	ld a, $07
+	ld ($C504), a
+	ld hl, $0294
+	jp LABEL_575A
+
+LABEL_4E9C:
+	ld hl, $C504
+	ld a, (hl)
+	cp $02
+	jp c, LABEL_4765
+	ld a, $10
+	call LABEL_617D
+	call LABEL_576A
+	ld hl, $00DC
+	jp LABEL_575A
+
+LABEL_4EB3:
+	ld	hl, $118
+	jp	LABEL_575A
+
+LABEL_4EB9:
+	ld	hl, $10E
+	jp	LABEL_575A
+
+LABEL_4EBF:
+	ld	hl, $112
+	jp	LABEL_575A
+
+LABEL_4EC5:
+	ld hl, $0114
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $0116
+	jr nz, +
+	ld hl, $013C
++:	
+	jp LABEL_575A
+
+LABEL_4ED9:
+	ld	hl, $10C
+	jp	LABEL_575A
+
+LABEL_4EDF:
+	ld	hl, $11C
+	jp	LABEL_575A
+
+LABEL_4EE5:
+	ld	hl, $11E
+	jp	LABEL_575A
+
+LABEL_4EEB:
+	ld	hl, $120
+	jp	LABEL_575A
+
+LABEL_4EF1:
+	ld	hl, $126
+	jp	LABEL_575A
+
+LABEL_4EF7:
+	ld	hl, $128
+	jp	LABEL_575A
+
+LABEL_4EFD:
+	ld	hl, $12E
+	jp	LABEL_575A
+
+LABEL_4F03:
+	ld	hl, $130
+	jp	LABEL_575A
+
+LABEL_4F09:
+	ld	hl, $132
+	jp	LABEL_575A
+
+LABEL_4F0F:
+	ld	hl, $134
+	jp	LABEL_575A
+
+LABEL_4F15:
+	ld hl, $013A
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $013C
+	jr z, ++
+	ld a, ($C507)
+	or a
+	jr nz, +
+	ld a, $01
+	ld ($C507), a
++:	
+	ld hl, $013E
+++:	
+	jp LABEL_575A
+
+LABEL_4F34:
+	ld	hl, $136
+	jp	LABEL_575A
+
+LABEL_4F3A:
+	ld	hl, $166
+	jp	LABEL_575A
+
+LABEL_4F40:
+	ld	hl, $168
+	jp	LABEL_575A
+
+LABEL_4F46:
+	ld	hl, $16A
+	jp	LABEL_575A
+
+LABEL_4F4C:
+	ld	hl, $16C
+	jp	LABEL_575A
+
+LABEL_4F52:
+	ld	hl, $170
+	jp	LABEL_575A
+
+LABEL_4F58:
+	ld hl, $0172
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $017C
+	jr nz, +
+	ld a, $01
+	ld ($C508), a
+	ld hl, $0174
++:	
+	jp LABEL_575A
+
+LABEL_4F71:
+	ld	hl, $17E
+	jp	LABEL_575A
+
+LABEL_4F77:
+	ld	hl, $180
+	jp	LABEL_575A
+
+LABEL_4F7D:
+	ld	hl, $184
+	jp	LABEL_575A
+
+LABEL_4F83:
+	ld	hl, $186
+	jp	LABEL_575A
+
+LABEL_4F89:
+	ld	hl, $188
+	jp	LABEL_575A
+
+LABEL_4F8F:
+	ld	hl, $18C
+	jp	LABEL_575A
+
+LABEL_4F95:
+	ld	hl, $190
+	jp	LABEL_575A
+
+LABEL_4F9B:
+	ld hl, $03E8
+	ld ($C2C5), hl
+	ld hl, $0194
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $019C
+	jp LABEL_575A
+
++:	
+	ld de, $03E8
+	ld hl, ($C4E0)
+	or a
+	sbc hl, de
+	jr nc, +
+	ld hl, $019A
+	jp LABEL_575A
+
++:	
+	ld ($C4E0), hl
+	ld hl, $0198
+	call LABEL_575A
+	ld a, $3B
+	ld ($C2C4), a
+	call LABEL_282E
+	ret z
+	jp LABEL_279F
+
+LABEL_4FD8:
+	ld	hl, $1A2
+	jp	LABEL_575A
+
+LABEL_4FDE:
+	ld	hl, $1A4
+	jp	LABEL_575A
+
+LABEL_4FE4:
+	ld	hl, $1A6
+	jp	LABEL_575A
+
+LABEL_4FEA:
+	ld	hl, $1AA
+	jp	LABEL_575A
+
+LABEL_4FF0:
+	ld	hl, $1B2
+	jp	LABEL_575A
+
+LABEL_4FF6:
+	ld	hl, $1B8
+	jp	LABEL_575A
+
+LABEL_4FFC:
+	ld	hl, $1BA
+	jp	LABEL_575A
+
+LABEL_5002:
+	ld	hl, $1BC
+	jp	LABEL_575A
+
+LABEL_5008:
+	ld	hl, $1BE
+	jp	LABEL_575A
+
+LABEL_500E:
+	ld	hl, $1C4
+	jp	LABEL_575A
+
+LABEL_5014:
+	ld	hl, $1C8
+	jp	LABEL_575A
+
+LABEL_501A:
+	ld	hl, $1CA
+	jp	LABEL_575A
+
+LABEL_5020:
+	ld	hl, $1CC
+	jp	LABEL_575A
+
+LABEL_5026:
+	ld	hl, $1D0
+	jp	LABEL_575A
+
+LABEL_502C:
+	ld hl, $01D6
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $01DA
+	jr z, +
+	ld hl, $01D8
++:	
+	jp LABEL_575A
+
+LABEL_5040:
+	ld	hl, $1DC
+	jp	LABEL_575A
+
+LABEL_5046:
+	ld	hl, $1DE
+	jp	LABEL_575A
+
+LABEL_504C:
+	ld hl, $000A
+	ld ($C2C5), hl
+	ld hl, $01E0
+	jp LABEL_575A
+
+LABEL_5058:
+	ld	hl, $1E2
+	jp	LABEL_575A
+
+LABEL_505E:
+	ld	hl, $1E4
+	jp	LABEL_575A
+
+LABEL_5064:
+	ld	hl, $1E6
+	jp	LABEL_575A
+
+LABEL_506A:
+	ld	hl, $1E8
+	jp	LABEL_575A
+
+LABEL_5070:
+	ld hl, $0190
+	ld ($C2C5), hl
+	ld hl, $01EA
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $01F0
+	jp LABEL_575A
+
++:	
+	ld de, $0190
+	ld hl, ($C4E0)
+	or a
+	sbc hl, de
+	jr nc, +
+	ld hl, $01F2
+	jp LABEL_575A
+
++:	
+	ld ($C4E0), hl
+	ld a, $01
+	ld ($C509), a
+	ld hl, $01F4
+	jp LABEL_575A
+
+LABEL_50A6:
+	ld hl, $01FA
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $01FC
+	jr z, +
+	ld hl, $01FE
++:	
+	jp LABEL_575A
+
+LABEL_50BA:
+	ld	hl, $200
+	jp	LABEL_575A
+
+LABEL_50C0:
+	ld	hl, $202
+	jp	LABEL_575A
+
+LABEL_50C6:
+	ld hl, $0204
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $0206
+	jr z, +
+	ld hl, $0208
++:	
+	jp LABEL_575A
+
+LABEL_50DA:
+	ld hl, $00BA
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $020C
+	jp LABEL_575A
+
++:	
+	ld a, $24
+	call LABEL_282E
+	jr nz, +
+	call LABEL_277F
+	ld hl, $020A
+	jp LABEL_575A
+
++:	
+	ld hl, $020E
+	jp LABEL_575A
+	
+
+LABEL_5101:
+	ld	hl, $210
+	jp	LABEL_575A
+
+LABEL_5107:
+	ld	hl, $26A
+	jp	LABEL_575A
+
+LABEL_510D:
+	ld hl, $0118
+	ld ($C2C5), hl
+	ld hl, $024A
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, LABEL_B12_B7E3
+	jp LABEL_31CF
+
++:	
+	ld de, $0118
+	ld hl, ($C4E0)
+	or a
+	sbc hl, de
+	jr nc, +
+	ld hl, LABEL_B12_BD57
+	jp LABEL_31CF
+
++:	
+	ld a, ($C4E2)
+	cp $18
+	jr c, +
+	ld hl, LABEL_B12_B813
+	jp LABEL_31CF
+
++:	
+	ld ($C4E0), hl
+	ld hl, $020A
+	call LABEL_575A
+	ld a, $36
+	ld ($C2C4), a
+	call LABEL_282E
+	ret z
+	jp LABEL_279F
+
+LABEL_5157:
+	ld a, $08
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld a, ($C4F0)
+	cp $03
+	ld hl, $00AC
+	jr nz, +
+	ld hl, $00B2
++:	
+	jp LABEL_575A
+
+LABEL_516F:
+	ld a, ($C4F0)
+	cp $03
+	jp nc, LABEL_4765
+	ld a, $3B
+	call LABEL_617D
+	call LABEL_576A
+	ld hl, $00AE
+	call LABEL_575A
+	ld a, $37
+	call LABEL_282E
+	ret nz
+	call LABEL_277F
+	pop hl
+	call LABEL_3464
+	call LABEL_2D25
+	ld a, $01
+	ld ($C506), a
+	ld iy, $C430
+	ld (iy+10), $01
+	ld (iy+11), $11
+	call LABEL_16F1
+	ld a, $03
+	ld ($C4F0), a
+	jp LABEL_4461
+
+LABEL_51B1:
+	ld hl, $C504
+	ld a, (hl)
+	cp $02
+	jp nc, LABEL_4765
+	ld a, $10
+	call LABEL_617D
+	call LABEL_576A
+	ld hl, $C504
+	ld a, (hl)
+	cp $01
+	ld de, $00DC
+	jr nz, +
+	ld (hl), $02
+	ld de, $00F6
++:	
+	ex de, hl
+	jp LABEL_575A
+
+LABEL_51D6:
+	ld	hl, $F8
+	jp	LABEL_575A
+
+LABEL_51DC:
+	ld a, ($C504)
+	or a
+	jp nz, LABEL_4765
+	ld a, $34
+	call LABEL_617D
+	call LABEL_576A
+	ld hl, $C503
+	ld a, (hl)
+	or a
+	jr nz, +
+	inc (hl)
+	ld hl, $00DE
+	jp LABEL_575A
+
++:	
+	cp $01
+	jr nz, +
+	inc (hl)
+	ld hl, $00E0
+	jp LABEL_575A
+
++:	
+	ld hl, $00E2
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $00D4
+	jr nz, +
+	ld hl, $C504
+	ld (hl), $01
+	ld hl, $00E4
++:	
+	jp LABEL_575A
+
+LABEL_521D:
+	ld a, $2E
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld hl, $00E6
+	call LABEL_575A
+	call LABEL_2D19
+	jr nz, +
+	ld a, $33
+	call LABEL_282E
+	jr nz, +
+	ld hl, $0024
+	jp LABEL_575A
+
++:	
+	ld hl, $00E8
+	call LABEL_575A
+	call LABEL_3464
+	jp LABEL_5389
+
+LABEL_5249:
+	ld hl, $00BA
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $00C2
+	jp LABEL_575A
+
++:	
+	ld a, $24
+	call LABEL_282E
+	jr nz, +
+	call LABEL_277F
+	ld hl, $00EA
+	jp LABEL_575A
+
++:	
+	ld hl, $00CE
+	jp LABEL_575A
+
+LABEL_5270:
+	ld hl, $00EC
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $013C
+	jr z, +
+	ld hl, $0124
++:	
+	jp LABEL_575A
+
+LABEL_5284:
+	ld	hl, $EE
+	jp	LABEL_575A
+
+LABEL_528A:
+	ld	hl, $F0
+	jp	LABEL_575A
+
+LABEL_5290:
+	ld hl, $00F2
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $014C
+	jr z, +
+	ld hl, $013C
++:	
+	jp LABEL_575A
+
+LABEL_52A4:
+	ld a, $16
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld hl, $00F4
+	jp LABEL_575A
+
+LABEL_52B2:
+	ld	hl, $FC
+	jp	LABEL_575A
+
+LABEL_52B8:
+	ld	hl, $FE
+	jp	LABEL_575A
+
+LABEL_52BE:
+	ld	hl, $100
+	jp	LABEL_575A
+
+LABEL_52C4:
+	ld	hl, $10A
+	jp	LABEL_575A
+
+LABEL_52CA:
+	ld	hl, $21A
+	jp	LABEL_575A
+
+LABEL_52D0:
+	ld hl, $0148
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+
+LABEL_52DB:	
+	ld hl, $0152
+	jp LABEL_575A
+
++:	
+	ld hl, $014E
+	call LABEL_575A
+	ld hl, $0150
+	call LABEL_575A
+	call LABEL_2D19
+	jr nz, LABEL_52DB
+	ld hl, $014E
+	call LABEL_575A
+	ld hl, $0154
+	call LABEL_575A
+	call LABEL_2D19
+	jr nz, LABEL_52DB
+	ld hl, $014E
+	call LABEL_575A
+	ld hl, $0156
+	call LABEL_575A
+	call LABEL_2D19
+	jr nz, +
+	ld hl, $0158
+	jp LABEL_575A
+
++:	
+	ld hl, $015A
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, LABEL_52DB
+	ld hl, $015C
+	call LABEL_575A
+	ld a, $3C
+	ld ($C2C4), a
+	call LABEL_282E
+	ret z
+	jp LABEL_279F
+
+LABEL_5337:
+	ld hl, $0160
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $0162
+	jr z, +
+	ld hl, $0164
++:	
+	jp LABEL_575A
+
+LABEL_534B:
+	ld a, $2E
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld hl, $021C
+	call LABEL_575A
+	call LABEL_2D19
+	jr nz, +
+	ld a, $33
+	call LABEL_282E
+	jr nz, +
+	ld hl, $021E
+	call LABEL_575A
+	call LABEL_3464
+	pop hl
+	ld hl, $159C
+	ld ($C30C), hl
+	ld a, $01
+	ld ($C30A), a
+	ld hl, $C202
+	ld (hl), $0A
+	ret
+
++:	
+	ld hl, $00E8
+	call LABEL_575A
+	call LABEL_3464
+LABEL_5389:	
+	call LABEL_100F
+	ld a, ($C800)
+	or a
+	call nz, LABEL_1BE1
+	pop hl
+	ret
+
+LABEL_5395:
+	ld	hl, $222
+	jp	LABEL_575A
+
+LABEL_539B:
+	ld	hl, $224
+	jp	LABEL_575A
+
+LABEL_53A1:
+	ld	hl, $226
+	jp	LABEL_575A
+
+LABEL_53A7:
+	ld	hl, $22E
+	jp	LABEL_575A
+
+LABEL_53AD:
+	ld	hl, $232
+	jp	LABEL_575A
+
+LABEL_53B3:
+	ld	hl, $218
+	jp	LABEL_575A
+
+LABEL_53B9:
+	ld	hl, $214
+	jp	LABEL_575A
+
+LABEL_53BF:
+	ld a, $2E
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld hl, $009C
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $00A2
+	call LABEL_575A
+	jr ++
+
++:	
+	ld a, $36
+	call LABEL_282E
+	jr nz, +
+	push bc
+	call LABEL_277F
+	pop bc
+	ld a, $FF
+	ld ($C511), a
+	ld hl, $009E
+	jp LABEL_575A
+
++:	
+	ld hl, $00A0
+	call LABEL_575A
+++:	
+	pop hl
+	call LABEL_3464
+	call LABEL_15DC
+	jp LABEL_688C
+
+LABEL_5401:
+	ld hl, $023E
+	call LABEL_575A
+	call LABEL_2D19
+	jr z, +
+	ld hl, $0246
+	jp LABEL_575A
+
++:	
+	ld a, $3A
+	call LABEL_282E
+	jr nz, +
+	call LABEL_277F
+	ld a, $2F
+	ld ($C2C4), a
+	call LABEL_279F
+	ld hl, $0244
+	jp LABEL_575A
+
++:	
+	ld hl, $0248
+	jp LABEL_575A
+
+LABEL_5430:
+	ld a, $31
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld a, ($C43B)
+	ld b, a
+	ld a, $18
+	cp b
+	jr z, +
+	call LABEL_282E
+	jr nz, ++
++:	
+	ld hl, $0258
+	jp LABEL_575A
+
+++:	
+	ld a, ($C4F0)
+	cp $03
+	jr nc, ++
+	ld hl, $025A
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $025E
+	jr z, +
+	ld hl, $0260
++:	
+	jp LABEL_575A
+
+++:	
+	ld hl, $024C
+	call LABEL_575A
+	ld a, ($C430)
+	or a
+	jr nz, +
+	ld hl, $02A8
+	jp LABEL_575A
+
++:	
+	ld hl, $024E
+	call LABEL_575A
+	call LABEL_3464
+	ld a, ($C431)
+	push af
+	ld a, ($C400)
+	push af
+	ld a, ($C410)
+	push af
+	ld a, ($C420)
+	push af
+	xor a
+	ld ($C400), a
+	ld ($C410), a
+	ld ($C420), a
+	call LABEL_100F
+	pop af
+	ld ($C420), a
+	pop af
+	ld ($C410), a
+	pop af
+	ld ($C400), a
+	pop af
+	ld b, a
+	ld a, ($C431)
+	or a
+	jr nz, +
+	ld a, b
+	ld ($C431), a
+	ld a, $01
+	ld ($C430), a
+	ld hl, $0256
+	jp LABEL_575A
+
++:	
+	ld hl, $0250
+	call LABEL_575A
+	ld a, $18
+	ld ($C2C4), a
+	jp LABEL_279F
+
+LABEL_54D0:
+	ld a, $3E
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld hl, $0262
+	call LABEL_575A
+	call LABEL_3464
+	call LABEL_54EF
+	ld a, $FF
+	ld ($C517), a
+	ld hl, $0266
+	jp LABEL_575A
+	
+LABEL_54EF:	
+	call LABEL_100F
+	ld a, ($C202)
+	cp $02
+	ret nz
+	pop hl
+	pop hl
+	ret
+
+LABEL_54FB:
+	ld a, ($C516)
+	or a
+	jp nz, LABEL_4765
+	ld a, $48
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld hl, $026C
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $026E
+	jr z, +
+	ld hl, $0270
++:	
+	call LABEL_575A
+	call LABEL_3464
+	call LABEL_54EF
+	ld a, $01
+	ld ($C516), a
+	ld hl, $02AA
+	jp LABEL_575A
+
+LABEL_552F:
+	ld	hl, LABEL_B12_B7AA
+	jp	LABEL_31CF
+
+LABEL_5535:
+	call	LABEL_2D25
+
+LABEL_5538:
+	call LABEL_1BE1
+	pop hl
+	ret
+
+LABEL_553D:	
+	ld hl, LABEL_B12_B569
+	call LABEL_31CF
+	jp LABEL_3464
 
 LABEL_5546:
-.db	$3E, $32, $32, $C4, $C2
-.db $CD, $2E, $28, $28, $ED, $CD, $64, $34
-.db $21, $01, $C8, $34, $CD, $6A, $57, $CD
-.db $25, $2D, $21, $2C, $01, $CD, $5A, $57
-.db $C3, $9F, $27
+	ld a, $32
+	ld ($C2C4), a
+	call LABEL_282E
+	jr z, LABEL_553D
+	call LABEL_3464
+	ld hl, $C801
+	inc (hl)
+	call LABEL_576A
+	call LABEL_2D25
+	ld hl, $012C
+	call LABEL_575A
+	jp LABEL_279F
 
 LABEL_5566:
-.db	$3A, $08, $C5, $B7, $28
-.db $D1, $3E, $32, $32, $C4, $C2, $CD, $2E
-.db $28, $20, $C7, $3E, $22, $32, $C4, $C2
-.db $CD, $2E, $28, $28, $BD, $21, $78, $01
-.db $CD, $5A, $57, $CD, $64, $34, $C3, $9F
-.db $27
+	ld a, ($C508)
+	or a
+	jr z, LABEL_553D
+	ld a, $32
+	ld ($C2C4), a
+	call LABEL_282E
+	jr nz, LABEL_553D
+	ld a, $22
+	ld ($C2C4), a
+	call LABEL_282E
+	jr z, LABEL_553D
+	ld hl, $0178
+	call LABEL_575A
+	call LABEL_3464
+	jp LABEL_279F
 
 LABEL_558C:
-.db	$21, $FA, $00, $CD, $5A, $57, $C3
-.db $64, $34, $3E, $2B, $32, $E6, $C2, $CD
-.db $FE, $5F, $21, $34, $02, $C3, $5A, $57
-.db $21, $34, $02, $C3, $5A, $57, $3E, $1B
-.db $32, $E6, $C2, $CD, $FE, $5F, $AF, $32
-.db $C3, $CB, $21, $38, $02, $C3, $5A, $57
-.db $3E, $26, $32, $E6, $C2, $CD, $FE, $5F
-.db $E1, $21, $00, $00, $22, $DD, $C2, $C3
-.db $0F, $10, $21, $28, $02, $CD, $5A, $57
-.db $CD, $19, $2D, $21, $2C, $02, $28, $03
-.db $21, $2A, $02, $C3, $5A, $57, $3E, $08
-.db $32, $E6, $C2, $CD, $FE, $5F, $21, $12
-.db $02, $C3, $5A, $57, $3A, $04, $C5, $FE
-.db $07, $30, $06, $21, $82, $02, $C3, $5A
-.db $57, $21, $84, $02, $CD, $5A, $57, $3A
-.db $01, $C3, $FE, $40, $21, $13, $56, $30
-.db $03, $21, $16, $56, $CD, $7B, $78, $C9
-.db $07, $1B, $1B, $07, $1B, $1D, $3E, $93
-.db $32, $04, $C0, $CD, $47, $2D, $3E, $1F
-.db $32, $9E, $C2, $CD, $47, $3D, $21, $FF
-.db $FF, $36, $13, $21, $00, $80, $11, $50
-.db $C2, $01, $10, $00, $ED, $B0, $3E, $0C
-.db $CD, $52, $00, $CD, $20, $7B, $3E, $49
-.db $32, $E6, $C2, $CD, $FE, $5F, $CD, $33
-.db $2D, $3E, $20, $32, $9E, $C2, $CD, $EF
-.db $54, $CD, $64, $34, $3A, $00, $C4, $B7
-.db $20, $09, $21, $64, $BF, $CD, $CF, $31
-.db $CD, $64, $34, $CD, $05, $7B, $3E, $1D
-.db $32, $9E, $C2, $CD, $47, $3D, $3E, $0C
-.db $CD, $52, $00, $CD, $20, $7B, $3E, $35
-.db $CD, $7D, $61, $CD, $6A, $57, $21, $72
-.db $02, $CD, $5A, $57, $CD, $19, $2D, $21
-.db $12, $02, $28, $03, $21, $30, $02, $CD
-.db $5A, $57, $CD, $64, $34, $E1, $C3, $4E
-.db $45, $21, $A4, $02, $C3, $5A, $57, $3A
-.db $F0, $C2, $57, $1E, $00, $7B, $32, $C2
-.db $C2, $CB, $1A, $D5, $21, $28, $B7, $DC
-.db $CF, $31, $D1, $1C, $7B, $FE, $04, $20
-.db $EC, $06, $04, $78, $3D, $CD, $7D, $18
-.db $20, $05, $10, $F7, $C3, $02, $16, $C3
-.db $64, $34, $21, $3A, $02, $C3, $5A, $57
-.db $21, $7A, $02, $C3, $5A, $57, $21, $CE
-.db $BD, $CD, $CF, $31, $CD, $19, $2D, $C0
-.db $3E, $81, $32, $E9, $C2, $C9, $21, $E6
-.db $BD, $CD, $CF, $31, $CD, $19, $2D, $C0
-.db $3E, $82, $32, $E9, $C2, $C9, $21, $54
-.db $B7, $CD, $CF, $31, $C5, $CD, $21, $3A
-.db $CB, $61, $C1, $C0, $57, $3A, $09, $C3
-.db $0F, $0F, $0F, $E6, $03, $5F, $BA, $20
-.db $14, $B7, $21, $99, $B7, $28, $09, $3D
-.db $21, $90, $B7, $28, $03, $21, $85, $B7
-.db $CD, $CF, $31, $18, $D1, $7A, $B7, $21
-.db $7B, $B7, $28, $09, $3D, $21, $6F, $B7
-.db $28, $03, $21, $61, $B7, $D5, $CD, $CF
-.db $31, $CD, $19, $2D, $D1, $20, $B7, $7B
-.db $87, $83, $82, $16, $00, $5F, $21, $52
-.db $57, $19, $7E, $32, $E9, $C2, $C9, $81
+	ld hl, $00FA
+	call LABEL_575A
+	jp LABEL_3464
+
+LABEL_5595:
+	ld a, $2B
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld hl, $0234
+	jp LABEL_575A
+
+LABEL_55A3:
+	ld	hl, $234
+	jp	LABEL_575A
+
+LABEL_55A9:
+	ld a, $1B
+	ld ($C2E6), a
+	call LABEL_5FFE
+	xor a
+	ld ($CBC3), a
+	ld hl, $0238
+	jp LABEL_575A
+
+LABEL_55BB:
+	ld a, $26
+	ld ($C2E6), a
+	call LABEL_5FFE
+	pop hl
+	ld hl, $0000
+	ld ($C2DD), hl
+	jp LABEL_100F
+
+LABEL_55CD:
+	ld hl, $0228
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $022C
+	jr z, +
+	ld hl, $022A
++:	
+	jp LABEL_575A
+
+LABEL_55E1:
+	ld a, $08
+	ld ($C2E6), a
+	call LABEL_5FFE
+	ld hl, $0212
+	jp LABEL_575A
+
+LABEL_55EF:
+	ld a, ($C504)
+	cp $07
+	jr nc, +
+	ld hl, $0282
+	jp LABEL_575A
+
++:	
+	ld hl, $0284
+	call LABEL_575A
+	ld a, ($C301)
+	cp $40
+	ld hl, LABEL_5613
+	jr nc, +
+	ld hl, LABEL_5616
++:	
+	call LABEL_787B
+	ret
+		
+LABEL_5613:
+.db $07, $1B, $1B
+
+LABEL_5616:
+.db	$07, $1B, $1D
+
+LABEL_5619:
+	ld a, $93
+	ld ($C004), a
+	call LABEL_2D47
+	ld a, $1F
+	ld ($C29E), a
+	call LABEL_3D47
+	ld hl, $FFFF
+	ld (hl), :Bank19
+	ld hl, LABEL_B19_8000
+	ld de, $C250
+	ld bc, $0010
+	ldir
+	ld a, $0C
+	call LABEL_52
+	call LABEL_7B20
+	ld a, $49
+	ld ($C2E6), a
+	call LABEL_5FFE
+	call LABEL_2D33
+	ld a, $20
+	ld ($C29E), a
+	call LABEL_54EF
+	call LABEL_3464
+	ld a, ($C400)
+	or a
+	jr nz, LABEL_5666
+	ld hl, LABEL_B12_BF64
+	call LABEL_31CF
+	call LABEL_3464
+
+LABEL_5666:
+	call LABEL_7B05
+	ld a, $1D
+	ld ($C29E), a
+	call LABEL_3D47
+	ld a, $0C
+	call LABEL_52
+	call LABEL_7B20
+	ld a, $35
+	call LABEL_617D
+	call LABEL_576A
+	ld hl, $0272
+	call LABEL_575A
+	call LABEL_2D19
+	ld hl, $0212
+	jr z, +
+	ld hl, $0230
++:	
+	call LABEL_575A
+	call LABEL_3464
+	pop hl
+	jp LABEL_454E
+
+LABEL_569C:
+	ld	hl, $2A4
+	jp	LABEL_575A
+
+LABEL_56A2:
+	ld a, ($C2F0)
+	ld d, a
+	ld e, $00
+-:	
+	ld a, e
+	ld ($C2C2), a
+	rr d
+	push de
+	ld hl, LABEL_B12_B728
+	call c, LABEL_31CF
+	pop de
+	inc e
+	ld a, e
+	cp $04
+	jr nz, -
+	ld b, $04
+-:	
+	ld a, b
+	dec a
+	call LABEL_187D
+	jr nz, +
+	djnz -
+	jp LABEL_1602
+
++:	
+	jp LABEL_3464
+
+LABEL_56CD:
+	ld	hl, $23A
+	jp	LABEL_575A
+
+LABEL_56D3:
+	ld	hl, $27A
+	jp	LABEL_575A
+
+LABEL_56D9:
+	ld hl, LABEL_B12_BDCE
+	call LABEL_31CF
+	call LABEL_2D19
+	ret nz
+	ld a, $81
+	ld ($C2E9), a
+	ret
+
+LABEL_56E9:
+	ld hl, LABEL_B12_BDE6
+	call LABEL_31CF
+	call LABEL_2D19
+	ret nz
+	ld a, $82
+	ld ($C2E9), a
+	ret
+
+LABEL_56F9:
+	ld hl, LABEL_B12_B754
+	call LABEL_31CF
+	push bc
+	call LABEL_3A21
+	bit 4, c
+	pop bc
+	ret nz
+	ld d, a
+	ld a, ($C309)
+	rrca
+	rrca
+	rrca
+	and $03
+	ld e, a
+	cp d
+	jr nz, ++
+	or a
+	ld hl, LABEL_B12_B799
+	jr z, +
+	dec a
+	ld hl, LABEL_B12_B790
+	jr z, +
+	ld hl, LABEL_B12_B785
++:	
+	call LABEL_31CF
+	jr LABEL_56F9
+
+++:	
+	ld a, d
+	or a
+	ld hl, LABEL_B12_B77B
+	jr z, +
+	dec a
+	ld hl, LABEL_B12_B76F
+	jr z, +
+	ld hl, LABEL_B12_B761
++:	
+	push de
+	call LABEL_31CF
+	call LABEL_2D19
+	pop de
+	jr nz, LABEL_56F9
+	ld a, e
+	add a, a
+	add a, e
+	add a, d
+	ld d, $00
+	ld e, a
+	ld hl, LABEL_5752
+	add hl, de
+	ld a, (hl)
+	ld ($C2E9), a
+	ret
+
+LABEL_5752:
+.db	$81
 .db $83, $84, $85, $82, $86, $87, $88
 
 LABEL_575A:
-.db	$3E
-.db $02, $32, $FF, $FF, $11, $FE, $7F, $19
-.db $7E, $23, $66, $6F, $C3, $D4, $31
+	ld a, :Bank02
+	ld ($FFFF), a
+	ld de, $7FFE
+	add hl, de
+	ld a, (hl)
+	inc hl
+	ld h, (hl)
+	ld l, a
+	jp LABEL_31D4
 
 LABEL_576A:
 	ld   hl, $C289
@@ -10151,7 +11745,7 @@ LABEL_5791:
 	and  $7F
 	jr   z, LABEL_57B1
 	push	bc
-	ld   hl, $5825
+	ld   hl, LABEL_5827-2
 	call	LABEL_E6
 	pop  bc
 	or   a
@@ -10240,11 +11834,43 @@ LABEL_580E:
 	ret
 
 
-; Data from 5818 to 5852 (59 bytes)
-.db $FD, $E5, $E1, $23, $5D, $54, $13, $AF, $77, $01, $1E, $00, $ED, $B0, $C9, $9F
-.db $59, $D4, $59, $E0, $59, $E5, $59, $F1, $59, $F6, $59, $02, $5A, $07, $5A, $4F
-.db $5A, $70, $5A, $87, $5B, $CE, $5B, $63, $5C, $99, $5C, $A0, $5D, $2B, $5E, $2E
-.db $5E, $72, $5E, $AE, $5E, $EA, $5E, $30, $5D, $5B, $5D
+LABEL_5818:
+	push iy
+	pop hl
+	inc hl
+	ld e, l
+	ld d, h
+	inc de
+	xor a
+	ld (hl), a
+	ld bc, $001E
+	ldir
+	ret
+
+
+LABEL_5827:
+.dw	LABEL_599F
+.dw	LABEL_59D4
+.dw	LABEL_59E0
+.dw	LABEL_59E5
+.dw	LABEL_59F1
+.dw	LABEL_59F6
+.dw	LABEL_5A02
+.dw	LABEL_5A07
+.dw	LABEL_5A4F
+.dw	LABEL_5A70
+.dw	LABEL_5B87
+.dw	LABEL_5BCE
+.dw	LABEL_5C63
+.dw	LABEL_5C99
+.dw	LABEL_5DA0
+.dw	LABEL_5E2B
+.dw	LABEL_5E2E
+.dw	LABEL_5E72
+.dw	LABEL_5EAE
+.dw	LABEL_5EEA
+.dw	LABEL_5D30
+.dw	LABEL_5D5B
 
 LABEL_5853:
 	ld   l, (iy+1)
@@ -10313,7 +11939,7 @@ LABEL_595E:
 .ENDR
 	ret
 
-	
+LABEL_599F:	
 .db	$06, $01, $C5, $CD
 .db $18, $58, $FD, $34, $00, $C1, $FD, $36
 .db $02, $60, $3A, $EA, $C2, $E6, $03, $3E
@@ -10321,13 +11947,34 @@ LABEL_595E:
 .db $FD, $36, $12, $01, $FD, $70, $01, $FD
 .db $36, $11, $01, $79, $B7, $3E, $00, $20
 .db $02, $3E, $03, $FD, $77, $0A, $3E, $FF
-.db $C9, $11, $13, $5A, $21, $17, $5A, $CD
-.db $98, $5A, $3E, $FF, $C9, $06, $02, $C3
-.db $A1, $59, $11, $27, $5A, $21, $2B, $5A
-.db $CD, $98, $5A, $3E, $FF, $C9, $06, $03
-.db $C3, $A1, $59, $11, $13, $5A, $21, $17
-.db $5A, $CD, $98, $5A, $3E, $FF, $C9, $06
-.db $04, $C3, $A1, $59, $11, $3B, $5A, $21
+.db $C9
+
+LABEL_59D4:
+.db	$11, $13, $5A, $21, $17, $5A, $CD
+.db $98, $5A, $3E, $FF, $C9
+
+LABEL_59E0:
+.db	$06, $02, $C3
+.db $A1, $59
+
+LABEL_59E5:
+.db	$11, $27, $5A, $21, $2B, $5A
+.db $CD, $98, $5A, $3E, $FF, $C9
+
+LABEL_59F1:
+.db	$06, $03
+.db $C3, $A1, $59
+
+LABEL_59F6:
+.db	$11, $13, $5A, $21, $17
+.db $5A, $CD, $98, $5A, $3E, $FF, $C9
+
+LABEL_5A02:
+.db	$06
+.db $04, $C3, $A1, $59
+
+LABEL_5A07:
+.db	$11, $3B, $5A, $21
 .db $3F, $5A, $CD, $98, $5A, $3E, $FF, $C9
 .db $01, $00, $09, $0C, $05, $06, $07, $06
 .db $02, $03, $04, $03, $08, $09, $0A, $09
@@ -10336,11 +11983,17 @@ LABEL_595E:
 .db $07, $08, $09, $08, $0A, $0B, $0C, $0B
 .db $01, $00, $0E, $0F, $05, $06, $07, $06
 .db $02, $03, $04, $03, $08, $09, $0A, $0A
-.db $0B, $0C, $0D, $0D, $CD, $18, $58, $FD
+.db $0B, $0C, $0D, $0D
+
+LABEL_5A4F:
+.db	$CD, $18, $58, $FD
 .db $34, $00, $FD, $36, $02, $60, $FD, $36
 .db $04, $80, $FD, $36, $01, $05, $3A, $0E
 .db $C3, $D6, $04, $FD, $77, $10, $FD, $36
-.db $11, $01, $3E, $FF, $C9, $CD, $76, $5A
+.db $11, $01, $3E, $FF, $C9
+
+LABEL_5A70:
+.db	$CD, $76, $5A
 .db $3E, $FF, $C9, $CD, $43, $71, $3A, $64
 .db $C2, $E6, $0F, $C8, $0E, $FF, $0F, $0C
 .db $D2, $81, $5A, $21, $94, $5A, $06, $00
@@ -10375,7 +12028,10 @@ LABEL_595E:
 .db $FE, $02, $D2, $7B, $5B, $B7, $20, $01
 .db $3D, $FD, $86, $02, $FD, $77, $02, $C9
 .db $D6, $02, $20, $01, $3D, $FD, $86, $04
-.db $FD, $77, $04, $C9, $FD, $7E, $0A, $F5
+.db $FD, $77, $04, $C9
+
+LABEL_5B87:
+.db	$FD, $7E, $0A, $F5
 .db $CD, $18, $58, $F1, $FD, $34, $00, $21
 .db $FF, $FF, $36, $12, $87, $5F, $87, $83
 .db $5F, $16, $00, $21, $F1, $5B, $19, $7E
@@ -10384,7 +12040,10 @@ LABEL_595E:
 .db $77, $0F, $23, $3A, $94, $C8, $FD, $77
 .db $02, $3A, $95, $C8, $FD, $77, $04, $7E
 .db $23, $66, $6F, $11, $00, $74, $CD, $FA
-.db $03, $AF, $C9, $CD, $D4, $5B, $3E, $FF
+.db $03, $AF, $C9
+
+LABEL_5BCE:
+.db	$CD, $D4, $5B, $3E, $FF
 .db $C9, $FD, $35, $0E, $F0, $FD, $7E, $18
 .db $FD, $77, $0E, $FD, $7E, $01, $3C, $FD
 .db $BE, $0F, $30, $04, $FD, $77, $01, $C9
@@ -10403,13 +12062,18 @@ LABEL_595E:
 .db $A4, $03, $75, $7A, $44, $B2, $A8, $03
 .db $20, $29, $BC, $A3, $A9, $03, $28, $32
 .db $E0, $A5, $AA, $03, $31, $3A, $FD, $A7
+
+LABEL_5C63:
 .db $CD, $18, $58, $FD, $34, $00, $FD, $36
 .db $02, $58, $FD, $36, $04, $60, $FD, $36
 .db $01, $3A, $FD, $36, $0E, $07, $CD, $B1
 .db $05, $47, $0E, $3D, $3A, $E0, $C2, $B7
 .db $28, $0E, $FE, $F0, $30, $03, $B8, $38
 .db $07, $0F, $0E, $3E, $30, $02, $0E, $43
-.db $FD, $71, $0F, $3E, $FF, $C9, $CD, $9F
+.db $FD, $71, $0F, $3E, $FF, $C9
+
+LABEL_5C99:
+.db	$CD, $9F
 .db $5C, $3E, $FF, $C9, $FD, $CB, $0A, $46
 .db $C8, $FD, $CB, $0A, $4E, $20, $1B, $FD
 .db $35, $0E, $F0, $FD, $36, $0E, $07, $FD
@@ -10428,21 +12092,31 @@ LABEL_595E:
 .db $01, $3D, $FD, $36, $00, $00, $C9, $FD
 .db $7E, $01, $3C, $FD, $77, $01, $FE, $47
 .db $D8, $CD, $C4, $7B, $FD, $36, $01, $3D
-.db $FD, $36, $00, $00, $C9, $CD, $18, $58
+.db $FD, $36, $00, $00, $C9
+
+LABEL_5D30:
+.db	$CD, $18, $58
 .db $FD, $34, $00, $3A, $09, $C3, $FE, $17
 .db $3E, $84, $11, $D0, $88, $20, $05, $3E
 .db $88, $11, $50, $30, $FD, $72, $02, $FD
 .db $73, $04, $FD, $77, $01, $FD, $77, $0F
 .db $3E, $B9, $32, $04, $C0, $3E, $FF, $C9
+
+LABEL_5D5B:
 .db $CD, $61, $5D, $3E, $FF, $C9, $FD, $35
 .db $0E, $F0, $FD, $36, $0E, $07, $FD, $7E
 .db $0D, $FD, $34, $0D, $E6, $03, $FD, $86
 .db $0F, $FD, $77, $01, $3A, $09, $C3, $FE
 .db $17, $28, $11, $FD, $35, $04, $FD, $35
 .db $02, $FD, $7E, $04, $FE, $90, $C0, $FD
-.db $36, $00, $00, $C9, $FD, $34, $02, $FD
+.db $36, $00, $00, $C9
+
+.db	$FD, $34, $02, $FD
 .db $7E, $02, $FE, $78, $28, $F1, $E6, $07
-.db $C0, $FD, $35, $04, $C9, $CD, $A7, $5D
+.db $C0, $FD, $35, $04, $C9
+
+LABEL_5DA0:
+.db	$CD, $A7, $5D
 .db $FD, $7E, $01, $C9, $3A, $9F, $C2, $B7
 .db $C8, $3A, $00, $C8, $B7, $C0, $FD, $35
 .db $0E, $F0, $FD, $7E, $18, $FD, $77, $0E
@@ -10458,9 +12132,16 @@ LABEL_595E:
 .db $0D, $3A, $E6, $C2, $FE, $48, $28, $12
 .db $3E, $11, $32, $00, $C8, $C9, $3A, $ED
 .db $C2, $B7, $20, $06, $3E, $BB, $32, $04
-.db $C0, $C9, $3E, $AE, $32, $04, $C0, $CD
+.db $C0, $C9
+
+.db	$3E, $AE, $32, $04, $C0, $CD
 .db $C4, $7B, $3A, $EE, $C2, $C3, $A1, $2F
-.db $3E, $FF, $C9, $CD, $18, $58, $FD, $34
+
+LABEL_5E2B:
+.db $3E, $FF, $C9
+
+LABEL_5E2E:
+.db	$CD, $18, $58, $FD, $34
 .db $00, $21, $FF, $FF, $36, $0B, $3A, $8A
 .db $C8, $CB, $77, $21, $A2, $5E, $28, $03
 .db $21, $A8, $5E, $7E, $32, $04, $C0, $23
@@ -10468,7 +12149,10 @@ LABEL_595E:
 .db $01, $23, $7E, $FD, $77, $0F, $23, $3A
 .db $96, $C8, $FD, $77, $02, $3A, $97, $C8
 .db $FD, $77, $04, $7E, $23, $66, $6F, $11
-.db $00, $74, $CD, $FA, $03, $AF, $C9, $CD
+.db $00, $74, $CD, $FA, $03, $AF, $C9
+
+LABEL_5E72:
+.db	$CD
 .db $78, $5E, $3E, $FF, $C9, $FD, $35, $0E
 .db $F0, $FD, $7E, $18, $FD, $77, $0E, $FD
 .db $7E, $01, $3C, $FD, $BE, $0F, $30, $04
@@ -10476,14 +12160,20 @@ LABEL_595E:
 .db $E1, $3A, $EF, $C2, $E6, $80, $CA, $1D
 .db $5E, $3E, $BB, $32, $04, $C0, $C9, $A8
 .db $03, $46, $4F, $01, $99, $A9, $03, $79
-.db $82, $F0, $9A, $CD, $B5, $5E, $FD, $7E
+.db $82, $F0, $9A
+
+LABEL_5EAE:
+.db	$CD, $B5, $5E, $FD, $7E
 .db $01, $C9, $3A, $9F, $C2, $B7, $C8, $FD
 .db $35, $0E, $F0, $FD, $7E, $18, $FD, $77
 .db $0E, $21, $FF, $FF, $36, $03, $3A, $EE
 .db $C2, $B7, $11, $F6, $94, $28, $0F, $3D
 .db $11, $06, $95, $28, $09, $3D, $11, $11
 .db $95, $28, $03, $11, $1C, $95, $FD, $4E
-.db $0D, $69, $26, $00, $C3, $D8, $5D, $CD
+.db $0D, $69, $26, $00, $C3, $D8, $5D
+
+LABEL_5EEA:
+.db	$CD
 .db $F1, $5E, $FD, $7E, $01, $C9, $3A, $9F
 .db $C2, $B7, $C8, $FD, $7E, $0C, $FE, $02
 .db $30, $25, $FD, $35, $0B, $F0, $FD, $36
@@ -12589,7 +14279,10 @@ LABEL_7908:
 .db $00, $47, $38, $00, $66, $55, $00, $25, $42, $00, $14, $0F, $00, $41, $1A, $00
 .db $66, $75, $00, $38, $66, $01, $27, $64, $01, $53, $73, $01, $27, $64, $01, $71
 .db $5A, $01, $26, $29, $02, $5B, $2C, $02, $38, $49, $02, $5B, $2C, $02, $38, $49
-.db $00, $16, $6A, $21, $09, $10, $22, $1B, $C2, $18, $06
+.db $00, $16, $6A
+
+LABEL_7AFD:
+.db	$21, $09, $10, $22, $1B, $C2, $18, $06
 
 LABEL_7B05:
 	ld   hl, $2009
