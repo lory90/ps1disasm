@@ -17,6 +17,8 @@ BANKS 32
 
 .EMPTYFILL $FF
 
+.include "ps1.constants.asm"	
+
 .BANK 0 SLOT 0
 .ORG $0000
 Bank00:
@@ -29,9 +31,9 @@ _START:
 
 _RST_08H:
 	ld   a, e
-	out  ($BF), a
+	out  (Port_VDPAddress), a
 	ld   a, d
-	out  ($BF), a
+	out  (Port_VDPAddress), a
 	ret
 
 .db $FF
@@ -55,7 +57,7 @@ _RST_30H:
 _RST_38H:
 _IRQ_HANDLER:
 	push	af
-	in   a, ($BF)
+	in   a, (Port_VDPStatus)
 	jp   VBlank
 
 
@@ -197,7 +199,7 @@ VBlank:
 	push	af
 	ld   a, $80
 	ld   ($FFFC), a
-	in   a, ($DD)
+	in   a, (Port_IOPort2)
 	and  $10
 	ld   hl, $C20B
 	ld   c, (hl)
@@ -256,20 +258,20 @@ LABEL_159:
 
 LABEL_15F:
 	ld	a, ($C300)
-	out ($BF), a
+	out (Port_VDPAddress), a
 	ld	a, $88
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, ($C304)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $89
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	call	LABEL_588B
 	call	LABEL_7B40
 	call	LABEL_7BEE
 	ld	hl, $C220
 	ld	de, $C000
 	rst	$08
-	ld	c, $BE
+	ld	c, Port_VDPData
 	call	LABEL_595E
 	call	LABEL_63A5
 	call	LABEL_2E5
@@ -295,13 +297,13 @@ LABEL_1A7:
 
 LABEL_1AD:
 	ld	a, ($C300)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $88
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, ($C304)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $89
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	call	LABEL_588B
 	call	LABEL_63A5
 	call	LABEL_339
@@ -311,13 +313,13 @@ LABEL_1AD:
 
 LABEL_1D1:
 	ld	a, ($C300)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $88
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, ($C304)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $89
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	call	LABEL_588B
 	call	LABEL_63A5
 	call	LABEL_2E5
@@ -325,19 +327,19 @@ LABEL_1D1:
 
 LABEL_1EF:
 	ld	a, ($C300)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $88
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, ($C304)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $89
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	hl, $D000
 	xor a
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $78
-	out	($BF), a
-	ld	c, $BE
+	out	(Port_VDPAddress), a
+	ld	c, Port_VDPData
 	call	LABEL_589E
 	call	LABEL_589E
 	call	LABEL_589E
@@ -357,13 +359,13 @@ LABEL_226:
 
 LABEL_235:
 	ld	a, ($C300)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $88
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, ($C304)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $89
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	call	LABEL_588B
 	call	LABEL_7C18
 	call	LABEL_61F5
@@ -375,25 +377,25 @@ LABEL_235:
 
 LABEL_25F:
 	ld	a, ($C300)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $88
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, ($C304)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $89
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	call	LABEL_588B
 	ld	hl, $C220
 	ld	de, $C000
 	rst	$08
-	ld	c, $BE
+	ld	c, Port_VDPData
 	call	LABEL_595E
 	ld	hl, $D000
 	xor	a
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $78
-	out	($BF), a
-	ld	c, $BE
+	out	(Port_VDPAddress), a
+	ld	c, Port_VDPData
 	ld	a, $06
 	ld	b, 0
 LABEL_290:
@@ -406,25 +408,25 @@ LABEL_290:
 
 LABEL_29F:
 	ld	a, ($C300)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $88
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, ($C304)
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $89
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	call	LABEL_588B
 	ld	hl, $C220
 	ld	de, $C000
 	rst	$08
-	ld	c, $BE
+	ld	c, Port_VDPData
 	call	LABEL_595E
 	ld	hl, $D000
 	xor	a
-	out	($BF), a
+	out	(Port_VDPAddress), a
 	ld	a, $78
-	out	($BF), a
-	ld	c, $BE
+	out	(Port_VDPAddress), a
+	ld	c, Port_VDPData
 	ld	a, $07
 	ld	b, 0
 LABEL_2D0:
@@ -472,16 +474,16 @@ LABEL_2FD:
 LABEL_318:
 	ld   hl, $0000
 LABEL_31B:
-	in   a, ($BF)
+	in   a, (Port_VDPStatus)
 	or   a
 	jp   p, LABEL_31B
 LABEL_321:
-	in   a, ($BF)
+	in   a, (Port_VDPStatus)
 	or   a
 	jp   p, LABEL_321
 LABEL_327:
 	inc  hl
-	in   a, ($BF)
+	in   a, (Port_VDPStatus)
 	or   a
 	jp   p, LABEL_327
 	xor  a
@@ -493,7 +495,7 @@ LABEL_327:
 
 
 LABEL_339:
-	in	a, ($DC)
+	in	a, (Port_IOPort1)
 	ld	hl, $C204
 	cpl
 	ld	b, a
@@ -513,7 +515,7 @@ LABEL_346:
 LABEL_34C:
 	ld   a, b
 	ld   b, c
-	ld   c, $BE
+	ld   c, Port_VDPData
 LABEL_350:
 	outi
 	jp   nz, LABEL_350
@@ -535,11 +537,11 @@ LABEL_363:
 	inc  b
 LABEL_369:
 	ld   a, l
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, h
-	out  ($BE), a
+	out  (Port_VDPData), a
 	dec  c
 	jr   nz, LABEL_369
 	djnz	LABEL_369
@@ -624,7 +626,7 @@ LABEL_3DA:
 -
 	rst	$08
 	ld	a, (hl)
-	out	($BE), a
+	out	(Port_VDPData), a
 	jp	z, +
 	inc	hl
 +
@@ -665,7 +667,7 @@ LABEL_412:
 	di
 	rst  $08
 	ld   a, (hl)
-	out  ($BE), a
+	out  (Port_VDPData), a
 	ei
 	jp   z, LABEL_41C
 	inc  hl
@@ -6412,7 +6414,7 @@ LABEL_2E62:
 	ex de, hl
 	rst $08
 	ld a, c
-	out ($BE), a
+	out (Port_VDPData), a
 	ld hl, ($C269)
 	ld a, ($C26B)
 	ld ($C26C), a
@@ -6432,7 +6434,7 @@ LABEL_2E62:
 	jr nz, +
 	ld a, c
 +:	
-	out ($BE), a
+	out (Port_VDPData), a
 	ret
 
 LABEL_2EAC:
@@ -6573,7 +6575,7 @@ LABEL_2FE1:
 	ld   b, $08
 LABEL_2FE7:
 	ld   a, (hl)
-	out  ($BE), a
+	out  (Port_VDPData), a
 	inc  hl
 	djnz	LABEL_2FE7
 	pop  af
@@ -6609,11 +6611,11 @@ LABEL_3011:
 	push	af
 	pop  af
 	ld   a, $F3
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $13
-	out  ($BE), a
+	out  (Port_VDPData), a
 	pop  de
 	ld   hl, $0040
 	add  hl, de
@@ -6631,7 +6633,7 @@ LABEL_3036:
 	ld   b, $0C
 LABEL_303C:
 	ld   a, (hl)
-	out  ($BE), a
+	out  (Port_VDPData), a
 	inc  hl
 	djnz	LABEL_303C
 	pop  hl
@@ -6683,11 +6685,11 @@ LABEL_3082:
 	push	af
 	pop  af
 	ld   a, $F3
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $13
-	out  ($BE), a
+	out  (Port_VDPData), a
 	pop  de
 	ld   hl, $0040
 	add  hl, de
@@ -6787,11 +6789,11 @@ LABEL_315C:
 	push	af
 	pop  af
 	ld   a, $F3
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $11
-	out  ($BE), a
+	out  (Port_VDPData), a
 	ld   b, $08
 LABEL_316F:
 	ld   a, (hl)
@@ -6805,21 +6807,21 @@ LABEL_316F:
 	sub  e
 	ld   d, a
 	ld   a, (de)
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $10
-	out  ($BE), a
+	out  (Port_VDPData), a
 	inc  hl
 	djnz	LABEL_316F
 	push	af
 	pop  af
 	ld   a, $F3
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $13
-	out  ($BE), a
+	out  (Port_VDPData), a
 	pop  de
 	ld   hl, $0040
 	add  hl, de
@@ -7053,11 +7055,11 @@ LABEL_3302:
 	push	af
 	pop  af
 	ld   a, $C0
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $10
-	out  ($BE), a
+	out  (Port_VDPData), a
 	ld   a, $40
 	add  a, e
 	ld   e, a
@@ -7067,11 +7069,11 @@ LABEL_3302:
 	rst  $08
 	pop  af
 	add  a, $C1
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $10
-	out  ($BE), a
+	out  (Port_VDPData), a
 	pop  de
 	inc  de
 	inc  de
@@ -7212,11 +7214,11 @@ LABEL_33D6:
 	sub  c
 	ld   b, a
 	ld   a, (bc)
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $10
-	out  ($BE), a
+	out  (Port_VDPData), a
 	ex   de, hl
 	ld   bc, $0040
 	add  hl, bc
@@ -7232,11 +7234,11 @@ LABEL_33D6:
 	sub  c
 	ld   b, a
 	ld   a, (bc)
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $10
-	out  ($BE), a
+	out  (Port_VDPData), a
 	inc  hl
 	pop  de
 	inc  de
@@ -7457,11 +7459,11 @@ LABEL_356B:
 	push	af
 	pop  af
 	ld   a, $F3
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $11
-	out  ($BE), a
+	out  (Port_VDPData), a
 	ld   b, $08
 LABEL_3588:
 	ld   a, (hl)
@@ -7475,21 +7477,21 @@ LABEL_3588:
 	sub  e
 	ld   d, a
 	ld   a, (de)
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $10
-	out  ($BE), a
+	out  (Port_VDPData), a
 	inc  hl
 	djnz	LABEL_3588
 	push	af
 	pop  af
 	ld   a, $F3
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $13
-	out  ($BE), a
+	out  (Port_VDPData), a
 	pop  de
 	ld   hl, $0040
 	add  hl, de
@@ -7519,7 +7521,7 @@ LABEL_35C9:
 	ld   hl, LABEL_3639
 LABEL_35CC:
 	ld   a, (hl)
-	out  ($BE), a
+	out  (Port_VDPData), a
 	inc  hl
 	djnz	LABEL_35CC
 	ld   hl, ($C4E0)
@@ -7577,11 +7579,11 @@ LABEL_3620:
 	push	af
 	pop  af
 	ld   a, $F3
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, $13
-	out  ($BE), a
+	out  (Port_VDPData), a
 	pop  de
 	ld   hl, $0040
 	add  hl, de
@@ -7601,11 +7603,11 @@ LABEL_3645:
 	ld   bc, $C110
 LABEL_364D:
 	add  a, b
-	out  ($BE), a
+	out  (Port_VDPData), a
 	push	af
 	pop  af
 	ld   a, c
-	out  ($BE), a
+	out  (Port_VDPData), a
 	ret
 
 
@@ -7972,11 +7974,11 @@ LABEL_38D9:
 	push af
 	pop af
 	ld a, $F3
-	out ($BE), a
+	out (Port_VDPData), a
 	push af
 	pop af
 	ld a, $11
-	out ($BE), a
+	out (Port_VDPData), a
 	ld b, $08
 -:	
 	ld a, (hl)
@@ -7990,11 +7992,11 @@ LABEL_38D9:
 	sub e
 	ld d, a
 	ld a, (de)
-	out ($BE), a
+	out (Port_VDPData), a
 	push af
 	pop af
 	ld a, $10
-	out ($BE), a
+	out (Port_VDPData), a
 	inc hl
 	djnz -
 	ld a, c
@@ -8006,11 +8008,11 @@ LABEL_397D:
 	push af
 	pop af
 	ld a, $C0
-	out ($BE), a
+	out (Port_VDPData), a
 	push af
 	pop af
 	ld a, $10
-	out ($BE), a
+	out (Port_VDPData), a
 	djnz LABEL_397D
 	pop hl
 	inc hl
@@ -8927,13 +8929,13 @@ LABEL_414F:
 	ex de, hl
 	rst $08
 	ld a, b
-	out ($BE), a
+	out (Port_VDPData), a
 	ld hl, $FFC0
 	add hl, de
 	ex de, hl
 	rst $08
 	ld a, c
-	out ($BE), a
+	out (Port_VDPData), a
 	ret
 
 LABEL_4166:
@@ -13446,7 +13448,7 @@ LABEL_641B:
 	rr e
 	ld hl, LABEL_B16_A8F6
 	add hl, de
-	ld bc, $8000|$BE
+	ld bc, $8000|Port_VDPData
 -:	
 	outi
 	jp nz, -
@@ -13491,7 +13493,7 @@ LABEL_6442:
 	ld bc, LABEL_B17_8000
 	ex de, hl
 	add hl, bc
-	ld bc, $8000|$BE
+	ld bc, $8000|Port_VDPData
 -:	
 	outi
 	jp nz, -
@@ -13511,7 +13513,7 @@ LABEL_6442:
 	ld bc, LABEL_B17_8000
 	ex de, hl
 	add hl, bc
-	ld bc, $4000|$BE
+	ld bc, $4000|Port_VDPData
 -:	
 	outi
 	jp nz, -
@@ -13542,7 +13544,7 @@ LABEL_64A3:
 	ld d, $00
 	ld hl, LABEL_65C6
 	add hl, de
-	ld bc, $0300|$BE
+	ld bc, $0300|Port_VDPData
 -:	
 	outi
 	jp nz, -
@@ -13570,7 +13572,7 @@ LABEL_64CF:
 	ld d, $00
 	ld hl, LABEL_65CE
 	add hl, de
-	ld bc, $0400|$BE
+	ld bc, $0400|Port_VDPData
 -:	
 	outi
 	jp nz, -
@@ -14359,9 +14361,9 @@ LABEL_6AFC:
 LABEL_6B1C:
 	di
 	xor  a
-	out  ($BF), a
+	out  (Port_VDPAddress), a
 	ld   a, d
-	out  ($BF), a
+	out  (Port_VDPAddress), a
 	ei
 	call	LABEL_6B8E
 	pop  hl
@@ -14460,7 +14462,7 @@ LABEL_6B98:
 	dec  hl
 	dec  hl
 	dec  hl
-	out  ($BE), a
+	out  (Port_VDPData), a
 	jp   nz, LABEL_6B98
 	inc  hl
 	inc  hl
@@ -14482,7 +14484,7 @@ LABEL_6BB5:
 	outi
 	push	af
 	pop  af
-	out  ($BE), a
+	out  (Port_VDPData), a
 	jp   nz, LABEL_6BB5
 	jp   LABEL_6B90
 
@@ -15478,7 +15480,7 @@ LABEL_73D0:
 	ld l, a
 	ld d, $78
 	ld h, $D0
-	ld bc, $1C00|$BE
+	ld bc, $1C00|Port_VDPData
 -:	
 	push bc
 	rst $08
@@ -15527,7 +15529,7 @@ LABEL_73D0:
 	ld a, h
 	add a, $D0
 	ld h, a
-	ld bc, $4000|$BE
+	ld bc, $4000|Port_VDPData
 -:	
 	outi
 	nop
@@ -15811,7 +15813,7 @@ LABEL_74E4:
 	ld d, a
 	ld hl, LABEL_7AB9
 	di
-	ld bc, $0200|$BE
+	ld bc, $0200|Port_VDPData
 --:	
 	push bc
 	rst $08
@@ -16795,7 +16797,7 @@ LABEL_7C18:
 	ld b, $00
 	add hl, bc
 	rst $08
-	ld bc, $0300|$BE
+	ld bc, $0300|Port_VDPData
 -:	
 	outi
 	jp nz, -
@@ -19168,7 +19170,7 @@ Bank11:
 Bank12:
 
 ; Data from 30000 to 33FFF (16384 bytes)
-.include "banks\bank12.asm"
+.include "sound\sound_driver.asm"
 
 
 .BANK 13
