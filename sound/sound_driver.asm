@@ -1,4 +1,4 @@
-LABEL_B12_8000:
+Snd_InitDriver:
 	push hl
 	push de
 	push bc
@@ -22,7 +22,7 @@ LABEL_B12_8000:
 	pop de
 	pop hl
 
-LABEL_B12_801F:
+Snd_SilencePSG:
 	push hl
 	push bc
 	ld hl, LABEL_B12_803B
@@ -46,7 +46,7 @@ LABEL_B12_803B:
 .db	$80, $00, $A0, $00, $C0
 .db $00, $E5, $FF
 
-LABEL_B12_8043:
+Snd_UpdateAll:
 	ld hl, $C00C
 	exx
 	call LABEL_B12_80C9
@@ -176,7 +176,7 @@ LABEL_B12_80F0:
 
 +:	
 	or a
-	jp p, LABEL_B12_8000
+	jp p, Snd_InitDriver
 	ld a, ($C006)
 	or a
 	ret z
@@ -241,7 +241,7 @@ LABEL_B12_8155:
 
 
 LABEL_B12_8196:	
-	call LABEL_B12_801F
+	call Snd_SilencePSG
 	ld a, ($C005)
 	ld ($C002), a
 	ld a, $80
@@ -428,7 +428,7 @@ LABEL_B12_82E5:
 LABEL_B12_82EF:	
 	ld a, ($C004)
 	bit 7, a
-	jp z, LABEL_B12_8000
+	jp z, Snd_InitDriver
 	cp $A0
 	jr c, LABEL_B12_832F
 	cp $D0
@@ -436,7 +436,7 @@ LABEL_B12_82EF:
 	cp $D5
 	jp c, +
 	cp $DA
-	jp nc, LABEL_B12_8000
+	jp nc, Snd_InitDriver
 	sub $D5
 	add a, a
 	ld c, a
@@ -490,12 +490,12 @@ LABEL_B12_832F:
 	djnz -
 +:	
 	call LABEL_B12_802D
-	call LABEL_B12_801F
+	call Snd_SilencePSG
 	pop af
 	ld de, $C14E
 	or a
 	jp m, +
-	call LABEL_B12_8000
+	call Snd_InitDriver
 	ld de, $C06E
 +:	
 	ld hl, LABEL_B12_8253
@@ -522,7 +522,7 @@ LABEL_B12_8389:
 	cp $A0
 	jr z, +++
 	push bc
-	call LABEL_B12_8000
+	call Snd_InitDriver
 	pop bc
 	ld de, $C06E
 	jr LABEL_B12_83F4

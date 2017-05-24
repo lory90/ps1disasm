@@ -17,7 +17,7 @@ BANKS 32
 
 .EMPTYFILL $FF
 
-.include "ps1.constants.asm"	
+.include "ps1.constants.asm"
 
 .BANK 0 SLOT 0
 .ORG $0000
@@ -127,45 +127,45 @@ MainSetup:
 	ld   (hl), l	; clear byte in $C000
 	ldir			; then do the rest (until bc = 0)
 
-	call	LABEL_2ED
+	call	CallSndInit
 	call	LABEL_3A4
 	call	LABEL_318
 	call	LABEL_7DA
 	ei
 
 MainGameLoop:
-	ld   hl, $C202
+	ld   hl, Game_mode
 	ld   a, (hl)
 	and  $1F
-	ld   hl, LABEL_BE
-	call	LABEL_E6
+	ld   hl, GameModeTbl
+	call	GetPtrFromHL
 	jp   MainGameLoop
 
 
-LABEL_BE:
-.dw	LABEL_5D0
-.dw	LABEL_5D0
-.dw	LABEL_74D
-.dw	LABEL_5D6
-.dw	LABEL_A5C
-.dw	LABEL_86F
-.dw	LABEL_B07
-.dw	LABEL_B07
-.dw LABEL_B6A
-.dw	LABEL_B08
-.dw	LABEL_F7D
-.dw	LABEL_F3C
-.dw	LABEL_3C52
-.dw	LABEL_3B9C
-.dw	LABEL_ED7
-.dw	LABEL_E8B
-.dw LABEL_4034
-.dw	LABEL_3EB9
-.dw	LABEL_467C
-.dw	LABEL_467C
+GameModeTbl:
+.dw	GameMode_InitIntro	; 0
+.dw	GameMode_InitIntro	; 1
+.dw	GameMode_LoadIntro	; 2
+.dw	GameMode_Intro	; 3
+.dw	LABEL_A5C	; 4
+.dw	LABEL_86F	; 5
+.dw	LABEL_B07	; 6
+.dw	LABEL_B07	; 7
+.dw GameMode_LoadMap	; 8
+.dw	GameMode_Map	; 9
+.dw	GameMode_LoadDungeon	; $A
+.dw	GameMode_Dungeon	; $B
+.dw	GameMode_LoadInteraction	; $C
+.dw	GameMode_Interaction	; $D
+.dw	LABEL_ED7	; $E
+.dw	LABEL_E8B	; $F
+.dw GameMode_LoadNameInput	; $10
+.dw	GameMode_NameInput	; $11
+.dw	LABEL_467C	; $12
+.dw	LABEL_467C	; $13
 
 
-LABEL_E6:
+GetPtrFromHL:
 	add  a, a
 	add  a, l
 	ld   l, a
@@ -180,7 +180,7 @@ LABEL_E6:
 
 
 LABEL_F1:
-	call	LABEL_2F5
+	call	CallSndMute
 -
 	ld	a, ($C212)
 	or	a
@@ -274,7 +274,7 @@ LABEL_15F:
 	ld	c, Port_VDPData
 	call	LABEL_595E
 	call	LABEL_63A5
-	call	LABEL_2E5
+	call	CallSndUpdate
 	jp	LABEL_143
 
 LABEL_18F:
@@ -292,7 +292,7 @@ LABEL_18F:
 .dw LABEL_15F
 
 LABEL_1A7:
-	call	LABEL_2E5
+	call	CallSndUpdate
 	jp	LABEL_143
 
 LABEL_1AD:
@@ -306,9 +306,9 @@ LABEL_1AD:
 	out	(Port_VDPAddress), a
 	call	LABEL_588B
 	call	LABEL_63A5
-	call	LABEL_339
+	call	ReadJoypad
 	call	LABEL_2E62
-	call	LABEL_2E5
+	call	CallSndUpdate
 	jp	LABEL_143
 
 LABEL_1D1:
@@ -322,7 +322,7 @@ LABEL_1D1:
 	out	(Port_VDPAddress), a
 	call	LABEL_588B
 	call	LABEL_63A5
-	call	LABEL_2E5
+	call	CallSndUpdate
 	jp	LABEL_143
 
 LABEL_1EF:
@@ -354,7 +354,7 @@ LABEL_226:
 	jp	nz, LABEL_226
 	dec	a
 	jp	nz, LABEL_226
-	call	LABEL_2E5
+	call	CallSndUpdate
 	jp	LABEL_143
 
 LABEL_235:
@@ -371,8 +371,8 @@ LABEL_235:
 	call	LABEL_61F5
 	call	LABEL_73D0
 	call	LABEL_62BC
-	call	LABEL_339
-	call	LABEL_2E5
+	call	ReadJoypad
+	call	CallSndUpdate
 	jp	LABEL_143
 
 LABEL_25F:
@@ -403,7 +403,7 @@ LABEL_290:
 	jp	nz, LABEL_290
 	dec	a
 	jp	nz, LABEL_290
-	call	LABEL_2E5
+	call	CallSndUpdate
 	jp	LABEL_143
 
 LABEL_29F:
@@ -434,28 +434,28 @@ LABEL_2D0:
 	jp	nz, LABEL_2D0
 	dec	a
 	jp	nz, LABEL_2D0
-	call	LABEL_2E5
+	call	CallSndUpdate
 	jp	LABEL_143
 
 LABEL_2DF:
-	call	LABEL_2F5
+	call	CallSndMute
 	jp   LABEL_147
 
 
-LABEL_2E5:
+CallSndUpdate:
 	ld	hl, $FFFF
 	ld	(hl), :Bank12
-	jp	LABEL_B12_8043
+	jp	Snd_UpdateAll
 
-LABEL_2ED:
+CallSndInit:
 	ld   hl, $FFFF
 	ld   (hl), :Bank12
-	jp   LABEL_B12_8000
+	jp   Snd_InitDriver
 
-LABEL_2F5:
+CallSndMute:
 	ld   hl, $FFFF
 	ld   (hl), :Bank12
-	jp   LABEL_B12_801F
+	jp   Snd_SilencePSG
 
 
 LABEL_2FD:
@@ -494,9 +494,9 @@ LABEL_327:
 	ret
 
 
-LABEL_339:
+ReadJoypad:
 	in	a, (Port_IOPort1)
-	ld	hl, $C204
+	ld	hl, Ctrl_1
 	cpl
 	ld	b, a
 	xor	(hl)
@@ -1048,12 +1048,12 @@ LABEL_5C8:
 	ret
 
 
-LABEL_5D0:
-	ld	hl, $C202
+GameMode_InitIntro:
+	ld	hl, Game_mode
 	ld	(hl), $02
 	ret
 
-LABEL_5D6:
+GameMode_Intro:
 	ld	hl, $7C12
 	ld	($C269), hl
 	ld	a, $01
@@ -1068,7 +1068,7 @@ LABEL_5E8:
 	ld	bc, $3FF
 	ld	(hl), l
 	ldir
-	ld	iy, $C400
+	ld	iy, Char_stats
 	ld	(iy+$0A), $02
 	ld	(iy+$0B), $10
 	call	LABEL_16F1
@@ -1085,9 +1085,9 @@ LABEL_5E8:
 	ld	($C305), hl
 	ld	($C311), hl
 	ld	hl, 0
-	ld	($C4E0), hl
+	ld	(Money_owned), hl
 	call	LABEL_42AC
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $08
 	ret
 
@@ -1113,7 +1113,7 @@ LABEL_64D:
 	di
 	call	LABEL_35A
 	ei
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $08
 	ld	hl, $FFFF
 	ld	(hl), :Bank16
@@ -1156,7 +1156,7 @@ LABEL_678:
 	ld	a, ($C316)
 	cp	$0B
 	ret	nz
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $0A
 	ret
 
@@ -1211,7 +1211,7 @@ LABEL_6C5:
 	ldir
 	ld	a, $80
 	ld	($FFFC), a
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $02
 	ret
 
@@ -1230,13 +1230,13 @@ LABEL_73A:
 	ld	($FFFC), a
 	ret
 
-LABEL_74D:
+GameMode_LoadIntro:
 	call	LABEL_7B05
 	di
 	call	LABEL_3E
-	call	LABEL_2ED
+	call	CallSndInit
 	call	LABEL_35A
-	ld	hl, $C202
+	ld	hl, Game_mode
 	inc	(hl)
 	ld	hl, $258
 	ld	($C20E), hl
@@ -1345,8 +1345,8 @@ LABEL_86F:
 	call	nz, LABEL_F1
 	ld	a, $0E
 	call	LABEL_52
-	ld	a, ($C205)
-	and	$30
+	ld	a, (Ctrl_1_pressed)
+	and	Button_1_Mask|Button_2_Mask
 	jr	nz, _f
 	call	LABEL_998
 	ld	hl, ($C2F2)
@@ -1413,15 +1413,15 @@ __
 	call	nz, LABEL_F1
 	ld	a, $0E
 	call	LABEL_52
-	ld	a, ($C205)
-	and	$30
+	ld	a, (Ctrl_1_pressed)
+	and	Button_1_Mask|Button_2_Mask
 	jr	nz, +
 	call	LABEL_9E9
 	ld	a, ($C307)
 	or	a
 	jr	nz, -
 +
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $04
 	call	LABEL_A74
 	ld	hl, $800
@@ -1432,8 +1432,8 @@ __
 	call	nz, LABEL_F1
 	ld	a, $0E
 	call	LABEL_52
-	ld	a, ($C205)
-	and	$30
+	ld	a, (Ctrl_1_pressed)
+	and	Button_1_Mask|Button_2_Mask
 	jr	nz, +
 	call	LABEL_998
 	ld	hl, ($C2F2)
@@ -1445,7 +1445,7 @@ __
 +
 	ld	hl, 0
 	ld	($C2F2), hl
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $08
 	ld	a, ($C2E9)
 	and	$7F
@@ -1611,7 +1611,7 @@ LABEL_A74:
 	
 LABEL_A8C:
 	xor	a
-	ld	($C204), a
+	ld	(Ctrl_1_held), a
 	ld	($C264), a
 	ld	a, ($C2E9)
 	cp	$83
@@ -1622,7 +1622,7 @@ LABEL_A8C:
 	ld	($C30E), a
 	ld	hl, 0
 	ld	($C2F2), hl
-	call	LABEL_B6A
+	call	GameMode_LoadMap
 	ld	hl, $C26F
 	ld	de, $C270
 	ld	bc, $17
@@ -1646,7 +1646,7 @@ LABEL_A8C:
 LABEL_B07:
 	ret
 
-LABEL_B08:
+GameMode_Map:
 	ld	a, ($C212)
 	or	a
 	call	nz, LABEL_F1
@@ -1668,8 +1668,8 @@ LABEL_B08:
 	ld	a, $FF
 	jp	LABEL_B41
 +
-	ld	a, ($C204)
-	and	$30
+	ld	a, (Ctrl_1_held)
+	and	Button_1_Mask|Button_2_Mask
 	ret	z
 	ld	a, ($C265)
 	or	a
@@ -1678,7 +1678,7 @@ LABEL_B08:
 
 LABEL_B41:
 	ld	($C29D), a
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $0C
 	ld	a, ($C810)
 	ld	($C2D7), a
@@ -1694,12 +1694,12 @@ LABEL_B41:
 	ldir
 	ret
 
-LABEL_B6A:
+GameMode_LoadMap:
 	call	LABEL_7B05
 	di
 	call	LABEL_3E
 	ei
-	ld	hl, $C202
+	ld	hl, Game_mode
 	inc	(hl)
 	xor	a
 	ld	($C2D6), a
@@ -1885,7 +1885,7 @@ LABEL_CA6:
 LABEL_CC0:
 	ld	de, $C800
 	ld	bc, $20
-	ld	hl, $C400
+	ld	hl, Char_stats
 	ld	a, $01
 	call	LABEL_CE3
 	ld	hl, $C430
@@ -1979,11 +1979,11 @@ LABEL_E8B:
 	call	nz, LABEL_F1
 	ld	a, $0E
 	call	LABEL_52
-	ld	a, ($C205)
-	and	$30
+	ld	a, (Ctrl_1_pressed)
+	and	Button_1_Mask|Button_2_Mask
 	jr	nz, +
 	ld	a, ($C2EA)
-	ld	($C204), a
+	ld	(Ctrl_1_held), a
 	call	LABEL_576A
 	ld	a, ($C265)
 	or	a
@@ -1993,7 +1993,7 @@ LABEL_E8B:
 	ld	($C2EB), a
 	ret	nz
 +
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $08
 	ld	a, ($C2E9)
 	add	a, a
@@ -2029,7 +2029,7 @@ LABEL_ED7:
 	ld	de, $EF5
 	push	de
 	call	LABEL_787B
-	call	LABEL_B6A
+	call	GameMode_LoadMap
 	ld	hl, $C26F
 	ld	de, $C270
 	ld	bc, $17
@@ -2049,7 +2049,7 @@ LABEL_F0C:
 .db $2B, $64, $10, $43, $1E
 
 
-LABEL_F3C:
+GameMode_Dungeon:
 	ld	a, ($C212)
 	or	a
 	call	nz, LABEL_F1
@@ -2083,10 +2083,10 @@ LABEL_F3C:
 	ret
 
 
-LABEL_F7D:
+GameMode_LoadDungeon:
 	call	LABEL_7B05
 	call	LABEL_6DE2
-	ld	hl, $C202
+	ld	hl, Game_mode
 	inc	(hl)
 	ld	hl, $FFFF
 	ld	(hl), :Bank16
@@ -2097,7 +2097,7 @@ LABEL_F7D:
 	ld	de, $7E00
 	call	LABEL_3FA
 	ld	a, $39
-	call	LABEL_282E
+	call	Inventory_FindFreeSlot
 	jr	nz, +
 	ld	a, $FF
 	ld	($C315), a
@@ -2132,7 +2132,7 @@ LABEL_F7D:
 	jp	LABEL_7B20
 
 +
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $08
 	ret
 
@@ -2239,7 +2239,7 @@ LABEL_108A:
 	bit	4, c
 	jp	nz, LABEL_1121
 	ld	hl, LABEL_1912
-	call	LABEL_E6
+	call	GetPtrFromHL
 	call	LABEL_2ECD
 
 LABEL_10B7:
@@ -2285,7 +2285,7 @@ LABEL_10E7:
 	jp	LABEL_1656
 
 LABEL_10FC:
-	ld	hl, $C400
+	ld	hl, Char_stats
 	ld	de, $10
 	ld	b, $04
 	
@@ -2429,7 +2429,7 @@ LABEL_11DC:
 	ld	a, b
 	and	$1F
 	ld	hl, LABEL_1A8A
-	call	LABEL_E6
+	call	GetPtrFromHL
 	jp	LABEL_120B
 
 LABEL_11F1:
@@ -2439,7 +2439,7 @@ LABEL_11F1:
 	ld	($C2C2), a
 	ld	a, b
 	ld	($C2C4), a
-	call	LABEL_282E
+	call	Inventory_FindFreeSlot
 	jr nz, LABEL_1212
 	ld	($C29B), hl
 	call	LABEL_2201
@@ -2553,7 +2553,7 @@ LABEL_12B9:
 	ld	a, ($C2E8)
 	and	$07
 	ld	hl, LABEL_12C4
-	jp	LABEL_E6
+	jp	GetPtrFromHL
 
 
 LABEL_12C4:
@@ -2640,7 +2640,7 @@ LABEL_1344:
 	ld	a, ($C2C2)
 	cp	$01
 	jr	nz, LABEL_1376
-	ld	hl, $C400
+	ld	hl, Char_stats
 	ld	de, $10
 	xor	a
 	ld	b, $04
@@ -2909,9 +2909,9 @@ LABEL_152F:
 	jp	LABEL_30B7
 
 LABEL_1561:
-	ld	a, $3C
+	ld	a, ItemID_Crystal
 	ld	($C2C4), a
-	call	LABEL_282E
+	call	Inventory_FindFreeSlot
 	ld	c, $01
 	jp	nz, LABEL_14A7
 	ld	c, $FF
@@ -3039,7 +3039,7 @@ LABEL_1613:
 	call	nz, LABEL_31CF
 	ld	hl, LABEL_B12_BD23
 	call	LABEL_31CF
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $02
 	jp	LABEL_3464
 
@@ -3156,7 +3156,7 @@ LABEL_170D:
 	ret	z
 	ld	hl, LABEL_B12_B604
 	call	LABEL_31CF
-	ld	iy, $C400
+	ld	iy, Char_stats
 	ld	de, LABEL_B03_B8AF
 	xor	a
 	ld	($C2C2), a
@@ -3230,7 +3230,7 @@ LABEL_1754:
 LABEL_17BA:
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
-	ld	iy, $C400
+	ld	iy, Char_stats
 	ld	de, LABEL_B03_B8A7
 	call	LABEL_17E4
 	ld	iy, $C410
@@ -3300,7 +3300,7 @@ LABEL_187D:
 	add  a, a
 	add  a, a
 	add  a, a
-	ld   hl, $C400
+	ld   hl, Char_stats
 	add  a, l
 	ld   l, a
 	adc  a, h
@@ -3562,7 +3562,7 @@ LABEL_19F2:
 	jr	c, LABEL_1A4B
 	ld	a, b
 	ld	hl, LABEL_1A66
-	call	LABEL_E6
+	call	GetPtrFromHL
 
 LABEL_1A3F:
 	jp	LABEL_34C9
@@ -3849,7 +3849,7 @@ LABEL_1BEE:
 	bit	4, c
 	jp	nz, LABEL_1C13
 	ld	hl, LABEL_1C97
-	call	LABEL_E6
+	call	GetPtrFromHL
 	call	LABEL_36EF
 	jp	LABEL_1BEE
 
@@ -3896,7 +3896,7 @@ LABEL_1C15:
 	jp	c, LABEL_4497
 	ld	a, $BF
 	ld	($C004), a
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $08
 	xor	a
 	ld	($C30E), a
@@ -4012,7 +4012,7 @@ LABEL_1D3B:
 LABEL_1D41:
 	xor	a
 	ld	($C780), a
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $10
 	pop	hl
 	pop	hl
@@ -4077,7 +4077,7 @@ LABEL_1D4D:
 	jp	c, LABEL_1DD1
 	ld	a, b
 	ld	hl, LABEL_1DFE
-	call	LABEL_E6
+	call	GetPtrFromHL
 
 LABEL_1DB7:
 	call	LABEL_34C9
@@ -4513,7 +4513,7 @@ LABEL_2078:
 	call	LABEL_3464
 	ld	a, $FF
 	ld	($C2D8), a
-	ld	hl, $C202
+	ld	hl, Game_mode
 	ld	(hl), $08
 	ret
 
@@ -4637,7 +4637,7 @@ LABEL_2159:
 	ret
 
 LABEL_2168:
-	ld a, ($C4E2)
+	ld a, (Inventory_curr_num)
 	or a
 	jp nz, +
 	call LABEL_34D5
@@ -4708,7 +4708,7 @@ LABEL_2168:
 	bit 4, c
 	jp nz, +
 	ld hl, LABEL_21FB
-	call LABEL_E6
+	call GetPtrFromHL
 +:	
 	call LABEL_376B
 LABEL_21F5:	
@@ -4725,7 +4725,7 @@ LABEL_21FB:
 LABEL_2201:
 	ld a, ($C2C4)
 	ld hl, LABEL_220A
-	jp LABEL_E6
+	jp GetPtrFromHL
 
 
 LABEL_220A:
@@ -4902,7 +4902,7 @@ LABEL_2337:
 	call LABEL_31CF
 	pop de
 	call LABEL_1E5F
-	call LABEL_277C
+	call Inventory_RemoveItem
 ++:	
 	ld a, ($C29D)
 	or a
@@ -4962,7 +4962,7 @@ LABEL_239D:
 	ld hl, LABEL_B12_B2AC
 	call LABEL_31CF
 	call LABEL_3464
-	call LABEL_277C
+	call Inventory_RemoveItem
 	ld a, $FF
 	ld ($C315), a
 	ld ($C2D8), a
@@ -4971,7 +4971,7 @@ LABEL_239D:
 LABEL_23E2:
 	ld a, ($C29D)
 	or a
-	call nz, LABEL_277C
+	call nz, Inventory_RemoveItem
 	jp LABEL_2299
 
 LABEL_23EC:
@@ -4988,7 +4988,7 @@ LABEL_23EC:
 	ld a, ($C29E)
 	or a
 	push af
-	call nz, LABEL_277C
+	call nz, Inventory_RemoveItem
 	pop af
 	jp nz, LABEL_2159
 	ld hl, LABEL_B12_B312
@@ -4996,7 +4996,7 @@ LABEL_23EC:
 	jp LABEL_3464
 
 LABEL_2416:
-	call LABEL_277C
+	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
 	call LABEL_31CF
 	ld a, ($C29D)
@@ -5035,7 +5035,7 @@ LABEL_242F:
 	ld hl, LABEL_B12_B3B1
 	call LABEL_31CF
 	call LABEL_3464
-	call LABEL_277C
+	call Inventory_RemoveItem
 	ld iy, $C420
 	ld (iy+10), $06
 	ld (iy+11), $13
@@ -5073,7 +5073,7 @@ LABEL_2491:
 	jp LABEL_3464
 
 LABEL_24BE:
-	ld a, ($C400)
+	ld a, (Char_stats)
 	ld d, a
 	ld a, ($C420)
 	ld e, a
@@ -5092,7 +5092,7 @@ LABEL_24BE:
 +:	
 	ld hl, LABEL_B12_B3B1
 	call LABEL_31CF
-	call LABEL_277C
+	call Inventory_RemoveItem
 	call LABEL_5546
 	jp LABEL_3464
 
@@ -5129,7 +5129,7 @@ LABEL_24EF:
 
 
 LABEL_2524:
-	call LABEL_277C
+	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
 	call LABEL_31CF
 	ld a, ($C29D)
@@ -5160,22 +5160,22 @@ LABEL_2537:
 	call LABEL_7CA6
 	pop bc
 	ld a, $38
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, LABEL_B12_B49A
 	call LABEL_31CF
 	jp LABEL_3464
 
 +:	
-	call LABEL_277C
+	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B471
 	call LABEL_31CF
 	call LABEL_3464
-	ld a, $31
+	ld a, ItemID_Nuts
 	ld ($C2C4), a
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ret z
-	jp LABEL_279F
+	jp Inventory_AddItem
 
 LABEL_2589:
 	ld hl, LABEL_B12_B458
@@ -5412,7 +5412,7 @@ LABEL_26C8:
 	call LABEL_3464
 	pop af
 	or a
-	call z, LABEL_277C
+	call z, Inventory_RemoveItem
 
 LABEL_2741:	
 	call LABEL_17BA
@@ -5444,13 +5444,13 @@ LABEL_2752:
 +:	
 	ld hl, LABEL_B12_B2C2
 	call LABEL_31CF
-	call LABEL_277C
+	call Inventory_RemoveItem
 	jp LABEL_3464
 
-LABEL_277C:
+Inventory_RemoveItem:
 	ld hl, ($C29B)
 
-LABEL_277F:	
+Inventory_RemoveItem2:	
 	push bc
 	ld e, l
 	ld d, h
@@ -5463,28 +5463,28 @@ LABEL_277F:
 	ld b, $00
 	ldir
 +:	
-	ld hl, $C4C0
-	ld a, ($C4E2)
+	ld hl, Inventory
+	ld a, (Inventory_curr_num)
 	dec a
-	ld ($C4E2), a
+	ld (Inventory_curr_num), a
 	add a, l
 	ld l, a
 	ld (hl), $00
 	pop bc
 	ret
 
-LABEL_279F:
-	ld a, ($C4E2)
+Inventory_AddItem:
+	ld a, (Inventory_curr_num)
 	cp $18
 	jr nc, LABEL_27BC
-	ld hl, $C4C0
+	ld hl, Inventory
 	add a, l
 	ld l, a
 	ld a, ($C2C4)
 	ld (hl), a
-	ld a, ($C4E2)
+	ld a, (Inventory_curr_num)
 	inc a
-	ld ($C4E2), a
+	ld (Inventory_curr_num), a
 	ld a, $B3
 	ld ($C004), a
 	ret
@@ -5545,8 +5545,8 @@ LABEL_27D8:
 	ld ($C2C4), a
 	jp LABEL_27BC
 
-LABEL_282E:
-	ld hl, $C4C0
+Inventory_FindFreeSlot:
+	ld hl, Inventory
 	ld b, $18
 -:	
 	cp (hl)
@@ -5628,11 +5628,11 @@ LABEL_2839:
 	jr z, LABEL_28C5
 ++:	
 	ld ($C2C4), a
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, LABEL_28C5
 	ld hl, LABEL_B12_B592
 	call LABEL_31CF
-	call LABEL_279F
+	call Inventory_AddItem
 	jp LABEL_3464
 
 LABEL_28C5:	
@@ -5696,7 +5696,7 @@ LABEL_28EE:
 	jr z, +
 	ld hl, LABEL_B12_B592
 	call LABEL_31CF
-	call LABEL_279F
+	call Inventory_AddItem
 +:	
 	ld a, $D0
 	ld ($C900), a
@@ -5735,12 +5735,12 @@ LABEL_2950:
 
 LABEL_297A:
 	ex de, hl
-	ld hl, ($C4E0)
+	ld hl, (Money_owned)
 	add hl, de
 	jr nc, +
 	ld hl, $FFFF
 +:	
-	ld ($C4E0), hl
+	ld (Money_owned), hl
 	ex de, hl
 	ret
 
@@ -5806,11 +5806,11 @@ LABEL_2999:
 	pop af
 	jr nz, LABEL_2A48
 	ld de, ($C2C5)
-	ld hl, ($C4E0)
+	ld hl, (Money_owned)
 	or a
 	sbc hl, de
 	jr c, LABEL_2A5E
-	ld ($C4E0), hl
+	ld (Money_owned), hl
 	call LABEL_39F7
 	ld a, $C1
 	ld ($C004), a
@@ -5913,11 +5913,11 @@ LABEL_2A98:
 	ld hl, LABEL_B12_B9B0
 	call LABEL_31CF
 	ld de, ($C2C5)
-	ld hl, ($C4E0)
+	ld hl, (Money_owned)
 	or a
 	sbc hl, de
 	jp c, +
-	ld ($C4E0), hl
+	ld (Money_owned), hl
 	call LABEL_39F7
 	ld (iy+0), $01
 	ld a, (iy+6)
@@ -5963,7 +5963,7 @@ LABEL_2B46:
 	jp LABEL_3464
 
 +:	
-	ld iy, $C400
+	ld iy, Char_stats
 	ld de, LABEL_B03_B8AF
 	xor a
 	call +
@@ -6033,7 +6033,7 @@ LABEL_2BDC:
 	bit 4, c
 	pop bc
 	jr nz, LABEL_2C2D
-	ld a, ($C4E2)
+	ld a, (Inventory_curr_num)
 	cp $18
 	jr nc, LABEL_2C3C
 	ld a, (hl)
@@ -6042,24 +6042,24 @@ LABEL_2BDC:
 	ld e, (hl)
 	inc hl
 	ld d, (hl)
-	ld hl, ($C4E0)
+	ld hl, (Money_owned)
 	or a
 	sbc hl, de
 	jr c, LABEL_2C41
 	ld a, ($C2C4)
 	cp $40
 	jr nc, LABEL_2C46
-	ld ($C4E0), hl
+	ld (Money_owned), hl
 	call LABEL_39F7
 	ld a, ($C2C4)
 	cp $21
 	jr c, +
 	cp $24
 	jr nc, +
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, ++
 +:	
-	call LABEL_279F
+	call Inventory_AddItem
 ++:	
 	ld hl, LABEL_B12_B807
 	call LABEL_31CF
@@ -6102,14 +6102,14 @@ LABEL_2C46:
 	xor a
 	ld ($C2EC), a
 	push hl
-	ld a, $33
+	ld a, ItemID_RoadPass
 	ld ($C2C4), a
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	pop hl
 	jr z, LABEL_2C46
-	ld ($C4E0), hl
+	ld (Money_owned), hl
 	call LABEL_39F7
-	call LABEL_279F
+	call Inventory_AddItem
 	ld hl, $0146
 	call LABEL_575A
 	call LABEL_3A12
@@ -6178,7 +6178,7 @@ LABEL_2CEA:
 	jp LABEL_2CB1
 
 +:	
-	call LABEL_277C
+	call Inventory_RemoveItem
 	ld hl, ($C2C5)
 	call LABEL_297A
 	ld hl, LABEL_B12_B8BC
@@ -6200,8 +6200,8 @@ LABEL_2D19:
 LABEL_2D25:
 	ld   a, $08
 	call	LABEL_52
-	ld   a, ($C205)
-	and  $30
+	ld   a, (Ctrl_1_pressed)
+	and  Button_1_Mask|Button_2_Mask
 	jp   z, LABEL_2D25
 	ret
 
@@ -6215,8 +6215,8 @@ LABEL_2D37:
 LABEL_2D39:
 	ld   a, $08
 	call	LABEL_52
-	ld   a, ($C205)
-	and  $30
+	ld   a, (Ctrl_1_pressed)
+	and  Button_1_Mask|Button_2_Mask
 	ret  nz
 
 	djnz	LABEL_2D39
@@ -6240,8 +6240,8 @@ LABEL_2D51:
 LABEL_2D60:
 	ld   a, $08
 	call	LABEL_52
-	ld   a, ($C205)
-	and  $03
+	ld   a, (Ctrl_1_pressed)
+	and  ButtonUp_Mask|ButtonDown_Mask
 	jp   z, LABEL_2D8B
 	ld   c, a
 	ld   hl, $C26E
@@ -6262,8 +6262,8 @@ LABEL_2D7D:
 LABEL_2D88:
 	ld   ($C26B), a
 LABEL_2D8B:
-	ld   a, ($C205)
-	and  $30
+	ld   a, (Ctrl_1_pressed)
+	and  Button_1_Mask|Button_2_Mask
 	jp   z, LABEL_2D60
 	ld   c, a
 	xor  a
@@ -6283,9 +6283,9 @@ LABEL_2DA5:
 LABEL_2DAA:	
 	ld a, $08
 	call LABEL_52
-	ld a, ($C205)
+	ld a, (Ctrl_1_pressed)
 	ld c, a
-	and $03
+	and ButtonUp_Mask|ButtonDown_Mask
 	jp z, ++
 	ld c, a
 	ld hl, $C26E
@@ -6345,7 +6345,7 @@ LABEL_2DAA:
 	ld ($C268), a
 	bit 4, c
 	ret nz
-	ld a, ($C4E2)
+	ld a, (Inventory_curr_num)
 	cp $09
 	ld a, ($C26B)
 	ret c
@@ -6370,7 +6370,7 @@ LABEL_2DAA:
 	call LABEL_352D
 	ld a, ($C299)
 	ld l, a
-	ld a, ($C4E2)
+	ld a, (Inventory_curr_num)
 	dec a
 	cp $08
 	ld h, $00
@@ -6471,7 +6471,7 @@ LABEL_2ED9:
 	call LABEL_3AA6
 	ld hl, LABEL_B27_B4AB
 	ld de, $7C80
-	ld ix, $C400
+	ld ix, Char_stats
 	call +
 	ld hl, LABEL_B27_B4DB
 	ld de, $7C90
@@ -6503,7 +6503,7 @@ LABEL_2F1B:
 LABEL_2F3C:
 	ld hl, LABEL_B27_B4AB
 	ld de, $7C80
-	ld ix, $C400
+	ld ix, Char_stats
 	call +
 	ld hl, LABEL_B27_B4DB
 	ld de, $7C90
@@ -6541,7 +6541,7 @@ LABEL_2F93:
 LABEL_2FA1:	
 	ld hl, LABEL_B27_B4AB
 	ld de, $7C80
-	ld ix, $C400
+	ld ix, Char_stats
 	or a
 	jp z, LABEL_2F1B
 	ld hl, LABEL_B27_B4DB
@@ -7371,14 +7371,14 @@ LABEL_34C9:
 	jp LABEL_3A57
 
 LABEL_34D5:
-	ld a, ($C4E2)
+	ld a, (Inventory_curr_num)
 	dec a
 	and $18
 	ld h, a
 	ld l, $00
 	ld ($C299), hl
 	call LABEL_3521
-	ld a, ($C4E2)
+	ld a, (Inventory_curr_num)
 	or a
 	jp z, LABEL_2D25
 	dec a
@@ -7401,7 +7401,7 @@ LABEL_34D5:
 	ld l, a
 	ld a, ($C299)
 	add a, l
-	ld hl, $C4C0
+	ld hl, Inventory
 	add a, l
 	ld l, a
 	ld ($C29B), hl
@@ -7421,13 +7421,13 @@ LABEL_352D:
 	ld bc, $0114
 	call LABEL_3A57
 	call LABEL_35C4
-	ld a, ($C4E2)
+	ld a, (Inventory_curr_num)
 	cp $09
 	ld hl, LABEL_B27_BAF7
 	ld bc, $0214
 	call nc, LABEL_3A57
 	ld a, ($C299)
-	ld hl, $C4C0
+	ld hl, Inventory
 	add a, l
 	ld l, a
 	ld b, $08
@@ -7524,7 +7524,7 @@ LABEL_35CC:
 	out  (Port_VDPData), a
 	inc  hl
 	djnz	LABEL_35CC
-	ld   hl, ($C4E0)
+	ld   hl, (Money_owned)
 	
 LABEL_35D5:
 	ld   bc, $C010
@@ -7807,7 +7807,7 @@ LABEL_37CF:
 	add  a, a
 	add  a, a
 	add  a, a
-	ld   hl, $C400
+	ld   hl, Char_stats
 	add  a, l
 	ld   l, a
 	adc  a, h
@@ -8216,7 +8216,7 @@ LABEL_3AC4:
 .db $F2, $15, $F2, $15, $F2, $15, $F1, $17
 
 
-LABEL_3B9C:
+GameMode_Interaction:
 	ld a, ($C212)
 	or a
 	call nz, LABEL_F1
@@ -8233,8 +8233,8 @@ LABEL_3B9C:
 	xor a
 +:	
 	and $0F
-	ld hl, $3C2A
-	call LABEL_E6
+	ld hl, LABEL_3C2A
+	call GetPtrFromHL
 LABEL_3BC5:	
 	ld a, ($C29E)
 	sub $0F
@@ -8314,7 +8314,7 @@ LABEL_3C2A:
 .dw	LABEL_474B
 
 
-LABEL_3C52:
+GameMode_LoadInteraction:
 	ld a, $D6
 	ld ($C004), a
 	call LABEL_7B05
@@ -8408,7 +8408,7 @@ LABEL_3CAD:
 	jr z, +
 	ld ($C004), a
 +:	
-	ld hl, $C202
+	ld hl, Game_mode
 	inc (hl)
 	di
 	ld de, $8006
@@ -8503,29 +8503,47 @@ LABEL_3D96:
 
 
 LABEL_3DA6:
-.db $10, $00, $80, $20, $80, $0F, $00, $80, $10, $16, $8F, $36, $8F, $0F, $33, $83
-.db $10, $72, $9C, $82, $9C, $0F, $E9, $86, $10, $72, $9C, $82, $9C, $0F, $A0, $89
-.db $10, $F6, $B3, $06, $B4, $0F, $80, $8C, $10, $10, $80, $20, $80, $0F, $46, $8E
-.db $10, $00, $80, $20, $80, $0F, $16, $91, $11, $40, $86, $50, $86, $0F, $7B, $94
-.db $11, $C4, $97, $D4, $97, $0F, $0A, $97, $11, $B1, $A4, $C1, $A4, $0F, $2C, $9A
-.db $11
+.db $10, $00, $80, $20, $80, $0F, $00, $80
+.db	$10, $16, $8F, $36, $8F, $0F, $33, $83
+.db $10, $72, $9C, $82, $9C, $0F, $E9, $86
+.db	$10, $72, $9C, $82, $9C, $0F, $A0, $89
+.db $10, $F6, $B3, $06, $B4, $0F, $80, $8C
+.db	$10, $10, $80, $20, $80, $0F, $46, $8E
+.db $10, $00, $80, $20, $80, $0F, $16, $91
+.db	$11, $40, $86, $50, $86, $0F, $7B, $94
+.db $11, $C4, $97, $D4, $97, $0F, $0A, $97
+.db	$11, $B1, $A4, $C1, $A4, $0F, $2C, $9A
 
-LABEL_3DF7:
-.db	$58, $AF, $68, $AF, $0F, $11, $9C, $10, $26, $8F, $36, $8F, $0F, $33, $83
-.db $16, $7D, $AC, $8D, $AC, $16, $32, $BC, $0B, $00, $80, $10, $80, $16, $2A, $BE
-.db $16, $9E, $3E, $8D, $AC, $16, $32, $BC, $17, $9F, $AA, $6F, $AB, $17, $00, $80
-.db $17, $AF, $AA, $6F, $AB, $17, $1E, $83, $17, $BF, $AA, $6F, $AB, $17, $54, $86
-.db $17, $CF, $AA, $6F, $AB, $17, $DD, $88, $17, $DF, $AA, $6F, $AB, $17, $A6, $8B
-.db $17, $EF, $AA, $6F, $AB, $17, $8E, $8F, $17, $FF, $AA, $6F, $AB, $17, $ED, $92
-.db $17, $0F, $AB, $6F, $AB, $17, $1B, $96, $17, $1F, $AB, $6F, $AB, $17, $49, $99
-.db $17, $2F, $AB, $6F, $AB, $17, $A3, $9C, $17, $3F, $AB, $6F, $AB, $17, $E3, $9F
-.db $17, $4F, $AB, $6F, $AB, $17, $10, $A3, $17, $5F, $AB, $6F, $AB, $17, $4C, $A6
-.db $09, $14, $BB, $24, $BB, $09, $8B, $B7, $14, $DA, $A4, $EA, $A4, $1B, $63, $BD
-.db $13, $00, $80, $10, $80, $0D, $B1, $BD, $30, $00, $3F, $0B, $06, $1A, $2F, $2A
-.db $08, $15, $15, $0B, $06, $1A, $2F, $28, $A6, $8B, $17, $EF, $AA, $6F, $AB, $17
+LABEL_3DF6:
+.db $11, $58, $AF, $68, $AF, $0F, $11, $9C
+.db	$10, $26, $8F, $36, $8F, $0F, $33, $83
+.db	$16, $7D, $AC, $8D, $AC, $16, $32, $BC
+.db	$0B, $00, $80, $10, $80, $16, $2A, $BE
+.db $16, $9E, $3E, $8D, $AC, $16, $32, $BC
+.db	$17, $9F, $AA, $6F, $AB, $17, $00, $80
+.db $17, $AF, $AA, $6F, $AB, $17, $1E, $83
+.db	$17, $BF, $AA, $6F, $AB, $17, $54, $86
+.db $17, $CF, $AA, $6F, $AB, $17, $DD, $88
+.db	$17, $DF, $AA, $6F, $AB, $17, $A6, $8B
+.db $17, $EF, $AA, $6F, $AB, $17, $8E, $8F
+.db	$17, $FF, $AA, $6F, $AB, $17, $ED, $92
+.db $17, $0F, $AB, $6F, $AB, $17, $1B, $96
+.db	$17, $1F, $AB, $6F, $AB, $17, $49, $99
+.db $17, $2F, $AB, $6F, $AB, $17, $A3, $9C
+.db	$17, $3F, $AB, $6F, $AB, $17, $E3, $9F
+.db $17, $4F, $AB, $6F, $AB, $17, $10, $A3
+.db	$17, $5F, $AB, $6F, $AB, $17, $4C, $A6
+
+
+.db $09, $14, $BB, $24, $BB, $09, $8B, $B7
+.db	$14, $DA, $A4, $EA, $A4, $1B, $63, $BD
+.db $13, $00, $80, $10, $80, $0D, $B1, $BD
+.db	$30, $00, $3F, $0B, $06, $1A, $2F, $2A
+.db $08, $15, $15, $0B, $06, $1A, $2F, $28
+.db	$A6, $8B, $17, $EF, $AA, $6F, $AB, $17
 .db $8E, $8F, $17
 
-LABEL_3EB9:
+GameMode_NameInput:
 	ld a, ($C212)
 	or a
 	call nz, LABEL_F1
@@ -8533,8 +8551,8 @@ LABEL_3EB9:
 	ld a, $08
 	call LABEL_52
 	call LABEL_40C5
-	ld a, ($C205)
-	and $30
+	ld a, (Ctrl_1_pressed)
+	and Button_1_Mask|Button_2_Mask
 	jp z, LABEL_3F73
 	and $10
 	jp nz, +++
@@ -8627,7 +8645,7 @@ LABEL_3F69:
 .db $18, $81, $3C, $81, $60, $81, $84, $81, $A8, $81
 
 LABEL_3F73:	
-	ld a, ($C205)
+	ld a, (Ctrl_1_pressed)
 	rra
 	jr c, LABEL_3FB7
 	rra
@@ -8636,7 +8654,7 @@ LABEL_3F73:
 	jr c, LABEL_3FEB
 	rra
 	jr c, +
-	ld a, ($C204)
+	ld a, (Ctrl_1_held)
 	rra
 	jr c, ++
 	rra
@@ -8753,7 +8771,7 @@ LABEL_402C:
 	ld (hl), $05
 	ret
 
-LABEL_4034:
+GameMode_LoadNameInput:
 	call LABEL_7B05
 	ld de, $7800
 	ld bc, $0300
@@ -8761,7 +8779,7 @@ LABEL_4034:
 	di
 	call LABEL_363
 	ei
-	ld hl, $C202
+	ld hl, Game_mode
 	inc (hl)
 	ld hl, $C781
 	ld (hl), $00
@@ -9122,8 +9140,8 @@ LABEL_42AC:
 -:	
 	ld a, $0E
 	call LABEL_52
-	ld a, ($C205)
-	and $30
+	ld a, (Ctrl_1_pressed)
+	and Button_1_Mask|Button_2_Mask
 	jr nz, +
 	call LABEL_43AA
 	ld a, ($C307)
@@ -9263,7 +9281,7 @@ LABEL_4461:
 	ld a, $8A
 	ld ($C004), a
 	ld a, $03
-	ld hl, $C400
+	ld hl, Char_stats
 	bit 0, (hl)
 	jr nz, +
 	ld a, $05
@@ -9442,7 +9460,7 @@ LABEL_454E:
 	call LABEL_52
 	call LABEL_7B20
 	call LABEL_2D47
-	ld hl, LABEL_3DF7
+	ld hl, LABEL_3DF6+1
 	ld ($C30C), hl
 	xor a
 	ld ($C30A), a
@@ -9472,7 +9490,7 @@ LABEL_454E:
 
 +:	
 	push hl
-	ld ($C204), a
+	ld (Ctrl_1_held), a
 	call LABEL_65EE
 	pop hl
 	inc hl
@@ -9808,11 +9826,11 @@ LABEL_48FC:
 	jr nz, +
 	ld hl, $0008
 	call LABEL_575A
-	ld a, $38
+	ld a, ItemID_LaconiaPot
 	ld ($C2C4), a
-	call LABEL_279F
+	call Inventory_AddItem
 	ld a, $38
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, +
 	ld a, $01
 	ld ($C502), a
@@ -9862,14 +9880,14 @@ LABEL_4960:
 
 LABEL_4966:
 	ld a, $33
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $0020
 	jp LABEL_575A
 
 LABEL_4973:
 	ld a, $33
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $0022
 	jp LABEL_575A
@@ -9918,7 +9936,7 @@ LABEL_49B5:
 	ld hl, $0020
 	jr nz, +
 	ld a, $34
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ld hl, $00CE
 	jr nz, +
 	ld a, $06
@@ -9962,7 +9980,7 @@ LABEL_49E6:
 	or a
 	jr z, +
 	ld a, $38
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $C518
 	ld ($C2E1), hl
@@ -9996,7 +10014,7 @@ LABEL_4A50:
 
 +:	
 	ld a, $34
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $00CE
 	jp LABEL_575A
@@ -10017,10 +10035,10 @@ LABEL_4A8C:
 	ld hl, $019E
 	call LABEL_575A
 	ld a, $34
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ret nz
 	push bc
-	call LABEL_277F
+	call Inventory_RemoveItem2
 	pop bc
 	ld hl, $01A0
 	jp LABEL_575A
@@ -10033,7 +10051,7 @@ LABEL_4AA6:
 
 LABEL_4AA9:
 	ld a, $33
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ld hl, $0020
 	jr nz, +
 	ld a, $04
@@ -10044,7 +10062,7 @@ LABEL_4AA9:
 
 LABEL_4ABE:
 	ld a, $33
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ld hl, $0022
 	jr nz, +
 	ld a, $05
@@ -10089,7 +10107,7 @@ LABEL_4AD3:
 
 +:	
 	ld de, $0064
-	ld hl, ($C4E0)
+	ld hl, (Money_owned)
 	or a
 	sbc hl, de
 	jr nc, +
@@ -10097,14 +10115,14 @@ LABEL_4AD3:
 	jp LABEL_31CF
 
 +:	
-	ld ($C4E0), hl
+	ld (Money_owned), hl
 	ld hl, $007A
 	call LABEL_575A
-	ld a, $34
+	ld a, ItemID_Passport
 	ld ($C2C4), a
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ret z
-	jp LABEL_279F
+	jp Inventory_AddItem
 
 LABEL_4B43:
 	ld a, ($C4F0)
@@ -10171,7 +10189,7 @@ LABEL_4B9D:
 	ld hl, $0060
 	jr nz, ++
 	ld a, $2D
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $C604
 	ld (hl), $00
@@ -10248,8 +10266,8 @@ LABEL_4C0D:
 	jp LABEL_575A
 
 +:	
-	ld a, $38
-	call LABEL_282E
+	ld a, ItemID_LaconiaPot
+	call Inventory_FindFreeSlot
 	jr nz, +
 	push hl
 	ld hl, $0096
@@ -10258,7 +10276,7 @@ LABEL_4C0D:
 	pop hl
 	jr nz, +
 	push bc
-	call LABEL_277F
+	call Inventory_RemoveItem2
 	pop bc
 	ld hl, $009A
 	call LABEL_575A
@@ -10268,9 +10286,9 @@ LABEL_4C0D:
 	call LABEL_16F1
 	ld a, $01
 	ld ($C4F0), a
-	ld a, $2B
+	ld a, ItemID_Alsulin
 	ld ($C2C4), a
-	call LABEL_279F
+	call Inventory_AddItem
 	jp LABEL_43CF
 
 +:	
@@ -10289,7 +10307,7 @@ LABEL_4C70:
 	ld ($C30C), hl
 	xor a
 	ld ($C30A), a
-	ld hl, $C202
+	ld hl, Game_mode
 	ld (hl), $0B
 	call LABEL_661C
 	ld a, $85
@@ -10303,7 +10321,7 @@ LABEL_4C70:
 	cp $03
 	jr nc, +
 	ld a, $37
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, ++
 +:	
 	ld hl, $029E
@@ -10315,12 +10333,12 @@ LABEL_4C70:
 	ld hl, $00A4
 	call LABEL_575A
 	push bc
-	ld a, $37
+	ld a, ItemID_Letter
 	ld ($C2C4), a
-	call LABEL_279F
+	call Inventory_AddItem
 	pop bc
 	ld a, $37
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ret nz
 	ld hl, $029C
 	call LABEL_575A
@@ -10347,7 +10365,7 @@ LABEL_4C70:
 	ld a, $4A
 	ld ($C2E6), a
 	call LABEL_5FFE
-	ld a, ($C400)
+	ld a, (Char_stats)
 	push af
 	ld a, ($C410)
 	push af
@@ -10359,7 +10377,7 @@ LABEL_4C70:
 	pop af
 	ld ($C410), a
 	pop af
-	ld ($C400), a
+	ld (Char_stats), a
 	call LABEL_7B05
 	call LABEL_3D47
 	ld a, $D0
@@ -10424,10 +10442,10 @@ LABEL_4DAB:
 
 +:	
 	ld a, $24
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, +
 	push bc
-	call LABEL_277F
+	call Inventory_RemoveItem2
 	pop bc
 	ld hl, $00BC
 	jp LABEL_575A
@@ -10446,9 +10464,9 @@ LABEL_4DD4:
 
 +:	
 	ld a, $24
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, +
-	call LABEL_277F
+	call Inventory_RemoveItem2
 	ld hl, $00C4
 	jp LABEL_575A
 
@@ -10489,7 +10507,7 @@ LABEL_4DFB:
 
 +:	
 	ld de, $04B0
-	ld hl, ($C4E0)
+	ld hl, (Money_owned)
 	or a
 	sbc hl, de
 	jr nc, +
@@ -10497,7 +10515,7 @@ LABEL_4DFB:
 	jp LABEL_575A
 
 +:	
-	ld ($C4E0), hl
+	ld (Money_owned), hl
 	ld a, $03
 	ld ($C504), a
 	ld hl, $0290
@@ -10519,13 +10537,13 @@ LABEL_4DFB:
 	ld hl, $00D2
 	call LABEL_575A
 	ld a, $32
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, ++
 	ld hl, $00D6
 	call LABEL_575A
 +:	
 	ld a, $32
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, ++
 	ld hl, $0104
 	jp LABEL_575A
@@ -10701,7 +10719,7 @@ LABEL_4F9B:
 
 +:	
 	ld de, $03E8
-	ld hl, ($C4E0)
+	ld hl, (Money_owned)
 	or a
 	sbc hl, de
 	jr nc, +
@@ -10709,14 +10727,14 @@ LABEL_4F9B:
 	jp LABEL_575A
 
 +:	
-	ld ($C4E0), hl
+	ld (Money_owned), hl
 	ld hl, $0198
 	call LABEL_575A
-	ld a, $3B
+	ld a, ItemID_GasShield
 	ld ($C2C4), a
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ret z
-	jp LABEL_279F
+	jp Inventory_AddItem
 
 LABEL_4FD8:
 	ld	hl, $1A2
@@ -10826,7 +10844,7 @@ LABEL_5070:
 
 +:	
 	ld de, $0190
-	ld hl, ($C4E0)
+	ld hl, (Money_owned)
 	or a
 	sbc hl, de
 	jr nc, +
@@ -10834,7 +10852,7 @@ LABEL_5070:
 	jp LABEL_575A
 
 +:	
-	ld ($C4E0), hl
+	ld (Money_owned), hl
 	ld a, $01
 	ld ($C509), a
 	ld hl, $01F4
@@ -10878,9 +10896,9 @@ LABEL_50DA:
 
 +:	
 	ld a, $24
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, +
-	call LABEL_277F
+	call Inventory_RemoveItem2
 	ld hl, $020A
 	jp LABEL_575A
 
@@ -10909,7 +10927,7 @@ LABEL_510D:
 
 +:	
 	ld de, $0118
-	ld hl, ($C4E0)
+	ld hl, (Money_owned)
 	or a
 	sbc hl, de
 	jr nc, +
@@ -10917,21 +10935,21 @@ LABEL_510D:
 	jp LABEL_31CF
 
 +:	
-	ld a, ($C4E2)
+	ld a, (Inventory_curr_num)
 	cp $18
 	jr c, +
 	ld hl, LABEL_B12_B813
 	jp LABEL_31CF
 
 +:	
-	ld ($C4E0), hl
+	ld (Money_owned), hl
 	ld hl, $020A
 	call LABEL_575A
-	ld a, $36
+	ld a, ItemID_Cake
 	ld ($C2C4), a
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ret z
-	jp LABEL_279F
+	jp Inventory_AddItem
 
 LABEL_5157:
 	ld a, $08
@@ -10955,9 +10973,9 @@ LABEL_516F:
 	ld hl, $00AE
 	call LABEL_575A
 	ld a, $37
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ret nz
-	call LABEL_277F
+	call Inventory_RemoveItem2
 	pop hl
 	call LABEL_3464
 	call LABEL_2D25
@@ -11037,7 +11055,7 @@ LABEL_521D:
 	call LABEL_2D19
 	jr nz, +
 	ld a, $33
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, +
 	ld hl, $0024
 	jp LABEL_575A
@@ -11058,9 +11076,9 @@ LABEL_5249:
 
 +:	
 	ld a, $24
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, +
-	call LABEL_277F
+	call Inventory_RemoveItem2
 	ld hl, $00EA
 	jp LABEL_575A
 
@@ -11162,11 +11180,11 @@ LABEL_52DB:
 	jr z, LABEL_52DB
 	ld hl, $015C
 	call LABEL_575A
-	ld a, $3C
+	ld a, ItemID_Crystal
 	ld ($C2C4), a
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ret z
-	jp LABEL_279F
+	jp Inventory_AddItem
 
 LABEL_5337:
 	ld hl, $0160
@@ -11187,7 +11205,7 @@ LABEL_534B:
 	call LABEL_2D19
 	jr nz, +
 	ld a, $33
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, +
 	ld hl, $021E
 	call LABEL_575A
@@ -11197,7 +11215,7 @@ LABEL_534B:
 	ld ($C30C), hl
 	ld a, $01
 	ld ($C30A), a
-	ld hl, $C202
+	ld hl, Game_mode
 	ld (hl), $0A
 	ret
 
@@ -11255,10 +11273,10 @@ LABEL_53BF:
 
 +:	
 	ld a, $36
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, +
 	push bc
-	call LABEL_277F
+	call Inventory_RemoveItem2
 	pop bc
 	ld a, $FF
 	ld ($C511), a
@@ -11284,12 +11302,12 @@ LABEL_5401:
 
 +:	
 	ld a, $3A
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, +
-	call LABEL_277F
-	ld a, $2F
+	call Inventory_RemoveItem2
+	ld a, ItemID_EclipseTorch
 	ld ($C2C4), a
-	call LABEL_279F
+	call Inventory_AddItem
 	ld hl, $0244
 	jp LABEL_575A
 
@@ -11306,7 +11324,7 @@ LABEL_5430:
 	ld a, $18
 	cp b
 	jr z, +
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, ++
 +:	
 	ld hl, $0258
@@ -11340,14 +11358,14 @@ LABEL_5430:
 	call LABEL_3464
 	ld a, ($C431)
 	push af
-	ld a, ($C400)
+	ld a, (Char_stats)
 	push af
 	ld a, ($C410)
 	push af
 	ld a, ($C420)
 	push af
 	xor a
-	ld ($C400), a
+	ld (Char_stats), a
 	ld ($C410), a
 	ld ($C420), a
 	call LABEL_100F
@@ -11356,7 +11374,7 @@ LABEL_5430:
 	pop af
 	ld ($C410), a
 	pop af
-	ld ($C400), a
+	ld (Char_stats), a
 	pop af
 	ld b, a
 	ld a, ($C431)
@@ -11372,9 +11390,9 @@ LABEL_5430:
 +:	
 	ld hl, $0250
 	call LABEL_575A
-	ld a, $18
+	ld a, ItemID_FradeMantle
 	ld ($C2C4), a
-	jp LABEL_279F
+	jp Inventory_AddItem
 
 LABEL_54D0:
 	ld a, $3E
@@ -11438,9 +11456,9 @@ LABEL_553D:
 	jp LABEL_3464
 
 LABEL_5546:
-	ld a, $32
+	ld a, ItemID_Hapsby
 	ld ($C2C4), a
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, LABEL_553D
 	call LABEL_3464
 	ld hl, $C801
@@ -11449,24 +11467,24 @@ LABEL_5546:
 	call LABEL_2D25
 	ld hl, $012C
 	call LABEL_575A
-	jp LABEL_279F
+	jp Inventory_AddItem
 
 LABEL_5566:
 	ld a, ($C508)
 	or a
 	jr z, LABEL_553D
-	ld a, $32
+	ld a, ItemID_Hapsby
 	ld ($C2C4), a
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr nz, LABEL_553D
-	ld a, $22
+	ld a, ItemID_Hovercraft
 	ld ($C2C4), a
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	jr z, LABEL_553D
 	ld hl, $0178
 	call LABEL_575A
 	call LABEL_3464
-	jp LABEL_279F
+	jp Inventory_AddItem
 
 LABEL_558C:
 	ld hl, $00FA
@@ -11568,7 +11586,7 @@ LABEL_5619:
 	ld ($C29E), a
 	call LABEL_54EF
 	call LABEL_3464
-	ld a, ($C400)
+	ld a, (Char_stats)
 	or a
 	jr nz, LABEL_5666
 	ld hl, LABEL_B12_BF64
@@ -11718,7 +11736,7 @@ LABEL_5752:
 LABEL_575A:
 	ld a, :Bank02
 	ld ($FFFF), a
-	ld de, $7FFE
+	ld de, DialogueBlock-2
 	add hl, de
 	ld a, (hl)
 	inc hl
@@ -11748,7 +11766,7 @@ LABEL_5791:
 	jr   z, LABEL_57B1
 	push	bc
 	ld   hl, LABEL_5827-2
-	call	LABEL_E6
+	call	GetPtrFromHL
 	pop  bc
 	or   a
 	jp   z, LABEL_57B1
@@ -12129,8 +12147,8 @@ LABEL_5AFC:
 	ld a, c
 	or a
 	jr nz, +
-	ld a, ($C204)
-	and $0F
+	ld a, (Ctrl_1_held)
+	and ButtonUp_Mask|ButtonDown_Mask|ButtonLeft_Mask|ButtonRight_Mask
 	jr z, +
 	ld l, $FF
 -:	
@@ -13099,7 +13117,7 @@ LABEL_61F5:
 	ld a, (ix+1)
 	or a
 	ld hl, LABEL_621F-2
-	jp nz, LABEL_E6
+	jp nz, GetPtrFromHL
 +:	
 	ld de, $0020
 	add ix, de
@@ -13356,7 +13374,7 @@ LABEL_63A5:
 	cp $0C
 	ret nc
 	ld hl, LABEL_63B8-2
-	jp LABEL_E6
+	jp GetPtrFromHL
 
 
 LABEL_63B8:
@@ -13748,8 +13766,8 @@ LABEL_66C4:
 	jp   LABEL_6963
 
 LABEL_66E1:
-	ld   a, ($C204)
-	and  $0F
+	ld   a, (Ctrl_1_held)
+	and  ButtonUp_Mask|ButtonDown_Mask|ButtonLeft_Mask|ButtonRight_Mask
 	jp   z, LABEL_6802
 	ld   c, a
 	bit  0, c
@@ -13911,8 +13929,8 @@ LABEL_67FE:
 	jp   LABEL_6A58
 
 LABEL_6802:
-	ld   a, ($C205)
-	and  $30
+	ld   a, (Ctrl_1_pressed)
+	and  Button_1_Mask|Button_2_Mask
 	ret  z
 
 	ld   b, $01
@@ -14065,7 +14083,7 @@ LABEL_68E1:
 
 
 LABEL_68E6:
-	ld   hl, $C202
+	ld   hl, Game_mode
 	ld   (hl), $08
 	ret
 
@@ -15040,8 +15058,8 @@ LABEL_7143:
 
 +:	
 	ld (hl), $00
-	ld a, ($C204)
-	and $0F
+	ld a, (Ctrl_1_held)
+	and ButtonUp_Mask|ButtonDown_Mask|ButtonLeft_Mask|ButtonRight_Mask
 	or $80
 	ld c, a
 	ld a, ($C30E)
@@ -16408,7 +16426,7 @@ LABEL_792A:
 	or a
 	ret nz
 	ld a, $35
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ret z
 	ld hl, $00A0
 	ld ($C2DB), hl
@@ -16470,7 +16488,7 @@ LABEL_7972:
 	cp $D2
 	ret nc
 	ld a, $3B
-	call LABEL_282E
+	call Inventory_FindFreeSlot
 	ret z
 	call LABEL_7BC4
 	ld c, $1E
@@ -17023,6 +17041,7 @@ RomHeader:
 Bank02:
 
 
+DialogueBlock:
 .db	$AA, $82, $F0, $82, $26, $83, $39, $83, $55, $83, $95, $83, $A8, $83, $D0, $83
 .db	$FA, $83, $1C, $84, $40, $84, $6C, $84, $89, $84, $B9, $84, $D1, $84, $F7, $84
 .db	$00, $85, $10, $85, $1E, $85, $2D, $85, $46, $85, $80, $85, $8D, $85, $AE, $85
