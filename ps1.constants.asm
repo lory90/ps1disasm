@@ -21,6 +21,8 @@
 .define	weapon $A	; byte
 .define	armor $B	; byte
 .define shield $C	; byte
+.define	battle_magic_num $E	; byte
+.define	map_magic_num $F	; byte
 
 ; Items
 .define	ItemID_Nothing 0
@@ -113,6 +115,8 @@
 .define	Ctrl_1_held $C204
 .define	Ctrl_1_pressed $C205
 
+.define	Option_total_num $C26E	; number of options available for an interactive menu (e.g. player menu)
+
 .define	Char_stats $C400
 .define	Alis_stats $C400
 .define	Myau_stats $C410
@@ -122,3 +126,5 @@
 .define	Inventory $C4C0
 .define	Money_owned $C4E0
 .define	Inventory_curr_num $C4E2
+
+.define	Party_curr_num $C4F0	; starts from 0

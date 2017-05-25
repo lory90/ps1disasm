@@ -58,7 +58,7 @@ _RST_38H:
 _IRQ_HANDLER:
 	push	af
 	in   a, (Port_VDPStatus)
-	jp   VBlank
+	jp   VInt
 
 
 LABEL_3E:
@@ -76,7 +76,7 @@ LABEL_45:
 	rst	$08
 	ret
 
-LABEL_52:
+WaitForVInt:
 	ld   ($C208), a
 -
 	ld   a, ($C208)
@@ -187,7 +187,7 @@ LABEL_F1:
 	ret	z
 	jr	-
 
-VBlank:
+VInt:
 	push	bc
 	push	de
 	push	hl
@@ -468,7 +468,7 @@ LABEL_2FD:
 	ld	(hl), 0
 	ldir
 	ld	a, $14
-	call	LABEL_52
+	call	WaitForVInt
 	jp	LABEL_7B20
 
 LABEL_318:
@@ -1057,8 +1057,8 @@ GameMode_Intro:
 	ld	hl, $7C12
 	ld	($C269), hl
 	ld	a, $01
-	ld	($C26E), a
-	call	LABEL_2D51
+	ld	(Option_total_num), a
+	call	CheckOptionSelection
 	or	a
 	jp	nz, LABEL_634
 	
@@ -1272,7 +1272,7 @@ GameMode_LoadIntro:
 	rst	$08
 	ei
 	ld	a, $0C
-	call	LABEL_52
+	call	WaitForVInt
 	jp	LABEL_2FD
 
 LABEL_7BA:
@@ -1344,7 +1344,7 @@ LABEL_86F:
 	or	a
 	call	nz, LABEL_F1
 	ld	a, $0E
-	call	LABEL_52
+	call	WaitForVInt
 	ld	a, (Ctrl_1_pressed)
 	and	Button_1_Mask|Button_2_Mask
 	jr	nz, _f
@@ -1358,7 +1358,7 @@ LABEL_86F:
 	jr	c, -
 __
 	ld	a, $16
-	call	LABEL_52
+	call	WaitForVInt
 	ld	a, ($C21B)
 	or	a
 	jr	nz, _b
@@ -1412,7 +1412,7 @@ __
 	or	a
 	call	nz, LABEL_F1
 	ld	a, $0E
-	call	LABEL_52
+	call	WaitForVInt
 	ld	a, (Ctrl_1_pressed)
 	and	Button_1_Mask|Button_2_Mask
 	jr	nz, +
@@ -1431,7 +1431,7 @@ __
 	or	a
 	call	nz, LABEL_F1
 	ld	a, $0E
-	call	LABEL_52
+	call	WaitForVInt
 	ld	a, (Ctrl_1_pressed)
 	and	Button_1_Mask|Button_2_Mask
 	jr	nz, +
@@ -1651,7 +1651,7 @@ GameMode_Map:
 	or	a
 	call	nz, LABEL_F1
 	ld	a, $0E
-	call	LABEL_52
+	call	WaitForVInt
 	call	LABEL_576A
 	call	LABEL_77AC
 	ld	a, ($C265)
@@ -1728,7 +1728,7 @@ GameMode_LoadMap:
 -
 	push	bc
 	ld	a, $0A
-	call	LABEL_52
+	call	WaitForVInt
 	di
 	call	LABEL_61F5
 	ei
@@ -1978,7 +1978,7 @@ LABEL_E8B:
 	or	a
 	call	nz, LABEL_F1
 	ld	a, $0E
-	call	LABEL_52
+	call	WaitForVInt
 	ld	a, (Ctrl_1_pressed)
 	and	Button_1_Mask|Button_2_Mask
 	jr	nz, +
@@ -2054,7 +2054,7 @@ GameMode_Dungeon:
 	or	a
 	call	nz, LABEL_F1
 	ld	a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	call	LABEL_65EE
 	ld	a, ($C2D2)
 	or	a
@@ -2234,11 +2234,11 @@ LABEL_108A:
 	ld	hl, $7882
 	ld	($C269), hl
 	ld	a, $04
-	ld	($C26E), a
-	call	LABEL_2D51
-	bit	4, c
-	jp	nz, LABEL_1121
-	ld	hl, LABEL_1912
+	ld	(Option_total_num), a
+	call	CheckOptionSelection
+	bit	Button_1, c
+	jp	nz, LABEL_1121	; jump if we pressed the 1 button (cancel)
+	ld	hl, PlayerMenu_OptionTbl
 	call	GetPtrFromHL
 	call	LABEL_2ECD
 
@@ -2663,7 +2663,7 @@ LABEL_1379:
 	
 -
 	ld	a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	djnz	-
 	call	LABEL_30B7
 	ret
@@ -2797,7 +2797,7 @@ LABEL_1443
 	
 -
 	ld	a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	djnz	-
 	jp	LABEL_30B7
 
@@ -2849,7 +2849,7 @@ LABEL_14A9:
 	
 -
 	ld	a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	djnz	-
 	call	LABEL_30B7
 
@@ -2904,7 +2904,7 @@ LABEL_152F:
 	
 -
 	ld	a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	djnz	-
 	jp	LABEL_30B7
 
@@ -3003,7 +3003,7 @@ LABEL_15F9:
 	call	LABEL_3D36
 LABEL_15FC:
 	ld   a, $10
-	call	LABEL_52
+	call	WaitForVInt
 	ret
 
 
@@ -3033,7 +3033,7 @@ LABEL_1613:
 +
 	ld	a, $94
 	ld	($C004), a
-	ld	a, ($C4F0)
+	ld	a, (Party_curr_num)
 	or	a
 	ld	hl, LABEL_B12_BD17
 	call	nz, LABEL_31CF
@@ -3046,7 +3046,7 @@ LABEL_1613:
 LABEL_163E:
 	push	af
 	call	LABEL_15D9
-	call	LABEL_17BA
+	call	UpdateCharStats
 	ld	a, $D8
 	ld	($C004), a
 	pop	af
@@ -3096,7 +3096,7 @@ LABEL_1688:
 	ld	hl, LABEL_B12_B71B
 	call	LABEL_31CF
 	call	LABEL_170D
-	call	LABEL_17BA
+	call	UpdateCharStats
 	ld	hl, ($C2DD)
 	ld	a, ($C2DF)
 	or	l
@@ -3131,7 +3131,7 @@ LABEL_16B2:
 	ld   ($C800), a
 	call	LABEL_576A
 	ld   a, $16
-	call	LABEL_52
+	call	WaitForVInt
 	ret
 
 
@@ -3140,7 +3140,7 @@ LABEL_16F1:
 	ld	(iy+0), 1
 	ld	(iy+5), 1
 	push	iy
-	call	LABEL_17BA
+	call	UpdateCharStats
 	pop	iy
 	ld	a, (iy+6)
 	ld	(iy+1), a
@@ -3156,51 +3156,51 @@ LABEL_170D:
 	ret	z
 	ld	hl, LABEL_B12_B604
 	call	LABEL_31CF
-	ld	iy, Char_stats
-	ld	de, LABEL_B03_B8AF
+	ld	iy, Alis_stats
+	ld	de, B03_AlisLevelTable
 	xor	a
 	ld	($C2C2), a
-	call	LABEL_1754
-	ld	iy, $C410
-	ld	de, LABEL_B03_B99F
+	call	CalculateExp
+	ld	iy, Myau_stats
+	ld	de, B03_MyauLevelTable
 	ld	a, $01
 	ld	($C2C2), a
-	call	LABEL_1754
-	ld	iy, $C420
-	ld	de, LABEL_B03_BA8F
+	call	CalculateExp
+	ld	iy, Odin_stats
+	ld	de, B03_OdinLevelTable
 	ld	a, $02
 	ld	($C2C2), a
-	call	LABEL_1754
-	ld	iy, $C430
-	ld	de, LABEL_B03_BB7F
+	call	CalculateExp
+	ld	iy, Noah_stats
+	ld	de, B03_NoahLevelTable
 	ld	a, $03
 	ld	($C2C2), a 
 
-LABEL_1754:
-	bit	0, (iy+0)
+CalculateExp:
+	bit	0, (iy+status)
 	ret	z
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
-	ld	l, (iy+5)
+	ld	l, (iy+level)
 	ld	h, $00
 	add	hl, hl
 	add	hl, hl
 	add	hl, hl
 	add	hl, de
 	push	hl
-	pop	ix
-	ld	e, (iy+3)
-	ld	d, (iy+4)
+	pop	ix		; ix = level table
+	ld	e, (iy+exp)
+	ld	d, (iy+exp+1)	; de = char's exp
 	ld	hl, ($C2D0)
 	add	hl, de
 	jr	nc, +
 	ld	hl, $FFFF
 +
-	ld	(iy+3), l
-	ld	(iy+4), h
+	ld	(iy+exp), l
+	ld	(iy+exp+1), h
 	ret	c
-	ld	a, (iy+5)
-	cp	$1E
+	ld	a, (iy+level)
+	cp	30
 	ret	z
 	ld	a, h
 	sub	(ix+5)
@@ -3216,70 +3216,73 @@ LABEL_1754:
 	call	LABEL_31CF
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
-	inc	(iy+5)
+	inc	(iy+level)
 	ld	a, (ix+6)
-	cp	(iy+$E)
+	cp	(iy+battle_magic_num)
 	jr	nz, +
 	ld	a, (ix+7)
-	cp	(iy+$F)
+	cp	(iy+map_magic_num)
 	ret	z
 +
 	ld	hl, LABEL_B12_B635
 	jp	LABEL_31CF
 
-LABEL_17BA:
+
+UpdateCharStats:
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
-	ld	iy, Char_stats
-	ld	de, LABEL_B03_B8A7
-	call	LABEL_17E4
-	ld	iy, $C410
-	ld	de, LABEL_B03_B997
-	call	LABEL_17E4
-	ld	iy, $C420
-	ld	de, LABEL_B03_BA87
-	call	LABEL_17E4
-	ld	iy, $C430
-	ld	de, LABEL_B03_BB77
+	ld	iy, Alis_stats
+	ld	de, B03_AlisLevelTable-8
+	call	+
+	ld	iy, Myau_stats
+	ld	de, B03_MyauLevelTable-8
+	call	+
+	ld	iy, Odin_stats
+	ld	de, B03_OdinLevelTable-8
+	call	+
+	ld	iy, Noah_stats
+	ld	de, B03_NoahLevelTable-8
 
-LABEL_17E4:
-	bit	0, (iy+0)
+
+; iy = char stats
++:
+	bit	0, (iy+status)
 	ret	z
-	ld	(iy+0), $01
+	ld	(iy+status), $01
 	ld	(iy+$D), $00
-	ld	l, (iy+5)
+	ld	l, (iy+level)
 	ld	h, $00
 	add	hl, hl
 	add	hl, hl
 	add	hl, hl
 	add	hl, de
 	push	hl
-	pop	ix
+	pop	ix	; ix = level table
 	ld	a, (ix+0)
-	ld	(iy+6), a
-	ld	l, (iy+$A)
+	ld	(iy+max_hp), a
+	ld	l, (iy+weapon)
 	ld	h, $00
 	ld	de, LABEL_183A
 	add	hl, de
 	ld	a, (hl)
 	add	a, (ix+1)
-	ld	(iy+8), a
-	ld	l, (iy+$B)
+	ld	(iy+attack), a
+	ld	l, (iy+armor)
 	ld	h, $00
 	add	hl, de
 	ld	a, (hl)
-	ld	l, (iy+$C)
+	ld	l, (iy+shield)
 	ld	h, $00
 	add	hl, de
 	add	a, (hl)
 	add	a, (ix+2)
-	ld	(iy+9), a
+	ld	(iy+defense), a
 	ld	a, (ix+3)
-	ld	(iy+7), a
+	ld	(iy+max_tp), a
 	ld	a, (ix+6)
-	ld	(iy+$E), a
+	ld	(iy+battle_magic_num), a
 	ld	a, (ix+7)
-	ld	(iy+$F), a
+	ld	(iy+map_magic_num), a
 	ret
 
 
@@ -3342,13 +3345,13 @@ LABEL_18A9:
 
 LABEL_18B9:
 	ld	a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	call	LABEL_576A
 	ld	a, ($C800)
 	or	a
 	jp	nz, LABEL_18B9
 	ld	a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	ret
 
 LABEL_18CE:
@@ -3360,13 +3363,13 @@ LABEL_18CE:
 	
 LABEL_18DB:
 	ld	a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	call	LABEL_576A
 	ld	a, ($C29F)
 	or	a
 	jp	nz, LABEL_18DB
 	ld	a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	pop	iy
 	ret
 
@@ -3395,15 +3398,16 @@ LABEL_18F2:
 	ret
 
 
-LABEL_1912:
-.dw	LABEL_191C
-.dw	LABEL_19DE
-.dw	LABEL_1B9E
-.dw	LABEL_192B
-.dw LABEL_199C
+; ========================================
+PlayerMenu_OptionTbl:
+.dw	PlayerMenu_Stats
+.dw	PlayerMenu_Magic
+.dw	PlayerMenu_Item
+.dw	PlayerMenu_Search
+.dw PlayerMenu_Save
+; ========================================
 
-
-LABEL_191C:
+PlayerMenu_Stats:
 	ld	bc, $01
 	xor	a
 	call	LABEL_1BB9
@@ -3412,7 +3416,7 @@ LABEL_191C:
 	ld	($C267), a
 	ret
 
-LABEL_192B:
+PlayerMenu_Search:
 	call	LABEL_2ECD
 	call	LABEL_30B7
 	call	LABEL_30E1
@@ -3473,7 +3477,7 @@ LABEL_198A:
 .dw	LABEL_B12_BB45
 
 
-LABEL_199C:
+PlayerMenu_Save:
 	call	LABEL_2ECD
 	call	LABEL_30B7
 	call	LABEL_30E1
@@ -3505,7 +3509,7 @@ LABEL_19C5:
 	ld	($C2D4), a
 	jp	LABEL_3464
 
-LABEL_19DE:
+PlayerMenu_Magic:
 	ld	a, ($C267)
 	ld	($C2C2), a
 	cp	$02
@@ -3540,10 +3544,10 @@ LABEL_19F2:
 	pop	hl
 	ld	a, (hl)
 	dec	a
-	ld	($C26E), a
-	call	LABEL_2D51
+	ld	(Option_total_num), a
+	call	CheckOptionSelection
 	pop	hl
-	bit	4, c
+	bit	Button_1, c
 	jp	nz, LABEL_1A3F
 	ld	l, a
 	ld	a, h
@@ -3777,7 +3781,7 @@ LABEL_1B87:
 	sub	(hl)
 	ret
 
-LABEL_1B9E:
+PlayerMenu_Item:
 	call	LABEL_34D5
 	call	LABEL_3656
 	bit	4, c
@@ -3844,9 +3848,9 @@ LABEL_1BEE:
 	ld	hl, $7882
 	ld	($C269), hl
 	ld	a, $04
-	ld	($C26E), a
-	call	LABEL_2D51
-	bit	4, c
+	ld	(Option_total_num), a
+	call	CheckOptionSelection
+	bit	Button_1, c
 	jp	nz, LABEL_1C13
 	ld	hl, LABEL_1C97
 	call	GetPtrFromHL
@@ -3924,7 +3928,7 @@ LABEL_1C97:
 	
 LABEL_1CA1:
 	call	LABEL_3665
-	bit  4, c
+	bit  Button_1, c
 	jr   nz, LABEL_1CDC
 	call	LABEL_188E
 	jr   z, LABEL_1CDC
@@ -4020,7 +4024,7 @@ LABEL_1D41:
 
 LABEL_1D4D:
 	call	LABEL_3665
-	bit	4, c
+	bit	Button_1, c
 	jp	nz, LABEL_1DBA
 	call	LABEL_188E
 	jp	z, LABEL_1DBA
@@ -4055,10 +4059,10 @@ LABEL_1D4D:
 	pop	hl
 	ld	a, (hl)
 	dec	a
-	ld	($C26E), a
-	call	LABEL_2D51
+	ld	(Option_total_num), a
+	call	CheckOptionSelection
 	pop	hl
-	bit	4, c
+	bit	Button_1, c
 	jp	nz, LABEL_1DB7
 	ld	h, a
 	ld	a, l
@@ -4703,9 +4707,9 @@ LABEL_2168:
 	ld hl, $7A72
 	ld ($C269), hl
 	ld a, $02
-	ld ($C26E), a
-	call LABEL_2D51
-	bit 4, c
+	ld (Option_total_num), a
+	call CheckOptionSelection
+	bit Button_1, c
 	jp nz, +
 	ld hl, LABEL_21FB
 	call GetPtrFromHL
@@ -4891,7 +4895,7 @@ LABEL_2337:
 	push de
 	call LABEL_3665
 	pop de
-	bit 4, c
+	bit Button_1, c
 	jr nz, ++
 +:	
 	ld ($C2C2), a
@@ -5041,7 +5045,7 @@ LABEL_242F:
 	ld (iy+11), $13
 	call LABEL_16F1
 	ld a, $02
-	ld ($C4F0), a
+	ld (Party_curr_num), a
 	ld hl, $C600
 	ld (hl), $00
 	ld hl, $C50A
@@ -5369,7 +5373,7 @@ LABEL_26C8:
 	call LABEL_3665
 	pop hl
 	pop de
-	bit 4, c
+	bit Button_1, c
 	jp nz, LABEL_2741
 	call LABEL_188E
 	jp z, LABEL_2741
@@ -5415,7 +5419,7 @@ LABEL_26C8:
 	call z, Inventory_RemoveItem
 
 LABEL_2741:	
-	call LABEL_17BA
+	call UpdateCharStats
 	jp LABEL_36BB
 
 +:	
@@ -5755,12 +5759,12 @@ LABEL_298D:
 	call LABEL_2D19
 	jp nz, LABEL_2A55
 LABEL_2999:	
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	ld hl, LABEL_B12_B925
 	call nz, LABEL_31CF
 	call LABEL_3665
-	bit 4, c
+	bit Button_1, c
 	jp nz, LABEL_2A52
 	ld ($C2C2), a
 	call LABEL_187D
@@ -5780,7 +5784,7 @@ LABEL_2999:
 	jr nz, +
 	ld hl, LABEL_B12_B96B
 	call LABEL_31CF
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	jr nz, LABEL_2A48
 	ld hl, LABEL_B12_B964
@@ -5821,7 +5825,7 @@ LABEL_2999:
 	ld hl, LABEL_B12_B938
 	call LABEL_31CF
 	call LABEL_3A12
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B90A
@@ -5831,7 +5835,7 @@ LABEL_2999:
 
 LABEL_2A48:	
 	call LABEL_36BB
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	jp nz, LABEL_2999
 LABEL_2A52:	
@@ -5878,13 +5882,13 @@ LABEL_2A85:
 	or a
 	jp nz, LABEL_2B46
 LABEL_2A98:	
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	jp z, LABEL_2B31
 	ld hl, LABEL_B12_B9D3
 	call LABEL_31CF
 	call LABEL_3665
-	bit 4, c
+	bit Button_1, c
 	jp nz, LABEL_2B43
 	call LABEL_187D
 	jr nz, LABEL_2B31
@@ -5948,7 +5952,7 @@ LABEL_2B31:
 	ld ($C2C2), a
 	ld hl, LABEL_B12_BA56
 	call LABEL_31CF
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	jr nz, LABEL_2B15
 	call LABEL_2D25
@@ -5964,7 +5968,7 @@ LABEL_2B46:
 
 +:	
 	ld iy, Char_stats
-	ld de, LABEL_B03_B8AF
+	ld de, B03_AlisLevelTable
 	xor a
 	call +
 	ld iy, $C410
@@ -6199,7 +6203,7 @@ LABEL_2D19:
 
 LABEL_2D25:
 	ld   a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	ld   a, (Ctrl_1_pressed)
 	and  Button_1_Mask|Button_2_Mask
 	jp   z, LABEL_2D25
@@ -6214,7 +6218,7 @@ LABEL_2D37:
 
 LABEL_2D39:
 	ld   a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	ld   a, (Ctrl_1_pressed)
 	and  Button_1_Mask|Button_2_Mask
 	ret  nz
@@ -6226,33 +6230,33 @@ LABEL_2D47:
 	ld   b, $D0
 LABEL_2D49:
 	ld   a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	djnz	LABEL_2D49
 	ret
 
-LABEL_2D51:
+CheckOptionSelection:
 	ld   a, $FF
 	ld   ($C268), a
 	ld   hl, $0000
 	ld   ($C26B), hl
 	xor  a
 	ld   ($C26D), a
-LABEL_2D60:
+OptionSelect_Loop:
 	ld   a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	ld   a, (Ctrl_1_pressed)
 	and  ButtonUp_Mask|ButtonDown_Mask
 	jp   z, LABEL_2D8B
 	ld   c, a
-	ld   hl, $C26E
+	ld   hl, Option_total_num
 	ld   a, ($C26B)
-	bit  0, c
+	bit  ButtonUp, c
 	jr   z, LABEL_2D7D
 	sub  $01
 	jr   nc, LABEL_2D7D
 	ld   a, (hl)
 LABEL_2D7D:
-	bit  1, c
+	bit  ButtonDown, c
 	jr   z, LABEL_2D88
 	inc  a
 	cp   (hl)
@@ -6264,12 +6268,12 @@ LABEL_2D88:
 LABEL_2D8B:
 	ld   a, (Ctrl_1_pressed)
 	and  Button_1_Mask|Button_2_Mask
-	jp   z, LABEL_2D60
+	jp   z, OptionSelect_Loop
 	ld   c, a
 	xor  a
 	ld   ($C26D), a
 	ld   a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	xor  a
 	ld   ($C268), a
 	ld   a, ($C26B)
@@ -6282,13 +6286,13 @@ LABEL_2DA5:
 
 LABEL_2DAA:	
 	ld a, $08
-	call LABEL_52
+	call WaitForVInt
 	ld a, (Ctrl_1_pressed)
 	ld c, a
 	and ButtonUp_Mask|ButtonDown_Mask
 	jp z, ++
 	ld c, a
-	ld hl, $C26E
+	ld hl, Option_total_num
 	ld a, ($C26B)
 	bit 0, c
 	jr z, +
@@ -6340,7 +6344,7 @@ LABEL_2DAA:
 	xor a
 	ld ($C26D), a
 	ld a, $08
-	call LABEL_52
+	call WaitForVInt
 	xor a
 	ld ($C268), a
 	bit 4, c
@@ -6384,7 +6388,7 @@ LABEL_2DAA:
 +:	
 	and $07
 	add a, h
-	ld ($C26E), a
+	ld (Option_total_num), a
 	ld hl, ($C26B)
 	cp l
 	jr nc, +
@@ -6622,7 +6626,7 @@ LABEL_3011:
 	ex   de, hl
 	ei
 	ld   a, $0A
-	call	LABEL_52
+	call	WaitForVInt
 	ret
 
 LABEL_3036:
@@ -6696,7 +6700,7 @@ LABEL_3082:
 	ex   de, hl
 	ei
 	ld   a, $0A
-	call	LABEL_52
+	call	WaitForVInt
 	ret
 
 
@@ -7079,7 +7083,7 @@ LABEL_3302:
 	inc  de
 	ei
 	ld   a, $0A
-	call	LABEL_52
+	call	WaitForVInt
 	dec  b
 	ret
 
@@ -7246,7 +7250,7 @@ LABEL_33D6:
 	pop  bc
 	ei
 	ld   a, $0A
-	call	LABEL_52
+	call	WaitForVInt
 	dec  b
 	ret  nz
 
@@ -7291,7 +7295,7 @@ LABEL_3439:
 	ld   b, $04
 LABEL_345C:
 	ld   a, $0A
-	call	LABEL_52
+	call	WaitForVInt
 	djnz	LABEL_345C
 	ret
 
@@ -7390,7 +7394,7 @@ LABEL_34D5:
 +:	
 	and $07
 	add a, l
-	ld ($C26E), a
+	ld (Option_total_num), a
 	ld hl, $796C
 	ld ($C269), hl
 	ld hl, $0000
@@ -7500,7 +7504,7 @@ LABEL_3588:
 	pop  bc
 	ei
 	ld   a, $0A
-	call	LABEL_52
+	call	WaitForVInt
 	ret
 
 LABEL_35BC:
@@ -7590,7 +7594,7 @@ LABEL_3620:
 	ex   de, hl
 	ei
 	ld   a, $0A
-	call	LABEL_52
+	call	WaitForVInt
 	ret
 
 
@@ -7621,7 +7625,7 @@ LABEL_3656:
 	ret
 
 LABEL_3665:
-	ld   a, ($C4F0)
+	ld   a, (Party_curr_num)
 	or   a
 	ret  z
 
@@ -7632,11 +7636,11 @@ LABEL_3665:
 	call	LABEL_369F
 	ld   hl, $7A84
 	ld   ($C269), hl
-	jp   LABEL_2D51
+	jp   CheckOptionSelection
 
 
 LABEL_3682:
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	ret z
 	ld hl, $DE14
@@ -7646,14 +7650,14 @@ LABEL_3682:
 	call LABEL_369F
 	ld hl, $7A94
 	ld ($C269), hl
-	jp LABEL_2D51
+	jp CheckOptionSelection
 
 LABEL_369F:
-	ld   a, ($C4F0)
+	ld   a, (Party_curr_num)
 	or   a
 	ret  z
 
-	ld   ($C26E), a
+	ld   (Option_total_num), a
 	inc  a
 	add  a, a
 	ld   b, a
@@ -7665,7 +7669,7 @@ LABEL_369F:
 	jp   LABEL_3A57
 
 LABEL_36BB:
-	ld   a, ($C4F0)
+	ld   a, (Party_curr_num)
 	or   a
 	ret  z
 
@@ -7676,7 +7680,7 @@ LABEL_36BB:
 
 
 LABEL_36CC:
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	ret z
 	ld hl, $DE14
@@ -7774,8 +7778,8 @@ LABEL_3777:
 	ld hl, $7B88
 	ld ($C269), hl
 	ld a, $01
-	ld ($C26E), a
-	jp LABEL_2D51
+	ld (Option_total_num), a
+	jp CheckOptionSelection
 
 LABEL_3797:
 	ld hl, $DE14
@@ -7793,8 +7797,8 @@ LABEL_37A3:
 	ld   hl, $7BAA
 	ld   ($C269), hl
 	ld   a, $01
-	ld   ($C26E), a
-	jp   LABEL_2D51
+	ld   (Option_total_num), a
+	jp   CheckOptionSelection
 
 LABEL_37C3:
 	ld   hl, $DE64
@@ -7916,7 +7920,7 @@ LABEL_38D9:
 	ld bc, $B70D
 	add hl, bc
 	ld a, (hl)
-	ld ($C26E), a
+	ld (Option_total_num), a
 	inc hl
 	push hl
 	ld b, $03
@@ -7940,7 +7944,7 @@ LABEL_38D9:
 	call LABEL_3A57
 	ld hl, $788C
 	ld ($C269), hl
-	call LABEL_2D51
+	call CheckOptionSelection
 	ld hl, $FFFF
 	ld (hl), $03
 	pop hl
@@ -8049,8 +8053,8 @@ LABEL_39B1:
 	ld hl, $78EE
 	ld ($C269), hl
 	ld a, $04
-	ld ($C26E), a
-	call LABEL_2D51
+	ld (Option_total_num), a
+	call CheckOptionSelection
 	ld l, a
 	inc l
 	ld h, $00
@@ -8105,8 +8109,8 @@ LABEL_3A21:
 	ld hl, $7B24
 	ld ($C269), hl
 	ld a, $02
-	ld ($C26E), a
-	call LABEL_2D51
+	ld (Option_total_num), a
+	call CheckOptionSelection
 	push af
 	push bc
 	ld hl, $DE14
@@ -8142,7 +8146,7 @@ LABEL_3A6E:
 	ex   de, hl
 	ei
 	ld   a, $0A
-	call	LABEL_52
+	call	WaitForVInt
 	pop  bc
 	djnz	LABEL_3A68
 	ret
@@ -8221,7 +8225,7 @@ GameMode_Interaction:
 	or a
 	call nz, LABEL_F1
 	ld a, $08
-	call LABEL_52
+	call WaitForVInt
 	ld a, ($C29D)
 	or a
 	jp nz, LABEL_3C1A
@@ -8415,7 +8419,7 @@ LABEL_3CAD:
 	rst $08
 	ei
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	jp LABEL_2FD
 
 
@@ -8549,7 +8553,7 @@ GameMode_NameInput:
 	call nz, LABEL_F1
 	ld ix, $C784
 	ld a, $08
-	call LABEL_52
+	call WaitForVInt
 	call LABEL_40C5
 	ld a, (Ctrl_1_pressed)
 	and Button_1_Mask|Button_2_Mask
@@ -9139,7 +9143,7 @@ LABEL_42AC:
 	ld ($C307), a
 -:	
 	ld a, $0E
-	call LABEL_52
+	call WaitForVInt
 	ld a, (Ctrl_1_pressed)
 	and Button_1_Mask|Button_2_Mask
 	jr nz, +
@@ -9171,7 +9175,7 @@ LABEL_42AC:
 	ld ($C304), a
 	ld ($C300), a
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	call LABEL_7B20
 	ld hl, $FFFF
 	ld (hl), :Bank18
@@ -9326,7 +9330,7 @@ LABEL_4497:
 	ld ($C29E), a
 	call LABEL_3D47
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	ld hl, $C250
 	ld b, $10
 -:	
@@ -9377,7 +9381,7 @@ LABEL_4517:
 	ld de, $6000
 	call LABEL_3FA
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	call LABEL_7B20
 	ld a, $15
 	ld ($C800), a
@@ -9394,7 +9398,7 @@ LABEL_454E:
 	ld ($C29E), a
 	call LABEL_3D47
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	call LABEL_7B20
 	ld b, $80
 	call LABEL_2D49
@@ -9457,7 +9461,7 @@ LABEL_454E:
 	ld bc, $1316
 	call LABEL_6E64
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	call LABEL_7B20
 	call LABEL_2D47
 	ld hl, LABEL_3DF6+1
@@ -9537,7 +9541,7 @@ LABEL_467C:
 	ld ($C300), a
 	ld ($C2D3), a
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	jp LABEL_2FD
 
 LABEL_46D1:
@@ -9976,7 +9980,7 @@ LABEL_49E6:
 ++:	
 	call LABEL_575A
 	call LABEL_3464
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	jr z, +
 	ld a, $38
@@ -10125,7 +10129,7 @@ LABEL_4AD3:
 	jp Inventory_AddItem
 
 LABEL_4B43:
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	ld hl, $0034
 	jr z, +
@@ -10134,7 +10138,7 @@ LABEL_4B43:
 	jp LABEL_575A
 
 LABEL_4B52:
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	ld hl, $003C
 	jr z, +
@@ -10249,7 +10253,7 @@ LABEL_4C07:
 	jp	LABEL_575A
 
 LABEL_4C0D:
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	or a
 	jr z, +
 	ld hl, $028A
@@ -10285,7 +10289,7 @@ LABEL_4C0D:
 	ld iy, $C410
 	call LABEL_16F1
 	ld a, $01
-	ld ($C4F0), a
+	ld (Party_curr_num), a
 	ld a, ItemID_Alsulin
 	ld ($C2C4), a
 	call Inventory_AddItem
@@ -10317,7 +10321,7 @@ LABEL_4C70:
 	ld a, $35
 	call LABEL_617D
 	call LABEL_576A
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	cp $03
 	jr nc, +
 	ld a, $37
@@ -10350,7 +10354,7 @@ LABEL_4C70:
 	ld a, $D0
 	ld ($C900), a
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	ld hl, LABEL_4D6C
 	ld de, $C240
 	ld bc, $0008
@@ -10383,7 +10387,7 @@ LABEL_4C70:
 	ld a, $D0
 	ld ($C900), a
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	call LABEL_7B20
 	ld hl, $02A2
 	call LABEL_575A
@@ -10393,7 +10397,7 @@ LABEL_4C70:
 	call LABEL_3D47
 	call LABEL_2A6D
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	call LABEL_7B20
 	ld a, $35
 	call LABEL_617D
@@ -10955,7 +10959,7 @@ LABEL_5157:
 	ld a, $08
 	ld ($C2E6), a
 	call LABEL_5FFE
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	cp $03
 	ld hl, $00AC
 	jr nz, +
@@ -10964,7 +10968,7 @@ LABEL_5157:
 	jp LABEL_575A
 
 LABEL_516F:
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	cp $03
 	jp nc, LABEL_4765
 	ld a, $3B
@@ -10972,7 +10976,7 @@ LABEL_516F:
 	call LABEL_576A
 	ld hl, $00AE
 	call LABEL_575A
-	ld a, $37
+	ld a, ItemID_Letter
 	call Inventory_FindFreeSlot
 	ret nz
 	call Inventory_RemoveItem2
@@ -10986,7 +10990,7 @@ LABEL_516F:
 	ld (iy+11), $11
 	call LABEL_16F1
 	ld a, $03
-	ld ($C4F0), a
+	ld (Party_curr_num), a
 	jp LABEL_4461
 
 LABEL_51B1:
@@ -11331,7 +11335,7 @@ LABEL_5430:
 	jp LABEL_575A
 
 ++:	
-	ld a, ($C4F0)
+	ld a, (Party_curr_num)
 	cp $03
 	jr nc, ++
 	ld hl, $025A
@@ -11576,7 +11580,7 @@ LABEL_5619:
 	ld bc, $0010
 	ldir
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	call LABEL_7B20
 	ld a, $49
 	ld ($C2E6), a
@@ -11599,7 +11603,7 @@ LABEL_5666:
 	ld ($C29E), a
 	call LABEL_3D47
 	ld a, $0C
-	call LABEL_52
+	call WaitForVInt
 	call LABEL_7B20
 	ld a, $35
 	call LABEL_617D
@@ -12867,7 +12871,7 @@ LABEL_5FFE:
 	jr   nz, LABEL_607F
 	and  $0F
 	ld   b, a
-	ld   a, ($C4F0)
+	ld   a, (Party_curr_num)
 	inc  a
 	add  a, a
 	cp   b
@@ -12945,7 +12949,7 @@ LABEL_6095:
 	ld   bc, $0020
 	ldir
 	ld   a, $10
-	jp   LABEL_52
+	jp   WaitForVInt
 
 LABEL_60FD:
 	ld   l, a
@@ -13100,7 +13104,7 @@ LABEL_617D:
 	call	LABEL_3FA
 	call	LABEL_576A
 	ld   a, $16
-	jp   LABEL_52
+	jp   WaitForVInt
 
 
 LABEL_61F5:
@@ -13684,7 +13688,7 @@ LABEL_6635:
 	add  a, $10
 	ld   ($C304), a
 	ld   a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	ld   a, b
 	sub  $0C
 	neg
@@ -13716,7 +13720,7 @@ LABEL_666A:
 	ld   bc, $0020
 	ldir
 	ld   a, $16
-	call	LABEL_52
+	call	WaitForVInt
 	ld   a, $10
 	ld   ($C304), a
 	ld   b, $0C
@@ -13726,7 +13730,7 @@ LABEL_668B:
 	add  a, $10
 	ld   ($C304), a
 	ld   a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	ld   a, b
 	sub  $0C
 	neg
@@ -13755,7 +13759,7 @@ LABEL_66BB:
 LABEL_66C4:
 	ld   ($C304), a
 	ld   a, $08
-	call	LABEL_52
+	call	WaitForVInt
 	djnz	LABEL_66BB
 	ld   hl, $FFFF
 	ld   (hl), :Bank16
@@ -13964,7 +13968,7 @@ LABEL_6830:
 	ld   a, h
 	call	LABEL_6E4C
 	ld   a, $0C
-	call	LABEL_52
+	call	WaitForVInt
 	pop  hl
 	ld   a, h
 	ld   bc, $0040
@@ -14113,7 +14117,7 @@ LABEL_68EC:
 	ld   ($C250), a
 LABEL_691D:
 	ld   a, $0C
-	call	LABEL_52
+	call	WaitForVInt
 	call	LABEL_7B20
 LABEL_6925:
 	ld   hl, $FFFF
@@ -14341,7 +14345,7 @@ LABEL_6AE1:
 LABEL_6AE5:
 	call	LABEL_6AED
 	ld   a, $0C
-	jp   LABEL_52
+	jp   WaitForVInt
 
 LABEL_6AED:
 	and  $3F
@@ -15660,7 +15664,7 @@ LABEL_7481:
 	pop bc
 	djnz LABEL_7481
 	ld a, $12
-	jp LABEL_52
+	jp WaitForVInt
 
 LABEL_74E4:
 	push bc
@@ -16585,7 +16589,7 @@ LABEL_7B05:
 	ld   ($C21B), hl
 LABEL_7B0B:
 	ld   a, $16
-	call	LABEL_52
+	call	WaitForVInt
 	ld   a, ($C21B)
 	or   a
 	jp   nz, LABEL_7B0B
@@ -16606,7 +16610,7 @@ LABEL_7B20:
 	ldir
 LABEL_7B33:
 	ld   a, $16
-	call	LABEL_52
+	call	WaitForVInt
 	ld   a, ($C21B)
 	or   a
 	jp   nz, LABEL_7B33
@@ -16714,7 +16718,7 @@ LABEL_7BAC:
 	ld ($C2C0), hl
 -:	
 	ld a, $16
-	call LABEL_52
+	call WaitForVInt
 	ld a, ($C2BE)
 	or a
 	jp nz, -
@@ -16736,7 +16740,7 @@ LABEL_7BC4:
 	ld ($C2C0), hl
 -:	
 	ld a, $16
-	call LABEL_52
+	call WaitForVInt
 	ld a, ($C2BE)
 	or a
 	jp nz, -
@@ -16852,7 +16856,7 @@ LABEL_7C85:
 	ldir
 +:	
 	ld a, $16
-	call LABEL_52
+	call WaitForVInt
 	pop af
 	dec a
 	jr nz, -
@@ -16866,7 +16870,7 @@ LABEL_7CA6:
 	ld bc, $0005
 	ldir
 	ld a, $16
-	jp LABEL_52
+	jp WaitForVInt
 
 LABEL_7CBB:
 	ld hl, $FFFF
@@ -16884,7 +16888,7 @@ LABEL_7CBB:
 	ld b, $08
 -:	
 	ld a, $16
-	call LABEL_52
+	call WaitForVInt
 	djnz -
 	pop bc
 	djnz --
@@ -16918,7 +16922,7 @@ LABEL_7CF7:
 	ld b, c
 -:	
 	ld a, $16
-	call LABEL_52
+	call WaitForVInt
 	djnz -
 	pop bc
 	djnz LABEL_7CF7
