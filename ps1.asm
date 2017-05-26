@@ -138,7 +138,7 @@ MainGameLoop:
 	ld   a, (hl)
 	and  $1F
 	ld   hl, GameModeTbl
-	call	GetPtrFromHL
+	call	GetPtrAndJump
 	jp   MainGameLoop
 
 
@@ -165,7 +165,7 @@ GameModeTbl:
 .dw	LABEL_467C	; $13
 
 
-GetPtrFromHL:
+GetPtrAndJump:
 	add  a, a
 	add  a, l
 	ld   l, a
@@ -2238,8 +2238,8 @@ LABEL_108A:
 	call	CheckOptionSelection
 	bit	Button_1, c
 	jp	nz, LABEL_1121	; jump if we pressed the 1 button (cancel)
-	ld	hl, PlayerMenu_OptionTbl
-	call	GetPtrFromHL
+	ld	hl, BattleMenu_OptionTbl
+	call	GetPtrAndJump
 	call	LABEL_2ECD
 
 LABEL_10B7:
@@ -2429,7 +2429,7 @@ LABEL_11DC:
 	ld	a, b
 	and	$1F
 	ld	hl, LABEL_1A8A
-	call	GetPtrFromHL
+	call	GetPtrAndJump
 	jp	LABEL_120B
 
 LABEL_11F1:
@@ -2553,7 +2553,7 @@ LABEL_12B9:
 	ld	a, ($C2E8)
 	and	$07
 	ld	hl, LABEL_12C4
-	jp	GetPtrFromHL
+	jp	GetPtrAndJump
 
 
 LABEL_12C4:
@@ -3399,15 +3399,15 @@ LABEL_18F2:
 
 
 ; ========================================
-PlayerMenu_OptionTbl:
-.dw	PlayerMenu_Stats
-.dw	PlayerMenu_Magic
-.dw	PlayerMenu_Item
-.dw	PlayerMenu_Search
-.dw PlayerMenu_Save
+BattleMenu_OptionTbl:
+.dw	BattleMenu_Attack
+.dw	BattleMenu_Magic
+.dw	BattleMenu_Item
+.dw	BattleMenu_Talk
+.dw BattleMenu_Run
 ; ========================================
 
-PlayerMenu_Stats:
+BattleMenu_Attack:
 	ld	bc, $01
 	xor	a
 	call	LABEL_1BB9
@@ -3416,7 +3416,7 @@ PlayerMenu_Stats:
 	ld	($C267), a
 	ret
 
-PlayerMenu_Search:
+BattleMenu_Talk:
 	call	LABEL_2ECD
 	call	LABEL_30B7
 	call	LABEL_30E1
@@ -3477,7 +3477,7 @@ LABEL_198A:
 .dw	LABEL_B12_BB45
 
 
-PlayerMenu_Save:
+BattleMenu_Run:
 	call	LABEL_2ECD
 	call	LABEL_30B7
 	call	LABEL_30E1
@@ -3509,7 +3509,7 @@ LABEL_19C5:
 	ld	($C2D4), a
 	jp	LABEL_3464
 
-PlayerMenu_Magic:
+BattleMenu_Magic:
 	ld	a, ($C267)
 	ld	($C2C2), a
 	cp	$02
@@ -3524,7 +3524,7 @@ LABEL_19F2:
 	add	a, a
 	add	a, a
 	add	a, a
-	ld	hl, $C40E
+	ld	hl, Char_stats+magic_num
 	add	a, l
 	ld	l, a
 	ld	a, (hl)
@@ -3566,7 +3566,7 @@ LABEL_19F2:
 	jr	c, LABEL_1A4B
 	ld	a, b
 	ld	hl, LABEL_1A66
-	call	GetPtrFromHL
+	call	GetPtrAndJump
 
 LABEL_1A3F:
 	jp	LABEL_34C9
@@ -3781,7 +3781,7 @@ LABEL_1B87:
 	sub	(hl)
 	ret
 
-PlayerMenu_Item:
+BattleMenu_Item:
 	call	LABEL_34D5
 	call	LABEL_3656
 	bit	4, c
@@ -3851,9 +3851,9 @@ LABEL_1BEE:
 	ld	(Option_total_num), a
 	call	CheckOptionSelection
 	bit	Button_1, c
-	jp	nz, LABEL_1C13
-	ld	hl, LABEL_1C97
-	call	GetPtrFromHL
+	jp	nz, LABEL_1C13	; jump if we pressed the 1 button (cancel)
+	ld	hl, PlayerMenu_OptionTbl
+	call	GetPtrAndJump
 	call	LABEL_36EF
 	jp	LABEL_1BEE
 
@@ -3919,14 +3919,18 @@ LABEL_1C7C:
 .db	$29, $2A, $09, $19, $66, $0E, $29, $19, $0F, $15, $43, $11, $53, $52, $16, $15
 .db	$2C, $15, $28, $61
 
-LABEL_1C97:
-.dw	LABEL_1CA1
-.dw	LABEL_1D4D
-.dw	LABEL_2168
-.dw	LABEL_2839
-.dw	LABEL_1CDF
+
+; ===========================================
+PlayerMenu_OptionTbl:
+.dw	PlayerMenu_Stats
+.dw	PlayerMenu_Magic
+.dw	PlayerMenu_Item
+.dw	PlayerMenu_Search
+.dw	PlayerMenu_Save
+; ===========================================
+
 	
-LABEL_1CA1:
+PlayerMenu_Stats:
 	call	LABEL_3665
 	bit  Button_1, c
 	jr   nz, LABEL_1CDC
@@ -3966,7 +3970,7 @@ LABEL_1CDC:
 	jp   LABEL_36BB
 
 
-LABEL_1CDF:
+PlayerMenu_Save:
 	ld	hl, LABEL_B12_BA62
 	call	LABEL_31CF
 	call	LABEL_39A5
@@ -4022,7 +4026,7 @@ LABEL_1D41:
 	pop	hl
 	ret
 
-LABEL_1D4D:
+PlayerMenu_Magic:
 	call	LABEL_3665
 	bit	Button_1, c
 	jp	nz, LABEL_1DBA
@@ -4081,7 +4085,7 @@ LABEL_1D4D:
 	jp	c, LABEL_1DD1
 	ld	a, b
 	ld	hl, LABEL_1DFE
-	call	GetPtrFromHL
+	call	GetPtrAndJump
 
 LABEL_1DB7:
 	call	LABEL_34C9
@@ -4640,7 +4644,7 @@ LABEL_2159:
 	ld	($C2D8), a
 	ret
 
-LABEL_2168:
+PlayerMenu_Item:
 	ld a, (Inventory_curr_num)
 	or a
 	jp nz, +
@@ -4712,7 +4716,7 @@ LABEL_2168:
 	bit Button_1, c
 	jp nz, +
 	ld hl, LABEL_21FB
-	call GetPtrFromHL
+	call GetPtrAndJump
 +:	
 	call LABEL_376B
 LABEL_21F5:	
@@ -4729,7 +4733,7 @@ LABEL_21FB:
 LABEL_2201:
 	ld a, ($C2C4)
 	ld hl, LABEL_220A
-	jp GetPtrFromHL
+	jp GetPtrAndJump
 
 
 LABEL_220A:
@@ -5559,7 +5563,7 @@ Inventory_FindFreeSlot:
 	djnz -
 	ret
 
-LABEL_2839:
+PlayerMenu_Search:
 	ld a, ($C800)
 	cp $0E
 	jr nz, +
@@ -7624,10 +7628,11 @@ LABEL_3656:
 	pop bc
 	ret
 
+
 LABEL_3665:
 	ld   a, (Party_curr_num)
 	or   a
-	ret  z
+	ret  z	; return if there's only 1 party member
 
 	ld   hl, $DDA8
 	ld   de, $7A44
@@ -8238,7 +8243,7 @@ GameMode_Interaction:
 +:	
 	and $0F
 	ld hl, LABEL_3C2A
-	call GetPtrFromHL
+	call GetPtrAndJump
 LABEL_3BC5:	
 	ld a, ($C29E)
 	sub $0F
@@ -11770,7 +11775,7 @@ LABEL_5791:
 	jr   z, LABEL_57B1
 	push	bc
 	ld   hl, LABEL_5827-2
-	call	GetPtrFromHL
+	call	GetPtrAndJump
 	pop  bc
 	or   a
 	jp   z, LABEL_57B1
@@ -13121,7 +13126,7 @@ LABEL_61F5:
 	ld a, (ix+1)
 	or a
 	ld hl, LABEL_621F-2
-	jp nz, GetPtrFromHL
+	jp nz, GetPtrAndJump
 +:	
 	ld de, $0020
 	add ix, de
@@ -13378,7 +13383,7 @@ LABEL_63A5:
 	cp $0C
 	ret nc
 	ld hl, LABEL_63B8-2
-	jp GetPtrFromHL
+	jp GetPtrAndJump
 
 
 LABEL_63B8:

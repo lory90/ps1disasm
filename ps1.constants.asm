@@ -21,6 +21,7 @@
 .define	weapon $A	; byte
 .define	armor $B	; byte
 .define shield $C	; byte
+.define	magic_num $E	; byte
 .define	battle_magic_num $E	; byte
 .define	map_magic_num $F	; byte
 
