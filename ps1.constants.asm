@@ -11,17 +11,16 @@
 ; Stats offsets
 .define	status 0	; byte
 .define	curr_hp 1	; byte
-.define	curr_tp 2	; byte
+.define	curr_mp 2	; byte
 .define	exp 3	; word
 .define	level 5	; byte
 .define	max_hp 6	; byte
-.define	max_tp 7	; byte
+.define	max_mp 7	; byte
 .define	attack 8	; byte
 .define	defense 9	; byte
 .define	weapon $A	; byte
 .define	armor $B	; byte
 .define shield $C	; byte
-.define	magic_num $E	; byte
 .define	battle_magic_num $E	; byte
 .define	map_magic_num $F	; byte
 

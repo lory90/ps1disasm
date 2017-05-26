@@ -2372,7 +2372,7 @@ LABEL_B03_B82F:
 ; 1 = max HP
 ; 2 = attack
 ; 3 = defense
-; 4 = max TP
+; 4 = max MP
 ; 5-6 = exp ; it's little endian so you need to read byte 6 first, byte 5 second
 ; 7 = number of spells available in battle
 ; 8 = number of spells available outside of battle

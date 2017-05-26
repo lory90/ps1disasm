@@ -1058,7 +1058,7 @@ GameMode_Intro:
 	ld	($C269), hl
 	ld	a, $01
 	ld	(Option_total_num), a
-	call	CheckOptionSelection
+	call	CheckOptionSelect
 	or	a
 	jp	nz, LABEL_634
 	
@@ -2235,7 +2235,7 @@ LABEL_108A:
 	ld	($C269), hl
 	ld	a, $04
 	ld	(Option_total_num), a
-	call	CheckOptionSelection
+	call	CheckOptionSelect
 	bit	Button_1, c
 	jp	nz, LABEL_1121	; jump if we pressed the 1 button (cancel)
 	ld	hl, BattleMenu_OptionTbl
@@ -3278,7 +3278,7 @@ UpdateCharStats:
 	add	a, (ix+2)
 	ld	(iy+defense), a
 	ld	a, (ix+3)
-	ld	(iy+max_tp), a
+	ld	(iy+max_mp), a
 	ld	a, (ix+6)
 	ld	(iy+battle_magic_num), a
 	ld	a, (ix+7)
@@ -3524,7 +3524,7 @@ LABEL_19F2:
 	add	a, a
 	add	a, a
 	add	a, a
-	ld	hl, Char_stats+magic_num
+	ld	hl, Char_stats+battle_magic_num
 	add	a, l
 	ld	l, a
 	ld	a, (hl)
@@ -3545,7 +3545,7 @@ LABEL_19F2:
 	ld	a, (hl)
 	dec	a
 	ld	(Option_total_num), a
-	call	CheckOptionSelection
+	call	CheckOptionSelect
 	pop	hl
 	bit	Button_1, c
 	jp	nz, LABEL_1A3F
@@ -3763,7 +3763,7 @@ LABEL_1B73:
 
 
 LABEL_1B87:
-	ld	hl, $1DDC
+	ld	hl, LABEL_1DDC
 	add	a, l
 	ld	l, a
 	adc	a, h
@@ -3774,7 +3774,7 @@ LABEL_1B87:
 	add	a, a
 	add	a, a
 	add	a, a
-	ld	de, $C402
+	ld	de, Char_stats+curr_mp
 	add	a, e
 	ld	e, a
 	ld	a, (de)
@@ -3837,8 +3837,6 @@ LABEL_1BE1:
 	ld   ($C29D), a
 	ld   ($C2D8), a
 	call	LABEL_36DD
-
-LABEL_1BEB:
 	call	LABEL_2ED9
 	
 LABEL_1BEE:
@@ -3849,7 +3847,7 @@ LABEL_1BEE:
 	ld	($C269), hl
 	ld	a, $04
 	ld	(Option_total_num), a
-	call	CheckOptionSelection
+	call	CheckOptionSelect
 	bit	Button_1, c
 	jp	nz, LABEL_1C13	; jump if we pressed the 1 button (cancel)
 	ld	hl, PlayerMenu_OptionTbl
@@ -4032,8 +4030,8 @@ PlayerMenu_Magic:
 	jp	nz, LABEL_1DBA
 	call	LABEL_188E
 	jp	z, LABEL_1DBA
-	cp	$02
-	jp	z, LABEL_1DC5
+	cp	$02	; is it Odin?
+	jp	z, LABEL_1DC5	; jump and display different message for Odin
 	ld	c, a
 	ld	($C2C2), a
 	ld	($C267), a
@@ -4041,12 +4039,12 @@ PlayerMenu_Magic:
 	add	a, a
 	add	a, a
 	add	a, a
-	ld	hl, $C40F
+	ld	hl, Char_stats+map_magic_num
 	add	a, l
 	ld	l, a
-	ld	a, (hl)
+	ld	a, (hl)	; get spell number
 	or	a
-	jp	z, LABEL_1DC0
+	jp	z, LABEL_1DC0 ; jump if character has no spells
 	ld	b, a
 	ld	a, c
 	cp	$03
@@ -4064,7 +4062,7 @@ PlayerMenu_Magic:
 	ld	a, (hl)
 	dec	a
 	ld	(Option_total_num), a
-	call	CheckOptionSelection
+	call	CheckOptionSelect
 	pop	hl
 	bit	Button_1, c
 	jp	nz, LABEL_1DB7
@@ -4112,7 +4110,8 @@ LABEL_1DD1:
 	call	LABEL_3464
 	jr	LABEL_1DB7
 	
-	
+
+LABEL_1DDC:
 .db	$00, $02, $06, $06, $0A, $04, $10, $0C, $04, $02, $0A, $02, $02, $04, $04
 .db $0C, $02, $04, $08
 
@@ -4712,7 +4711,7 @@ PlayerMenu_Item:
 	ld ($C269), hl
 	ld a, $02
 	ld (Option_total_num), a
-	call CheckOptionSelection
+	call CheckOptionSelect
 	bit Button_1, c
 	jp nz, +
 	ld hl, LABEL_21FB
@@ -6238,7 +6237,7 @@ LABEL_2D49:
 	djnz	LABEL_2D49
 	ret
 
-CheckOptionSelection:
+CheckOptionSelect:
 	ld   a, $FF
 	ld   ($C268), a
 	ld   hl, $0000
@@ -6479,19 +6478,19 @@ LABEL_2ED9:
 	call LABEL_3AA6
 	ld hl, LABEL_B27_B4AB
 	ld de, $7C80
-	ld ix, Char_stats
+	ld ix, Alis_stats
 	call +
 	ld hl, LABEL_B27_B4DB
 	ld de, $7C90
-	ld ix, $C410
+	ld ix, Myau_stats
 	call +
 	ld hl, LABEL_B27_B50B
 	ld de, $7CA0
-	ld ix, $C420
+	ld ix, Odin_stats
 	call +
 	ld hl, LABEL_B27_B53B
 	ld de, $7CB0
-	ld ix, $C430
+	ld ix, Noah_stats
 +:	
 	bit 0, (ix+0)
 	ret z
@@ -6725,7 +6724,7 @@ LABEL_30C3:
 	ld   de, $7842
 	ld   bc, $0B0C
 	call	LABEL_3AA6
-	ld   hl, $B56B
+	ld   hl, LABEL_B27_B56B
 	jp   LABEL_3A57
 
 
@@ -7641,7 +7640,7 @@ LABEL_3665:
 	call	LABEL_369F
 	ld   hl, $7A84
 	ld   ($C269), hl
-	jp   CheckOptionSelection
+	jp   CheckOptionSelect
 
 
 LABEL_3682:
@@ -7655,7 +7654,7 @@ LABEL_3682:
 	call LABEL_369F
 	ld hl, $7A94
 	ld ($C269), hl
-	jp CheckOptionSelection
+	jp CheckOptionSelect
 
 LABEL_369F:
 	ld   a, (Party_curr_num)
@@ -7784,7 +7783,7 @@ LABEL_3777:
 	ld ($C269), hl
 	ld a, $01
 	ld (Option_total_num), a
-	jp CheckOptionSelection
+	jp CheckOptionSelect
 
 LABEL_3797:
 	ld hl, $DE14
@@ -7803,7 +7802,7 @@ LABEL_37A3:
 	ld   ($C269), hl
 	ld   a, $01
 	ld   (Option_total_num), a
-	jp   CheckOptionSelection
+	jp   CheckOptionSelect
 
 LABEL_37C3:
 	ld   hl, $DE64
@@ -7949,7 +7948,7 @@ LABEL_38D9:
 	call LABEL_3A57
 	ld hl, $788C
 	ld ($C269), hl
-	call CheckOptionSelection
+	call CheckOptionSelect
 	ld hl, $FFFF
 	ld (hl), $03
 	pop hl
@@ -8059,7 +8058,7 @@ LABEL_39B1:
 	ld ($C269), hl
 	ld a, $04
 	ld (Option_total_num), a
-	call CheckOptionSelection
+	call CheckOptionSelect
 	ld l, a
 	inc l
 	ld h, $00
@@ -8115,7 +8114,7 @@ LABEL_3A21:
 	ld ($C269), hl
 	ld a, $02
 	ld (Option_total_num), a
-	call CheckOptionSelection
+	call CheckOptionSelect
 	push af
 	push bc
 	ld hl, $DE14
