@@ -1055,7 +1055,7 @@ GameMode_InitIntro:
 
 GameMode_Intro:
 	ld	hl, $7C12
-	ld	($C269), hl
+	ld	(Cursor_pos), hl
 	ld	a, $01
 	ld	(Option_total_num), a
 	call	CheckOptionSelect
@@ -1543,7 +1543,7 @@ LABEL_9E9:
 	add	a, l
 	ld	l, a
 	ld	h, 0
-	ld	de, $AB9
+	ld	de, LABEL_ABF-6
 	add	hl, de
 	ld	a, (hl)
 	ld	($C308), a
@@ -1587,7 +1587,7 @@ LABEL_A5C:
 	add	a, l
 	ld	l, a
 	ld	h, 0
-	ld	de, $AB6
+	ld	de, LABEL_ABF-9
 	add	hl, de
 	ld	de, LABEL_A8C
 	push	de
@@ -1603,7 +1603,7 @@ LABEL_A74:
 	add	a, l
 	ld	l, a
 	ld	h, 0
-	ld	de, $AB9
+	ld	de, LABEL_ABF-6
 	add	hl, de
 	ld	de, LABEL_A8C
 	push	de
@@ -1633,6 +1633,7 @@ LABEL_A8C:
 	ld	($C264), a
 	ret
 
+LABEL_ABF:
 .db $00, $39, $43, $01, $8B, $69, $10, $53
 .db $17, $01, $37, $69, $00, $91, $43, $05
 .db $17, $17, $00, $47, $35, $01, $27, $74
@@ -2232,7 +2233,7 @@ LABEL_108A:
 	call	LABEL_30D5
 	call	LABEL_2EAC
 	ld	hl, $7882
-	ld	($C269), hl
+	ld	(Cursor_pos), hl
 	ld	a, $04
 	ld	(Option_total_num), a
 	call	CheckOptionSelect
@@ -3540,7 +3541,7 @@ LABEL_19F2:
 	push	hl
 	call	LABEL_3478
 	ld	hl, $7A8C
-	ld	($C269), hl
+	ld	(Cursor_pos), hl
 	pop	hl
 	ld	a, (hl)
 	dec	a
@@ -3844,7 +3845,7 @@ LABEL_1BEE:
 	or	a
 	jr	nz, LABEL_1C15
 	ld	hl, $7882
-	ld	($C269), hl
+	ld	(Cursor_pos), hl
 	ld	a, $04
 	ld	(Option_total_num), a
 	call	CheckOptionSelect
@@ -4057,7 +4058,7 @@ PlayerMenu_Magic:
 	push	hl
 	call	LABEL_3478
 	ld	hl, $7A8C
-	ld	($C269), hl
+	ld	(Cursor_pos), hl
 	pop	hl
 	ld	a, (hl)
 	dec	a
@@ -4708,7 +4709,7 @@ PlayerMenu_Item:
 	ld ($C2C2), a
 	call LABEL_3759
 	ld hl, $7A72
-	ld ($C269), hl
+	ld (Cursor_pos), hl
 	ld a, $02
 	ld (Option_total_num), a
 	call CheckOptionSelect
@@ -6411,7 +6412,7 @@ LABEL_2E62:
 	jr nz, +
 	ld bc, $FF00
 +:	
-	ld hl, ($C269)
+	ld hl, (Cursor_pos)
 	ld a, ($C26C)
 	srl a
 	ld e, $00
@@ -6422,7 +6423,7 @@ LABEL_2E62:
 	rst $08
 	ld a, c
 	out (Port_VDPData), a
-	ld hl, ($C269)
+	ld hl, (Cursor_pos)
 	ld a, ($C26B)
 	ld ($C26C), a
 	srl a
@@ -7399,7 +7400,7 @@ LABEL_34D5:
 	add a, l
 	ld (Option_total_num), a
 	ld hl, $796C
-	ld ($C269), hl
+	ld (Cursor_pos), hl
 	ld hl, $0000
 	ld ($C26B), hl
 	xor a
@@ -7639,7 +7640,7 @@ LABEL_3665:
 	call	LABEL_3AA6
 	call	LABEL_369F
 	ld   hl, $7A84
-	ld   ($C269), hl
+	ld   (Cursor_pos), hl
 	jp   CheckOptionSelect
 
 
@@ -7653,7 +7654,7 @@ LABEL_3682:
 	call LABEL_3AA6
 	call LABEL_369F
 	ld hl, $7A94
-	ld ($C269), hl
+	ld (Cursor_pos), hl
 	jp CheckOptionSelect
 
 LABEL_369F:
@@ -7780,7 +7781,7 @@ LABEL_3777:
 	ld hl, LABEL_B27_BC55
 	call LABEL_3A57
 	ld hl, $7B88
-	ld ($C269), hl
+	ld (Cursor_pos), hl
 	ld a, $01
 	ld (Option_total_num), a
 	jp CheckOptionSelect
@@ -7799,7 +7800,7 @@ LABEL_37A3:
 	ld   hl, LABEL_B27_BC91
 	call	LABEL_3A57
 	ld   hl, $7BAA
-	ld   ($C269), hl
+	ld   (Cursor_pos), hl
 	ld   a, $01
 	ld   (Option_total_num), a
 	jp   CheckOptionSelect
@@ -7947,7 +7948,7 @@ LABEL_38D9:
 	ld bc, $0120
 	call LABEL_3A57
 	ld hl, $788C
-	ld ($C269), hl
+	ld (Cursor_pos), hl
 	call CheckOptionSelect
 	ld hl, $FFFF
 	ld (hl), $03
@@ -8055,7 +8056,7 @@ LABEL_39B1:
 	ld a, $80
 	ld ($FFFC), a
 	ld hl, $78EE
-	ld ($C269), hl
+	ld (Cursor_pos), hl
 	ld a, $04
 	ld (Option_total_num), a
 	call CheckOptionSelect
@@ -8111,7 +8112,7 @@ LABEL_3A21:
 	ld hl, LABEL_B18_BE84
 	call LABEL_3A68
 	ld hl, $7B24
-	ld ($C269), hl
+	ld (Cursor_pos), hl
 	ld a, $02
 	ld (Option_total_num), a
 	call CheckOptionSelect

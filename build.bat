@@ -4,7 +4,7 @@ binaries\wla-z80 -vo ps1.asm ps1.o> bank_info.txt
 if %ERRORLEVEL% neq 0 goto assemble_fail
 
 echo Linking...
-binaries\wlalink -rs link.txt ps1built.bin
+binaries\wlalink -rs link.txt ps1built.sms
 if %ERRORLEVEL% neq 0 goto link_fail
 
 echo ==========================
