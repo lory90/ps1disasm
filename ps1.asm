@@ -1085,7 +1085,7 @@ LABEL_5E8:
 	ld	($C305), hl
 	ld	($C311), hl
 	ld	hl, 0
-	ld	(Money_owned), hl
+	ld	(Current_money), hl
 	call	LABEL_42AC
 	ld	hl, Game_mode
 	ld	(hl), $08
@@ -5743,12 +5743,12 @@ LABEL_2950:
 
 LABEL_297A:
 	ex de, hl
-	ld hl, (Money_owned)
+	ld hl, (Current_money)
 	add hl, de
 	jr nc, +
 	ld hl, $FFFF
 +:	
-	ld (Money_owned), hl
+	ld (Current_money), hl
 	ex de, hl
 	ret
 
@@ -5814,11 +5814,11 @@ LABEL_2999:
 	pop af
 	jr nz, LABEL_2A48
 	ld de, ($C2C5)
-	ld hl, (Money_owned)
+	ld hl, (Current_money)
 	or a
 	sbc hl, de
 	jr c, LABEL_2A5E
-	ld (Money_owned), hl
+	ld (Current_money), hl
 	call LABEL_39F7
 	ld a, $C1
 	ld ($C004), a
@@ -5921,11 +5921,11 @@ LABEL_2A98:
 	ld hl, LABEL_B12_B9B0
 	call LABEL_31CF
 	ld de, ($C2C5)
-	ld hl, (Money_owned)
+	ld hl, (Current_money)
 	or a
 	sbc hl, de
 	jp c, +
-	ld (Money_owned), hl
+	ld (Current_money), hl
 	call LABEL_39F7
 	ld (iy+0), $01
 	ld a, (iy+6)
@@ -6050,14 +6050,14 @@ LABEL_2BDC:
 	ld e, (hl)
 	inc hl
 	ld d, (hl)
-	ld hl, (Money_owned)
+	ld hl, (Current_money)
 	or a
 	sbc hl, de
 	jr c, LABEL_2C41
 	ld a, ($C2C4)
 	cp $40
 	jr nc, LABEL_2C46
-	ld (Money_owned), hl
+	ld (Current_money), hl
 	call LABEL_39F7
 	ld a, ($C2C4)
 	cp $21
@@ -6115,7 +6115,7 @@ LABEL_2C46:
 	call Inventory_FindFreeSlot
 	pop hl
 	jr z, LABEL_2C46
-	ld (Money_owned), hl
+	ld (Current_money), hl
 	call LABEL_39F7
 	call Inventory_AddItem
 	ld hl, $0146
@@ -7532,7 +7532,7 @@ LABEL_35CC:
 	out  (Port_VDPData), a
 	inc  hl
 	djnz	LABEL_35CC
-	ld   hl, (Money_owned)
+	ld   hl, (Current_money)
 	
 LABEL_35D5:
 	ld   bc, $C010
@@ -10116,7 +10116,7 @@ LABEL_4AD3:
 
 +:	
 	ld de, $0064
-	ld hl, (Money_owned)
+	ld hl, (Current_money)
 	or a
 	sbc hl, de
 	jr nc, +
@@ -10124,7 +10124,7 @@ LABEL_4AD3:
 	jp LABEL_31CF
 
 +:	
-	ld (Money_owned), hl
+	ld (Current_money), hl
 	ld hl, $007A
 	call LABEL_575A
 	ld a, ItemID_Passport
@@ -10516,7 +10516,7 @@ LABEL_4DFB:
 
 +:	
 	ld de, $04B0
-	ld hl, (Money_owned)
+	ld hl, (Current_money)
 	or a
 	sbc hl, de
 	jr nc, +
@@ -10524,7 +10524,7 @@ LABEL_4DFB:
 	jp LABEL_575A
 
 +:	
-	ld (Money_owned), hl
+	ld (Current_money), hl
 	ld a, $03
 	ld ($C504), a
 	ld hl, $0290
@@ -10728,7 +10728,7 @@ LABEL_4F9B:
 
 +:	
 	ld de, $03E8
-	ld hl, (Money_owned)
+	ld hl, (Current_money)
 	or a
 	sbc hl, de
 	jr nc, +
@@ -10736,7 +10736,7 @@ LABEL_4F9B:
 	jp LABEL_575A
 
 +:	
-	ld (Money_owned), hl
+	ld (Current_money), hl
 	ld hl, $0198
 	call LABEL_575A
 	ld a, ItemID_GasShield
@@ -10853,7 +10853,7 @@ LABEL_5070:
 
 +:	
 	ld de, $0190
-	ld hl, (Money_owned)
+	ld hl, (Current_money)
 	or a
 	sbc hl, de
 	jr nc, +
@@ -10861,7 +10861,7 @@ LABEL_5070:
 	jp LABEL_575A
 
 +:	
-	ld (Money_owned), hl
+	ld (Current_money), hl
 	ld a, $01
 	ld ($C509), a
 	ld hl, $01F4
@@ -10936,7 +10936,7 @@ LABEL_510D:
 
 +:	
 	ld de, $0118
-	ld hl, (Money_owned)
+	ld hl, (Current_money)
 	or a
 	sbc hl, de
 	jr nc, +
@@ -10951,7 +10951,7 @@ LABEL_510D:
 	jp LABEL_31CF
 
 +:	
-	ld (Money_owned), hl
+	ld (Current_money), hl
 	ld hl, $020A
 	call LABEL_575A
 	ld a, ItemID_Cake

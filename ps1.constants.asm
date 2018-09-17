@@ -125,7 +125,7 @@
 .define	Noah_stats $C430
 
 .define	Inventory $C4C0
-.define	Money_owned $C4E0
+.define	Current_money $C4E0
 .define	Inventory_curr_num $C4E2
 
 .define	Party_curr_num $C4F0	; starts from 0
