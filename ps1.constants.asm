@@ -118,6 +118,10 @@
 .define	Cursor_pos	$C269
 .define	Option_total_num $C26E	; number of options available for an interactive menu (e.g. player menu)
 
+.define	Dungeon_direction $C30A
+.define	Dungeon_position $C30C
+.define	Dungeon_index $C30D
+
 .define	Char_stats $C400
 .define	Alis_stats $C400
 .define	Myau_stats $C410
@@ -129,3 +133,20 @@
 .define	Inventory_curr_num $C4E2
 
 .define	Party_curr_num $C4F0	; starts from 0
+
+.define	System_stack $CB00
+.define	Dungeon_layout $CB00	; $100 bytes; 1 byte per tile;
+								; 	0 = Empty
+								;	1 = Wall
+								;	2 = Floor up
+								;	3 = Floor down
+								;	4 = Unlocked door	; bit 7 determines if it's open (set) or not (clear)
+								;	5 = Dungeon key door
+								;	6 = Magically locked door
+								;	7 = Fake wall
+								;	8 = Special object (can be either trap or treasure chest)
+								;	$A = Exit up
+								;	$B = Exit down
+								;	$C = Exit door
+								;	$D = Exit locked door
+								;	$E = Ext magical door

@@ -26,7 +26,7 @@ Bank00:
 _START:
 	di
 	im   1
-	ld   sp, $CB00
+	ld   sp, System_stack
 	jr   MainSetup
 
 _RST_08H:
@@ -110,7 +110,7 @@ LABEL_81:
 
 MainSetup:
 	di
-	ld   sp, $CB00
+	ld   sp, System_stack
 	ld   hl, $FFFC
 	ld   (hl), $80	; Enable ROM write
 	inc  hl
@@ -1886,16 +1886,16 @@ LABEL_CA6:
 LABEL_CC0:
 	ld	de, $C800
 	ld	bc, $20
-	ld	hl, Char_stats
+	ld	hl, Alis_stats
 	ld	a, $01
 	call	LABEL_CE3
-	ld	hl, $C430
+	ld	hl, Noah_stats
 	ld	a, $03
 	call	LABEL_CE3
-	ld	hl, $C420
+	ld	hl, Odin_stats
 	ld	a, $05
 	call	LABEL_CE3
-	ld	hl, $C410
+	ld	hl, Myau_stats
 	ld	a, $07
 
 LABEL_CE3:
@@ -2380,7 +2380,7 @@ LABEL_1188:
 	add	a, a
 	add	a, a
 	add	a, a
-	ld	hl, $C40A
+	ld	hl, Char_stats+weapon
 	add	a, l
 	ld	l, a
 	adc	a, h
@@ -2872,10 +2872,10 @@ LABEL_1505:
 	jp	LABEL_15C2
 
 LABEL_151A:
-	ld	a, ($C420)
+	ld	a, (Odin_stats)
 	or	a
 	jr	z, +
-	ld	a, ($C42C)
+	ld	a, (Odin_stats+shield)
 	cp	$1F
 	jp	z, LABEL_1305
 +
@@ -3430,7 +3430,7 @@ BattleMenu_Talk:
 	jr	z, LABEL_1951
 	ld	a, ($C448)
 	ld	b, a
-	ld	a, ($C408)
+	ld	a, (Alis_stats+attack)
 	cp	b
 	jr	nc, LABEL_1964
 LABEL_1951
@@ -3705,7 +3705,7 @@ LABEL_1B17:
 	jp	z, LABEL_1964
 	ld	a, ($C448)
 	ld	b, a
-	ld	a, ($C408)
+	ld	a, (Alis_stats+attack)
 	cp	b
 	jr	nc, LABEL_1B42
 	jp	LABEL_1951
@@ -3945,7 +3945,7 @@ PlayerMenu_Stats:
 	add	a, a
 	add	a, a
 	add	a, a
-	ld	hl, $C40E
+	ld	hl, Char_stats+battle_magic_num
 	add	a, l
 	ld	l, a
 	ld	a, (hl)
@@ -4339,7 +4339,7 @@ LABEL_1F36:
 	jr	z, LABEL_1F71
 	ld	a, ($C448)
 	ld	b, a
-	ld	a, ($C408)
+	ld	a, (Alis_stats+attack)
 	cp	b
 	ld	c, $03
 	jr	nc, +
@@ -4435,7 +4435,7 @@ LABEL_1FDF:
 	ld	($C004), a
 	ld	a, ($C448)
 	ld	b, a
-	ld	a, ($C408)
+	ld	a, (Alis_stats+attack)
 	cp	b
 	jr	c, LABEL_200C
 	call	LABEL_5B1
@@ -4886,11 +4886,11 @@ LABEL_231A:
 	jp LABEL_3464
 
 LABEL_2333:
-	ld d, $0A
+	ld d, ItemID_SilverFang
 	jr +
 
 LABEL_2337:
-	ld d, $28
+	ld d, ItemID_Escaper
 +:	
 	ld a, ($C29D)
 	or a
@@ -5044,7 +5044,7 @@ LABEL_242F:
 	call LABEL_31CF
 	call LABEL_3464
 	call Inventory_RemoveItem
-	ld iy, $C420
+	ld iy, Odin_stats
 	ld (iy+10), $06
 	ld (iy+11), $13
 	call LABEL_16F1
@@ -5081,11 +5081,11 @@ LABEL_2491:
 	jp LABEL_3464
 
 LABEL_24BE:
-	ld a, (Char_stats)
+	ld a, (Alis_stats)	; get status
 	ld d, a
-	ld a, ($C420)
+	ld a, (Odin_stats)	; get status
 	ld e, a
-	ld a, ($C430)
+	ld a, (Noah_stats)	; get status
 	or d
 	or e
 	ret
@@ -5215,7 +5215,7 @@ LABEL_2589:
 	jp LABEL_3464
 
 LABEL_25C3:
-	ld a, ($C410)
+	ld a, (Myau_stats)
 	or a
 	jr z, LABEL_25D7
 	ld a, ($C309)
@@ -5395,7 +5395,7 @@ LABEL_26C8:
 	add a, a
 	add a, a
 	add a, a
-	ld de, $C40A
+	ld de, Char_stats+weapon
 	add a, e
 	ld e, a
 	adc a, d
@@ -5629,7 +5629,7 @@ PlayerMenu_Search:
 	ld a, ($C509)
 	or a
 	jr z, LABEL_28C5
-	ld a, ($C42C)
+	ld a, (Odin_stats+shield)
 	ld b, a
 	ld a, $1F
 	cp b
@@ -5971,20 +5971,20 @@ LABEL_2B46:
 	jp LABEL_3464
 
 +:	
-	ld iy, Char_stats
+	ld iy, Alis_stats
 	ld de, B03_AlisLevelTable
 	xor a
 	call +
-	ld iy, $C410
-	ld de, $B99F
+	ld iy, Myau_stats
+	ld de, B03_MyauLevelTable
 	ld a, $01
 	call +
-	ld iy, $C420
-	ld de, $BA8F
+	ld iy, Odin_stats
+	ld de, B03_OdinLevelTable
 	ld a, $02
 	call +
-	ld iy, $C430
-	ld de, $BB7F
+	ld iy, Noah_stats
+	ld de, B03_NoahLevelTable
 	ld a, $03
 +:	
 	ld ($C2C2), a
@@ -6511,19 +6511,19 @@ LABEL_2F1B:
 LABEL_2F3C:
 	ld hl, LABEL_B27_B4AB
 	ld de, $7C80
-	ld ix, Char_stats
+	ld ix, Alis_stats
 	call +
 	ld hl, LABEL_B27_B4DB
 	ld de, $7C90
-	ld ix, $C410
+	ld ix, Myau_stats
 	call +
 	ld hl, LABEL_B27_B50B
 	ld de, $7CA0
-	ld ix, $C420
+	ld ix, Odin_stats
 	call +
 	ld hl, LABEL_B27_B53B
 	ld de, $7CB0
-	ld ix, $C430
+	ld ix, Noah_stats
 +:	
 	bit 0, (ix+0)
 	ret z
@@ -6554,17 +6554,17 @@ LABEL_2FA1:
 	jp z, LABEL_2F1B
 	ld hl, LABEL_B27_B4DB
 	ld de, $7C90
-	ld ix, $C410
+	ld ix, Myau_stats
 	dec a
 	jp z, LABEL_2F1B
 	ld hl, LABEL_B27_B50B
 	ld de, $7CA0
-	ld ix, $C420
+	ld ix, Odin_stats
 	dec a
 	jp z, LABEL_2F1B
 	ld hl, LABEL_B27_B53B
 	ld de, $7CB0
-	ld ix, $C430
+	ld ix, Noah_stats
 	jp LABEL_2F1B
 
 LABEL_2FD8:
@@ -7732,7 +7732,7 @@ LABEL_3707:
 	add  a, a
 	ld   hl, $FFFF
 	ld   (hl), :Bank02
-	ld   hl, $C40A
+	ld   hl, Char_stats+weapon
 	add  a, l
 	ld   l, a
 	adc  a, h
@@ -9294,7 +9294,7 @@ LABEL_4461:
 	bit 0, (hl)
 	jr nz, +
 	ld a, $05
-	ld hl, $C420
+	ld hl, Odin_stats
 	bit 0, (hl)
 	jr nz, +
 	ld a, $04
@@ -9346,7 +9346,7 @@ LABEL_4497:
 	call LABEL_2D33
 	ld hl, $FFFF
 	ld (hl), :Bank11
-	ld hl, LABEL_B11_B000
+	ld hl, LABEL_B11_8000
 	ld de, $C250
 	ld bc, $0008
 	ldir
@@ -9962,7 +9962,7 @@ LABEL_49E6:
 	ld a, $47
 	ld ($C2E6), a
 	call LABEL_5FFE
-	ld a, ($C410)
+	ld a, (Myau_stats)
 	or a
 	jr z, +
 	ld hl, $0296
@@ -9976,7 +9976,7 @@ LABEL_49E6:
 	ld hl, LABEL_B12_B728
 	call LABEL_31CF
 	ld hl, $0000
-	ld ($C410), hl
+	ld (Myau_stats), hl
 	ld hl, $0298
 	jr ++
 
@@ -10291,7 +10291,7 @@ LABEL_4C0D:
 	call LABEL_575A
 	call LABEL_3464
 	pop hl
-	ld iy, $C410
+	ld iy, Myau_stats
 	call LABEL_16F1
 	ld a, $01
 	ld (Party_curr_num), a
@@ -10374,17 +10374,17 @@ LABEL_4C70:
 	ld a, $4A
 	ld ($C2E6), a
 	call LABEL_5FFE
-	ld a, (Char_stats)
+	ld a, (Alis_stats)	; get status
 	push af
-	ld a, ($C410)
+	ld a, (Myau_stats)
 	push af
-	ld a, ($C420)
+	ld a, (Odin_stats)
 	push af
 	call LABEL_100F
 	pop af
-	ld ($C420), a
+	ld (Odin_stats), a
 	pop af
-	ld ($C410), a
+	ld (Myau_stats), a
 	pop af
 	ld (Char_stats), a
 	call LABEL_7B05
@@ -10990,7 +10990,7 @@ LABEL_516F:
 	call LABEL_2D25
 	ld a, $01
 	ld ($C506), a
-	ld iy, $C430
+	ld iy, Noah_stats
 	ld (iy+10), $01
 	ld (iy+11), $11
 	call LABEL_16F1
@@ -11328,7 +11328,7 @@ LABEL_5430:
 	ld a, $31
 	ld ($C2E6), a
 	call LABEL_5FFE
-	ld a, ($C43B)
+	ld a, (Noah_stats+armor)
 	ld b, a
 	ld a, $18
 	cp b
@@ -11355,7 +11355,7 @@ LABEL_5430:
 ++:	
 	ld hl, $024C
 	call LABEL_575A
-	ld a, ($C430)
+	ld a, (Noah_stats)
 	or a
 	jr nz, +
 	ld hl, $02A8
@@ -11365,34 +11365,34 @@ LABEL_5430:
 	ld hl, $024E
 	call LABEL_575A
 	call LABEL_3464
-	ld a, ($C431)
+	ld a, (Noah_stats+curr_hp)
 	push af
-	ld a, (Char_stats)
+	ld a, (Alis_stats)
 	push af
-	ld a, ($C410)
+	ld a, (Myau_stats)
 	push af
-	ld a, ($C420)
+	ld a, (Odin_stats)
 	push af
 	xor a
-	ld (Char_stats), a
-	ld ($C410), a
-	ld ($C420), a
+	ld (Alis_stats), a
+	ld (Myau_stats), a
+	ld (Odin_stats), a
 	call LABEL_100F
 	pop af
-	ld ($C420), a
+	ld (Odin_stats), a
 	pop af
-	ld ($C410), a
+	ld (Myau_stats), a
 	pop af
-	ld (Char_stats), a
+	ld (Alis_stats), a
 	pop af
 	ld b, a
-	ld a, ($C431)
+	ld a, (Noah_stats+curr_hp)
 	or a
 	jr nz, +
 	ld a, b
-	ld ($C431), a
+	ld (Noah_stats+curr_hp), a
 	ld a, $01
-	ld ($C430), a
+	ld (Noah_stats), a
 	ld hl, $0256
 	jp LABEL_575A
 
@@ -12841,7 +12841,7 @@ LABEL_5FFE:
 	add  hl, hl
 	add  hl, hl
 	add  hl, hl
-	ld   de, LABEL_B03_867F
+	ld   de, B03_EnemyData
 	add  hl, de
 	ld   de, $C2C8
 	ld   bc, $0008
@@ -12966,7 +12966,7 @@ LABEL_60FD:
 	ld   d, h
 	add  hl, hl
 	add  hl, de
-	ld   de, LABEL_B03_8FC7
+	ld   de, LABEL_B03_8FC7-$18
 	add  hl, de
 	ld   de, $C880
 	ld   bc, $0003
@@ -13071,7 +13071,7 @@ LABEL_617D:
 	add  hl, hl
 	add  hl, hl
 	add  hl, hl
-	ld   de, $95BC
+	ld   de, LABEL_B03_95BC
 	add  hl, de
 	push	hl
 	ld   de, $C258
@@ -14757,9 +14757,9 @@ LABEL_6D56:
 	ld   l, $00
 	srl  h
 	rr   l
-	ld   de, LABEL_B15_9F6E
+	ld   de, B15_DungeonLayouts
 	add  hl, de
-	ld   de, $CB00
+	ld   de, Dungeon_layout
 	ld   b, $80
 LABEL_6D6E:
 	ld   a, (hl)
