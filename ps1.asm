@@ -91,19 +91,19 @@ WaitForVInt:
 ; We get here after the pause button is pressed
 _NMI_HANDLER:
 	push	af
-	ld   a, ($C202)
-	cp   $05
+	ld   a, (Game_mode)
+	cp   $05 ; GameMode_Ship
 	jr   z, LABEL_7A
-	cp   $09
+	cp   $09 ; GameMode_Map
 	jr   z, LABEL_7A
-	cp   $0B
+	cp   $0B ; GameMode_Dungeon
 	jr   z, LABEL_7A
-	cp   $0D
+	cp   $0D ; GameMode_Interaction
 	jr   nz, LABEL_81
 LABEL_7A:
-	ld   a, ($C212)
+	ld   a, (Game_is_paused)
 	cpl
-	ld   ($C212), a
+	ld   (Game_is_paused), a
 LABEL_81:
 	pop  af
 	retn
@@ -147,19 +147,19 @@ GameModeTbl:
 .dw	GameMode_InitIntro	; 1
 .dw	GameMode_LoadIntro	; 2
 .dw	GameMode_Intro	; 3
-.dw	LABEL_A5C	; 4
-.dw	LABEL_86F	; 5
+.dw	GameMode_LoadShip	; 4
+.dw	GameMode_Ship	; 5
 .dw	LABEL_B07	; 6
 .dw	LABEL_B07	; 7
-.dw GameMode_LoadMap	; 8
+.dw	GameMode_LoadMap	; 8
 .dw	GameMode_Map	; 9
 .dw	GameMode_LoadDungeon	; $A
 .dw	GameMode_Dungeon	; $B
 .dw	GameMode_LoadInteraction	; $C
 .dw	GameMode_Interaction	; $D
-.dw	LABEL_ED7	; $E
-.dw	LABEL_E8B	; $F
-.dw GameMode_LoadNameInput	; $10
+.dw	GameMode_LoadRoad	; $E
+.dw	GameMode_Road	; $F
+.dw	GameMode_LoadNameInput	; $10
 .dw	GameMode_NameInput	; $11
 .dw	LABEL_467C	; $12
 .dw	LABEL_467C	; $13
@@ -179,10 +179,10 @@ GetPtrAndJump:
 	jp   (hl)
 
 
-LABEL_F1:
+PauseLoop:
 	call	CallSndMute
 -
-	ld	a, ($C212)
+	ld	a, (Game_is_paused)
 	or	a
 	ret	z
 	jr	-
@@ -216,7 +216,7 @@ LABEL_126:
 LABEL_128:
 	djnz	LABEL_128
 LABEL_12A:
-	ld   a, ($C212)
+	ld   a, (Game_is_paused)
 	or   a
 	jp   nz, LABEL_2DF
 	ld   a, ($C208)
@@ -1050,7 +1050,7 @@ LABEL_5C8:
 
 GameMode_InitIntro:
 	ld	hl, Game_mode
-	ld	(hl), $02
+	ld	(hl), $02 ; GameMode_LoadIntro
 	ret
 
 GameMode_Intro:
@@ -1069,8 +1069,8 @@ LABEL_5E8:
 	ld	(hl), l
 	ldir
 	ld	iy, Char_stats
-	ld	(iy+$0A), $02
-	ld	(iy+$0B), $10
+	ld	(iy+weapon), $02
+	ld	(iy+armor), $10
 	call	LABEL_16F1
 	ld	hl, $C600
 	ld	(hl), $FF
@@ -1088,7 +1088,7 @@ LABEL_5E8:
 	ld	(Current_money), hl
 	call	LABEL_42AC
 	ld	hl, Game_mode
-	ld	(hl), $08
+	ld	(hl), $08 ; GameMode_LoadMap
 	ret
 
 LABEL_634:
@@ -1114,7 +1114,7 @@ LABEL_64D:
 	call	LABEL_35A
 	ei
 	ld	hl, Game_mode
-	ld	(hl), $08
+	ld	(hl), $08 ; GameMode_LoadMap
 	ld	hl, $FFFF
 	ld	(hl), :Bank16
 	ld	hl, LABEL_B16_BAD8
@@ -1126,11 +1126,11 @@ LABEL_64D:
 	call	LABEL_2FD
 LABEL_678:
 	ld	hl, LABEL_B12_BE45
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_2D19
 	jr	nz, LABEL_6C5
 	ld	hl, LABEL_B12_BE1B
-	call	LABEL_31CF
+	call	PlaySound
 -
 	push	bc
 	call	LABEL_39B1
@@ -1138,7 +1138,7 @@ LABEL_678:
 	call	LABEL_73A
 	jr	z, -
 	ld	hl, LABEL_B12_BE35
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	ld	a, $08
 	ld	($FFFC), a
@@ -1154,20 +1154,20 @@ LABEL_678:
 	ld	a, $80
 	ld	($FFFC), a
 	ld	a, ($C316)
-	cp	$0B
+	cp	$0B ; GameMode_Dungeon
 	ret	nz
 	ld	hl, Game_mode
-	ld	(hl), $0A
+	ld	(hl), $0A ; GameMode_LoadDungeon
 	ret
 
 LABEL_6C5:
 	ld	hl, LABEL_B12_BE5E
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_2D19
 	jr	nz, LABEL_678
 --
 	ld	hl, LABEL_B12_BE6F
-	call	LABEL_31CF
+	call	PlaySound
 -
 	push	bc
 	call	LABEL_39B1
@@ -1177,11 +1177,11 @@ LABEL_6C5:
 	call	LABEL_73A
 	jr	z, -
 	ld	hl, LABEL_B12_BA82
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_2D19
 	jr	nz, --
 	ld	hl, LABEL_B12_BE82
-	call	LABEL_31CF
+	call	PlaySound
 	ld	a, $08
 	ld	($FFFC), a
 	ld	a, ($C2C5)
@@ -1212,7 +1212,7 @@ LABEL_6C5:
 	ld	a, $80
 	ld	($FFFC), a
 	ld	hl, Game_mode
-	ld	(hl), $02
+	ld	(hl), $02 ; GameMode_LoadIntro
 	ret
 
 LABEL_730:
@@ -1237,7 +1237,7 @@ GameMode_LoadIntro:
 	call	CallSndInit
 	call	LABEL_35A
 	ld	hl, Game_mode
-	inc	(hl)
+	inc	(hl) ; GameMode_Intro
 	ld	hl, $258
 	ld	($C20E), hl
 	ld	hl, LABEL_7BA
@@ -1336,13 +1336,13 @@ LABEL_847:
 	ret
 
 
-LABEL_86F:
+GameMode_Ship:
 	ld	hl, $2009
 	ld	($C21B), hl
 -
-	ld	a, ($C212)
+	ld	a, (Game_is_paused)
 	or	a
-	call	nz, LABEL_F1
+	call	nz, PauseLoop
 	ld	a, $0E
 	call	WaitForVInt
 	ld	a, (Ctrl_1_pressed)
@@ -1408,9 +1408,9 @@ __
 	ld	a, $08
 	ld	($C307), a
 -
-	ld	a, ($C212)
+	ld	a, (Game_is_paused)
 	or	a
-	call	nz, LABEL_F1
+	call	nz, PauseLoop
 	ld	a, $0E
 	call	WaitForVInt
 	ld	a, (Ctrl_1_pressed)
@@ -1422,14 +1422,14 @@ __
 	jr	nz, -
 +
 	ld	hl, Game_mode
-	ld	(hl), $04
+	ld	(hl), $04 ; GameMode_LoadShip
 	call	LABEL_A74
 	ld	hl, $800
 	ld	($C2F2), hl
 -
-	ld	a, ($C212)
+	ld	a, (Game_is_paused)
 	or	a
-	call	nz, LABEL_F1
+	call	nz, PauseLoop
 	ld	a, $0E
 	call	WaitForVInt
 	ld	a, (Ctrl_1_pressed)
@@ -1446,7 +1446,7 @@ __
 	ld	hl, 0
 	ld	($C2F2), hl
 	ld	hl, Game_mode
-	ld	(hl), $08
+	ld	(hl), $08 ; GameMode_LoadMap
 	ld	a, ($C2E9)
 	and	$7F
 	ld	l, a
@@ -1577,7 +1577,7 @@ LABEL_A4A:
 .db $3F, $3E, $3C, $39, $38
 
 
-LABEL_A5C:
+GameMode_LoadShip:
 	ld	a, ($C2E9)
 	and	$7F
 	ld	l, a
@@ -1648,9 +1648,9 @@ LABEL_B07:
 	ret
 
 GameMode_Map:
-	ld	a, ($C212)
+	ld	a, (Game_is_paused)
 	or	a
-	call	nz, LABEL_F1
+	call	nz, PauseLoop
 	ld	a, $0E
 	call	WaitForVInt
 	call	LABEL_576A
@@ -1680,7 +1680,7 @@ GameMode_Map:
 LABEL_B41:
 	ld	($C29D), a
 	ld	hl, Game_mode
-	ld	(hl), $0C
+	ld	(hl), $0C ; GameMode_LoadInteraction
 	ld	a, ($C810)
 	ld	($C2D7), a
 	ld	hl, $C26F
@@ -1701,7 +1701,7 @@ GameMode_LoadMap:
 	call	LABEL_3E
 	ei
 	ld	hl, Game_mode
-	inc	(hl)
+	inc	(hl) ; GameMode_Map
 	xor	a
 	ld	($C2D6), a
 	ld	($C315), a
@@ -1974,10 +1974,10 @@ LABEL_DD9:
 .db $18, $00, $00, $00, $00, $00, $00, $16
 .db $90, $0D, $37, $AF
 
-LABEL_E8B:
-	ld	a, ($C212)
+GameMode_Road:
+	ld	a, (Game_is_paused)
 	or	a
-	call	nz, LABEL_F1
+	call	nz, PauseLoop
 	ld	a, $0E
 	call	WaitForVInt
 	ld	a, (Ctrl_1_pressed)
@@ -1995,7 +1995,7 @@ LABEL_E8B:
 	ret	nz
 +
 	ld	hl, Game_mode
-	ld	(hl), $08
+	ld	(hl), $08 ; GameMode_LoadMap
 	ld	a, ($C2E9)
 	add	a, a
 	add	a, a
@@ -2012,7 +2012,7 @@ LABEL_E8B:
 	call	LABEL_787B
 	ret
 
-LABEL_ED7:
+GameMode_LoadRoad:
 	ld	a, ($C2E9)
 	add	a, a
 	add	a, a
@@ -2051,9 +2051,9 @@ LABEL_F0C:
 
 
 GameMode_Dungeon:
-	ld	a, ($C212)
+	ld	a, (Game_is_paused)
 	or	a
-	call	nz, LABEL_F1
+	call	nz, PauseLoop
 	ld	a, $08
 	call	WaitForVInt
 	call	LABEL_65EE
@@ -2088,7 +2088,7 @@ GameMode_LoadDungeon:
 	call	LABEL_7B05
 	call	LABEL_6DE2
 	ld	hl, Game_mode
-	inc	(hl)
+	inc	(hl) ; GameMode_Dungeon
 	ld	hl, $FFFF
 	ld	(hl), :Bank16
 	ld	hl, LABEL_B16_BAD8
@@ -2121,7 +2121,7 @@ GameMode_LoadDungeon:
 	or	a
 	ret	nz
 	ld	hl, LABEL_B12_B392
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	call	LABEL_1BE1
 	ld	a, ($C315)
@@ -2134,7 +2134,7 @@ GameMode_LoadDungeon:
 
 +
 	ld	hl, Game_mode
-	ld	(hl), $08
+	ld	(hl), $08 ; GameMode_LoadMap
 	ret
 
 LABEL_FF3:
@@ -2366,7 +2366,7 @@ LABEL_1148:
 	jr	z, +
 	ld	hl, LABEL_B12_B1FC
 +
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_1188:
@@ -2452,7 +2452,7 @@ LABEL_120B:
 
 LABEL_1212:
 	ld	hl, LABEL_B12_BEA1
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	jr	LABEL_120B
 
@@ -2480,7 +2480,7 @@ LABEL_121D:
 	ld	a, $BB
 	ld	($C004), a
 	ld	hl, LABEL_B12_B108
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_1251:
@@ -2547,7 +2547,7 @@ LABEL_128C:
 	jr	z, +
 	ld	hl, LABEL_B12_B203
 +
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_12B9:
@@ -2594,7 +2594,7 @@ LABEL_12FA:
 	xor	a
 	ld	($C2EF), a
 	ld	hl, LABEL_B12_B1C1
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_1305:
@@ -2626,7 +2626,7 @@ LABEL_130C:
 	jr	nz, +
 	ld	hl, LABEL_B12_B118
 +
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 
 LABEL_1344:
@@ -2634,7 +2634,7 @@ LABEL_1344:
 	call	LABEL_187D
 	jr	nz, LABEL_1379
 	ld	hl, LABEL_B12_B728
-	call	LABEL_31CF
+	call	PlaySound
 	ld	a, ($C2E6)
 	cp	$46
 	jr	nz, LABEL_1376
@@ -2654,7 +2654,7 @@ LABEL_1344:
 	or	a
 	jr	z, LABEL_1376
 	ld	hl, LABEL_B12_BF3B
-	call	LABEL_31CF
+	call	PlaySound
 
 LABEL_1376:
 	call	LABEL_3464
@@ -2680,7 +2680,7 @@ LABEL_1386:
 	and	$80
 	jr	z, _f
 	ld	hl, LABEL_B12_B1B2
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 __
 	call	LABEL_5B1
@@ -2698,7 +2698,7 @@ __
 	ld	a, $A1
 	ld	($C004), a
 	ld	hl, LABEL_B12_B1EE
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_13CC:
@@ -2724,7 +2724,7 @@ LABEL_13CC:
 	ld	($C004), a
 	call	LABEL_3105
 	ld	hl, LABEL_B12_B1D8
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_13FF:
@@ -2738,7 +2738,7 @@ LABEL_13FF:
 	ld	a, $A1
 	ld	($C004), a
 	ld	hl, LABEL_B12_BCC2
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_1421:
@@ -2784,14 +2784,14 @@ LABEL_1443
 	and	$80
 	jr	z, +
 	ld	hl, LABEL_B12_B1B2
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 +
 	ld	a, ($C2C2)
 	call	LABEL_187D
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 +
 	ld	b, $04
@@ -2836,14 +2836,14 @@ LABEL_14A9:
 	and	$80
 	jr	z, +
 	ld	hl, LABEL_B12_B1B2
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 +
 	ld	a, ($C2C2)
 	call	LABEL_187D
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 +
 	ld	b, $04
@@ -2899,7 +2899,7 @@ LABEL_152F:
 	ld	(hl), a
 	call	LABEL_18CE
 	ld	hl, LABEL_B12_BE93
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	ld	b, $04
 	
@@ -3037,11 +3037,11 @@ LABEL_1613:
 	ld	a, (Party_curr_num)
 	or	a
 	ld	hl, LABEL_B12_BD17
-	call	nz, LABEL_31CF
+	call	nz, PlaySound
 	ld	hl, LABEL_B12_BD23
-	call	LABEL_31CF
+	call	PlaySound
 	ld	hl, Game_mode
-	ld	(hl), $02
+	ld	(hl), $02 ; GameMode_LoadIntro
 	jp	LABEL_3464
 
 LABEL_163E:
@@ -3095,7 +3095,7 @@ LABEL_1688:
 	ld	a, $D8
 	ld	($C004), a
 	ld	hl, LABEL_B12_B71B
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_170D
 	call	UpdateCharStats
 	ld	hl, ($C2DD)
@@ -3104,7 +3104,7 @@ LABEL_1688:
 	or	h
 	ret	z
 	ld	hl, LABEL_B12_BCE1
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_16B2
 	call	LABEL_2D25
 	jp	LABEL_28DB
@@ -3156,7 +3156,7 @@ LABEL_170D:
 	or	h
 	ret	z
 	ld	hl, LABEL_B12_B604
-	call	LABEL_31CF
+	call	PlaySound
 	ld	iy, Alis_stats
 	ld	de, B03_AlisLevelTable
 	xor	a
@@ -3214,7 +3214,7 @@ CalculateExp:
 	ld	a, $BA
 	ld	($C004), a
 	ld	hl, LABEL_B12_B621
-	call	LABEL_31CF
+	call	PlaySound
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
 	inc	(iy+level)
@@ -3226,7 +3226,7 @@ CalculateExp:
 	ret	z
 +
 	ld	hl, LABEL_B12_B635
-	jp	LABEL_31CF
+	jp	PlaySound
 
 
 UpdateCharStats:
@@ -3326,7 +3326,7 @@ LABEL_188E:
 	push	hl
 	ld   ($C2C2), a
 	ld   hl, LABEL_B12_B730
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	pop  hl
 	pop  de
@@ -3424,7 +3424,7 @@ BattleMenu_Talk:
 	ld	a, ($C267)
 	ld	($C2C2), a
 	ld	hl, LABEL_B12_B128
-	call	LABEL_31CF
+	call	PlaySound
 	ld	a, ($C2E8)
 	and	$80
 	jr	z, LABEL_1951
@@ -3439,12 +3439,12 @@ LABEL_1951
 	ld	a, $FF
 	ld	($C2D4), a
 	ld	hl, LABEL_B12_B13D
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_1964:
 	ld	hl, LABEL_B12_B132
-	call	LABEL_31CF
+	call	PlaySound
 	
 -
 	call	LABEL_5B1
@@ -3460,7 +3460,7 @@ LABEL_1964:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	call	LABEL_31CF
+	call	PlaySound
 	ld	a, $06
 	ld	($C267), a
 	jp	LABEL_3464
@@ -3503,7 +3503,7 @@ LABEL_19C5:
 	ld	a, ($C267)
 	ld	($C2C2), a
 	ld	hl, LABEL_B12_B15E
-	call	LABEL_31CF
+	call	PlaySound
 	ld	a, $04
 	ld	($C267), a
 	ld	a, $FF
@@ -3516,7 +3516,7 @@ BattleMenu_Magic:
 	cp	$02
 	jp	nz, LABEL_19F2
 	ld	hl, LABEL_B12_B5BA
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_19F2:
@@ -3574,12 +3574,12 @@ LABEL_1A3F:
 
 LABEL_1A42:
 	ld	hl, LABEL_B12_B5C8
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_1A4B:
 	ld	hl, LABEL_B12_B6F7
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	jp	LABEL_34C9
 
@@ -3726,7 +3726,7 @@ LABEL_1B42:
 	ld	a, $AC
 	ld	($C004), a
 	ld	hl, LABEL_B12_B132
-	call	LABEL_31CF
+	call	PlaySound
 	
 -
 	call	LABEL_5B1
@@ -3742,7 +3742,7 @@ LABEL_1B42:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	call	LABEL_31CF
+	call	PlaySound
 	ld	a, $06
 	ld	($C267), a
 	ld	a, $D5
@@ -3900,7 +3900,7 @@ LABEL_1C15:
 	ld	a, $BF
 	ld	($C004), a
 	ld	hl, Game_mode
-	ld	(hl), $08
+	ld	(hl), $08 ; GameMode_LoadMap
 	xor	a
 	ld	($C30E), a
 	ld	a, ($C317)
@@ -3971,16 +3971,16 @@ LABEL_1CDC:
 
 PlayerMenu_Save:
 	ld	hl, LABEL_B12_BA62
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_39A5
 	ld	hl, LABEL_B12_BA82
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_2D19
 	jr	nz, LABEL_1D3B
-	ld	a, ($C202)
+	ld	a, (Game_mode)
 	ld	($C316), a
 	ld	hl, LABEL_B12_BA93
-	call	LABEL_31CF
+	call	PlaySound
 	push	bc
 	ld	a, ($C2C5)
 	ld	h, a
@@ -4010,7 +4010,7 @@ PlayerMenu_Save:
 	pop	bc
 	jr	z, LABEL_1D41
 	ld	hl, LABEL_B12_BAA3
-	call	LABEL_31CF
+	call	PlaySound
 
 LABEL_1D3B:
 	call	LABEL_39DD
@@ -4020,7 +4020,7 @@ LABEL_1D41:
 	xor	a
 	ld	($C780), a
 	ld	hl, Game_mode
-	ld	(hl), $10
+	ld	(hl), $10 ; GameMode_LoadNameInput
 	pop	hl
 	pop	hl
 	ret
@@ -4101,13 +4101,13 @@ LABEL_1DC5:
 	ld	hl, LABEL_B12_B5BA
 
 LABEL_1DC8:
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	jp	LABEL_36BB
 
 LABEL_1DD1:
 	ld	hl, LABEL_B12_B6F7
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	jr	LABEL_1DB7
 	
@@ -4192,7 +4192,7 @@ LABEL_1E53:
 LABEL_1E5F:
 	push	de
 	ld	hl, LABEL_B12_B1D0
-	call	LABEL_31CF
+	call	PlaySound
 	pop	de
 	ld	a, $C1
 	ld	($C004), a
@@ -4229,7 +4229,7 @@ LABEL_1E90:
 	ld	a, c
 	ld	($C2EF), a
 	ld	hl, LABEL_B12_B18B
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_1EA7:
@@ -4373,7 +4373,7 @@ LABEL_1F76:
 	ld	hl, LABEL_B12_B1E0
 
 LABEL_1F7A:
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_1F80:
@@ -4399,14 +4399,14 @@ LABEL_1F89:
 	jr	z, +
 	ld	hl, LABEL_B12_B2CD
 +
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_1FAC:
 	ld	a, $BC
 	ld	($C004), a
 	ld	hl, LABEL_B12_B25F
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	ld	a, $05
 	ld	($C267), a
@@ -4424,7 +4424,7 @@ LABEL_1FC0:
 	call	LABEL_187D
 	set	7, (hl)
 	ld	hl, LABEL_B12_B22F
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_1FDF:
@@ -4463,7 +4463,7 @@ LABEL_2011:
 	ld	hl, LABEL_B12_B24C
 
 LABEL_2016:
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_201C:
@@ -4487,7 +4487,7 @@ LABEL_201C:
 	ld	(hl), $00
 	ld	hl, LABEL_B12_B28E
 +:	
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 ++:	
@@ -4497,7 +4497,7 @@ LABEL_201C:
 	jr	z, +
 	ld	hl, LABEL_B12_B28E
 +:	
-	call	LABEL_31CF
+	call	PlaySound
 	ld	a, $3D
 	ld	($C80F), a
 	jp	LABEL_28EE
@@ -4510,19 +4510,19 @@ LABEL_2064:
 	or	a
 	jr	z, LABEL_2078
 	ld	hl, LABEL_B12_B172
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_2078:
 	ld	a, $BF
 	ld	($C004), a
 	ld	hl, LABEL_B12_B59C
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	ld	a, $FF
 	ld	($C2D8), a
 	ld	hl, Game_mode
-	ld	(hl), $08
+	ld	(hl), $08 ; GameMode_LoadMap
 	ret
 
 LABEL_2091:
@@ -4536,7 +4536,7 @@ LABEL_2091:
 	jr	z, +
 -:	
 	ld	hl, LABEL_B12_B172
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 +:	
@@ -4582,7 +4582,7 @@ LABEL_20BF:
 	ldi
 	ld	hl, LABEL_B12_B5B0
 ++:	
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 +++:	
 	jp	LABEL_36CC
@@ -4606,7 +4606,7 @@ LABEL_2102:
 	jr	z, +
 	ld	hl, LABEL_B12_B404
 +:	
-	call	LABEL_31CF
+	call	PlaySound
 	ld	a, $D5
 	ld	($C004), a
 	jp	LABEL_3464
@@ -4618,7 +4618,7 @@ LABEL_2102:
 	jr	z, +
 	ld	hl, LABEL_B12_B404
 +:	
-	call	LABEL_31CF
+	call	PlaySound
 	ld	a, $D5
 	ld	($C004), a
 	jp	LABEL_28DB
@@ -4633,12 +4633,12 @@ LABEL_2140:
 	or	a
 	jr	nz, LABEL_2159
 	ld	hl, LABEL_B12_B172
-	call	LABEL_31CF
+	call	PlaySound
 	jp	LABEL_3464
 
 LABEL_2159:	
 	ld	hl, LABEL_B12_B59C
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_3464
 	ld	a, $08
 	ld	($C2D8), a
@@ -4690,7 +4690,7 @@ PlayerMenu_Item:
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B30A
 +:	
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3464
 	jp LABEL_21F5
 
@@ -4804,24 +4804,24 @@ LABEL_220A:
 
 LABEL_228A:
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_B2CD
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_2299:
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	jp nz, LABEL_1F89
 	ld hl, LABEL_B12_B312
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_22AF:
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld e, $04
 
 LABEL_22B7:	
@@ -4845,12 +4845,12 @@ LABEL_22B7:
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B305
 +:	
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_22E5:
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C308)
 	cp $04
 	ld hl, LABEL_B12_B2E3
@@ -4871,18 +4871,18 @@ LABEL_22E5:
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B305
 +:	
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_231A:
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C308)
 	cp $02
 	ld e, $0C
 	jp z, LABEL_22B7
 	ld hl, LABEL_B12_B2E3
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_2333:
@@ -4907,7 +4907,7 @@ LABEL_2337:
 	jr z, ++
 	push de
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	pop de
 	call LABEL_1E5F
 	call Inventory_RemoveItem
@@ -4919,14 +4919,14 @@ LABEL_2337:
 
 LABEL_2369:
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld a, $C2
 	ld ($C004), a
 	ld a, ($C29D)
 	or a
 	jr nz, +
 	ld hl, LABEL_B12_BFC4
-	call LABEL_31CF
+	call PlaySound
 	ld a, $D5
 	ld ($C004), a
 	ld a, ($C29E)
@@ -4936,7 +4936,7 @@ LABEL_2369:
 
 +:	
 	ld hl, LABEL_B12_B322
-	call LABEL_31CF
+	call PlaySound
 	ld a, $D5
 	ld ($C004), a
 	jp LABEL_3464
@@ -4947,9 +4947,9 @@ LABEL_239D:
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B366
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_B35C
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
@@ -4958,9 +4958,9 @@ LABEL_239D:
 	jr z, +
 -:	
 	ld hl, LABEL_B12_B366
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_B375
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
@@ -4968,7 +4968,7 @@ LABEL_239D:
 	or a
 	jr nz, -
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3464
 	call Inventory_RemoveItem
 	ld a, $FF
@@ -4984,12 +4984,12 @@ LABEL_23E2:
 
 LABEL_23EC:
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B2CD
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
@@ -5000,28 +5000,28 @@ LABEL_23EC:
 	pop af
 	jp nz, LABEL_2159
 	ld hl, LABEL_B12_B312
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_2416:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	jp nz, LABEL_1B17
 	ld hl, LABEL_B12_B2CD
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_242F:
 	ld hl, LABEL_B12_B366
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
@@ -5034,19 +5034,19 @@ LABEL_242F:
 -:	
 	ld hl, LABEL_B12_B3E3
 +:	
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 ++:	
 	call LABEL_24BE
 	jr z, -
 	ld hl, LABEL_B12_B3B1
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3464
 	call Inventory_RemoveItem
 	ld iy, Odin_stats
-	ld (iy+10), $06
-	ld (iy+11), $13
+	ld (iy+weapon), $06
+	ld (iy+armor), $13
 	call LABEL_16F1
 	ld a, $02
 	ld (Party_curr_num), a
@@ -5060,12 +5060,12 @@ LABEL_242F:
 
 LABEL_2491:
 	ld hl, LABEL_B12_B366
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
@@ -5077,7 +5077,7 @@ LABEL_2491:
 	jr z, +
 	ld hl, LABEL_B12_B3F9
 +:	
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_24BE:
@@ -5094,12 +5094,12 @@ LABEL_24BE:
 	call LABEL_24BE
 	jr nz, +
 	ld hl, LABEL_B12_B3E3
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B3B1
-	call LABEL_31CF
+	call PlaySound
 	call Inventory_RemoveItem
 	call LABEL_5546
 	jp LABEL_3464
@@ -5111,14 +5111,14 @@ LABEL_24E9:
 	
 LABEL_24EF:	
 	ld hl, LABEL_B12_B366
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_B569
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld b, $01
 	call LABEL_6BE9
 	and $07
@@ -5132,14 +5132,14 @@ LABEL_24EF:
 
 +:	
 	ld hl, LABEL_B12_B2CD
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 
 LABEL_2524:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	jp nz, LABEL_1B36
@@ -5147,12 +5147,12 @@ LABEL_2524:
 
 LABEL_2537:
 	ld hl, LABEL_B12_B458
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B431
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
@@ -5160,7 +5160,7 @@ LABEL_2537:
 	cp $AF
 	jr z, +
 	ld hl, LABEL_B12_B312
-	call LABEL_31CF
+	call PlaySound
 	jp	LABEL_3464
 
 +:	
@@ -5171,13 +5171,13 @@ LABEL_2537:
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, LABEL_B12_B49A
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B471
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3464
 	ld a, ItemID_Nuts
 	ld ($C2C4), a
@@ -5187,12 +5187,12 @@ LABEL_2537:
 
 LABEL_2589:
 	ld hl, LABEL_B12_B458
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
@@ -5201,7 +5201,7 @@ LABEL_2589:
 	jr z, +
 -:	
 	ld hl, LABEL_B12_B312
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
@@ -5209,7 +5209,7 @@ LABEL_2589:
 	cp $FF
 	jr z, -
 	ld hl, LABEL_B12_B4D5
-	call LABEL_31CF
+	call PlaySound
 	ld a, $06
 	ld ($C2D8), a
 	jp LABEL_3464
@@ -5227,14 +5227,14 @@ LABEL_25C3:
 
 LABEL_25D7:	
 	ld hl, LABEL_B12_B366
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	ld hl, LABEL_B12_B500
 	jr z, +
 	ld hl, LABEL_B12_B35C
 +:	
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 ++:	
@@ -5243,7 +5243,7 @@ LABEL_25D7:
 	jr nz, LABEL_25D7
 -:	
 	ld hl, LABEL_B12_B743
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3464
 	ld a, $07
 	ld ($C2D8), a
@@ -5263,14 +5263,14 @@ LABEL_2613:
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_B52C
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B544
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_2631:
@@ -5279,14 +5279,14 @@ LABEL_2631:
 	jr z, ++
 -:	
 	ld hl, LABEL_B12_B366
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	ld hl, LABEL_B12_B375
 	jr z, +
 	ld hl, LABEL_B12_B35C
 +:	
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 ++:	
@@ -5294,8 +5294,8 @@ LABEL_2631:
 	or a
 	jr nz, -
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
-	ld a, ($C30A)
+	call PlaySound
+	ld a, (Dungeon_direction)
 	and $03
 	ld hl, LABEL_B12_BD01
 	jr z, +
@@ -5307,7 +5307,7 @@ LABEL_2631:
 	jr z, +
 	ld hl, LABEL_B12_BCF7
 +:	
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_267C:
@@ -5315,7 +5315,7 @@ LABEL_267C:
 	or a
 	jp nz, LABEL_24EF
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld b, $01
 	call LABEL_6BE9
 	bit 7, (hl)
@@ -5334,19 +5334,19 @@ LABEL_267C:
 
 ++:	
 	ld hl, LABEL_B12_B2CD
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_26B0:
 	ld hl, LABEL_B12_B2AC
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C29D)
 	or a
 	ld hl, LABEL_B12_B312
 	jr nz, +
 	ld hl, LABEL_B12_B555
 +:	
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_26C8:
@@ -5367,7 +5367,7 @@ LABEL_26C8:
 	and $0F
 	jp nz, +
 	ld hl, LABEL_B12_B5F0
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
@@ -5412,7 +5412,7 @@ LABEL_26C8:
 	ld a, ($C2C4)
 	ld (de), a
 	ld hl, LABEL_B12_B2B6
-	call LABEL_31CF
+	call PlaySound
 	ld a, ($C2C2)
 	call LABEL_3707
 	call LABEL_2D25
@@ -5428,7 +5428,7 @@ LABEL_2741:
 
 +:	
 	ld hl, LABEL_B12_B5DE
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3464
 	jr LABEL_2741
 
@@ -5446,12 +5446,12 @@ LABEL_2752:
 	and $04
 	jr z, +
 	ld hl, LABEL_B12_B6DE
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B2C2
-	call LABEL_31CF
+	call PlaySound
 	call Inventory_RemoveItem
 	jp LABEL_3464
 
@@ -5499,21 +5499,21 @@ Inventory_AddItem:
 
 LABEL_27BC:	
 	ld hl, LABEL_B12_B671
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	jr z, LABEL_27D8
 	ld hl, LABEL_B12_B6C1
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	jr nz, LABEL_27D8
 	ld hl, LABEL_B12_B6D0
-	jp LABEL_31CF
+	jp PlaySound
 	
 LABEL_27D8:	
 	ld a, ($C2C4)
 	push af
 	ld hl, LABEL_B12_B68C
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_34D5
 	call LABEL_3656
 	bit 4, c
@@ -5531,14 +5531,14 @@ LABEL_27D8:
 	and $04
 	jr z, +
 	ld hl, LABEL_B12_B6DE
-	call LABEL_31CF
+	call PlaySound
 	pop af
 	ld ($C2C4), a
 	jp LABEL_27D8
 
 +:	
 	ld hl, LABEL_B12_B69E
-	call LABEL_31CF
+	call PlaySound
 	pop af
 	ld ($C2C4), a
 	ld hl, ($C29B)
@@ -5546,7 +5546,7 @@ LABEL_27D8:
 	ld a, $B3
 	ld ($C004), a
 	ld hl, LABEL_B12_B6AD
-	jp LABEL_31CF
+	jp PlaySound
 
 ++:	
 	pop af
@@ -5569,7 +5569,7 @@ PlayerMenu_Search:
 	jr nz, +
 	call LABEL_30B7
 	ld hl, LABEL_B12_B569
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_28DB
 	jp LABEL_2ED9
 
@@ -5639,7 +5639,7 @@ PlayerMenu_Search:
 	call Inventory_FindFreeSlot
 	jr z, LABEL_28C5
 	ld hl, LABEL_B12_B592
-	call LABEL_31CF
+	call PlaySound
 	call Inventory_AddItem
 	jp LABEL_3464
 
@@ -5650,12 +5650,12 @@ LABEL_28C5:
 	cp $A3
 	jp z, LABEL_558C
 	ld hl, LABEL_B12_B569
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_28DB:
 	ld   hl, LABEL_B12_B656
-	call	LABEL_31CF
+	call	PlaySound
 	call	LABEL_37A3
 	push	af
 	call	LABEL_37C3
@@ -5685,7 +5685,7 @@ LABEL_28EE:
 	or a
 	jr nz, +
 	ld hl, LABEL_B12_B665
-	call LABEL_31CF
+	call PlaySound
 	ld a, $D0
 	ld ($C900), a
 	jp LABEL_3464
@@ -5697,13 +5697,13 @@ LABEL_28EE:
 	ld a, h
 	or l
 	ld hl, LABEL_B12_B648
-	call nz, LABEL_31CF
+	call nz, PlaySound
 	ld a, ($C2DF)
 	ld ($C2C4), a
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B592
-	call LABEL_31CF
+	call PlaySound
 	call Inventory_AddItem
 +:	
 	ld a, $D0
@@ -5759,14 +5759,14 @@ LABEL_2989:
 	
 LABEL_298D:	
 	ld hl, LABEL_B12_B8C8
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	jp nz, LABEL_2A55
 LABEL_2999:	
 	ld a, (Party_curr_num)
 	or a
 	ld hl, LABEL_B12_B925
-	call nz, LABEL_31CF
+	call nz, PlaySound
 	call LABEL_3665
 	bit Button_1, c
 	jp nz, LABEL_2A52
@@ -5774,7 +5774,7 @@ LABEL_2999:
 	call LABEL_187D
 	jr nz, +
 	ld hl, LABEL_B12_B730
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_2A48
 
 +:	
@@ -5787,12 +5787,12 @@ LABEL_2999:
 	cp (iy+7)
 	jr nz, +
 	ld hl, LABEL_B12_B96B
-	call LABEL_31CF
+	call PlaySound
 	ld a, (Party_curr_num)
 	or a
 	jr nz, LABEL_2A48
 	ld hl, LABEL_B12_B964
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
@@ -5806,7 +5806,7 @@ LABEL_2999:
 	ld h, $00
 	ld ($C2C5), hl
 	ld hl, LABEL_B12_B8E0
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_39E9
 	call LABEL_2D19
 	push af
@@ -5827,13 +5827,13 @@ LABEL_2999:
 	ld a, (iy+7)
 	ld (iy+2), a
 	ld hl, LABEL_B12_B938
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3A12
 	ld a, (Party_curr_num)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B90A
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	jr nz, LABEL_2A52
 
@@ -5846,14 +5846,14 @@ LABEL_2A52:
 	call LABEL_36BB
 LABEL_2A55:	
 	ld hl, LABEL_B12_B951
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_2A5E:	
 	call LABEL_3A12
 	call LABEL_36BB
 	ld hl, LABEL_B12_BD57
-	call LABEL_31CF
+	call PlaySound
 +:	
 	jp LABEL_3464
 
@@ -5881,7 +5881,7 @@ LABEL_2A85:
 	ld a, ($C2DB)
 	ld ($C317), a
 	ld hl, LABEL_B12_B97F
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	or a
 	jp nz, LABEL_2B46
@@ -5890,7 +5890,7 @@ LABEL_2A98:
 	or a
 	jp z, LABEL_2B31
 	ld hl, LABEL_B12_B9D3
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3665
 	bit Button_1, c
 	jp nz, LABEL_2B43
@@ -5911,7 +5911,7 @@ LABEL_2A98:
 	add hl, de
 	ld ($C2C5), hl
 	ld hl, LABEL_B12_B9EE
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_39E9
 	call LABEL_2D19
 	push af
@@ -5919,7 +5919,7 @@ LABEL_2A98:
 	pop af
 	jr nz, LABEL_2B15
 	ld hl, LABEL_B12_B9B0
-	call LABEL_31CF
+	call PlaySound
 	ld de, ($C2C5)
 	ld hl, (Current_money)
 	or a
@@ -5933,14 +5933,14 @@ LABEL_2A98:
 	ld a, (iy+7)
 	ld (iy+2), a
 	ld hl, LABEL_B12_B9C4
-	call LABEL_31CF
+	call PlaySound
 	ld a, $C5
 	ld ($C004), a
 	call LABEL_2D33
 	call LABEL_3A12
 LABEL_2B15:	
 	ld hl, LABEL_B12_B9E5
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	jr nz, LABEL_2B43
 	call LABEL_36BB
@@ -5948,14 +5948,14 @@ LABEL_2B15:
 
 +:	
 	ld hl, LABEL_B12_BD9F
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3A12
 	jr LABEL_2B15
 
 LABEL_2B31:	
 	ld ($C2C2), a
 	ld hl, LABEL_B12_BA56
-	call LABEL_31CF
+	call PlaySound
 	ld a, (Party_curr_num)
 	or a
 	jr nz, LABEL_2B15
@@ -5964,9 +5964,9 @@ LABEL_2B43:
 	call LABEL_36BB
 LABEL_2B46:	
 	ld hl, LABEL_B12_BA3C
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_BA04
-	call LABEL_31CF
+	call PlaySound
 	call +
 	jp LABEL_3464
 
@@ -5988,13 +5988,13 @@ LABEL_2B46:
 	ld a, $03
 +:	
 	ld ($C2C2), a
-	bit 0, (iy+0)
+	bit 0, (iy+status)
 	ret z
-	ld a, (iy+5)
+	ld a, (iy+level)
 	cp $1E
 	jr c, +
 	ld hl, LABEL_B12_BDFF
-	jp LABEL_31CF
+	jp PlaySound
 
 +:	
 	ld hl, $FFFF
@@ -6015,17 +6015,17 @@ LABEL_2B46:
 	sbc hl, de
 	ld ($C2C5), hl
 	ld hl, LABEL_B12_BA1F
-	jp LABEL_31CF
+	jp PlaySound
 
 	
 LABEL_2BC0:	
 	ld hl, LABEL_B12_B7C7
-	call LABEL_31CF
+	call PlaySound
 LABEL_2BC6:	
 	call LABEL_2D19
 	jr z, LABEL_2BD4
 	ld hl, LABEL_B12_B7E3
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_2BD4:	
@@ -6035,7 +6035,7 @@ LABEL_2BD4:
 	pop bc
 LABEL_2BDC:	
 	ld hl, LABEL_B12_B7F5
-	call LABEL_31CF
+	call PlaySound
 	push bc
 	call LABEL_38D9
 	bit 4, c
@@ -6070,14 +6070,14 @@ LABEL_2BDC:
 	call Inventory_AddItem
 ++:	
 	ld hl, LABEL_B12_B807
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	jr z, LABEL_2BDC
 
 LABEL_2C2D:	
 	ld hl, LABEL_B12_B7E3
 -:	
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3A12
 	call LABEL_3999
 	jp LABEL_3464
@@ -6126,12 +6126,12 @@ LABEL_2C46:
 
 LABEL_2C8F:	
 	ld hl, LABEL_B12_B832
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_2BC6
 
 LABEL_2C98:	
 	ld hl, LABEL_B12_B85D
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3777
 	push af
 	push bc
@@ -6144,7 +6144,7 @@ LABEL_2C98:
 	jp z, LABEL_2BD4
 LABEL_2CB1:	
 	ld hl, LABEL_B12_B882
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_34D5
 	bit 4, c
 	push af
@@ -6170,17 +6170,17 @@ LABEL_2CB1:
 	or h
 	jr nz, +
 	ld hl, LABEL_B12_BD7E
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_2CB1
 
 LABEL_2CEA:	
 	ld hl, LABEL_B12_B7E3
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B89A
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	jr z, +
 	jp LABEL_2CB1
@@ -6190,7 +6190,7 @@ LABEL_2CEA:
 	ld hl, ($C2C5)
 	call LABEL_297A
 	ld hl, LABEL_B12_B8BC
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	jp z, LABEL_2CB1
 	jp LABEL_2CEA
@@ -6406,8 +6406,8 @@ LABEL_2E62:
 	ld a, ($C268)
 	or a
 	ret z
-	ld a, ($C202)
-	cp $03
+	ld a, (Game_mode)
+	cp $03 ; GameMode_Intro
 	ld bc, $F0F3
 	jr nz, +
 	ld bc, $FF00
@@ -6862,7 +6862,7 @@ LABEL_31CB:
 	dec  hl
 	jp   LABEL_3235
 
-LABEL_31CF:
+PlaySound:
 	ld   a, :Bank12
 	ld   ($FFFF), a
 	
@@ -8226,9 +8226,9 @@ LABEL_3AC4:
 
 
 GameMode_Interaction:
-	ld a, ($C212)
+	ld a, (Game_is_paused)
 	or a
-	call nz, LABEL_F1
+	call nz, PauseLoop
 	ld a, $08
 	call WaitForVInt
 	ld a, ($C29D)
@@ -8272,23 +8272,23 @@ LABEL_3BC5:
 	ld bc, $00FF
 	ld (hl), $00
 	ldir
-	ld a, ($C202)
-	cp $0D
+	ld a, (Game_mode)
+	cp $0D ; GameMode_Interaction
 	ret nz
 	ld a, ($C2E9)
 	bit 7, a
 	jr z, +
-	ld a, $04
-	ld ($C202), a
+	ld a, $04 ; GameMode_LoadShip
+	ld (Game_mode), a
 	ret
 
 +:	
 	or a
-	ld a, $08
+	ld a, $08 ; GameMode_LoadMap
 	jr z, +
-	ld a, $0E
+	ld a, $0E ; GameMode_LoadRoad
 +:	
-	ld ($C202), a
+	ld (Game_mode), a
 	ret
 
 LABEL_3C1A:	
@@ -8418,7 +8418,7 @@ LABEL_3CAD:
 	ld ($C004), a
 +:	
 	ld hl, Game_mode
-	inc (hl)
+	inc (hl) ; GameMode_Interaction
 	di
 	ld de, $8006
 	rst $08
@@ -8553,9 +8553,9 @@ LABEL_3DF6:
 .db $8E, $8F, $17
 
 GameMode_NameInput:
-	ld a, ($C212)
+	ld a, (Game_is_paused)
 	or a
-	call nz, LABEL_F1
+	call nz, PauseLoop
 	ld ix, $C784
 	ld a, $08
 	call WaitForVInt
@@ -8642,12 +8642,12 @@ GameMode_NameInput:
 	ld a, $80
 	ld ($FFFC), a
 	ld a, ($C316)
-	cp $0B
-	ld a, $0A
+	cp $0B ; GameMode_Dungeon
+	ld a, $0A ; GameMode_LoadDungeon
 	jr z, +
-	ld a, $0C
+	ld a, $0C ; GameMode_LoadInteraction
 +:	
-	ld ($C202), a
+	ld (Game_mode), a
 	ret
 
 LABEL_3F69:
@@ -8789,7 +8789,7 @@ GameMode_LoadNameInput:
 	call LABEL_363
 	ei
 	ld hl, Game_mode
-	inc (hl)
+	inc (hl) ; GameMode_NameInput
 	ld hl, $C781
 	ld (hl), $00
 	ld de, $C782
@@ -9354,13 +9354,13 @@ LABEL_4497:
 	ld ($C2E6), a
 	call LABEL_5FFE
 	call LABEL_100F
-	ld a, ($C202)
-	cp $02
+	ld a, (Game_mode)
+	cp $02 ; GameMode_LoadIntro
 	ret z
 	ld hl, LABEL_4511
 LABEL_4509:	
-	ld a, $08
-	ld ($C202), a
+	ld a, $08 ; GameMode_LoadMap
+	ld (Game_mode), a
 	jp LABEL_787B
 
 
@@ -9409,17 +9409,17 @@ LABEL_454E:
 	call LABEL_2D49
 	call LABEL_7CE4
 	ld hl, LABEL_B12_BEB6
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_BED0
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_BEE8
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_BEFD
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_BF09
-	call LABEL_31CF
+	call PlaySound
 	ld hl, LABEL_B12_BF21
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3464
 	call LABEL_467C
 	ld a, $03
@@ -9470,9 +9470,9 @@ LABEL_454E:
 	call LABEL_7B20
 	call LABEL_2D47
 	ld hl, LABEL_3DF6+1
-	ld ($C30C), hl
+	ld (Dungeon_position), hl
 	xor a
-	ld ($C30A), a
+	ld (Dungeon_direction), a
 	call LABEL_661C
 	ld hl, $FFFF
 	ld (hl), :Bank15
@@ -9512,8 +9512,8 @@ LABEL_454E:
 	ld ($C2F5), a
 	ld b, $B4
 	call LABEL_2D49
-	ld a, $02
-	ld ($C202), a
+	ld a, $02 ; GameMode_LoadIntro
+	ld (Game_mode), a
 	ret
 
 LABEL_467C:
@@ -9974,7 +9974,7 @@ LABEL_49E6:
 	ld a, $01
 	ld ($C2C2), a
 	ld hl, LABEL_B12_B728
-	call LABEL_31CF
+	call PlaySound
 	ld hl, $0000
 	ld (Myau_stats), hl
 	ld hl, $0298
@@ -10121,7 +10121,7 @@ LABEL_4AD3:
 	sbc hl, de
 	jr nc, +
 	ld hl, LABEL_B12_BD57
-	jp LABEL_31CF
+	jp PlaySound
 
 +:	
 	ld (Current_money), hl
@@ -10313,11 +10313,11 @@ LABEL_4C70:
 	call LABEL_3464
 	pop hl
 	ld hl, $22E6
-	ld ($C30C), hl
+	ld (Dungeon_position), hl
 	xor a
-	ld ($C30A), a
+	ld (Dungeon_direction), a
 	ld hl, Game_mode
-	ld (hl), $0B
+	ld (hl), $0B ; GameMode_Dungeon
 	call LABEL_661C
 	ld a, $85
 	jp LABEL_C97
@@ -10932,7 +10932,7 @@ LABEL_510D:
 	call LABEL_2D19
 	jr z, +
 	ld hl, LABEL_B12_B7E3
-	jp LABEL_31CF
+	jp PlaySound
 
 +:	
 	ld de, $0118
@@ -10941,14 +10941,14 @@ LABEL_510D:
 	sbc hl, de
 	jr nc, +
 	ld hl, LABEL_B12_BD57
-	jp LABEL_31CF
+	jp PlaySound
 
 +:	
 	ld a, (Inventory_curr_num)
 	cp $18
 	jr c, +
 	ld hl, LABEL_B12_B813
-	jp LABEL_31CF
+	jp PlaySound
 
 +:	
 	ld (Current_money), hl
@@ -11221,11 +11221,11 @@ LABEL_534B:
 	call LABEL_3464
 	pop hl
 	ld hl, $159C
-	ld ($C30C), hl
+	ld (Dungeon_position), hl
 	ld a, $01
-	ld ($C30A), a
+	ld (Dungeon_direction), a
 	ld hl, Game_mode
-	ld (hl), $0A
+	ld (hl), $0A ; GameMode_LoadDungeon
 	ret
 
 +:	
@@ -11418,8 +11418,8 @@ LABEL_54D0:
 	
 LABEL_54EF:	
 	call LABEL_100F
-	ld a, ($C202)
-	cp $02
+	ld a, (Game_mode)
+	cp $02 ; GameMode_LoadIntro
 	ret nz
 	pop hl
 	pop hl
@@ -11449,7 +11449,7 @@ LABEL_54FB:
 
 LABEL_552F:
 	ld	hl, LABEL_B12_B7AA
-	jp	LABEL_31CF
+	jp	PlaySound
 
 LABEL_5535:
 	call	LABEL_2D25
@@ -11461,7 +11461,7 @@ LABEL_5538:
 
 LABEL_553D:	
 	ld hl, LABEL_B12_B569
-	call LABEL_31CF
+	call PlaySound
 	jp LABEL_3464
 
 LABEL_5546:
@@ -11599,7 +11599,7 @@ LABEL_5619:
 	or a
 	jr nz, LABEL_5666
 	ld hl, LABEL_B12_BF64
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_3464
 
 LABEL_5666:
@@ -11639,7 +11639,7 @@ LABEL_56A2:
 	rr d
 	push de
 	ld hl, LABEL_B12_B728
-	call c, LABEL_31CF
+	call c, PlaySound
 	pop de
 	inc e
 	ld a, e
@@ -11667,7 +11667,7 @@ LABEL_56D3:
 
 LABEL_56D9:
 	ld hl, LABEL_B12_BDCE
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	ret nz
 	ld a, $81
@@ -11676,7 +11676,7 @@ LABEL_56D9:
 
 LABEL_56E9:
 	ld hl, LABEL_B12_BDE6
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	ret nz
 	ld a, $82
@@ -11685,7 +11685,7 @@ LABEL_56E9:
 
 LABEL_56F9:
 	ld hl, LABEL_B12_B754
-	call LABEL_31CF
+	call PlaySound
 	push bc
 	call LABEL_3A21
 	bit 4, c
@@ -11708,7 +11708,7 @@ LABEL_56F9:
 	jr z, +
 	ld hl, LABEL_B12_B785
 +:	
-	call LABEL_31CF
+	call PlaySound
 	jr LABEL_56F9
 
 ++:	
@@ -11722,7 +11722,7 @@ LABEL_56F9:
 	ld hl, LABEL_B12_B761
 +:	
 	push de
-	call LABEL_31CF
+	call PlaySound
 	call LABEL_2D19
 	pop de
 	jr nz, LABEL_56F9
@@ -13205,10 +13205,10 @@ LABEL_6280:
 	jp LABEL_589E
 
 LABEL_6293:
-	ld a, ($C202)
-	cp $05
+	ld a, (Game_mode)
+	cp $05 ; GameMode_Ship
 	jr z, +
-	cp $09
+	cp $09 ; GameMode_Map
 	ret nz
 +:	
 	ld hl, $FFFF
@@ -13553,8 +13553,8 @@ LABEL_64A3:
 	ld a, ($C21B)
 	or a
 	ret nz
-	ld a, ($C202)
-	cp $0D
+	ld a, (Game_mode)
+	cp $0D ; GameMode_Interaction
 	ret nz
 	ld hl, $C213
 	dec (hl)
@@ -13581,8 +13581,8 @@ LABEL_64CF:
 	ld a, ($C21B)
 	or a
 	ret nz
-	ld a, ($C202)
-	cp $0D
+	ld a, (Game_mode)
+	cp $0D ; GameMode_Interaction
 	ret nz
 	ld hl, $C213
 	dec (hl)
@@ -13648,14 +13648,14 @@ LABEL_65D6:
 
 
 LABEL_65EE:
-	ld   a, ($C30C)
+	ld   a, (Dungeon_position)
 	ld   l, a
 	ld   h, $CB
 	ld   a, (hl)
 	cp   $08
 	jp   nz, LABEL_66E1
 	ld   c, l
-	ld   a, ($C30D)
+	ld   a, (Dungeon_index)
 	ld   b, a
 	ld   hl, $FFFF
 	ld   (hl), :Bank03
@@ -13711,12 +13711,12 @@ LABEL_6635:
 	ei
 	pop  bc
 	djnz	LABEL_6635
-	ld   a, ($C30D)
+	ld   a, (Dungeon_index)
 	sub  $01
 	jr   nc, LABEL_666A
 	xor  a
 LABEL_666A:
-	ld   ($C30D), a
+	ld   (Dungeon_index), a
 	call	LABEL_6D56
 	xor  a
 	call	LABEL_6AED
@@ -13803,9 +13803,9 @@ LABEL_66E1:
 	jr   z, LABEL_671C
 	ld   b, $FF
 LABEL_671C:
-	ld   a, ($C30D)
+	ld   a, (Dungeon_index)
 	add  a, b
-	ld   ($C30D), a
+	ld   (Dungeon_index), a
 	call	LABEL_6D56
 	jp   LABEL_6731
 
@@ -13817,7 +13817,7 @@ LABEL_6729:
 	jp   nz, LABEL_68BC
 LABEL_6731:
 	call	LABEL_7B05
-	ld   a, ($C30A)
+	ld   a, (Dungeon_direction)
 	and  $03
 	ld   hl, $6ADF
 	add  a, l
@@ -13825,10 +13825,10 @@ LABEL_6731:
 	adc  a, h
 	sub  l
 	ld   h, a
-	ld   a, ($C30C)
+	ld   a, (Dungeon_position)
 	add  a, (hl)
 	add  a, (hl)
-	ld   ($C30C), a
+	ld   (Dungeon_position), a
 	xor  a
 	call	LABEL_6AE5
 	call	LABEL_7B20
@@ -13840,7 +13840,7 @@ LABEL_6755:
 LABEL_6758:
 	ld   a, $00
 	call	LABEL_6A58
-	ld   a, ($C30A)
+	ld   a, (Dungeon_direction)
 	and  $03
 	ld   hl, LABEL_6AE1-2
 	add  a, l
@@ -13848,9 +13848,9 @@ LABEL_6758:
 	adc  a, h
 	sub  l
 	ld   h, a
-	ld   a, ($C30C)
+	ld   a, (Dungeon_position)
 	add  a, (hl)
-	ld   ($C30C), a
+	ld   (Dungeon_position), a
 	xor  a
 	call	LABEL_6AE5
 	ld	b, $01
@@ -13869,7 +13869,7 @@ LABEL_677A:
 	jp	LABEL_6963
 
 LABEL_6792:
-	ld   a, ($C30A)
+	ld   a, (Dungeon_direction)
 	and  $03
 	ld   hl, LABEL_6AE1
 	add  a, l
@@ -13877,9 +13877,9 @@ LABEL_6792:
 	adc  a, h
 	sub  l
 	ld   h, a
-	ld   a, ($C30C)
+	ld   a, (Dungeon_position)
 	add  a, (hl)
-	ld   ($C30C), a
+	ld   (Dungeon_position), a
 	ld   a, $01
 	jp   LABEL_6A58
 
@@ -13891,10 +13891,10 @@ LABEL_67AB:
 	jp	LABEL_6963
 
 LABEL_67B7:
-	ld   a, ($C30A)
+	ld   a, (Dungeon_direction)
 	dec  a
 	and  $03
-	ld   ($C30A), a
+	ld   (Dungeon_direction), a
 	ld   h, $02
 	ld   b, $0D
 	call	LABEL_6BCA
@@ -13918,10 +13918,10 @@ LABEL_67D7:
 	jp	LABEL_6963
 
 LABEL_67E2:
-	ld   a, ($C30A)
+	ld   a, (Dungeon_direction)
 	inc  a
 	and  $03
-	ld   ($C30A), a
+	ld   (Dungeon_direction), a
 	ld   h, $06
 	ld   b, $0C
 	call	LABEL_6BCA
@@ -13994,7 +13994,7 @@ LABEL_684A:
 	cp $08
 	jr nz, ++
 	ld c, l
-	ld a, ($C30D)
+	ld a, (Dungeon_index)
 	ld b, a
 	ld hl, $FFFF
 	ld (hl), :Bank03
@@ -14067,7 +14067,7 @@ LABEL_68BC:
 	ret  z
 
 	ld   c, l
-	ld   a, ($C30D)
+	ld   a, (Dungeon_index)
 	ld   b, a
 	ld   hl, $FFFF
 	ld   (hl), :Bank03
@@ -14093,7 +14093,7 @@ LABEL_68E1:
 
 LABEL_68E6:
 	ld   hl, Game_mode
-	ld   (hl), $08
+	ld   (hl), $08 ; GameMode_LoadMap
 	ret
 
 LABEL_68EC:
@@ -14131,8 +14131,8 @@ LABEL_6925:
 	inc  hl
 	inc  hl
 	call	LABEL_6A2F
-	ld   a, ($C202)
-	cp   $0B
+	ld   a, (Game_mode)
+	cp   $0B ; GameMode_Dungeon
 	ret  nz
 
 	call	LABEL_7B05
@@ -14167,7 +14167,7 @@ LABEL_6963:
 
 	ld   c, l
 	push	bc
-	ld   a, ($C30D)
+	ld   a, (Dungeon_index)
 	ld   b, a
 	ld   hl, $FFFF
 	ld   (hl), :Bank03
@@ -14234,7 +14234,7 @@ LABEL_69C7:
 	ret  nz
 
 	ld   hl, LABEL_B12_BD97
-	call	LABEL_31CF
+	call	PlaySound
 	push	bc
 	call	LABEL_16B2
 	pop  bc
@@ -14517,7 +14517,7 @@ LABEL_6BB5:
 
 LABEL_6BCA:
 	push	hl
-	ld   a, ($C30A)
+	ld   a, (Dungeon_direction)
 	and  $03
 	add  a, a
 	add  a, a
@@ -14529,7 +14529,7 @@ LABEL_6BCA:
 	add  hl, de
 	ld   e, b
 	add  hl, de
-	ld   a, ($C30C)
+	ld   a, (Dungeon_position)
 	add  a, (hl)
 	ld   h, $CB
 	ld   l, a
@@ -14539,7 +14539,7 @@ LABEL_6BCA:
 	ret
 
 LABEL_6BE9:
-	ld   a, ($C30A)
+	ld   a, (Dungeon_direction)
 	and  $03
 	add  a, a
 	add  a, a
@@ -14551,7 +14551,7 @@ LABEL_6BE9:
 	add  hl, de
 	ld   e, b
 	add  hl, de
-	ld   a, ($C30C)
+	ld   a, (Dungeon_position)
 	add  a, (hl)
 	ld   h, $CB
 	ld   l, a
@@ -14752,7 +14752,7 @@ LABEL_6D45:
 LABEL_6D56:
 	ld   hl, $FFFF
 	ld   (hl), :Bank15
-	ld   a, ($C30D)
+	ld   a, (Dungeon_index)
 	ld   h, a
 	ld   l, $00
 	srl  h
@@ -14784,7 +14784,7 @@ LABEL_6D7F:
 	ld   de, $C251
 	ld   bc, $0007
 	ldir
-	ld   a, ($C30D)
+	ld   a, (Dungeon_index)
 	add  a, a
 	add  a, a
 	ld   l, a
@@ -14801,7 +14801,7 @@ LABEL_6D7F:
 	ld   a, (hl)
 	jr   nz, LABEL_6DBB
 	ld   e, a
-	ld   a, ($C30D)
+	ld   a, (Dungeon_index)
 	ld   hl, LABEL_6DFE
 	ld   bc, $0006
 	cpir
@@ -14833,7 +14833,7 @@ LABEL_6DBB:
 LABEL_6DE2:
 	ld hl, $FFFF
 	ld (hl), :Bank03
-	ld a, ($C30D)
+	ld a, (Dungeon_index)
 	add a, a
 	add a, a
 	ld l, a
@@ -16302,7 +16302,7 @@ LABEL_77AC:
 	jp nz, LABEL_78BD
 
 LABEL_7877:
-	ld   ($C202), a
+	ld   (Game_mode), a
 	inc  hl
 LABEL_787B:
 	ld   a, (hl)
@@ -16352,15 +16352,15 @@ LABEL_7897:
 LABEL_78BD:
 	cp $0A
 	jp nz, +
-	ld ($C202), a
+	ld (Game_mode), a
 	inc hl
 	ld d, (hl)
 	inc hl
 	ld e, (hl)
-	ld ($C30C), de
+	ld (Dungeon_position), de
 	inc hl
 	ld a, (hl)
-	ld ($C30A), a
+	ld (Dungeon_direction), a
 	ld hl, ($C311)
 	ld ($C305), hl
 	ld hl, ($C313)
@@ -16372,7 +16372,7 @@ LABEL_78BD:
 +:	
 	cp $0C
 	ret nz
-	ld ($C202), a
+	ld (Game_mode), a
 	inc hl
 	ld a, (hl)
 	ld ($C29E), a
@@ -16416,12 +16416,12 @@ LABEL_792A:
 	ld a, ($C506)
 	or a
 	ret z
-	ld a, $0A
-	ld ($C202), a
+	ld a, $0A ; GameMode_LoadDungeon
+	ld (Game_mode), a
 	ld hl, $00DE
-	ld ($C30C), hl
+	ld (Dungeon_position), hl
 	ld a, $00
-	ld ($C30A), a
+	ld (Dungeon_direction), a
 	ld hl, ($C311)
 	ld ($C305), hl
 	ld hl, ($C313)
@@ -16440,8 +16440,8 @@ LABEL_792A:
 	ld hl, $00A0
 	ld ($C2DB), hl
 LABEL_7972:	
-	ld a, $0C
-	ld ($C202), a
+	ld a, $0C ; GameMode_LoadInteraction
+	ld (Game_mode), a
 	ld hl, ($C311)
 	ld ($C305), hl
 	ld hl, ($C313)
@@ -16518,8 +16518,8 @@ LABEL_79E2:
 	ld ($C2F0), a
 	ld hl, $00AE
 	ld ($C2DB), hl
-	ld a, $0C
-	ld ($C202), a
+	ld a, $0C ; GameMode_LoadInteraction
+	ld (Game_mode), a
 	jp LABEL_7908
 
 +:	
