@@ -110,6 +110,7 @@
 
 ; RAM
 .define	Game_mode $C202
+.define	Game_is_paused $C212
 
 .define	Ctrl_1 $C204
 .define	Ctrl_1_held $C204
