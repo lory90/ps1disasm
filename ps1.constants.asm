@@ -91,7 +91,6 @@
 
 .define	InventoryMaxNum 24
 
-
 ; Buttons
 .define	ButtonUp 0
 .define	ButtonDown 1
@@ -108,16 +107,31 @@
 .define	Button_2_Mask 1<<Button_2
 
 
+; Dialogue
+.define Dialogue_DoubleQuote $22
+.define Dialogue_Apostrophe $40
+.define Dialogue_EnemyName $5C
+.define Dialogue_NewLine $60
+.define Dialogue_NewPage $61
+.define Dialogue_Terminator62 $62
+.define Dialogue_Terminator63 $63
+.define Dialogue_Terminator64 $64
+.define Dialogue_Terminator65 $65
+
 ; RAM
 .define	Game_mode $C202
 .define	Game_is_paused $C212
+.define	Fade_timer $C21B
 
 .define	Ctrl_1 $C204
 .define	Ctrl_1_held $C204
 .define	Ctrl_1_pressed $C205
 
-.define	Cursor_pos	$C269
+.define	Cursor_pos $C269
 .define	Option_total_num $C26E	; number of options available for an interactive menu (e.g. player menu)
+
+.define	CurrentBattle_EnemyName $C2C8 ; 8 bytes
+.define	CurrentBattle_EXPReward $C2D0 ; unsigned 2 bytes, little endian
 
 .define	Dungeon_direction $C30A
 .define	Dungeon_position $C30C

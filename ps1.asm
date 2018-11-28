@@ -101,6 +101,11 @@ _NMI_HANDLER:
 	cp   $0D ; GameMode_Interaction
 	jr   nz, LABEL_81
 LABEL_7A:
+	; Small routine to test B12 dialogue stuff - Isotarge
+	;push hl
+	;ld	hl, LABEL_B12_BF64
+	;call	ShowDialogue_B12
+	;pop hl
 	ld   a, (Game_is_paused)
 	cpl
 	ld   (Game_is_paused), a
@@ -469,7 +474,7 @@ LABEL_2FD:
 	ldir
 	ld	a, $14
 	call	WaitForVInt
-	jp	LABEL_7B20
+	jp	FadeIn2
 
 LABEL_318:
 	ld   hl, $0000
@@ -1068,10 +1073,10 @@ LABEL_5E8:
 	ld	bc, $3FF
 	ld	(hl), l
 	ldir
-	ld	iy, Char_stats
-	ld	(iy+weapon), $02
-	ld	(iy+armor), $10
-	call	LABEL_16F1
+	ld	iy, Alis_stats
+	ld	(iy+weapon), ItemID_ShortSword
+	ld	(iy+armor), ItemID_LeatherArmor
+	call	UnlockCharacter
 	ld	hl, $C600
 	ld	(hl), $FF
 	ld	hl, $C604
@@ -1109,7 +1114,7 @@ LABEL_63E:
 LABEL_64D:
 	ld	a, $80
 	ld	($FFFC), a
-	call	LABEL_7B05
+	call	FadeOut2
 	di
 	call	LABEL_35A
 	ei
@@ -1126,11 +1131,11 @@ LABEL_64D:
 	call	LABEL_2FD
 LABEL_678:
 	ld	hl, LABEL_B12_BE45
-	call	PlaySound
-	call	LABEL_2D19
+	call	ShowDialogue_B12
+	call	ShowYesNoPrompt
 	jr	nz, LABEL_6C5
 	ld	hl, LABEL_B12_BE1B
-	call	PlaySound
+	call	ShowDialogue_B12
 -
 	push	bc
 	call	LABEL_39B1
@@ -1138,7 +1143,7 @@ LABEL_678:
 	call	LABEL_73A
 	jr	z, -
 	ld	hl, LABEL_B12_BE35
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	a, $08
 	ld	($FFFC), a
@@ -1162,12 +1167,12 @@ LABEL_678:
 
 LABEL_6C5:
 	ld	hl, LABEL_B12_BE5E
-	call	PlaySound
-	call	LABEL_2D19
+	call	ShowDialogue_B12
+	call	ShowYesNoPrompt
 	jr	nz, LABEL_678
 --
 	ld	hl, LABEL_B12_BE6F
-	call	PlaySound
+	call	ShowDialogue_B12
 -
 	push	bc
 	call	LABEL_39B1
@@ -1177,11 +1182,11 @@ LABEL_6C5:
 	call	LABEL_73A
 	jr	z, -
 	ld	hl, LABEL_B12_BA82
-	call	PlaySound
-	call	LABEL_2D19
+	call	ShowDialogue_B12
+	call	ShowYesNoPrompt
 	jr	nz, --
 	ld	hl, LABEL_B12_BE82
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $08
 	ld	($FFFC), a
 	ld	a, ($C2C5)
@@ -1231,7 +1236,7 @@ LABEL_73A:
 	ret
 
 GameMode_LoadIntro:
-	call	LABEL_7B05
+	call	FadeOut2
 	di
 	call	LABEL_3E
 	call	CallSndInit
@@ -1338,7 +1343,7 @@ LABEL_847:
 
 GameMode_Ship:
 	ld	hl, $2009
-	ld	($C21B), hl
+	ld	(Fade_timer), hl
 -
 	ld	a, (Game_is_paused)
 	or	a
@@ -1359,7 +1364,7 @@ GameMode_Ship:
 __
 	ld	a, $16
 	call	WaitForVInt
-	ld	a, ($C21B)
+	ld	a, (Fade_timer)
 	or	a
 	jr	nz, _b
 	jr	+
@@ -1402,7 +1407,7 @@ __
 	ldir
 	ld	a, $8F
 	ld	($C004), a
-	call	LABEL_7B20
+	call	FadeIn2
 	ld	hl, 0
 	ld	($C2F2), hl
 	ld	a, $08
@@ -1511,7 +1516,7 @@ LABEL_998:
 	ld	a, ($C2F3)
 	cp	$07
 	ret	nz
-	ld	a, ($C21B)
+	ld	a, (Fade_timer)
 	or	a
 	call	nz, LABEL_7B40
 	ret
@@ -1696,7 +1701,7 @@ LABEL_B41:
 	ret
 
 GameMode_LoadMap:
-	call	LABEL_7B05
+	call	FadeOut2
 	di
 	call	LABEL_3E
 	ei
@@ -2085,7 +2090,7 @@ GameMode_Dungeon:
 
 
 GameMode_LoadDungeon:
-	call	LABEL_7B05
+	call	FadeOut2
 	call	LABEL_6DE2
 	ld	hl, Game_mode
 	inc	(hl) ; GameMode_Dungeon
@@ -2121,7 +2126,7 @@ GameMode_LoadDungeon:
 	or	a
 	ret	nz
 	ld	hl, LABEL_B12_B392
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	call	LABEL_1BE1
 	ld	a, ($C315)
@@ -2130,7 +2135,7 @@ GameMode_LoadDungeon:
 	ld	a, $FF
 	ld	($C315), a
 	call	LABEL_6D7F
-	jp	LABEL_7B20
+	jp	FadeIn2
 
 +
 	ld	hl, Game_mode
@@ -2366,7 +2371,7 @@ LABEL_1148:
 	jr	z, +
 	ld	hl, LABEL_B12_B1FC
 +
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1188:
@@ -2452,7 +2457,7 @@ LABEL_120B:
 
 LABEL_1212:
 	ld	hl, LABEL_B12_BEA1
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	jr	LABEL_120B
 
@@ -2480,7 +2485,7 @@ LABEL_121D:
 	ld	a, $BB
 	ld	($C004), a
 	ld	hl, LABEL_B12_B108
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1251:
@@ -2547,7 +2552,7 @@ LABEL_128C:
 	jr	z, +
 	ld	hl, LABEL_B12_B203
 +
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_12B9:
@@ -2594,7 +2599,7 @@ LABEL_12FA:
 	xor	a
 	ld	($C2EF), a
 	ld	hl, LABEL_B12_B1C1
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1305:
@@ -2626,7 +2631,7 @@ LABEL_130C:
 	jr	nz, +
 	ld	hl, LABEL_B12_B118
 +
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 
 LABEL_1344:
@@ -2634,7 +2639,7 @@ LABEL_1344:
 	call	LABEL_187D
 	jr	nz, LABEL_1379
 	ld	hl, LABEL_B12_B728
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, ($C2E6)
 	cp	$46
 	jr	nz, LABEL_1376
@@ -2654,7 +2659,7 @@ LABEL_1344:
 	or	a
 	jr	z, LABEL_1376
 	ld	hl, LABEL_B12_BF3B
-	call	PlaySound
+	call	ShowDialogue_B12
 
 LABEL_1376:
 	call	LABEL_3464
@@ -2680,7 +2685,7 @@ LABEL_1386:
 	and	$80
 	jr	z, _f
 	ld	hl, LABEL_B12_B1B2
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 __
 	call	LABEL_5B1
@@ -2698,7 +2703,7 @@ __
 	ld	a, $A1
 	ld	($C004), a
 	ld	hl, LABEL_B12_B1EE
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_13CC:
@@ -2724,7 +2729,7 @@ LABEL_13CC:
 	ld	($C004), a
 	call	LABEL_3105
 	ld	hl, LABEL_B12_B1D8
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_13FF:
@@ -2738,7 +2743,7 @@ LABEL_13FF:
 	ld	a, $A1
 	ld	($C004), a
 	ld	hl, LABEL_B12_BCC2
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1421:
@@ -2784,14 +2789,14 @@ LABEL_1443
 	and	$80
 	jr	z, +
 	ld	hl, LABEL_B12_B1B2
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 +
 	ld	a, ($C2C2)
 	call	LABEL_187D
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 +
 	ld	b, $04
@@ -2836,14 +2841,14 @@ LABEL_14A9:
 	and	$80
 	jr	z, +
 	ld	hl, LABEL_B12_B1B2
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 +
 	ld	a, ($C2C2)
 	call	LABEL_187D
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 +
 	ld	b, $04
@@ -2899,7 +2904,7 @@ LABEL_152F:
 	ld	(hl), a
 	call	LABEL_18CE
 	ld	hl, LABEL_B12_BE93
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	b, $04
 	
@@ -3037,9 +3042,9 @@ LABEL_1613:
 	ld	a, (Party_curr_num)
 	or	a
 	ld	hl, LABEL_B12_BD17
-	call	nz, PlaySound
+	call	nz, ShowDialogue_B12
 	ld	hl, LABEL_B12_BD23
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	hl, Game_mode
 	ld	(hl), $02 ; GameMode_LoadIntro
 	jp	LABEL_3464
@@ -3095,7 +3100,7 @@ LABEL_1688:
 	ld	a, $D8
 	ld	($C004), a
 	ld	hl, LABEL_B12_B71B
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_170D
 	call	UpdateCharStats
 	ld	hl, ($C2DD)
@@ -3104,7 +3109,7 @@ LABEL_1688:
 	or	h
 	ret	z
 	ld	hl, LABEL_B12_BCE1
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_16B2
 	call	LABEL_2D25
 	jp	LABEL_28DB
@@ -3137,26 +3142,26 @@ LABEL_16B2:
 
 
 ; Data from 16F1 to 187C (396 bytes)
-LABEL_16F1:
-	ld	(iy+0), 1
-	ld	(iy+5), 1
+UnlockCharacter:
+	ld	(iy+status), 1
+	ld	(iy+level), 1
 	push	iy
 	call	UpdateCharStats
 	pop	iy
-	ld	a, (iy+6)
-	ld	(iy+1), a
-	ld	a, (iy+7)
-	ld	(iy+2), a
+	ld	a, (iy+max_hp)
+	ld	(iy+curr_hp), a
+	ld	a, (iy+max_mp)
+	ld	(iy+curr_mp), a
 	ret
 
 LABEL_170D:
-	ld	hl, ($C2D0)
+	ld	hl, (CurrentBattle_EXPReward)
 	ld	($C2C5), hl
 	ld	a, l
 	or	h
 	ret	z
 	ld	hl, LABEL_B12_B604
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	iy, Alis_stats
 	ld	de, B03_AlisLevelTable
 	xor	a
@@ -3192,10 +3197,10 @@ CalculateExp:
 	pop	ix		; ix = level table
 	ld	e, (iy+exp)
 	ld	d, (iy+exp+1)	; de = char's exp
-	ld	hl, ($C2D0)
+	ld	hl, (CurrentBattle_EXPReward)
 	add	hl, de
 	jr	nc, +
-	ld	hl, $FFFF
+	ld	hl, $FFFF ; Set exp to 65535 if overflow is detected
 +
 	ld	(iy+exp), l
 	ld	(iy+exp+1), h
@@ -3214,7 +3219,7 @@ CalculateExp:
 	ld	a, $BA
 	ld	($C004), a
 	ld	hl, LABEL_B12_B621
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
 	inc	(iy+level)
@@ -3226,7 +3231,7 @@ CalculateExp:
 	ret	z
 +
 	ld	hl, LABEL_B12_B635
-	jp	PlaySound
+	jp	ShowDialogue_B12
 
 
 UpdateCharStats:
@@ -3326,7 +3331,7 @@ LABEL_188E:
 	push	hl
 	ld   ($C2C2), a
 	ld   hl, LABEL_B12_B730
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	pop  hl
 	pop  de
@@ -3424,7 +3429,7 @@ BattleMenu_Talk:
 	ld	a, ($C267)
 	ld	($C2C2), a
 	ld	hl, LABEL_B12_B128
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, ($C2E8)
 	and	$80
 	jr	z, LABEL_1951
@@ -3439,12 +3444,12 @@ LABEL_1951
 	ld	a, $FF
 	ld	($C2D4), a
 	ld	hl, LABEL_B12_B13D
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1964:
 	ld	hl, LABEL_B12_B132
-	call	PlaySound
+	call	ShowDialogue_B12
 	
 -
 	call	LABEL_5B1
@@ -3460,7 +3465,7 @@ LABEL_1964:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $06
 	ld	($C267), a
 	jp	LABEL_3464
@@ -3503,7 +3508,7 @@ LABEL_19C5:
 	ld	a, ($C267)
 	ld	($C2C2), a
 	ld	hl, LABEL_B12_B15E
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $04
 	ld	($C267), a
 	ld	a, $FF
@@ -3516,7 +3521,7 @@ BattleMenu_Magic:
 	cp	$02
 	jp	nz, LABEL_19F2
 	ld	hl, LABEL_B12_B5BA
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_19F2:
@@ -3574,12 +3579,12 @@ LABEL_1A3F:
 
 LABEL_1A42:
 	ld	hl, LABEL_B12_B5C8
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1A4B:
 	ld	hl, LABEL_B12_B6F7
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	jp	LABEL_34C9
 
@@ -3726,7 +3731,7 @@ LABEL_1B42:
 	ld	a, $AC
 	ld	($C004), a
 	ld	hl, LABEL_B12_B132
-	call	PlaySound
+	call	ShowDialogue_B12
 	
 -
 	call	LABEL_5B1
@@ -3742,7 +3747,7 @@ LABEL_1B42:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $06
 	ld	($C267), a
 	ld	a, $D5
@@ -3971,16 +3976,16 @@ LABEL_1CDC:
 
 PlayerMenu_Save:
 	ld	hl, LABEL_B12_BA62
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_39A5
 	ld	hl, LABEL_B12_BA82
-	call	PlaySound
-	call	LABEL_2D19
+	call	ShowDialogue_B12
+	call	ShowYesNoPrompt
 	jr	nz, LABEL_1D3B
 	ld	a, (Game_mode)
 	ld	($C316), a
 	ld	hl, LABEL_B12_BA93
-	call	PlaySound
+	call	ShowDialogue_B12
 	push	bc
 	ld	a, ($C2C5)
 	ld	h, a
@@ -4010,7 +4015,7 @@ PlayerMenu_Save:
 	pop	bc
 	jr	z, LABEL_1D41
 	ld	hl, LABEL_B12_BAA3
-	call	PlaySound
+	call	ShowDialogue_B12
 
 LABEL_1D3B:
 	call	LABEL_39DD
@@ -4101,13 +4106,13 @@ LABEL_1DC5:
 	ld	hl, LABEL_B12_B5BA
 
 LABEL_1DC8:
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	jp	LABEL_36BB
 
 LABEL_1DD1:
 	ld	hl, LABEL_B12_B6F7
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	jr	LABEL_1DB7
 	
@@ -4192,7 +4197,7 @@ LABEL_1E53:
 LABEL_1E5F:
 	push	de
 	ld	hl, LABEL_B12_B1D0
-	call	PlaySound
+	call	ShowDialogue_B12
 	pop	de
 	ld	a, $C1
 	ld	($C004), a
@@ -4229,7 +4234,7 @@ LABEL_1E90:
 	ld	a, c
 	ld	($C2EF), a
 	ld	hl, LABEL_B12_B18B
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1EA7:
@@ -4373,7 +4378,7 @@ LABEL_1F76:
 	ld	hl, LABEL_B12_B1E0
 
 LABEL_1F7A:
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1F80:
@@ -4399,14 +4404,14 @@ LABEL_1F89:
 	jr	z, +
 	ld	hl, LABEL_B12_B2CD
 +
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1FAC:
 	ld	a, $BC
 	ld	($C004), a
 	ld	hl, LABEL_B12_B25F
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	a, $05
 	ld	($C267), a
@@ -4424,7 +4429,7 @@ LABEL_1FC0:
 	call	LABEL_187D
 	set	7, (hl)
 	ld	hl, LABEL_B12_B22F
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1FDF:
@@ -4463,7 +4468,7 @@ LABEL_2011:
 	ld	hl, LABEL_B12_B24C
 
 LABEL_2016:
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_201C:
@@ -4487,7 +4492,7 @@ LABEL_201C:
 	ld	(hl), $00
 	ld	hl, LABEL_B12_B28E
 +:	
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 ++:	
@@ -4497,7 +4502,7 @@ LABEL_201C:
 	jr	z, +
 	ld	hl, LABEL_B12_B28E
 +:	
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $3D
 	ld	($C80F), a
 	jp	LABEL_28EE
@@ -4510,14 +4515,14 @@ LABEL_2064:
 	or	a
 	jr	z, LABEL_2078
 	ld	hl, LABEL_B12_B172
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_2078:
 	ld	a, $BF
 	ld	($C004), a
 	ld	hl, LABEL_B12_B59C
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	a, $FF
 	ld	($C2D8), a
@@ -4536,7 +4541,7 @@ LABEL_2091:
 	jr	z, +
 -:	
 	ld	hl, LABEL_B12_B172
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 +:	
@@ -4582,7 +4587,7 @@ LABEL_20BF:
 	ldi
 	ld	hl, LABEL_B12_B5B0
 ++:	
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 +++:	
 	jp	LABEL_36CC
@@ -4606,7 +4611,7 @@ LABEL_2102:
 	jr	z, +
 	ld	hl, LABEL_B12_B404
 +:	
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $D5
 	ld	($C004), a
 	jp	LABEL_3464
@@ -4618,7 +4623,7 @@ LABEL_2102:
 	jr	z, +
 	ld	hl, LABEL_B12_B404
 +:	
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $D5
 	ld	($C004), a
 	jp	LABEL_28DB
@@ -4633,12 +4638,12 @@ LABEL_2140:
 	or	a
 	jr	nz, LABEL_2159
 	ld	hl, LABEL_B12_B172
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_2159:	
 	ld	hl, LABEL_B12_B59C
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	a, $08
 	ld	($C2D8), a
@@ -4690,7 +4695,7 @@ PlayerMenu_Item:
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B30A
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	jp LABEL_21F5
 
@@ -4804,24 +4809,24 @@ LABEL_220A:
 
 LABEL_228A:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_B2CD
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2299:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jp nz, LABEL_1F89
 	ld hl, LABEL_B12_B312
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_22AF:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld e, $04
 
 LABEL_22B7:	
@@ -4845,12 +4850,12 @@ LABEL_22B7:
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B305
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_22E5:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C308)
 	cp $04
 	ld hl, LABEL_B12_B2E3
@@ -4871,18 +4876,18 @@ LABEL_22E5:
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B305
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_231A:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C308)
 	cp $02
 	ld e, $0C
 	jp z, LABEL_22B7
 	ld hl, LABEL_B12_B2E3
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2333:
@@ -4907,7 +4912,7 @@ LABEL_2337:
 	jr z, ++
 	push de
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	pop de
 	call LABEL_1E5F
 	call Inventory_RemoveItem
@@ -4919,14 +4924,14 @@ LABEL_2337:
 
 LABEL_2369:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $C2
 	ld ($C004), a
 	ld a, ($C29D)
 	or a
 	jr nz, +
 	ld hl, LABEL_B12_BFC4
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $D5
 	ld ($C004), a
 	ld a, ($C29E)
@@ -4936,7 +4941,7 @@ LABEL_2369:
 
 +:	
 	ld hl, LABEL_B12_B322
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $D5
 	ld ($C004), a
 	jp LABEL_3464
@@ -4947,9 +4952,9 @@ LABEL_239D:
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_B35C
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -4958,9 +4963,9 @@ LABEL_239D:
 	jr z, +
 -:	
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_B375
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -4968,7 +4973,7 @@ LABEL_239D:
 	or a
 	jr nz, -
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	call Inventory_RemoveItem
 	ld a, $FF
@@ -4984,12 +4989,12 @@ LABEL_23E2:
 
 LABEL_23EC:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B2CD
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5000,28 +5005,28 @@ LABEL_23EC:
 	pop af
 	jp nz, LABEL_2159
 	ld hl, LABEL_B12_B312
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2416:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jp nz, LABEL_1B17
 	ld hl, LABEL_B12_B2CD
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_242F:
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5034,20 +5039,20 @@ LABEL_242F:
 -:	
 	ld hl, LABEL_B12_B3E3
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 ++:	
 	call LABEL_24BE
 	jr z, -
 	ld hl, LABEL_B12_B3B1
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	call Inventory_RemoveItem
 	ld iy, Odin_stats
-	ld (iy+weapon), $06
-	ld (iy+armor), $13
-	call LABEL_16F1
+	ld (iy+weapon), ItemID_IronAxe
+	ld (iy+armor), ItemID_IronArmor
+	call UnlockCharacter
 	ld a, $02
 	ld (Party_curr_num), a
 	ld hl, $C600
@@ -5060,12 +5065,12 @@ LABEL_242F:
 
 LABEL_2491:
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5077,7 +5082,7 @@ LABEL_2491:
 	jr z, +
 	ld hl, LABEL_B12_B3F9
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_24BE:
@@ -5094,12 +5099,12 @@ LABEL_24BE:
 	call LABEL_24BE
 	jr nz, +
 	ld hl, LABEL_B12_B3E3
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B3B1
-	call PlaySound
+	call ShowDialogue_B12
 	call Inventory_RemoveItem
 	call LABEL_5546
 	jp LABEL_3464
@@ -5111,14 +5116,14 @@ LABEL_24E9:
 	
 LABEL_24EF:	
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_B569
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld b, $01
 	call LABEL_6BE9
 	and $07
@@ -5132,14 +5137,14 @@ LABEL_24EF:
 
 +:	
 	ld hl, LABEL_B12_B2CD
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 
 LABEL_2524:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jp nz, LABEL_1B36
@@ -5147,12 +5152,12 @@ LABEL_2524:
 
 LABEL_2537:
 	ld hl, LABEL_B12_B458
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B431
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5160,7 +5165,7 @@ LABEL_2537:
 	cp $AF
 	jr z, +
 	ld hl, LABEL_B12_B312
-	call PlaySound
+	call ShowDialogue_B12
 	jp	LABEL_3464
 
 +:	
@@ -5171,13 +5176,13 @@ LABEL_2537:
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, LABEL_B12_B49A
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B471
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	ld a, ItemID_Nuts
 	ld ($C2C4), a
@@ -5187,12 +5192,12 @@ LABEL_2537:
 
 LABEL_2589:
 	ld hl, LABEL_B12_B458
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5201,7 +5206,7 @@ LABEL_2589:
 	jr z, +
 -:	
 	ld hl, LABEL_B12_B312
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5209,7 +5214,7 @@ LABEL_2589:
 	cp $FF
 	jr z, -
 	ld hl, LABEL_B12_B4D5
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $06
 	ld ($C2D8), a
 	jp LABEL_3464
@@ -5227,14 +5232,14 @@ LABEL_25C3:
 
 LABEL_25D7:	
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	ld hl, LABEL_B12_B500
 	jr z, +
 	ld hl, LABEL_B12_B35C
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 ++:	
@@ -5243,7 +5248,7 @@ LABEL_25D7:
 	jr nz, LABEL_25D7
 -:	
 	ld hl, LABEL_B12_B743
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	ld a, $07
 	ld ($C2D8), a
@@ -5263,14 +5268,14 @@ LABEL_2613:
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_B52C
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B544
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2631:
@@ -5279,14 +5284,14 @@ LABEL_2631:
 	jr z, ++
 -:	
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	ld hl, LABEL_B12_B375
 	jr z, +
 	ld hl, LABEL_B12_B35C
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 ++:	
@@ -5294,7 +5299,7 @@ LABEL_2631:
 	or a
 	jr nz, -
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, (Dungeon_direction)
 	and $03
 	ld hl, LABEL_B12_BD01
@@ -5307,7 +5312,7 @@ LABEL_2631:
 	jr z, +
 	ld hl, LABEL_B12_BCF7
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_267C:
@@ -5315,7 +5320,7 @@ LABEL_267C:
 	or a
 	jp nz, LABEL_24EF
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld b, $01
 	call LABEL_6BE9
 	bit 7, (hl)
@@ -5334,19 +5339,19 @@ LABEL_267C:
 
 ++:	
 	ld hl, LABEL_B12_B2CD
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_26B0:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	ld hl, LABEL_B12_B312
 	jr nz, +
 	ld hl, LABEL_B12_B555
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_26C8:
@@ -5367,7 +5372,7 @@ LABEL_26C8:
 	and $0F
 	jp nz, +
 	ld hl, LABEL_B12_B5F0
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5412,7 +5417,7 @@ LABEL_26C8:
 	ld a, ($C2C4)
 	ld (de), a
 	ld hl, LABEL_B12_B2B6
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C2C2)
 	call LABEL_3707
 	call LABEL_2D25
@@ -5428,7 +5433,7 @@ LABEL_2741:
 
 +:	
 	ld hl, LABEL_B12_B5DE
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	jr LABEL_2741
 
@@ -5446,12 +5451,12 @@ LABEL_2752:
 	and $04
 	jr z, +
 	ld hl, LABEL_B12_B6DE
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B2C2
-	call PlaySound
+	call ShowDialogue_B12
 	call Inventory_RemoveItem
 	jp LABEL_3464
 
@@ -5499,21 +5504,21 @@ Inventory_AddItem:
 
 LABEL_27BC:	
 	ld hl, LABEL_B12_B671
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr z, LABEL_27D8
 	ld hl, LABEL_B12_B6C1
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr nz, LABEL_27D8
 	ld hl, LABEL_B12_B6D0
-	jp PlaySound
+	jp ShowDialogue_B12
 	
 LABEL_27D8:	
 	ld a, ($C2C4)
 	push af
 	ld hl, LABEL_B12_B68C
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_34D5
 	call LABEL_3656
 	bit 4, c
@@ -5531,14 +5536,14 @@ LABEL_27D8:
 	and $04
 	jr z, +
 	ld hl, LABEL_B12_B6DE
-	call PlaySound
+	call ShowDialogue_B12
 	pop af
 	ld ($C2C4), a
 	jp LABEL_27D8
 
 +:	
 	ld hl, LABEL_B12_B69E
-	call PlaySound
+	call ShowDialogue_B12
 	pop af
 	ld ($C2C4), a
 	ld hl, ($C29B)
@@ -5546,7 +5551,7 @@ LABEL_27D8:
 	ld a, $B3
 	ld ($C004), a
 	ld hl, LABEL_B12_B6AD
-	jp PlaySound
+	jp ShowDialogue_B12
 
 ++:	
 	pop af
@@ -5569,7 +5574,7 @@ PlayerMenu_Search:
 	jr nz, +
 	call LABEL_30B7
 	ld hl, LABEL_B12_B569
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_28DB
 	jp LABEL_2ED9
 
@@ -5639,7 +5644,7 @@ PlayerMenu_Search:
 	call Inventory_FindFreeSlot
 	jr z, LABEL_28C5
 	ld hl, LABEL_B12_B592
-	call PlaySound
+	call ShowDialogue_B12
 	call Inventory_AddItem
 	jp LABEL_3464
 
@@ -5650,12 +5655,12 @@ LABEL_28C5:
 	cp $A3
 	jp z, LABEL_558C
 	ld hl, LABEL_B12_B569
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_28DB:
 	ld   hl, LABEL_B12_B656
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_37A3
 	push	af
 	call	LABEL_37C3
@@ -5685,7 +5690,7 @@ LABEL_28EE:
 	or a
 	jr nz, +
 	ld hl, LABEL_B12_B665
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $D0
 	ld ($C900), a
 	jp LABEL_3464
@@ -5697,13 +5702,13 @@ LABEL_28EE:
 	ld a, h
 	or l
 	ld hl, LABEL_B12_B648
-	call nz, PlaySound
+	call nz, ShowDialogue_B12
 	ld a, ($C2DF)
 	ld ($C2C4), a
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B592
-	call PlaySound
+	call ShowDialogue_B12
 	call Inventory_AddItem
 +:	
 	ld a, $D0
@@ -5759,14 +5764,14 @@ LABEL_2989:
 	
 LABEL_298D:	
 	ld hl, LABEL_B12_B8C8
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jp nz, LABEL_2A55
 LABEL_2999:	
 	ld a, (Party_curr_num)
 	or a
 	ld hl, LABEL_B12_B925
-	call nz, PlaySound
+	call nz, ShowDialogue_B12
 	call LABEL_3665
 	bit Button_1, c
 	jp nz, LABEL_2A52
@@ -5774,7 +5779,7 @@ LABEL_2999:
 	call LABEL_187D
 	jr nz, +
 	ld hl, LABEL_B12_B730
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_2A48
 
 +:	
@@ -5787,12 +5792,12 @@ LABEL_2999:
 	cp (iy+7)
 	jr nz, +
 	ld hl, LABEL_B12_B96B
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, (Party_curr_num)
 	or a
 	jr nz, LABEL_2A48
 	ld hl, LABEL_B12_B964
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5806,9 +5811,9 @@ LABEL_2999:
 	ld h, $00
 	ld ($C2C5), hl
 	ld hl, LABEL_B12_B8E0
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_39E9
-	call LABEL_2D19
+	call ShowYesNoPrompt
 	push af
 	call nz, LABEL_3A12
 	pop af
@@ -5827,14 +5832,14 @@ LABEL_2999:
 	ld a, (iy+7)
 	ld (iy+2), a
 	ld hl, LABEL_B12_B938
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3A12
 	ld a, (Party_curr_num)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B90A
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr nz, LABEL_2A52
 
 LABEL_2A48:	
@@ -5846,14 +5851,14 @@ LABEL_2A52:
 	call LABEL_36BB
 LABEL_2A55:	
 	ld hl, LABEL_B12_B951
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2A5E:	
 	call LABEL_3A12
 	call LABEL_36BB
 	ld hl, LABEL_B12_BD57
-	call PlaySound
+	call ShowDialogue_B12
 +:	
 	jp LABEL_3464
 
@@ -5881,8 +5886,8 @@ LABEL_2A85:
 	ld a, ($C2DB)
 	ld ($C317), a
 	ld hl, LABEL_B12_B97F
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	or a
 	jp nz, LABEL_2B46
 LABEL_2A98:	
@@ -5890,7 +5895,7 @@ LABEL_2A98:
 	or a
 	jp z, LABEL_2B31
 	ld hl, LABEL_B12_B9D3
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3665
 	bit Button_1, c
 	jp nz, LABEL_2B43
@@ -5911,15 +5916,15 @@ LABEL_2A98:
 	add hl, de
 	ld ($C2C5), hl
 	ld hl, LABEL_B12_B9EE
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_39E9
-	call LABEL_2D19
+	call ShowYesNoPrompt
 	push af
 	call nz, LABEL_3A12
 	pop af
 	jr nz, LABEL_2B15
 	ld hl, LABEL_B12_B9B0
-	call PlaySound
+	call ShowDialogue_B12
 	ld de, ($C2C5)
 	ld hl, (Current_money)
 	or a
@@ -5933,29 +5938,29 @@ LABEL_2A98:
 	ld a, (iy+7)
 	ld (iy+2), a
 	ld hl, LABEL_B12_B9C4
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $C5
 	ld ($C004), a
 	call LABEL_2D33
 	call LABEL_3A12
 LABEL_2B15:	
 	ld hl, LABEL_B12_B9E5
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr nz, LABEL_2B43
 	call LABEL_36BB
 	jp LABEL_2A98
 
 +:	
 	ld hl, LABEL_B12_BD9F
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3A12
 	jr LABEL_2B15
 
 LABEL_2B31:	
 	ld ($C2C2), a
 	ld hl, LABEL_B12_BA56
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, (Party_curr_num)
 	or a
 	jr nz, LABEL_2B15
@@ -5964,9 +5969,9 @@ LABEL_2B43:
 	call LABEL_36BB
 LABEL_2B46:	
 	ld hl, LABEL_B12_BA3C
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BA04
-	call PlaySound
+	call ShowDialogue_B12
 	call +
 	jp LABEL_3464
 
@@ -5994,7 +5999,7 @@ LABEL_2B46:
 	cp $1E
 	jr c, +
 	ld hl, LABEL_B12_BDFF
-	jp PlaySound
+	jp ShowDialogue_B12
 
 +:	
 	ld hl, $FFFF
@@ -6015,17 +6020,17 @@ LABEL_2B46:
 	sbc hl, de
 	ld ($C2C5), hl
 	ld hl, LABEL_B12_BA1F
-	jp PlaySound
+	jp ShowDialogue_B12
 
 	
 LABEL_2BC0:	
 	ld hl, LABEL_B12_B7C7
-	call PlaySound
+	call ShowDialogue_B12
 LABEL_2BC6:	
-	call LABEL_2D19
+	call ShowYesNoPrompt
 	jr z, LABEL_2BD4
 	ld hl, LABEL_B12_B7E3
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2BD4:	
@@ -6035,7 +6040,7 @@ LABEL_2BD4:
 	pop bc
 LABEL_2BDC:	
 	ld hl, LABEL_B12_B7F5
-	call PlaySound
+	call ShowDialogue_B12
 	push bc
 	call LABEL_38D9
 	bit 4, c
@@ -6070,14 +6075,14 @@ LABEL_2BDC:
 	call Inventory_AddItem
 ++:	
 	ld hl, LABEL_B12_B807
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr z, LABEL_2BDC
 
 LABEL_2C2D:	
 	ld hl, LABEL_B12_B7E3
 -:	
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3A12
 	call LABEL_3999
 	jp LABEL_3464
@@ -6101,7 +6106,7 @@ LABEL_2C46:
 +:	
 	inc a
 	ld ($C2EC), a
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3A12
 	call LABEL_3999
 	jp LABEL_3464
@@ -6119,19 +6124,19 @@ LABEL_2C46:
 	call LABEL_39F7
 	call Inventory_AddItem
 	ld hl, $0146
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3A12
 	call LABEL_3999
 	jp LABEL_3464
 
 LABEL_2C8F:	
 	ld hl, LABEL_B12_B832
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_2BC6
 
 LABEL_2C98:	
 	ld hl, LABEL_B12_B85D
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3777
 	push af
 	push bc
@@ -6144,7 +6149,7 @@ LABEL_2C98:
 	jp z, LABEL_2BD4
 LABEL_2CB1:	
 	ld hl, LABEL_B12_B882
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_34D5
 	bit 4, c
 	push af
@@ -6170,18 +6175,18 @@ LABEL_2CB1:
 	or h
 	jr nz, +
 	ld hl, LABEL_B12_BD7E
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_2CB1
 
 LABEL_2CEA:	
 	ld hl, LABEL_B12_B7E3
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B89A
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr z, +
 	jp LABEL_2CB1
 
@@ -6190,12 +6195,12 @@ LABEL_2CEA:
 	ld hl, ($C2C5)
 	call LABEL_297A
 	ld hl, LABEL_B12_B8BC
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jp z, LABEL_2CB1
 	jp LABEL_2CEA
 
-LABEL_2D19:
+ShowYesNoPrompt:
 	push	bc
 	call	LABEL_37A3
 	push	af
@@ -6756,7 +6761,7 @@ LABEL_3105:
 	ld   de, $781C
 	ld   bc, $0114
 	call	LABEL_3A83
-	ld   hl, $C2C8
+	ld   hl, CurrentBattle_EnemyName
 	ld   c, $00
 	call	LABEL_315C
 	ld   c, $01
@@ -6862,7 +6867,7 @@ LABEL_31CB:
 	dec  hl
 	jp   LABEL_3235
 
-PlaySound:
+ShowDialogue_B12:
 	ld   a, :Bank12
 	ld   ($FFFF), a
 	
@@ -6949,7 +6954,7 @@ LABEL_3262:
 	cp   $5C
 	jr   nz, LABEL_3274
 	push	hl
-	ld   hl, $C2C8
+	ld   hl, CurrentBattle_EnemyName
 	ld   a, $08
 	call	LABEL_336C
 	pop  hl
@@ -8326,7 +8331,7 @@ LABEL_3C2A:
 GameMode_LoadInteraction:
 	ld a, $D6
 	ld ($C004), a
-	call LABEL_7B05
+	call FadeOut2
 	ld a, ($C308)
 	or a
 	jr nz, +
@@ -8781,7 +8786,7 @@ LABEL_402C:
 	ret
 
 GameMode_LoadNameInput:
-	call LABEL_7B05
+	call FadeOut2
 	ld de, $7800
 	ld bc, $0300
 	ld hl, $0000
@@ -9108,7 +9113,7 @@ LABEL_4280:
 LABEL_42AC:
 	ld a, $D7
 	ld ($C004), a
-	call LABEL_7B05
+	call FadeOut2
 	ld hl, $FFFF
 	ld (hl), :Bank23
 	ld hl, LABEL_B23_B767
@@ -9141,7 +9146,7 @@ LABEL_42AC:
 	ei
 	ld a, $8C
 	ld ($C004), a
-	call LABEL_7B20
+	call FadeIn2
 	ld a, $02
 	ld ($C264), a
 	ld a, $02
@@ -9164,7 +9169,7 @@ LABEL_42AC:
 	xor a
 	ld ($C264), a
 	ld ($C307), a
-	call LABEL_7B05
+	call FadeOut2
 	ld a, $08
 	ld ($C29E), a
 	call LABEL_3D47
@@ -9181,7 +9186,7 @@ LABEL_42AC:
 	ld ($C300), a
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld hl, $FFFF
 	ld (hl), :Bank18
 	ld hl, LABEL_B18_BEF4
@@ -9279,11 +9284,11 @@ LABEL_4414:
 	call LABEL_46D1
 	ld hl, LABEL_B7D1
 	call LABEL_337D
-	call LABEL_7B05
+	call FadeOut2
 	call LABEL_FF3
 	ld a, $D8
 	ld ($C004), a
-	jp LABEL_7B20
+	jp FadeIn2
 
 LABEL_4461:	
 	call LABEL_467C
@@ -9342,7 +9347,7 @@ LABEL_4497:
 	ld (hl), $30
 	inc hl
 	djnz -
-	call LABEL_7B20
+	call FadeIn2
 	call LABEL_2D33
 	ld hl, $FFFF
 	ld (hl), :Bank11
@@ -9372,7 +9377,7 @@ LABEL_4514:
 .db $00 $40 $4C
 
 LABEL_4517:	
-	call LABEL_7B05
+	call FadeOut2
 	ld a, $0F
 	ld ($C29E), a
 	call LABEL_3D47
@@ -9387,14 +9392,14 @@ LABEL_4517:
 	call LABEL_3FA
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld a, $15
 	ld ($C800), a
 	call LABEL_18B9
-	jp LABEL_7B05
+	jp FadeOut2
 
 LABEL_454E:	
-	call LABEL_7B05
+	call FadeOut2
 	ld a, $D0
 	ld ($C900), a
 	ld a, $8B
@@ -9404,22 +9409,22 @@ LABEL_454E:
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld b, $80
 	call LABEL_2D49
 	call LABEL_7CE4
 	ld hl, LABEL_B12_BEB6
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BED0
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BEE8
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BEFD
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BF09
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BF21
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	call LABEL_467C
 	ld a, $03
@@ -9444,7 +9449,7 @@ LABEL_454E:
 	call LABEL_337D
 	ld hl, LABEL_BA54
 	call LABEL_337D
-	call LABEL_7B05
+	call FadeOut2
 	ld hl, $FFFF
 	ld (hl), :Bank31
 	ld hl, LABEL_B31_9676
@@ -9467,7 +9472,7 @@ LABEL_454E:
 	call LABEL_6E64
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	call LABEL_2D47
 	ld hl, LABEL_3DF6+1
 	ld (Dungeon_position), hl
@@ -9517,7 +9522,7 @@ LABEL_454E:
 	ret
 
 LABEL_467C:
-	call LABEL_7B05
+	call FadeOut2
 	ld hl, $FFFF
 	ld (hl), :Bank16
 	ld hl, LABEL_B16_BAD8
@@ -9551,7 +9556,7 @@ LABEL_467C:
 
 LABEL_46D1:
 	push	af
-	call	LABEL_7AFD
+	call	FadeOut
 	pop	af
 	ld	l, a
 	add	a, a
@@ -9591,7 +9596,7 @@ LABEL_46D1:
 	ld   hl, $0800
 	call	LABEL_363
 	ei
-	jp   LABEL_7B18
+	jp   FadeIn
 
 
 LABEL_471E:
@@ -9638,7 +9643,7 @@ LABEL_4773:
 .dw	LABEL_4934
 .dw	LABEL_493A
 .dw	LABEL_4940
-.dw LABEL_495A
+.dw	LABEL_495A
 .dw	LABEL_4960
 .dw	LABEL_4966
 .dw	LABEL_4973
@@ -9646,7 +9651,7 @@ LABEL_4773:
 .dw	LABEL_4997
 .dw	LABEL_499D
 .dw	LABEL_49A3
-.dw LABEL_49A9
+.dw	LABEL_49A9
 .dw	LABEL_49AF
 .dw	LABEL_49B5
 .dw	LABEL_49B5
@@ -9654,7 +9659,7 @@ LABEL_4773:
 .dw	LABEL_49E6
 .dw	LABEL_4A3E
 .dw	LABEL_4A44
-.dw LABEL_4A4A
+.dw	LABEL_4A4A
 .dw	LABEL_4A50
 .dw	LABEL_4AA9
 .dw	LABEL_4ABE
@@ -9662,7 +9667,7 @@ LABEL_4773:
 .dw	LABEL_4B43
 .dw	LABEL_4B52
 .dw	LABEL_4B61
-.dw LABEL_4B67
+.dw	LABEL_4B67
 .dw	LABEL_4B6D
 .dw	LABEL_4B73
 .dw	LABEL_4B79
@@ -9670,7 +9675,7 @@ LABEL_4773:
 .dw	LABEL_4B85
 .dw	LABEL_4B8B
 .dw	LABEL_4B91
-.dw LABEL_4B97
+.dw	LABEL_4B97
 .dw	LABEL_4B9D
 .dw	LABEL_4BBD
 .dw	LABEL_4BD1
@@ -9678,7 +9683,7 @@ LABEL_4773:
 .dw	LABEL_4BDD
 .dw	LABEL_4BE3
 .dw	LABEL_4BE9
-.dw LABEL_4BEF
+.dw	LABEL_4BEF
 .dw	LABEL_4BF5
 .dw	LABEL_4BFB
 .dw	LABEL_4C01
@@ -9686,7 +9691,7 @@ LABEL_4773:
 .dw	LABEL_4C0D
 .dw	LABEL_4C70
 .dw	LABEL_4D74
-.dw LABEL_4D7A
+.dw	LABEL_4D7A
 .dw	LABEL_4D9F
 .dw	LABEL_4DA5
 .dw	LABEL_4DAB
@@ -9694,7 +9699,7 @@ LABEL_4773:
 .dw	LABEL_4DFB
 .dw	LABEL_4E9C
 .dw	LABEL_4EB3
-.dw LABEL_4EB9
+.dw	LABEL_4EB9
 .dw	LABEL_4EBF
 .dw	LABEL_4EC5
 .dw	LABEL_4ED9
@@ -9702,7 +9707,7 @@ LABEL_4773:
 .dw	LABEL_4EE5
 .dw	LABEL_4EEB
 .dw	LABEL_4EF1
-.dw LABEL_4EF7
+.dw	LABEL_4EF7
 .dw	LABEL_4EFD
 .dw	LABEL_4F03
 .dw	LABEL_4F09
@@ -9710,7 +9715,7 @@ LABEL_4773:
 .dw	LABEL_4F15
 .dw	LABEL_4F34
 .dw	LABEL_4F3A
-.dw LABEL_4F40
+.dw	LABEL_4F40
 .dw	LABEL_4F46
 .dw	LABEL_4F4C
 .dw	LABEL_4F52
@@ -9718,7 +9723,7 @@ LABEL_4773:
 .dw	LABEL_4F71
 .dw	LABEL_4F77
 .dw	LABEL_4F7D
-.dw LABEL_4F83
+.dw	LABEL_4F83
 .dw	LABEL_4F89
 .dw	LABEL_4F8F
 .dw	LABEL_4F95
@@ -9726,7 +9731,7 @@ LABEL_4773:
 .dw	LABEL_4FD8
 .dw	LABEL_4FDE
 .dw	LABEL_4FE4
-.dw LABEL_4FEA
+.dw	LABEL_4FEA
 .dw	LABEL_4FF0
 .dw	LABEL_4FF6
 .dw	LABEL_4FFC
@@ -9734,7 +9739,7 @@ LABEL_4773:
 .dw	LABEL_5008
 .dw	LABEL_500E
 .dw	LABEL_5014
-.dw LABEL_501A
+.dw	LABEL_501A
 .dw	LABEL_5020
 .dw	LABEL_5026
 .dw	LABEL_502C
@@ -9742,7 +9747,7 @@ LABEL_4773:
 .dw	LABEL_5046
 .dw	LABEL_504C
 .dw	LABEL_5058
-.dw LABEL_505E
+.dw	LABEL_505E
 .dw	LABEL_5064
 .dw	LABEL_506A
 .dw	LABEL_5070
@@ -9750,7 +9755,7 @@ LABEL_4773:
 .dw	LABEL_50BA
 .dw	LABEL_50C0
 .dw	LABEL_50C6
-.dw LABEL_50DA
+.dw	LABEL_50DA
 .dw	LABEL_5101
 .dw	LABEL_5107
 .dw	LABEL_510D
@@ -9758,7 +9763,7 @@ LABEL_4773:
 .dw	LABEL_516F
 .dw	LABEL_51B1
 .dw	LABEL_51D6
-.dw LABEL_51DC
+.dw	LABEL_51DC
 .dw	LABEL_521D
 .dw	LABEL_5249
 .dw	LABEL_5270
@@ -9766,7 +9771,7 @@ LABEL_4773:
 .dw	LABEL_528A
 .dw	LABEL_5290
 .dw	LABEL_52A4
-.dw LABEL_52B2
+.dw	LABEL_52B2
 .dw	LABEL_52B8
 .dw	LABEL_52BE
 .dw	LABEL_52C4
@@ -9774,7 +9779,7 @@ LABEL_4773:
 .dw	LABEL_52D0
 .dw	LABEL_5337
 .dw	LABEL_4F8F
-.dw LABEL_4F95
+.dw	LABEL_4F95
 .dw	LABEL_4F9B
 .dw	LABEL_534B
 .dw	LABEL_5395
@@ -9782,7 +9787,7 @@ LABEL_4773:
 .dw	LABEL_53A1
 .dw	LABEL_53A7
 .dw	LABEL_53AD
-.dw LABEL_53B3
+.dw	LABEL_53B3
 .dw	LABEL_53B9
 .dw	LABEL_53BF
 .dw	LABEL_5401
@@ -9790,7 +9795,7 @@ LABEL_4773:
 .dw	LABEL_54D0
 .dw	LABEL_54FB
 .dw	LABEL_552F
-.dw LABEL_5535
+.dw	LABEL_5535
 .dw	LABEL_5535
 .dw	LABEL_5538
 .dw	LABEL_5595
@@ -9798,7 +9803,7 @@ LABEL_4773:
 .dw	LABEL_55A9
 .dw	LABEL_55BB
 .dw	LABEL_55CD
-.dw LABEL_55E1
+.dw	LABEL_55E1
 .dw	LABEL_55EF
 .dw	LABEL_5619
 .dw	LABEL_5666
@@ -9806,7 +9811,7 @@ LABEL_4773:
 .dw	LABEL_56A2
 .dw	LABEL_5535
 .dw	LABEL_5535
-.dw LABEL_56CD
+.dw	LABEL_56CD
 .dw	LABEL_56D3
 .dw	LABEL_56D9
 .dw	LABEL_56E9
@@ -9821,10 +9826,10 @@ LABEL_48DF:
 	jr nz, +
 	ld (hl), $01
 	ld hl, $0002
-	call LABEL_575A
+	call ShowDialogue_B2
 +:	
 	ld hl, $0006
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, $C1
 	ld ($C004), a
 	jp LABEL_2A6D
@@ -9834,7 +9839,7 @@ LABEL_48FC:
 	or a
 	jr nz, +
 	ld hl, $0008
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_LaconiaPot
 	ld ($C2C4), a
 	call Inventory_AddItem
@@ -9845,65 +9850,65 @@ LABEL_48FC:
 	ld ($C502), a
 +:	
 	ld hl, $0010
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4922:
 	ld	hl, $12
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4928:
 	ld	hl, $14
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_492E:
 	ld	hl, $16
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4934:
 	ld	hl, $18
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_493A:
 	ld	hl, $1A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4940:
 	ld hl, $0062
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0060
 	jr z, +
 	ld hl, $0003
 	ld ($C2C5), hl
 	ld hl, $0064
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_495A:
 	ld	hl, $1C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4960:
 	ld	hl, $1E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4966:
 	ld a, $33
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $0020
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4973:
 	ld a, $33
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $0022
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0024
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ($C309)
 	rrca
 	dec a
@@ -9913,35 +9918,35 @@ LABEL_4973:
 
 LABEL_4991:
 	ld	hl, $26
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4997:
 	ld	hl, $28
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_499D:
 	ld	hl, $2A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_49A3:
 	ld	hl, $2E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_49A9:
 	ld	hl, $30
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_49AF:
 	ld	hl, $32
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_49B5:
 	ld a, ($C504)
 	cp $07
 	jp nc, LABEL_4A8C
 	ld hl, $0070
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0020
 	jr nz, +
 	ld a, $34
@@ -9952,11 +9957,11 @@ LABEL_49B5:
 	ld ($C2E9), a
 	ld hl, $0024
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_49E0:
 	ld	hl, $286
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_49E6:
 	ld a, $47
@@ -9966,15 +9971,15 @@ LABEL_49E6:
 	or a
 	jr z, +
 	ld hl, $0296
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld a, $AE
 	ld ($C004), a
 	ld a, $01
 	ld ($C2C2), a
 	ld hl, LABEL_B12_B728
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, $0000
 	ld (Myau_stats), hl
 	ld hl, $0298
@@ -9983,7 +9988,7 @@ LABEL_49E6:
 +:	
 	ld hl, $029A
 ++:	
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	ld a, (Party_curr_num)
 	or a
@@ -10000,37 +10005,37 @@ LABEL_49E6:
 
 LABEL_4A3E:
 	ld	hl, $6A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4A44:
 	ld	hl, $6C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4A4A:
 	ld	hl, $6E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4A50:
 	ld a, ($C504)
 	cp $07
 	jr nc, LABEL_4A8C
 	ld hl, $0070
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $0020
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $34
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $00CE
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0024
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ($C305)
 	cp $60
 	ld hl, LABEL_4AA3
@@ -10042,7 +10047,7 @@ LABEL_4A50:
 
 LABEL_4A8C:	
 	ld hl, $019E
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, $34
 	call Inventory_FindFreeSlot
 	ret nz
@@ -10050,7 +10055,7 @@ LABEL_4A8C:
 	call Inventory_RemoveItem2
 	pop bc
 	ld hl, $01A0
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4AA3:
 .db $05, $20, $17
@@ -10067,7 +10072,7 @@ LABEL_4AA9:
 	ld ($C2E9), a
 	ld hl, $0024
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4ABE:
 	ld a, $33
@@ -10078,41 +10083,41 @@ LABEL_4ABE:
 	ld ($C2E9), a
 	ld hl, $0024
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4AD3:
 	ld hl, $0072
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $007C
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0074
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld hl, $007E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0076
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld hl, $007E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $64
 	ld ($C2C5), hl
 	ld hl, $0078
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $007C
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld de, $0064
@@ -10121,12 +10126,12 @@ LABEL_4AD3:
 	sbc hl, de
 	jr nc, +
 	ld hl, LABEL_B12_BD57
-	jp PlaySound
+	jp ShowDialogue_B12
 
 +:	
 	ld (Current_money), hl
 	ld hl, $007A
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_Passport
 	ld ($C2C4), a
 	call Inventory_FindFreeSlot
@@ -10140,7 +10145,7 @@ LABEL_4B43:
 	jr z, +
 	ld hl, $003A
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4B52:
 	ld a, (Party_curr_num)
@@ -10149,52 +10154,52 @@ LABEL_4B52:
 	jr z, +
 	ld hl, $0040
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4B61:
 	ld	hl, $42
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B67:
 	ld	hl, $44
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B6D:
 	ld	hl, $46
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B73:
 	ld	hl, $48
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B79:
 	ld	hl, $4A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B7F:
 	ld	hl, $4C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B85:
 	ld	hl, $4E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B8B:
 	ld	hl, $50
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B91:
 	ld	hl, $52
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B97:
 	ld	hl, $54
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B9D:
 	ld hl, $0056
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0060
 	jr nz, ++
 	ld a, $2D
@@ -10205,74 +10210,74 @@ LABEL_4B9D:
 +:	
 	ld hl, $0058
 ++:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4BBD:
 	ld hl, $005C
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0060
 	jr z, +
 	ld hl, $005E
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4BD1:
 	ld	hl, $80
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BD7:
 	ld	hl, $82
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BDD:
 	ld	hl, $84
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BE3:
 	ld	hl, $86
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BE9:
 	ld	hl, $88
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BEF:
 	ld	hl, $8A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BF5:
 	ld	hl, $8C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BFB:
 	ld	hl, $8E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4C01:
 	ld	hl, $90
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4C07:
 	ld	hl, $288
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4C0D:
 	ld a, (Party_curr_num)
 	or a
 	jr z, +
 	ld hl, $028A
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $000A
 	ld ($C2C5), hl
 	ld hl, $0092
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld hl, $0094
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, ItemID_LaconiaPot
@@ -10280,19 +10285,19 @@ LABEL_4C0D:
 	jr nz, +
 	push hl
 	ld hl, $0096
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	pop hl
 	jr nz, +
 	push bc
 	call Inventory_RemoveItem2
 	pop bc
 	ld hl, $009A
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	pop hl
 	ld iy, Myau_stats
-	call LABEL_16F1
+	call UnlockCharacter
 	ld a, $01
 	ld (Party_curr_num), a
 	ld a, ItemID_Alsulin
@@ -10302,14 +10307,14 @@ LABEL_4C0D:
 
 +:	
 	ld hl, $007C
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4C70:
 	ld a, ($C516)
 	or a
 	jr z, +
 	ld hl, $02A6
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	pop hl
 	ld hl, $22E6
@@ -10334,13 +10339,13 @@ LABEL_4C70:
 	jr nz, ++
 +:	
 	ld hl, $029E
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld hl, $00AA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 ++:	
 	ld hl, $00A4
-	call LABEL_575A
+	call ShowDialogue_B2
 	push bc
 	ld a, ItemID_Letter
 	ld ($C2C4), a
@@ -10350,8 +10355,8 @@ LABEL_4C70:
 	call Inventory_FindFreeSlot
 	ret nz
 	ld hl, $029C
-	call LABEL_575A
-	call LABEL_7B05
+	call ShowDialogue_B2
+	call FadeOut2
 	call LABEL_3464
 	ld a, $20
 	ld ($C29E), a
@@ -10364,9 +10369,9 @@ LABEL_4C70:
 	ld de, $C240
 	ld bc, $0008
 	ldir
-	call LABEL_7B20
+	call FadeIn2
 	ld hl, $02A0
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	ld a, $A0
 	ld ($C004), a
@@ -10387,28 +10392,28 @@ LABEL_4C70:
 	ld (Myau_stats), a
 	pop af
 	ld (Char_stats), a
-	call LABEL_7B05
+	call FadeOut2
 	call LABEL_3D47
 	ld a, $D0
 	ld ($C900), a
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld hl, $02A2
-	call LABEL_575A
-	call LABEL_7B05
+	call ShowDialogue_B2
+	call FadeOut2
 	ld a, $1D
 	ld ($C29E), a
 	call LABEL_3D47
 	call LABEL_2A6D
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld a, $35
 	call LABEL_617D
 	call LABEL_576A
 	ld hl, $00AA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4D6C:
 .db	$00, $00, $3F, $00, $00, $00, $00
@@ -10416,12 +10421,12 @@ LABEL_4D6C:
 
 LABEL_4D74:
 	ld	hl, $B4
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4D7A:
 	ld hl, $00B6
-	call LABEL_575A
-	call LABEL_7B05
+	call ShowDialogue_B2
+	call FadeOut2
 	call LABEL_3464
 	ld a, $A0
 	ld ($C004), a
@@ -10429,25 +10434,25 @@ LABEL_4D7A:
 	call LABEL_2A6D
 	ld a, $C1
 	ld ($C004), a
-	call LABEL_7B20
+	call FadeIn2
 	ld hl, $00B8
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4D9F:
 	ld	hl, $102
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4DA5:
 	ld	hl, $106
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4DAB:
 	ld hl, $00BA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $00C2
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $24
@@ -10457,19 +10462,19 @@ LABEL_4DAB:
 	call Inventory_RemoveItem2
 	pop bc
 	ld hl, $00BC
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $020E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4DD4:
 	ld hl, $00BA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $00C2
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $24
@@ -10477,11 +10482,11 @@ LABEL_4DD4:
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld hl, $00C4
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $020E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4DFB:
 	ld a, ($C504)
@@ -10494,13 +10499,13 @@ LABEL_4DFB:
 	cp $07
 	jr c, +
 	ld hl, $00D8
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	cp $02
 	jr nc, +
 	ld hl, $00CA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	cp $03
@@ -10508,11 +10513,11 @@ LABEL_4DFB:
 	ld hl, $04B0
 	ld ($C2C5), hl
 	ld hl, $028C
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $00DA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld de, $04B0
@@ -10521,14 +10526,14 @@ LABEL_4DFB:
 	sbc hl, de
 	jr nc, +
 	ld hl, $00D0
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld (Current_money), hl
 	ld a, $03
 	ld ($C504), a
 	ld hl, $0290
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 ++:	
 	cp $05
@@ -10536,7 +10541,7 @@ LABEL_4DFB:
 	inc a
 	ld ($C504), a
 	ld hl, $0292
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	cp $06
@@ -10544,24 +10549,24 @@ LABEL_4DFB:
 	inc a
 	ld ($C504), a
 	ld hl, $00D2
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, $32
 	call Inventory_FindFreeSlot
 	jr z, ++
 	ld hl, $00D6
-	call LABEL_575A
+	call ShowDialogue_B2
 +:	
 	ld a, $32
 	call Inventory_FindFreeSlot
 	jr z, ++
 	ld hl, $0104
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 ++:	
 	ld a, $07
 	ld ($C504), a
 	ld hl, $0294
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4E9C:
 	ld hl, $C504
@@ -10572,74 +10577,74 @@ LABEL_4E9C:
 	call LABEL_617D
 	call LABEL_576A
 	ld hl, $00DC
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4EB3:
 	ld	hl, $118
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EB9:
 	ld	hl, $10E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EBF:
 	ld	hl, $112
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EC5:
 	ld hl, $0114
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0116
 	jr nz, +
 	ld hl, $013C
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4ED9:
 	ld	hl, $10C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EDF:
 	ld	hl, $11C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EE5:
 	ld	hl, $11E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EEB:
 	ld	hl, $120
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EF1:
 	ld	hl, $126
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EF7:
 	ld	hl, $128
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EFD:
 	ld	hl, $12E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F03:
 	ld	hl, $130
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F09:
 	ld	hl, $132
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F0F:
 	ld	hl, $134
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F15:
 	ld hl, $013A
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $013C
 	jr z, ++
 	ld a, ($C507)
@@ -10650,81 +10655,81 @@ LABEL_4F15:
 +:	
 	ld hl, $013E
 ++:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4F34:
 	ld	hl, $136
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F3A:
 	ld	hl, $166
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F40:
 	ld	hl, $168
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F46:
 	ld	hl, $16A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F4C:
 	ld	hl, $16C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F52:
 	ld	hl, $170
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F58:
 	ld hl, $0172
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $017C
 	jr nz, +
 	ld a, $01
 	ld ($C508), a
 	ld hl, $0174
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4F71:
 	ld	hl, $17E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F77:
 	ld	hl, $180
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F7D:
 	ld	hl, $184
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F83:
 	ld	hl, $186
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F89:
 	ld	hl, $188
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F8F:
 	ld	hl, $18C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F95:
 	ld	hl, $190
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F9B:
 	ld hl, $03E8
 	ld ($C2C5), hl
 	ld hl, $0194
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $019C
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld de, $03E8
@@ -10733,12 +10738,12 @@ LABEL_4F9B:
 	sbc hl, de
 	jr nc, +
 	ld hl, $019A
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld (Current_money), hl
 	ld hl, $0198
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_GasShield
 	ld ($C2C4), a
 	call Inventory_FindFreeSlot
@@ -10747,109 +10752,109 @@ LABEL_4F9B:
 
 LABEL_4FD8:
 	ld	hl, $1A2
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FDE:
 	ld	hl, $1A4
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FE4:
 	ld	hl, $1A6
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FEA:
 	ld	hl, $1AA
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FF0:
 	ld	hl, $1B2
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FF6:
 	ld	hl, $1B8
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FFC:
 	ld	hl, $1BA
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5002:
 	ld	hl, $1BC
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5008:
 	ld	hl, $1BE
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_500E:
 	ld	hl, $1C4
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5014:
 	ld	hl, $1C8
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_501A:
 	ld	hl, $1CA
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5020:
 	ld	hl, $1CC
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5026:
 	ld	hl, $1D0
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_502C:
 	ld hl, $01D6
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $01DA
 	jr z, +
 	ld hl, $01D8
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_5040:
 	ld	hl, $1DC
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5046:
 	ld	hl, $1DE
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_504C:
 	ld hl, $000A
 	ld ($C2C5), hl
 	ld hl, $01E0
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_5058:
 	ld	hl, $1E2
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_505E:
 	ld	hl, $1E4
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5064:
 	ld	hl, $1E6
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_506A:
 	ld	hl, $1E8
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5070:
 	ld hl, $0190
 	ld ($C2C5), hl
 	ld hl, $01EA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $01F0
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld de, $0190
@@ -10858,50 +10863,50 @@ LABEL_5070:
 	sbc hl, de
 	jr nc, +
 	ld hl, $01F2
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld (Current_money), hl
 	ld a, $01
 	ld ($C509), a
 	ld hl, $01F4
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_50A6:
 	ld hl, $01FA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $01FC
 	jr z, +
 	ld hl, $01FE
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_50BA:
 	ld	hl, $200
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_50C0:
 	ld	hl, $202
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_50C6:
 	ld hl, $0204
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0206
 	jr z, +
 	ld hl, $0208
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_50DA:
 	ld hl, $00BA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $020C
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $24
@@ -10909,30 +10914,30 @@ LABEL_50DA:
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld hl, $020A
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $020E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 	
 
 LABEL_5101:
 	ld	hl, $210
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5107:
 	ld	hl, $26A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_510D:
 	ld hl, $0118
 	ld ($C2C5), hl
 	ld hl, $024A
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, LABEL_B12_B7E3
-	jp PlaySound
+	jp ShowDialogue_B12
 
 +:	
 	ld de, $0118
@@ -10941,19 +10946,19 @@ LABEL_510D:
 	sbc hl, de
 	jr nc, +
 	ld hl, LABEL_B12_BD57
-	jp PlaySound
+	jp ShowDialogue_B12
 
 +:	
 	ld a, (Inventory_curr_num)
 	cp $18
 	jr c, +
 	ld hl, LABEL_B12_B813
-	jp PlaySound
+	jp ShowDialogue_B12
 
 +:	
 	ld (Current_money), hl
 	ld hl, $020A
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_Cake
 	ld ($C2C4), a
 	call Inventory_FindFreeSlot
@@ -10970,7 +10975,7 @@ LABEL_5157:
 	jr nz, +
 	ld hl, $00B2
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_516F:
 	ld a, (Party_curr_num)
@@ -10980,7 +10985,7 @@ LABEL_516F:
 	call LABEL_617D
 	call LABEL_576A
 	ld hl, $00AE
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_Letter
 	call Inventory_FindFreeSlot
 	ret nz
@@ -10991,9 +10996,9 @@ LABEL_516F:
 	ld a, $01
 	ld ($C506), a
 	ld iy, Noah_stats
-	ld (iy+10), $01
-	ld (iy+11), $11
-	call LABEL_16F1
+	ld (iy+weapon), ItemID_WoodCane
+	ld (iy+armor), ItemID_WhiteMantle
+	call UnlockCharacter
 	ld a, $03
 	ld (Party_curr_num), a
 	jp LABEL_4461
@@ -11015,11 +11020,11 @@ LABEL_51B1:
 	ld de, $00F6
 +:	
 	ex de, hl
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_51D6:
 	ld	hl, $F8
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_51DC:
 	ld a, ($C504)
@@ -11034,54 +11039,54 @@ LABEL_51DC:
 	jr nz, +
 	inc (hl)
 	ld hl, $00DE
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	cp $01
 	jr nz, +
 	inc (hl)
 	ld hl, $00E0
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $00E2
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $00D4
 	jr nz, +
 	ld hl, $C504
 	ld (hl), $01
 	ld hl, $00E4
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_521D:
 	ld a, $2E
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $00E6
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld a, $33
 	call Inventory_FindFreeSlot
 	jr nz, +
 	ld hl, $0024
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $00E8
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	jp LABEL_5389
 
 LABEL_5249:
 	ld hl, $00BA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $00C2
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $24
@@ -11089,106 +11094,106 @@ LABEL_5249:
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld hl, $00EA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $00CE
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_5270:
 	ld hl, $00EC
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $013C
 	jr z, +
 	ld hl, $0124
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_5284:
 	ld	hl, $EE
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_528A:
 	ld	hl, $F0
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5290:
 	ld hl, $00F2
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $014C
 	jr z, +
 	ld hl, $013C
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_52A4:
 	ld a, $16
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $00F4
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_52B2:
 	ld	hl, $FC
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_52B8:
 	ld	hl, $FE
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_52BE:
 	ld	hl, $100
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_52C4:
 	ld	hl, $10A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_52CA:
 	ld	hl, $21A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_52D0:
 	ld hl, $0148
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 
 LABEL_52DB:	
 	ld hl, $0152
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $014E
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld hl, $0150
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, LABEL_52DB
 	ld hl, $014E
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld hl, $0154
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, LABEL_52DB
 	ld hl, $014E
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld hl, $0156
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld hl, $0158
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $015A
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, LABEL_52DB
 	ld hl, $015C
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_Crystal
 	ld ($C2C4), a
 	call Inventory_FindFreeSlot
@@ -11197,27 +11202,27 @@ LABEL_52DB:
 
 LABEL_5337:
 	ld hl, $0160
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0162
 	jr z, +
 	ld hl, $0164
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_534B:
 	ld a, $2E
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $021C
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld a, $33
 	call Inventory_FindFreeSlot
 	jr nz, +
 	ld hl, $021E
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	pop hl
 	ld hl, $159C
@@ -11230,7 +11235,7 @@ LABEL_534B:
 
 +:	
 	ld hl, $00E8
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 LABEL_5389:	
 	call LABEL_100F
@@ -11242,42 +11247,42 @@ LABEL_5389:
 
 LABEL_5395:
 	ld	hl, $222
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_539B:
 	ld	hl, $224
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53A1:
 	ld	hl, $226
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53A7:
 	ld	hl, $22E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53AD:
 	ld	hl, $232
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53B3:
 	ld	hl, $218
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53B9:
 	ld	hl, $214
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53BF:
 	ld a, $2E
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $009C
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $00A2
-	call LABEL_575A
+	call ShowDialogue_B2
 	jr ++
 
 +:	
@@ -11290,11 +11295,11 @@ LABEL_53BF:
 	ld a, $FF
 	ld ($C511), a
 	ld hl, $009E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $00A0
-	call LABEL_575A
+	call ShowDialogue_B2
 ++:	
 	pop hl
 	call LABEL_3464
@@ -11303,11 +11308,11 @@ LABEL_53BF:
 
 LABEL_5401:
 	ld hl, $023E
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $0246
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $3A
@@ -11318,11 +11323,11 @@ LABEL_5401:
 	ld ($C2C4), a
 	call Inventory_AddItem
 	ld hl, $0244
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0248
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_5430:
 	ld a, $31
@@ -11337,33 +11342,33 @@ LABEL_5430:
 	jr nz, ++
 +:	
 	ld hl, $0258
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 ++:	
 	ld a, (Party_curr_num)
 	cp $03
 	jr nc, ++
 	ld hl, $025A
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $025E
 	jr z, +
 	ld hl, $0260
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 ++:	
 	ld hl, $024C
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, (Noah_stats)
 	or a
 	jr nz, +
 	ld hl, $02A8
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $024E
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	ld a, (Noah_stats+curr_hp)
 	push af
@@ -11394,11 +11399,11 @@ LABEL_5430:
 	ld a, $01
 	ld (Noah_stats), a
 	ld hl, $0256
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0250
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_FradeMantle
 	ld ($C2C4), a
 	jp Inventory_AddItem
@@ -11408,13 +11413,13 @@ LABEL_54D0:
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $0262
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	call LABEL_54EF
 	ld a, $FF
 	ld ($C517), a
 	ld hl, $0266
-	jp LABEL_575A
+	jp ShowDialogue_B2
 	
 LABEL_54EF:	
 	call LABEL_100F
@@ -11433,23 +11438,23 @@ LABEL_54FB:
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $026C
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $026E
 	jr z, +
 	ld hl, $0270
 +:	
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	call LABEL_54EF
 	ld a, $01
 	ld ($C516), a
 	ld hl, $02AA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_552F:
 	ld	hl, LABEL_B12_B7AA
-	jp	PlaySound
+	jp	ShowDialogue_B12
 
 LABEL_5535:
 	call	LABEL_2D25
@@ -11461,7 +11466,7 @@ LABEL_5538:
 
 LABEL_553D:	
 	ld hl, LABEL_B12_B569
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_5546:
@@ -11475,7 +11480,7 @@ LABEL_5546:
 	call LABEL_576A
 	call LABEL_2D25
 	ld hl, $012C
-	call LABEL_575A
+	call ShowDialogue_B2
 	jp Inventory_AddItem
 
 LABEL_5566:
@@ -11491,13 +11496,13 @@ LABEL_5566:
 	call Inventory_FindFreeSlot
 	jr z, LABEL_553D
 	ld hl, $0178
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	jp Inventory_AddItem
 
 LABEL_558C:
 	ld hl, $00FA
-	call LABEL_575A
+	call ShowDialogue_B2
 	jp LABEL_3464
 
 LABEL_5595:
@@ -11505,11 +11510,11 @@ LABEL_5595:
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $0234
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_55A3:
 	ld	hl, $234
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_55A9:
 	ld a, $1B
@@ -11518,7 +11523,7 @@ LABEL_55A9:
 	xor a
 	ld ($CBC3), a
 	ld hl, $0238
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_55BB:
 	ld a, $26
@@ -11531,31 +11536,31 @@ LABEL_55BB:
 
 LABEL_55CD:
 	ld hl, $0228
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $022C
 	jr z, +
 	ld hl, $022A
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_55E1:
 	ld a, $08
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $0212
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_55EF:
 	ld a, ($C504)
 	cp $07
 	jr nc, +
 	ld hl, $0282
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0284
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ($C301)
 	cp $40
 	ld hl, LABEL_5613
@@ -11586,7 +11591,7 @@ LABEL_5619:
 	ldir
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld a, $49
 	ld ($C2E6), a
 	call LABEL_5FFE
@@ -11599,35 +11604,35 @@ LABEL_5619:
 	or a
 	jr nz, LABEL_5666
 	ld hl, LABEL_B12_BF64
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 
 LABEL_5666:
-	call LABEL_7B05
+	call FadeOut2
 	ld a, $1D
 	ld ($C29E), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld a, $35
 	call LABEL_617D
 	call LABEL_576A
 	ld hl, $0272
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0212
 	jr z, +
 	ld hl, $0230
 +:	
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	pop hl
 	jp LABEL_454E
 
 LABEL_569C:
 	ld	hl, $2A4
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_56A2:
 	ld a, ($C2F0)
@@ -11639,7 +11644,7 @@ LABEL_56A2:
 	rr d
 	push de
 	ld hl, LABEL_B12_B728
-	call c, PlaySound
+	call c, ShowDialogue_B12
 	pop de
 	inc e
 	ld a, e
@@ -11659,16 +11664,16 @@ LABEL_56A2:
 
 LABEL_56CD:
 	ld	hl, $23A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_56D3:
 	ld	hl, $27A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_56D9:
 	ld hl, LABEL_B12_BDCE
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	ret nz
 	ld a, $81
 	ld ($C2E9), a
@@ -11676,8 +11681,8 @@ LABEL_56D9:
 
 LABEL_56E9:
 	ld hl, LABEL_B12_BDE6
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	ret nz
 	ld a, $82
 	ld ($C2E9), a
@@ -11685,7 +11690,7 @@ LABEL_56E9:
 
 LABEL_56F9:
 	ld hl, LABEL_B12_B754
-	call PlaySound
+	call ShowDialogue_B12
 	push bc
 	call LABEL_3A21
 	bit 4, c
@@ -11708,7 +11713,7 @@ LABEL_56F9:
 	jr z, +
 	ld hl, LABEL_B12_B785
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jr LABEL_56F9
 
 ++:	
@@ -11722,8 +11727,8 @@ LABEL_56F9:
 	ld hl, LABEL_B12_B761
 +:	
 	push de
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	pop de
 	jr nz, LABEL_56F9
 	ld a, e
@@ -11742,7 +11747,7 @@ LABEL_5752:
 .db	$81
 .db $83, $84, $85, $82, $86, $87, $88
 
-LABEL_575A:
+ShowDialogue_B2:
 	ld a, :Bank02
 	ld ($FFFF), a
 	ld de, DialogueBlock-2
@@ -12843,7 +12848,7 @@ LABEL_5FFE:
 	add  hl, hl
 	ld   de, B03_EnemyData
 	add  hl, de
-	ld   de, $C2C8
+	ld   de, CurrentBattle_EnemyName
 	ld   bc, $0008
 	ldir
 	ld   de, $C258
@@ -12937,7 +12942,7 @@ LABEL_6095:
 	ld   c, a
 	ld   b, $00
 	call	LABEL_44C
-	ld   ($C2D0), hl
+	ld   (CurrentBattle_EXPReward), hl
 	pop  hl
 	inc  hl
 	ld   a, (hl)
@@ -13550,7 +13555,7 @@ LABEL_6442:
 	ret
 
 LABEL_64A3:
-	ld a, ($C21B)
+	ld a, (Fade_timer)
 	or a
 	ret nz
 	ld a, (Game_mode)
@@ -13578,7 +13583,7 @@ LABEL_64A3:
 	ret
 
 LABEL_64CF:
-	ld a, ($C21B)
+	ld a, (Fade_timer)
 	or a
 	ret nz
 	ld a, (Game_mode)
@@ -13816,7 +13821,7 @@ LABEL_6729:
 	bit  3, b
 	jp   nz, LABEL_68BC
 LABEL_6731:
-	call	LABEL_7B05
+	call	FadeOut2
 	ld   a, (Dungeon_direction)
 	and  $03
 	ld   hl, $6ADF
@@ -13831,7 +13836,7 @@ LABEL_6731:
 	ld   (Dungeon_position), a
 	xor  a
 	call	LABEL_6AE5
-	call	LABEL_7B20
+	call	FadeIn2
 	ld	b, $01
 	jp	LABEL_6963
 
@@ -14108,7 +14113,7 @@ LABEL_68EC:
 	cp   $FF
 	jr   nz, LABEL_6947
 	push	hl
-	call	LABEL_7B05
+	call	FadeOut2
 	ld   hl, $FFFF
 	ld   (hl), :Bank09
 	ld   hl, LABEL_B09_B471
@@ -14123,7 +14128,7 @@ LABEL_68EC:
 LABEL_691D:
 	ld   a, $0C
 	call	WaitForVInt
-	call	LABEL_7B20
+	call	FadeIn2
 LABEL_6925:
 	ld   hl, $FFFF
 	ld   (hl), :Bank03
@@ -14135,18 +14140,18 @@ LABEL_6925:
 	cp   $0B ; GameMode_Dungeon
 	ret  nz
 
-	call	LABEL_7B05
+	call	FadeOut2
 	xor  a
 	call	LABEL_6AE5
 	call	LABEL_6D7F
 	call	LABEL_6DE2
-	call	LABEL_7B20
+	call	FadeIn2
 	ret
 
 LABEL_6947:
 	push	hl
 	push	af
-	call	LABEL_7B05
+	call	FadeOut2
 	pop  af
 	ld   c, $0D
 	cp   $FE
@@ -14234,7 +14239,7 @@ LABEL_69C7:
 	ret  nz
 
 	ld   hl, LABEL_B12_BD97
-	call	PlaySound
+	call	ShowDialogue_B12
 	push	bc
 	call	LABEL_16B2
 	pop  bc
@@ -16584,30 +16589,30 @@ LABEL_7AC0:
 .db $5A, $01, $26, $29, $02, $5B, $2C, $02, $38, $49, $02, $5B, $2C, $02, $38, $49
 .db $00, $16, $6A
 
-LABEL_7AFD:
+FadeOut:
 	ld hl, $1009
-	ld ($C21B), hl
+	ld (Fade_timer), hl
 	jr LABEL_7B0B
 
-LABEL_7B05:
+FadeOut2:
 	ld   hl, $2009
-	ld   ($C21B), hl
+	ld   (Fade_timer), hl
 LABEL_7B0B:
 	ld   a, $16
 	call	WaitForVInt
-	ld   a, ($C21B)
+	ld   a, (Fade_timer)
 	or   a
 	jp   nz, LABEL_7B0B
 	ret
 
-LABEL_7B18:
+FadeIn:
 	ld   hl, $1089
-	ld   ($C21B), hl
+	ld   (Fade_timer), hl
 	jr   LABEL_7B33
 
-LABEL_7B20:
+FadeIn2:
 	ld   hl, $2089
-	ld   ($C21B), hl
+	ld   (Fade_timer), hl
 	ld   hl, $C220
 	ld   de, $C221
 	ld   bc, $001F
@@ -16616,7 +16621,7 @@ LABEL_7B20:
 LABEL_7B33:
 	ld   a, $16
 	call	WaitForVInt
-	ld   a, ($C21B)
+	ld   a, (Fade_timer)
 	or   a
 	jp   nz, LABEL_7B33
 	ret
@@ -16627,7 +16632,7 @@ LABEL_7B40:
 	dec (hl)
 	ret p
 	ld (hl), $03
-	ld hl, $C21B
+	ld hl, Fade_timer
 	ld a, (hl)
 	bit 7, a
 	jp nz, ++
