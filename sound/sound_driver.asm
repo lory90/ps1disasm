@@ -3107,7 +3107,7 @@ LABEL_B12_B500:
 
 LABEL_B12_B52C:
 .db $8A, " SHAKES HIS", Dialogue_NewLine
-.db "HEAD ", Dialogue_DoubleQuote, "NO", Dialogue_DoubleQuote, ".", Dialogue_Terminator65
+.db "HEAD ", "\"NO\".", Dialogue_Terminator65
 
 LABEL_B12_B544:
 .db $8A, " IS", Dialogue_NewLine
@@ -3432,7 +3432,7 @@ LABEL_B12_BB5C:
 
 LABEL_B12_BB8D:
 .db $DE, "VEHICLE ", $BE, "N", Dialogue_NewLine
-.db "AS ", Dialogue_DoubleQuote, "ICE DIGGER", Dialogue_DoubleQuote, Dialogue_NewPage
+.db "AS \"ICE DIGGER\"", Dialogue_NewPage
 .db "LIVES UP TO ITS", Dialogue_NewLine
 .db "NAME.", Dialogue_Terminator65
 
@@ -3601,9 +3601,9 @@ LABEL_B12_BF64:
 .db $80, " HEARS ", $B2, Dialogue_Apostrophe, "S", Dialogue_NewLine
 .db "VOICE IN ", $DE, "DEPTH", Dialogue_NewPage
 .db "OF HER SOUL;", Dialogue_NewLine
-.db Dialogue_DoubleQuote, "YOU", Dialogue_Apostrophe, "LL BE REBORN", Dialogue_NewPage
+.db "\"YOU", Dialogue_Apostrophe, "LL BE REBORN", Dialogue_NewPage
 .db "TO FIGHT FOR", Dialogue_NewLine
-.db "PEACE AGAIN.", Dialogue_DoubleQuote, Dialogue_NewPage
+.db "PEACE AGAIN.\"", Dialogue_NewPage
 .db $80, " IS", Dialogue_NewLine
 .db $8E, "ED.", Dialogue_Terminator65
 

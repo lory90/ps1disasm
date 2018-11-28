@@ -108,7 +108,6 @@
 
 
 ; Dialogue
-.define Dialogue_DoubleQuote $22
 .define Dialogue_Apostrophe $40
 .define Dialogue_EnemyName $5C
 .define Dialogue_NewLine $60

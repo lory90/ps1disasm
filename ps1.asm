@@ -17647,8 +17647,8 @@ DialogueBlock:
 .db $D4, ".", Dialogue_Terminator65
 
 .db $E3, $E1, "HEARD OF", Dialogue_NewLine
-.db "A GEM CALLED ", Dialogue_DoubleQuote, $DE, Dialogue_NewPage
-.db "AMBER EYE", Dialogue_DoubleQuote, "?", Dialogue_NewLine
+.db "A GEM CALLED \"", $DE, Dialogue_NewPage
+.db "AMBER EYE\"?", Dialogue_NewLine
 .db $D5, " SAY ", $DE, "CASBA", Dialogue_NewPage
 .db "DRAGON HAS ", $FD, ".", Dialogue_Terminator65
 
@@ -17977,7 +17977,7 @@ DialogueBlock:
 .db "ONCE EVERY HUNDREDYEARS. A TORCH", Dialogue_NewPage
 .db "LIT DURING AN", Dialogue_NewLine
 .db "ECLIPSE IS CALLED", Dialogue_NewPage
-.db "AN ", Dialogue_DoubleQuote, "ECLIPSE TORCH", Dialogue_DoubleQuote, "AND IS REGARDED", Dialogue_NewPage
+.db "AN \"ECLIPSE TORCH\"AND IS REGARDED", Dialogue_NewPage
 .db "AS HOLY BY ", $DE, Dialogue_NewLine
 .db $F4, "S.", Dialogue_Terminator65
 
@@ -18454,7 +18454,7 @@ LABEL_B4FC:
 .db "I ", $E3, "HEARD OF A", Dialogue_NewLine
 .db "MAN WITH ", $E6, Dialogue_NewLine
 .db "STRENGTH ", $E7, Dialogue_NewLine
-.db Dialogue_DoubleQuote, "ODIN.", Dialogue_DoubleQuote, " MAYBE THE", Dialogue_NewPage
+.db "\"ODIN.\" MAYBE THE", Dialogue_NewPage
 .db "TWO OF ", $E1, "CAN", Dialogue_NewLine
 .db "STOP ", $D4, ".", Dialogue_NewLine
 .db $80, ",IT", Dialogue_Apostrophe, "S TOO LATE", Dialogue_NewLine
