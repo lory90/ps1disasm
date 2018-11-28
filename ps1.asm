@@ -101,11 +101,6 @@ _NMI_HANDLER:
 	cp   $0D ; GameMode_Interaction
 	jr   nz, LABEL_81
 LABEL_7A:
-	; Small routine to test B12 dialogue stuff - Isotarge
-	;push hl
-	;ld	hl, LABEL_B12_BF64
-	;call	ShowDialogue_B12
-	;pop hl
 	ld   a, (Game_is_paused)
 	cpl
 	ld   (Game_is_paused), a

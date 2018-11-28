@@ -2885,16 +2885,16 @@ LABEL_B12_A969:
 .db $81, $81, $81, $89, $81, $81, $81, $85
 .db $85, $85, $85, $89, $81, $81, $81, $F9
 
-; Dialogue from here on I believe - Isotarge
+; Dialogue from here on
 ; Control characters:
 ; $40 apostrophe
 ; $5B player/combatant name?
 ; $5C enemy name
 ; $60 newline
 ; $61 newpage
-; $62 terminator?
+; $62 terminator
 ; $63 terminator
-; $65 terminator?
+; $65 terminator
 
 LABEL_B12_B108:
 .db Dialogue_EnemyName, " DODGES", Dialogue_NewLine
