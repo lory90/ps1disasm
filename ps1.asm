@@ -17590,78 +17590,75 @@ DialogueBlock:
 
 .db "I HAVEN", Dialogue_Apostrophe, "T SEEN", Dialogue_NewLine
 .db $F6, $FD, " FOR A LONG", Dialogue_NewPage
-.db $9F
+.db $9F, ". ", $CD, Dialogue_NewLine
+.db "TALK WITH ME?", Dialogue_Terminator62
 
-; Data from 92F9 to 9320 (40 bytes)
-.db ". ", $CD, "`TALK WITH ME?bPOLYMETERAL ", $C7, "`DISSOLVE"
-.db	$20, $41, $4C, $4C, $61, $4D, $41, $54, $45, $52, $49, $41, $4C, $53, $20, $45
-.db	$58, $43, $45, $50, $54, $60, $46, $4F, $52, $20, $BC, $2E, $65, $57, $48, $41
-.db	$54, $3F, $20, $44, $52, $2E, $AD, $60, $48, $41, $53, $20, $52, $45, $54, $55
-.db	$52, $4E, $45, $44, $3F, $61, $48, $45, $20, $C7
+.db "POLYMETERAL ", $C7, Dialogue_NewLine
+.db "DISSOLVE ALL", Dialogue_NewPage
+.db "MATERIALS EXCEPT", Dialogue_NewLine
+.db "FOR ", $BC, ".", Dialogue_Terminator65
 
-; Data from 935B to 9363 (9 bytes)
-.db " BUILD`AN"
-.db	$4F
+.db "WHAT? DR.", $AD, Dialogue_NewLine
+.db "HAS RETURNED?", Dialogue_NewPage
+.db "HE ", $C7, " BUILD", Dialogue_NewLine
+.db "ANOTHER ", $E8, "?", Dialogue_NewPage
+.db "I ", $C7, " BE ", $D1, Dialogue_NewLine
+.db "RIGHT AWAY.", Dialogue_Terminator65
 
-; Data from 9365 to 9375 (17 bytes)
-.db "THER ", $E8, "?aI ", $C7, " BE ", $D1, "`"
-.db	$52
+.db "NO MAN ", $DC, " GOES", Dialogue_NewLine
+.db "INTO ", $DE, "ROOM IN", Dialogue_NewPage
+.db $DE, "FAR CORNER HASEVER COME OUT", Dialogue_NewPage
+.db "ALIVE! AHA-HA-HA!", Dialogue_Terminator65
 
-; Data from 9377 to 9388 (18 bytes)
-.db "IGHT AWAY.eNO MAN "
-.db	$DC, $20, $47, $4F
+.db "IT SEEMS TO BE A", Dialogue_NewLine
+.db "MAN WHO HAS BEEN", Dialogue_NewPage
+.db $91, "!", Dialogue_NewLine
+.db "I WONDER IF HE CAN", Dialogue_NewPage
+.db "BE RETURNED TO HISORIGINAL FORM?", Dialogue_Terminator65
 
-; Data from 938D to 939F (19 bytes)
-.db "ES`INTO ", $DE, "ROOM INa", $DE, "F"
-.db	$41
+.db $CB, " SOON FIND", Dialogue_NewLine
+.db "OUT ", $DE, "TRUTH!", Dialogue_Terminator65
 
-; Data from 93A1 to 94E5 (325 bytes)
-.db "R CORNER HASEVER COME OUTaALIVE! AHA-HA-HA!eIT SEEMS TO BE "
-.db	"A`MAN WHO HAS BEENa"
-.db $91, "!`I WONDER IF HE CANaBE RETURNED TO HISORIGINAL FORM?e"
-.db	$CB, " SOON FIND`"
-.db "OUT ", $DE, "TRUTH!eHALT! GO BACK!`", $E2, "LAST CHANCE!e"
-.db	"HOW BRAVE! BUT BE`", $ED, ""
-.db " OF TRAPS!e", $A8, " IS MY`TURF. DON@T YAaMESS @ROUND "
-.db	$D2, ",`NOW GIT!e", $CE, ""
-.db " FIND A`ROBOT ", $E7, "a", $8A, ". HE CAN FLYA ", $E8
-.db	".eIN ", $E4, "PILE OF`J"
-.db "UNK, ", $D5, $D0, ",a", $DA, " S@P"
-.db	$50
+.db "HALT! GO BACK!", Dialogue_NewLine
+.db $E2, "LAST CHANCE!", Dialogue_Terminator65
 
-; Data from 94E7 to 94FF (25 bytes)
-.db "OSED`T@BE A USABLEaROBOT,"
-.db	$42, $55, $54, $20, $E1, $BE, $60, $48, $4F, $57, $20, $52, $55, $4D, $4F, $52
-.db	$53, $20, $42, $45, $2E, $65, $50, $4F, $4C, $59, $4D, $45, $54, $45, $52, $41
-.db	$4C, $20, $49, $53, $20, $46, $4F, $52, $60, $53, $41, $4C, $45, $20, $49, $4E
-.db	$20, $41, $42, $49, $4F, $4E, $2E, $65, $E4, $B9, $20, $49, $53, $60, $43, $41
-.db	$4C, $4C, $45, $44, $20, $4C, $4F, $41, $52, $2E, $61, $57, $45, $20, $E3, $42
-.db	$45, $45, $4E, $20, $49, $4E, $60, $44, $45, $43, $4C, $49, $4E, $45, $20, $B3
-.db	$20, $54, $4F, $61, $DE, $57, $4F, $52, $4B, $20, $4F, $46, $60, $D4, $2E, $65
-.db	$E3, $E1, $48, $45, $41, $52, $44, $20, $4F
+.db "HOW BRAVE! BUT BE", Dialogue_NewLine
+.db $ED, " OF TRAPS!", Dialogue_Terminator65
 
-; Data from 9579 to 9591 (25 bytes)
-.db "F`A GEM CALLED ", $22, $DE, "aAMBER E"
-.db	$59
+.db $A8, " IS MY", Dialogue_NewLine
+.db "TURF. DON", Dialogue_Apostrophe, "T YA", Dialogue_NewPage
+.db "MESS ", Dialogue_Apostrophe, "ROUND ", $D2, ",", Dialogue_NewLine
+.db "NOW GIT!", Dialogue_Terminator65
 
-; Data from 9593 to 959D (11 bytes)
-.db "E", $22, "?`", $D5, " SAY ", $DE
-.db	$43
+.db $CE, " FIND A", Dialogue_NewLine
+.db "ROBOT ", $E7, Dialogue_NewPage
+.db $8A, ". HE CAN FLYA ", $E8, ".", Dialogue_Terminator65
 
-; Data from 959F to 95B5 (23 bytes)
-.db "ASBAaDRAGON HAS ", $FD, ".e", $DA, " A "
-.db	$9E
+.db "IN ", $E4, "PILE OF", Dialogue_NewLine
+.db "JUNK, ", $D5, $D0, ",", Dialogue_NewPage
+.db $DA, " S", Dialogue_Apostrophe, "PPOSED", Dialogue_NewLine
+.db "T", Dialogue_Apostrophe, "BE A USABLE", Dialogue_NewPage
+.db "ROBOT,BUT ", $E1, $BE, Dialogue_NewLine
+.db "HOW RUMORS BE.", Dialogue_Terminator65
 
-; Data from 95B7 to 95B9 (3 bytes)
-.db "CAL"
-.db	$4C
+.db "POLYMETERAL IS FOR", Dialogue_NewLine
+.db "SALE IN ABION.", Dialogue_Terminator65
 
-; Data from 95BB to 95C7 (13 bytes)
-.db "ED ABION ONa", $DE
-.db	$57
+.db $E4, $B9, " IS", Dialogue_NewLine
+.db "CALLED LOAR.", Dialogue_NewPage
+.db "WE ", $E3, "BEEN IN", Dialogue_NewLine
+.db "DECLINE ", $B3, " TO", Dialogue_NewPage
+.db $DE, "WORK OF", Dialogue_NewLine
+.db $D4, ".", Dialogue_Terminator65
 
-; Data from 95C9 to BFFF (10807 bytes)
-.db "ESTERN EDGE", Dialogue_NewLine
+.db $E3, $E1, "HEARD OF", Dialogue_NewLine
+.db "A GEM CALLED ", Dialogue_DoubleQuote, $DE, Dialogue_NewPage
+.db "AMBER EYE", Dialogue_DoubleQuote, "?", Dialogue_NewLine
+.db $D5, " SAY ", $DE, "CASBA", Dialogue_NewPage
+.db "DRAGON HAS ", $FD, ".", Dialogue_Terminator65
+
+.db $DA, " A ", $9E, "CALLED ABION ON", Dialogue_NewPage
+.db $DE, "WESTERN EDGE", Dialogue_NewLine
 .db "ON ", $E4, "ISLAND.", Dialogue_Terminator65
 
 .db $C3, " ABOUT", Dialogue_NewLine
