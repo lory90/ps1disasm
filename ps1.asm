@@ -18443,257 +18443,170 @@ DialogueBlock:
 
 
 LABEL_B49B:
-.db	$53, $43, $55, $4D, $21, $20
-.db $44, $4F, $20, $4E, $4F, $54, $20, $53
-.db $4E, $49, $46, $46, $60, $41, $52, $4F
-.db $55, $4E, $44, $20, $49, $4E, $20, $D4
-.db $40, $53, $60, $41, $46, $46, $41, $49
-.db $52, $53, $21, $20, $4C, $45, $41, $52
-.db $4E, $60, $54, $48, $49, $53, $20, $4C
-.db $45, $53, $53, $4F, $4E, $20, $57, $45
-.db $4C, $4C, $21, $61, $B2, $21, $20, $57
-.db $48, $41, $54, $20, $48, $41, $50, $50
-.db $2D, $60, $45, $4E, $45, $44, $21, $20
-.db $44, $4F, $4E, $40, $54, $20, $44, $49
-.db $45, $21, $65
+.db "SCUM! DO NOT SNIFF", Dialogue_NewLine
+.db "AROUND IN ", $D4, Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db "AFFAIRS! LEARN", Dialogue_NewLine
+.db "THIS LESSON WELL!", Dialogue_NewPage
+.db $B2, "! WHAT HAPP-", Dialogue_NewLine
+.db "ENED! DON", Dialogue_Apostrophe, "T DIE!", Dialogue_Terminator65
 
 LABEL_B4FC:
-.db	$80, $2C, $4C, $49, $53
-.db $54, $45, $4E, $21, $60, $D4, $20, $49
-.db $53, $20, $4C, $45, $41, $44, $49, $4E
-.db $47, $60, $4F, $55, $52, $20, $B5, $20
-.db $54, $4F, $60, $44, $45, $53, $54, $52
-.db $55, $43, $54, $49, $4F, $4E, $2E, $20
-.db $49, $61, $54, $52, $49, $45, $44, $20
-.db $54, $4F, $20, $44, $49, $53, $43, $4F
-.db $56, $45, $52, $60, $48, $49, $53, $20
-.db $50, $4C, $41, $4E, $53, $2C, $20, $42
-.db $55, $54, $20, $49, $60, $43, $FF, $20
-.db $4E, $4F, $54, $20, $44, $4F, $20, $4D
-.db $55, $43, $48, $60, $42, $59, $20, $4D
-.db $59, $53, $45, $4C, $46, $2E, $61, $49
-.db $20, $E3, $48, $45, $41, $52, $44, $20
-.db $4F, $46, $20, $41, $60, $4D, $41, $4E
-.db $20, $57, $49, $54, $48, $20, $E6, $60
-.db $53, $54, $52, $45, $4E, $47, $54, $48
-.db $20, $E7, $60, $22, $4F, $44, $49, $4E
-.db $2E, $22, $20, $4D, $41, $59, $42, $45
-.db $20, $54, $48, $45, $61, $54, $57, $4F
-.db $20, $4F, $46, $20, $E1, $43, $41, $4E
-.db $60, $53, $54, $4F, $50, $20, $D4, $2E
-.db $60, $80, $2C, $49, $54, $40, $53, $20
-.db $54, $4F, $4F, $20, $4C, $41, $54, $45
-.db $60, $46, $4F, $52, $20, $4D, $45, $2E
-.db $20, $42, $45, $20, $53, $54, $52, $4F
-.db $4E, $47, $2E, $65
+.db $80, ",LISTEN!", Dialogue_NewLine
+.db $D4, " IS LEADING", Dialogue_NewLine
+.db "OUR ", $B5, " TO", Dialogue_NewLine
+.db "DESTRUCTION. I", Dialogue_NewPage
+.db "TRIED TO DISCOVER", Dialogue_NewLine
+.db "HIS PLANS, BUT I", Dialogue_NewLine
+.db "C", $FF, " NOT DO MUCH", Dialogue_NewLine
+.db "BY MYSELF.", Dialogue_NewPage
+.db "I ", $E3, "HEARD OF A", Dialogue_NewLine
+.db "MAN WITH ", $E6, Dialogue_NewLine
+.db "STRENGTH ", $E7, Dialogue_NewLine
+.db Dialogue_DoubleQuote, "ODIN.", Dialogue_DoubleQuote, " MAYBE THE", Dialogue_NewPage
+.db "TWO OF ", $E1, "CAN", Dialogue_NewLine
+.db "STOP ", $D4, ".", Dialogue_NewLine
+.db $80, ",IT", Dialogue_Apostrophe, "S TOO LATE", Dialogue_NewLine
+.db "FOR ME. BE STRONG.", Dialogue_Terminator65
 
 LABEL_B5D5:
-.db	$49, $20, $C7, $20
-.db $4D, $41, $4B, $45, $20, $53, $55, $52
-.db $45, $60, $DC, $20, $92, $60, $44, $49
-.db $45, $44, $20, $4E, $4F, $54, $20, $49
-.db $4E, $20, $56, $41, $49, $4E, $21, $60
-.db $57, $41, $54, $43, $48, $20, $4F, $56
-.db $45, $52, $20, $41, $4E, $44, $61, $50
-.db $52, $4F, $54, $45, $43, $54, $20, $4D
-.db $45, $2C, $20, $B2, $21, $65
+.db "I ", $C7, " MAKE SURE", Dialogue_NewLine
+.db $DC, " ", $92, Dialogue_NewLine
+.db "DIED NOT IN VAIN!", Dialogue_NewLine
+.db "WATCH OVER AND", Dialogue_NewPage
+.db "PROTECT ME, ", $B2, "!", Dialogue_Terminator65
 
 LABEL_B617:
-.db	$57, $45
-.db $20, $C7, $20, $42, $45, $20, $46, $45
-.db $4C, $4C, $4F, $57, $60, $54, $52, $41
-.db $56, $45, $4C, $45, $52, $53, $2E, $60
-.db $49, $40, $4D, $20, $80, $3B, $20, $57
-.db $48, $41, $54, $40, $53, $60, $E2, $4E
-.db $41, $4D, $45, $3F, $65
+.db "WE ", $C7, " BE FELLOW", Dialogue_NewLine
+.db "TRAVELERS.", Dialogue_NewLine
+.db "I", Dialogue_Apostrophe, "M ", $80, $3B, " WHAT", Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db $E2, "NAME?", Dialogue_Terminator65
 
 LABEL_B646:
-.db	$49, $40, $4D
-.db $20, $81, $2E, $65
+.db "I", Dialogue_Apostrophe, "M ", $81, ".", Dialogue_Terminator65
 
 LABEL_B64D:
-.db	$81, $2C, $20, $E3
-.db $E1, $60, $45, $56, $45, $52, $20, $48
-.db $45, $41, $52, $44, $20, $4F, $46, $20
-.db $41, $60, $4D, $41, $4E, $20, $E7, $4F
-.db $44, $49, $4E, $3F, $65
+.db $81, ", ", $E3, $E1, Dialogue_NewLine
+.db "EVER HEARD OF A", Dialogue_NewLine
+.db "MAN ", $E7, "ODIN?", Dialogue_Terminator65
 
 LABEL_B66E:
-.db	$59, $45, $53
-.db $2C, $20, $42, $55, $54, $20, $48, $45
-.db $20, $49, $53, $60, $91, $21, $60, $49
-.db $46, $20, $48, $45, $20, $44, $52, $49
-.db $4E, $4B, $53, $20, $54, $48, $49, $53
-.db $60, $4D, $45, $44, $49, $43, $49, $4E
-.db $45, $2C, $20, $48, $45, $40, $4C, $4C
-.db $20, $42, $45, $61, $4F, $2E, $4B, $2E
-.db $2C, $20, $42, $55, $54, $20, $49, $20
-.db $88, $60, $4F, $50, $45, $4E, $20, $DE
-.db $42, $4F, $54, $54, $4C, $45, $2E, $65
+.db "YES, BUT HE IS", Dialogue_NewLine
+.db $91, "!", Dialogue_NewLine
+.db "IF HE DRINKS THIS", Dialogue_NewLine
+.db "MEDICINE, HE", Dialogue_Apostrophe, "LL BE", Dialogue_NewPage
+.db "O.K., BUT I ", $88, Dialogue_NewLine
+.db "OPEN ", $DE, "BOTTLE.", Dialogue_Terminator65
 
 LABEL_B6C1:
-.db $57, $45, $4C, $4C, $2C, $20, $54, $48
-.db $45, $4E, $2C, $20, $57, $45, $40, $44
-.db $60, $42, $45, $54, $54, $45, $52, $20
-.db $47, $4F, $20, $8F, $60, $4F, $44, $49
-.db $4E, $20, $54, $4F, $47, $45, $54, $48
-.db $45, $52, $2C, $60, $4F, $2E, $4B, $2E
-.db $3F, $65
+.db "WELL, THEN, WE", Dialogue_Apostrophe, "D", Dialogue_NewLine
+.db "BETTER GO ", $8F, Dialogue_NewLine
+.db "ODIN TOGETHER,", Dialogue_NewLine
+.db "O.K.?", Dialogue_Terminator65
 
 LABEL_B6F3:
-.db	$B3, $20, $46, $4F, $52, $20
-.db $53, $41, $56, $49, $4E, $47, $60, $4D
-.db $45, $2E, $20, $49, $20, $47, $55, $45
-.db $53, $53, $20, $49, $46, $60, $EA, $20
-.db $43, $41, $4E, $20, $53, $54, $4F, $50
-.db $60, $4D, $45, $2C, $20, $49, $20, $44
-.db $4F, $4E, $40, $54, $20, $E3, $61, $4D
-.db $55, $43, $48, $20, $48, $4F, $50, $45
-.db $20, $4F, $46, $60, $4B, $49, $4C, $4C
-.db $49, $4E, $47, $20, $D4, $2C, $60, $44
-.db $4F, $20, $49, $3F, $65
+.db $B3, " FOR SAVING", Dialogue_NewLine
+.db "ME. I GUESS IF", Dialogue_NewLine
+.db $EA, " CAN STOP", Dialogue_NewLine
+.db "ME, I DON", Dialogue_Apostrophe, "T ", $E3, Dialogue_NewPage
+.db "MUCH HOPE OF", Dialogue_NewLine
+.db "KILLING ", $D4, ",", Dialogue_NewLine
+.db "DO I?", Dialogue_Terminator65
 
 LABEL_B746:
-.db	$92, $20, $44
-.db $49, $45, $44, $60, $54, $52, $59, $49
-.db $4E, $47, $20, $54, $4F, $20, $4B, $49
-.db $4C, $4C, $60, $D4, $2E, $20, $42, $45
-.db $46, $4F, $52, $45, $20, $48, $45, $60
-.db $44, $49, $45, $44, $2C, $20, $48, $45
-.db $20, $54, $4F, $4C, $44, $20, $4D, $45
-.db $61, $54, $4F, $20, $53, $45, $45, $4B
-.db $20, $E2, $CA, $2E, $65
+.db $92, " DIED", Dialogue_NewLine
+.db "TRYING TO KILL", Dialogue_NewLine
+.db $D4, ". BEFORE HE", Dialogue_NewLine
+.db "DIED, HE TOLD ME", Dialogue_NewPage
+.db "TO SEEK ", $E2, $CA, ".", Dialogue_Terminator65
 
 LABEL_B786:
-.db	$49, $53, $20
-.db $DC, $20, $53, $4F, $3F, $20, $57, $45
-.db $4C, $4C, $2C, $60, $49, $20, $C8, $20
-.db $4E, $4F, $54, $20, $4C, $45, $54, $60
-.db $E2, $42, $52, $4F, $54, $48, $45, $52
-.db $20, $44, $49, $45, $60, $55, $4E, $41
-.db $56, $45, $4E, $47, $45, $44, $2E, $65
+.db "IS ", $DC, " SO? WELL,", Dialogue_NewLine
+.db "I ", $C8, " NOT LET", Dialogue_NewLine
+.db $E2, "BROTHER DIE", Dialogue_NewLine
+.db "UNAVENGED.", Dialogue_Terminator65
 
 LABEL_B7B9:
-.db $57, $48, $59, $20, $44, $49, $44, $20
-.db $E1, $54, $52, $59, $20, $54, $4F, $60
-.db $4B, $49, $4C, $4C, $20, $EA, $3F, $65
+.db "WHY DID ", $E1, "TRY TO", Dialogue_NewLine
+.db "KILL ", $EA, "?", Dialogue_Terminator65
 
 LABEL_B7D1:
-.db $42, $45, $43, $41, $55, $53, $45, $20
-.db $EA, $20, $48, $41, $53, $60, $41, $20
-.db $4D, $59, $53, $54, $49, $43, $20, $41
-.db $58, $45, $2E, $60, $55, $4E, $46, $4F
-.db $52, $54, $55, $4E, $41, $54, $45, $4C
-.db $59, $2C, $20, $53, $48, $45, $60, $47
-.db $4F, $54, $20, $41, $57, $41, $59, $20
-.db $FE, $4D, $45, $2E, $61, $41, $4E, $59
-.db $48, $4F, $57, $2C, $20, $49, $20, $E3
-.db $60, $53, $54, $41, $53, $48, $45, $44
-.db $20, $41, $20, $43, $4F, $4D, $50, $41
-.db $53, $53, $60, $49, $4E, $20, $4F, $4E
-.db $45, $20, $4F, $46, $20, $54, $48, $45
-.db $60, $BA, $53, $20, $4F, $46, $20, $E4
-.db $61, $43, $41, $56, $45, $2E, $20, $4C
-.db $45, $54, $40, $53, $20, $47, $4F, $20
-.db $41, $4E, $44, $60, $47, $45, $54, $20
-.db $49, $54, $65
+.db "BECAUSE ", $EA, " HAS", Dialogue_NewLine
+.db "A MYSTIC AXE.", Dialogue_NewLine
+.db "UNFORTUNATELY, SHE", Dialogue_NewLine
+.db "GOT AWAY ", $FE, "ME.", Dialogue_NewPage
+.db "ANYHOW, I ", $E3, Dialogue_NewLine
+.db "STASHED A COMPASS", Dialogue_NewLine
+.db "IN ONE OF THE", Dialogue_NewLine
+.db $BA, "S OF ", $E4, Dialogue_NewPage
+.db "CAVE. LET", Dialogue_Apostrophe, "S GO AND", Dialogue_NewLine
+.db "GET IT", Dialogue_Terminator65
 
 LABEL_B85C:
-.db	$49, $40, $56, $45, $20
-.db $52, $45, $43, $45, $49, $56, $45, $44
-.db $20, $41, $60, $4C, $45, $54, $54, $45
-.db $52, $20, $FE, $DE, $60, $AA, $2E, $20
-.db $C9, $60, $52, $45, $41, $44, $20, $49
-.db $54, $2E, $65
+.db "I", Dialogue_Apostrophe, "VE RECEIVED A", Dialogue_NewLine
+.db "LETTER ", $FE, $DE, Dialogue_NewLine
+.db $AA, ". ", $C9, Dialogue_NewLine
+.db "READ IT.", Dialogue_Terminator65
 
 LABEL_B884:
-.db	$4C, $45, $54, $20, $4D
-.db $45, $20, $53, $45, $45, $20, $49, $54
-.db $2E, $2E, $2E, $2E, $2E, $60, $4F, $55
-.db $52, $20, $44, $55, $54, $59, $20, $49
-.db $53, $20, $43, $4C, $45, $41, $52, $3B
-.db $60, $57, $45, $20, $C8, $20, $50, $52
-.db $4F, $54, $45, $43, $54, $60, $DE, $B8
-.db $20, $4F, $46, $20, $54, $48, $45, $61
-.db $9B, $20, $9C, $20, $FE, $60, $45, $56
-.db $49, $4C, $2E, $60, $57, $45, $20, $C8
-.db $20, $46, $49, $52, $53, $54, $20, $47
-.db $4F, $60, $54, $4F, $20, $DE, $95, $61
-.db $46, $4F, $52, $45, $53, $54, $53, $20
-.db $41, $4E, $44, $20, $46, $49, $4E, $44
-.db $60, $44, $52, $2E, $AD, $2E, $20, $57
-.db $45, $20, $43, $41, $4E, $60, $55, $53
-.db $45, $20, $41, $4E, $20, $55, $4E, $44
-.db $45, $52, $47, $52, $4F, $55, $4E, $44
-.db $60, $BA, $20, $FE, $41, $61, $4D, $41
-.db $4E, $48, $4F, $4C, $45, $20, $49, $4E
-.db $20, $54, $48, $45, $60, $98, $2E, $65
+.db "LET ME SEE IT.....", Dialogue_NewLine
+.db "OUR DUTY IS CLEAR", $3B, Dialogue_NewLine
+.db "WE ", $C8, " PROTECT", Dialogue_NewLine
+.db $DE, $B8, " OF THE", Dialogue_NewPage
+.db $9B, " ", $9C, " ", $FE, Dialogue_NewLine
+.db "EVIL.", Dialogue_NewLine
+.db "WE ", $C8, " FIRST GO", Dialogue_NewLine
+.db "TO ", $DE, $95, Dialogue_NewPage
+.db "FORESTS AND FIND", Dialogue_NewLine
+.db "DR.", $AD, ". WE CAN", Dialogue_NewLine
+.db "USE AN UNDERGROUND", Dialogue_NewLine
+.db $BA, " ", $FE, "A", Dialogue_NewPage
+.db "MANHOLE IN THE", Dialogue_NewLine
+.db $98, ".", Dialogue_Terminator65
 
 LABEL_B929:
-.db $57, $48, $45, $4E, $20, $81, $20, $45
-.db $41, $54, $53, $20, $54, $48, $45, $60
-.db $4E, $55, $54, $53, $20, $4F, $46, $20
-.db $D7, $2C, $20, $48, $45, $60, $42, $45
-.db $43, $4F, $4D, $45, $53, $20, $43, $4C
-.db $4F, $54, $48, $45, $44, $20, $49, $4E
-.db $60, $46, $4C, $41, $4D, $45, $20, $41
-.db $4E, $44, $20, $45, $4D, $49, $54, $53
-.db $20, $41, $61, $42, $4C, $49, $4E, $44
-.db $49, $4E, $47, $20, $4C, $49, $47, $48
-.db $54, $2E, $65
+.db "WHEN ", $81, " EATS THE", Dialogue_NewLine
+.db "NUTS OF ", $D7, ", HE", Dialogue_NewLine
+.db "BECOMES CLOTHED IN", Dialogue_NewLine
+.db "FLAME AND EMITS A", Dialogue_NewPage
+.db "BLINDING LIGHT.", Dialogue_Terminator65
 
 LABEL_B97C:
-.db	$57, $48, $45, $4E, $20
-.db $48, $45, $20, $49, $53, $20, $56, $49
-.db $53, $49, $42, $4C, $45, $60, $41, $47
-.db $41, $49, $4E, $2C, $20, $48, $45, $20
-.db $48, $41, $53, $20, $42, $45, $45, $4E
-.db $60, $54, $52, $41, $4E, $53, $46, $4F
-.db $52, $4D, $45, $44, $20, $49, $4E, $54
-.db $4F, $61, $41, $20, $42, $45, $41, $55
-.db $54, $49, $46, $55, $4C, $60, $57, $49
-.db $4E, $47, $45, $44, $20, $42, $45, $41
-.db $53, $54, $2E, $60, $81, $20, $46, $4C
-.db $41, $50, $53, $20, $48, $49, $53, $60
-.db $57, $49, $4E, $47, $53, $20, $50, $4C
-.db $4F, $55, $44, $4C, $59, $2E, $65
+.db "WHEN HE IS VISIBLE", Dialogue_NewLine
+.db "AGAIN, HE HAS BEEN", Dialogue_NewLine
+.db "TRANSFORMED INTO", Dialogue_NewPage
+.db "A BEAUTIFUL", Dialogue_NewLine
+.db "WINGED BEAST.", Dialogue_NewLine
+.db $81, " FLAPS HIS", Dialogue_NewLine
+.db "WINGS PLOUDLY.", Dialogue_Terminator65
 
 LABEL_B9E8:
-.db	$60
-.db $20, $20, $20, $20, $20, $80, $63
+.db Dialogue_NewLine
+.db "     ", $80, Dialogue_Terminator63
 
 LABEL_B9F0:
-.db	$60
-.db $20, $20, $20, $20, $20, $4F, $44, $49
-.db $4E, $63
+.db Dialogue_NewLine
+.db "     ODIN", Dialogue_Terminator63
 
 LABEL_B9FB:
-.db	$60, $20, $20, $20, $20, $20
-.db $4E, $4F, $41, $48, $63
+.db Dialogue_NewLine
+.db "     NOAH", Dialogue_Terminator63
 
 LABEL_BA06:
-.db	$60, $20, $20
-.db $20, $20, $20, $41, $4E, $44, $20, $81
-.db $63
+.db Dialogue_NewLine
+.db "     AND ", $81, Dialogue_Terminator63
 
 LABEL_BA12:
-.db	$45, $56, $45, $4E, $20, $54, $48
-.db $4F, $55, $47, $48, $20, $54, $48, $45
-.db $60, $4D, $45, $4D, $4F, $52, $49, $45
-.db $53, $20, $4F, $46, $20, $45, $56, $49
-.db $4C, $60, $46, $41, $44, $45, $20, $41
-.db $57, $41, $59, $2C, $20, $54, $48, $45
-.db $49, $52, $60, $4E, $41, $4D, $45, $53
-.db $20, $C7, $20, $42, $45, $20, $4B, $45
-.db $50, $54, $63
+.db "EVEN THOUGH THE", Dialogue_NewLine
+.db "MEMORIES OF EVIL", Dialogue_NewLine
+.db "FADE AWAY, THEIR", Dialogue_NewLine
+.db "NAMES ", $C7, " BE KEPT", Dialogue_Terminator63
 
 LABEL_BA54:
-.db	$5F, $49, $4E, $20, $DE
-.db $48, $45, $41, $52, $54, $53, $20, $4F
-.db $46, $60, $DE, $50, $45, $4F, $50, $4C
-.db $45, $20, $4F, $46, $20, $DE, $60, $41
-.db $4C, $47, $4F, $4C, $20, $46, $4F, $52
-.db $45, $56, $45, $52, $21, $21, $21, $63
+.db $5F, "IN ", $DE, "HEARTS OF", Dialogue_NewLine
+.db $DE, "PEOPLE OF ", $DE, Dialogue_NewLine
+.db "ALGOL FOREVER!!!", Dialogue_Terminator63
+
+
 .db $81, $BB, $86, $BB, $8B, $BB, $92, $BB
 .db $9C, $BB, $A3, $BB, $A8, $BB, $AF, $BB
 .db $B8, $BB, $BF, $BB, $C6, $BB, $CD, $BB
@@ -18726,127 +18639,136 @@ LABEL_BA54:
 .db $01, $BF, $0A, $BF, $11, $BF, $15, $BF
 .db $1B, $BF, $20, $BF, $26, $BF, $2B, $BF
 .db $33, $BF, $3A, $BF, $3E, $BF, $44, $BF
-.db $41, $4C, $49, $53, $65, $4D, $59, $41
-.db $55, $65, $41, $54, $54, $41, $43, $4B
-.db $65, $45, $46, $46, $45, $43, $54, $49
-.db $56, $45, $65, $4D, $41, $47, $49, $43
-.db $20, $65, $57, $41, $4C, $4C, $65, $48
-.db $45, $41, $4C, $45, $44, $65, $44, $45
-.db $46, $4C, $45, $43, $54, $53, $65, $43
-.db $41, $4E, $4E, $4F, $54, $65, $43, $41
-.db $53, $54, $4C, $45, $65, $48, $41, $50
-.db $53, $42, $59, $65, $57, $45, $20, $41
-.db $52, $45, $20, $65, $48, $45, $41, $44
-.db $49, $4E, $47, $20, $46, $4F, $52, $65
-.db $43, $41, $52, $52, $59, $65, $52, $45
-.db $53, $55, $52, $52, $45, $43, $54, $65
-.db $53, $41, $56, $45, $65, $43, $55, $52
-.db $52, $45, $4E, $54, $4C, $59, $65, $54
-.db $55, $52, $4E, $45, $44, $20, $54, $4F
-.db $20, $53, $54, $4F, $4E, $45, $65, $4D
-.db $59, $20, $42, $52, $4F, $54, $48, $45
-.db $52, $65, $44, $45, $5A, $4F, $52, $49
-.db $53, $65, $4D, $4F, $54, $41, $56, $49
-.db $41, $65, $47, $4F, $54, $48, $49, $43
-.db $65, $53, $43, $49, $4F, $4E, $65, $57
-.db $49, $53, $48, $65, $53, $50, $41, $43
-.db $45, $50, $4F, $52, $54, $65, $50, $41
-.db $53, $53, $50, $4F, $52, $54, $65, $50
-.db $4C, $41, $4E, $45, $54, $65, $41, $4C
-.db $47, $4F, $4C, $65, $53, $59, $53, $54
-.db $45, $4D, $65, $54, $4F, $57, $45, $52
-.db $65, $56, $49, $4C, $4C, $41, $47, $45
-.db $65, $54, $49, $4D, $45, $65, $52, $4F
-.db $41, $44, $50, $41, $53, $53, $65, $4D
-.db $45, $53, $45, $54, $41, $53, $65, $50
-.db $41, $53, $53, $65, $41, $4E, $54, $20
-.db $4C, $49, $4F, $4E, $65, $53, $4F, $4F
-.db $54, $48, $49, $4E, $47, $20, $46, $4C
-.db $55, $54, $45, $65, $53, $45, $43, $52
-.db $45, $54, $65, $4C, $41, $43, $4F, $4E
-.db $49, $41, $4E, $20, $50, $4F, $54, $65
-.db $4D, $41, $48, $41, $52, $55, $65, $42
-.db $4F, $52, $54, $45, $56, $4F, $65, $59
-.db $4F, $55, $52, $53, $45, $4C, $46, $65
-.db $47, $4F, $56, $45, $52, $4E, $4F, $52
-.db $65, $48, $49, $4C, $4C, $65, $53, $54
-.db $52, $41, $4E, $47, $45, $65, $4C, $55
-.db $56, $45, $4E, $4F, $65, $48, $4F, $57
-.db $45, $56, $45, $52, $65, $4B, $49, $4E
-.db $47, $65, $51, $55, $45, $45, $4E, $65
-.db $46, $41, $54, $48, $45, $52, $65, $4E
-.db $45, $52, $4F, $65, $54, $48, $41, $4E
-.db $4B, $53, $65, $54, $48, $41, $4E, $4B
-.db $20, $59, $4F, $55, $65, $57, $4F, $52
-.db $4C, $44, $65, $53, $48, $49, $45, $4C
-.db $44, $65, $49, $20, $53, $45, $45, $65
-.db $50, $4C, $41, $4E, $45, $54, $53, $65
-.db $54, $4F, $57, $4E, $65, $50, $41, $53
-.db $53, $41, $47, $45, $65, $53, $4F, $4F
-.db $54, $48, $53, $41, $59, $45, $52, $65
-.db $4C, $41, $43, $4F, $4E, $49, $41, $65
-.db $4C, $41, $42, $4F, $52, $41, $54, $4F
-.db $52, $59, $65, $4B, $4E, $4F, $57, $65
-.db $52, $45, $53, $54, $65, $42, $41, $59
-.db $41, $65, $4D, $41, $4C, $41, $59, $65
-.db $42, $41, $59, $41, $20, $4D, $41, $4C
-.db $41, $59, $65, $44, $4F, $20, $59, $4F
-.db $55, $20, $4B, $4E, $4F, $57, $65, $46
-.db $4F, $52, $45, $53, $54, $65, $44, $4F
-.db $20, $59, $4F, $55, $20, $48, $41, $56
-.db $45, $65, $44, $4F, $20, $59, $4F, $55
-.db $65, $57, $49, $4C, $4C, $65, $4D, $55
-.db $53, $54, $65, $50, $4C, $45, $41, $53
-.db $45, $20, $65, $48, $45, $4C, $50, $65
-.db $59, $4F, $55, $20, $57, $49, $4C, $4C
-.db $65, $49, $20, $57, $49, $4C, $4C, $65
-.db $57, $49, $4C, $4C, $20, $59, $4F, $55
-.db $65, $59, $4F, $55, $20, $4D, $55, $53
-.db $54, $65, $50, $41, $4C, $4D, $41, $65
-.db $57, $48, $45, $52, $45, $65, $54, $48
-.db $45, $52, $45, $65, $48, $45, $52, $45
-.db $65, $49, $4E, $44, $45, $45, $44, $65
-.db $4C, $41, $53, $53, $49, $43, $65, $53
-.db $4F, $4D, $45, $65, $52, $45, $53, $49
-.db $44, $45, $4E, $54, $49, $41, $4C, $20
-.db $41, $52, $45, $41, $65, $4C, $41, $45
-.db $52, $4D, $41, $65, $44, $55, $4E, $47
-.db $45, $4F, $4E, $65, $4C, $41, $4E, $47
-.db $55, $41, $47, $45, $65, $54, $48, $45
-.db $52, $45, $20, $49, $53, $65, $54, $48
-.db $45, $52, $45, $20, $41, $52, $45, $65
-.db $54, $48, $41, $54, $65, $54, $48, $52
-.db $4F, $55, $47, $48, $65, $54, $48, $45
-.db $20, $65, $50, $52, $45, $53, $45, $4E
-.db $54, $65, $57, $45, $4C, $43, $4F, $4D
-.db $45, $20, $65, $59, $4F, $55, $20, $65
-.db $59, $4F, $55, $52, $20, $65, $48, $41
-.db $56, $45, $20, $65, $54, $48, $49, $53
-.db $20, $65, $4D, $4F, $55, $4E, $54, $41
-.db $49, $4E, $65, $47, $52, $45, $41, $54
-.db $20, $65, $4E, $41, $4D, $45, $44, $20
-.db $65, $53, $50, $41, $43, $45, $53, $48
-.db $49, $50, $65, $50, $41, $4C, $4D, $41
-.db $4E, $53, $65, $4D, $45, $44, $55, $53
-.db $41, $65, $44, $4F, $4E, $40, $54, $20
-.db $42, $45, $20, $41, $20, $46, $4F, $4F
-.db $4C, $21, $65, $41, $52, $45, $20, $65
-.db $43, $41, $52, $45, $46, $55, $4C, $65
-.db $44, $45, $4C, $45, $54, $45, $65, $4D
-.db $41, $47, $49, $43, $65, $53, $41, $42
-.db $52, $55, $53, $20, $43, $41, $42, $52
-.db $55, $53, $65, $54, $52, $45, $41, $53
-.db $55, $52, $45, $20, $65, $43, $48, $45
-.db $53, $54, $65, $4D, $4F, $56, $45, $65
-.db $44, $45, $5A, $4F, $52, $49, $41, $4E
-.db $65, $45, $4D, $42, $41, $52, $4B, $65
-.db $41, $4E, $59, $65, $54, $48, $49, $4E
-.db $47, $65, $4E, $4F, $54, $20, $65, $57
-.db $41, $4E, $54, $20, $65, $47, $41, $4D
-.db $45, $65, $46, $41, $43, $49, $4E, $47
-.db $20, $65, $53, $45, $4C, $45, $43, $54
-.db $65, $4F, $4E, $45, $65, $46, $52, $4F
-.db $4D, $20, $65, $4F, $55, $4C, $44, $65
+
+
+.db "ALIS", Dialogue_Terminator65
+.db "MYAU", Dialogue_Terminator65
+.db "ATTACK", Dialogue_Terminator65
+.db "EFFECTIVE", Dialogue_Terminator65
+.db "MAGIC ", Dialogue_Terminator65
+.db "WALL", Dialogue_Terminator65
+.db "HEALED", Dialogue_Terminator65
+.db "DEFLECTS", Dialogue_Terminator65
+.db "CANNOT", Dialogue_Terminator65
+.db "CASTLE", Dialogue_Terminator65
+.db "HAPSBY", Dialogue_Terminator65
+.db "WE ARE ", Dialogue_Terminator65
+.db "HEADING FOR", Dialogue_Terminator65
+.db "CARRY", Dialogue_Terminator65
+.db "RESURRECT", Dialogue_Terminator65
+.db "SAVE", Dialogue_Terminator65
+.db "CURRENTLY", Dialogue_Terminator65
+.db "TURNED TO STONE", Dialogue_Terminator65
+.db "MY BROTHER", Dialogue_Terminator65
+.db "DEZORIS", Dialogue_Terminator65
+.db "MOTAVIA", Dialogue_Terminator65
+.db "GOTHIC", Dialogue_Terminator65
+.db "SCION", Dialogue_Terminator65
+.db "WISH", Dialogue_Terminator65
+.db "SPACEPORT", Dialogue_Terminator65
+.db "PASSPORT", Dialogue_Terminator65
+.db "PLANET", Dialogue_Terminator65
+.db "ALGOL", Dialogue_Terminator65
+.db "SYSTEM", Dialogue_Terminator65
+.db "TOWER", Dialogue_Terminator65
+.db "VILLAGE", Dialogue_Terminator65
+.db "TIME", Dialogue_Terminator65
+.db "ROADPASS", Dialogue_Terminator65
+.db "MESETAS", Dialogue_Terminator65
+.db "PASS", Dialogue_Terminator65
+.db "ANT LION", Dialogue_Terminator65
+.db "SOOTHING FLUTE", Dialogue_Terminator65
+.db "SECRET", Dialogue_Terminator65
+.db "LACONIAN POT", Dialogue_Terminator65
+.db "MAHARU", Dialogue_Terminator65
+.db "BORTEVO", Dialogue_Terminator65
+.db "YOURSELF", Dialogue_Terminator65
+.db "GOVERNOR", Dialogue_Terminator65
+.db "HILL", Dialogue_Terminator65
+.db "STRANGE", Dialogue_Terminator65
+.db "LUVENO", Dialogue_Terminator65
+.db "HOWEVER", Dialogue_Terminator65
+.db "KING", Dialogue_Terminator65
+.db "QUEEN", Dialogue_Terminator65
+.db "FATHER", Dialogue_Terminator65
+.db "NERO", Dialogue_Terminator65
+.db "THANKS", Dialogue_Terminator65
+.db "THANK YOU", Dialogue_Terminator65
+.db "WORLD", Dialogue_Terminator65
+.db "SHIELD", Dialogue_Terminator65
+.db "I SEE", Dialogue_Terminator65
+.db "PLANETS", Dialogue_Terminator65
+.db "TOWN", Dialogue_Terminator65
+.db "PASSAGE", Dialogue_Terminator65
+.db "SOOTHSAYER", Dialogue_Terminator65
+.db "LACONIA", Dialogue_Terminator65
+.db "LABORATORY", Dialogue_Terminator65
+.db "KNOW", Dialogue_Terminator65
+.db "REST", Dialogue_Terminator65
+.db "BAYA", Dialogue_Terminator65
+.db "MALAY", Dialogue_Terminator65
+.db "BAYA MALAY", Dialogue_Terminator65
+.db "DO YOU KNOW", Dialogue_Terminator65
+.db "FOREST", Dialogue_Terminator65
+.db "DO YOU HAVE", Dialogue_Terminator65
+.db "DO YOU", Dialogue_Terminator65
+.db "WILL", Dialogue_Terminator65
+.db "MUST", Dialogue_Terminator65
+.db "PLEASE ", Dialogue_Terminator65
+.db "HELP", Dialogue_Terminator65
+.db "YOU WILL", Dialogue_Terminator65
+.db "I WILL", Dialogue_Terminator65
+.db "WILL YOU", Dialogue_Terminator65
+.db "YOU MUST", Dialogue_Terminator65
+.db "PALMA", Dialogue_Terminator65
+.db "WHERE", Dialogue_Terminator65
+.db "THERE", Dialogue_Terminator65
+.db "HERE", Dialogue_Terminator65
+.db "INDEED", Dialogue_Terminator65
+.db "LASSIC", Dialogue_Terminator65
+.db "SOME", Dialogue_Terminator65
+.db "RESIDENTIAL AREA", Dialogue_Terminator65
+.db "LAERMA", Dialogue_Terminator65
+.db "DUNGEON", Dialogue_Terminator65
+.db "LANGUAGE", Dialogue_Terminator65
+.db "THERE IS", Dialogue_Terminator65
+.db "THERE ARE", Dialogue_Terminator65
+.db "THAT", Dialogue_Terminator65
+.db "THROUGH", Dialogue_Terminator65
+.db "THE ", Dialogue_Terminator65
+.db "PRESENT", Dialogue_Terminator65
+.db "WELCOME ", Dialogue_Terminator65
+.db "YOU ", Dialogue_Terminator65
+.db "YOUR ", Dialogue_Terminator65
+.db "HAVE ", Dialogue_Terminator65
+.db "THIS ", Dialogue_Terminator65
+.db "MOUNTAIN", Dialogue_Terminator65
+.db "GREAT ", Dialogue_Terminator65
+.db "NAMED ", Dialogue_Terminator65
+.db "SPACESHIP", Dialogue_Terminator65
+.db "PALMANS", Dialogue_Terminator65
+.db "MEDUSA", Dialogue_Terminator65
+.db "DON", Dialogue_Apostrophe, "T BE A FOOL!", Dialogue_Terminator65
+.db "ARE ", Dialogue_Terminator65
+.db "CAREFUL", Dialogue_Terminator65
+.db "DELETE", Dialogue_Terminator65
+.db "MAGIC", Dialogue_Terminator65
+.db "SABRUS CABRUS", Dialogue_Terminator65
+.db "TREASURE ", Dialogue_Terminator65
+.db "CHEST", Dialogue_Terminator65
+.db "MOVE", Dialogue_Terminator65
+.db "DEZORIAN", Dialogue_Terminator65
+.db "EMBARK", Dialogue_Terminator65
+.db "ANY", Dialogue_Terminator65
+.db "THING", Dialogue_Terminator65
+.db "NOT ", Dialogue_Terminator65
+.db "WANT ", Dialogue_Terminator65
+.db "GAME", Dialogue_Terminator65
+.db "FACING ", Dialogue_Terminator65
+.db "SELECT", Dialogue_Terminator65
+.db "ONE", Dialogue_Terminator65
+.db "FROM ", Dialogue_Terminator65
+.db "OULD", Dialogue_Terminator65
 
 
 .BANK 3
