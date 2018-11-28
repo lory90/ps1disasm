@@ -469,7 +469,7 @@ LABEL_2FD:
 	ldir
 	ld	a, $14
 	call	WaitForVInt
-	jp	LABEL_7B20
+	jp	FadeIn2
 
 LABEL_318:
 	ld   hl, $0000
@@ -1068,10 +1068,10 @@ LABEL_5E8:
 	ld	bc, $3FF
 	ld	(hl), l
 	ldir
-	ld	iy, Char_stats
-	ld	(iy+weapon), $02
-	ld	(iy+armor), $10
-	call	LABEL_16F1
+	ld	iy, Alis_stats
+	ld	(iy+weapon), ItemID_ShortSword
+	ld	(iy+armor), ItemID_LeatherArmor
+	call	UnlockCharacter
 	ld	hl, $C600
 	ld	(hl), $FF
 	ld	hl, $C604
@@ -1109,7 +1109,7 @@ LABEL_63E:
 LABEL_64D:
 	ld	a, $80
 	ld	($FFFC), a
-	call	LABEL_7B05
+	call	FadeOut2
 	di
 	call	LABEL_35A
 	ei
@@ -1126,11 +1126,11 @@ LABEL_64D:
 	call	LABEL_2FD
 LABEL_678:
 	ld	hl, LABEL_B12_BE45
-	call	PlaySound
-	call	LABEL_2D19
+	call	ShowDialogue_B12
+	call	ShowYesNoPrompt
 	jr	nz, LABEL_6C5
 	ld	hl, LABEL_B12_BE1B
-	call	PlaySound
+	call	ShowDialogue_B12
 -
 	push	bc
 	call	LABEL_39B1
@@ -1138,7 +1138,7 @@ LABEL_678:
 	call	LABEL_73A
 	jr	z, -
 	ld	hl, LABEL_B12_BE35
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	a, $08
 	ld	($FFFC), a
@@ -1162,12 +1162,12 @@ LABEL_678:
 
 LABEL_6C5:
 	ld	hl, LABEL_B12_BE5E
-	call	PlaySound
-	call	LABEL_2D19
+	call	ShowDialogue_B12
+	call	ShowYesNoPrompt
 	jr	nz, LABEL_678
 --
 	ld	hl, LABEL_B12_BE6F
-	call	PlaySound
+	call	ShowDialogue_B12
 -
 	push	bc
 	call	LABEL_39B1
@@ -1177,11 +1177,11 @@ LABEL_6C5:
 	call	LABEL_73A
 	jr	z, -
 	ld	hl, LABEL_B12_BA82
-	call	PlaySound
-	call	LABEL_2D19
+	call	ShowDialogue_B12
+	call	ShowYesNoPrompt
 	jr	nz, --
 	ld	hl, LABEL_B12_BE82
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $08
 	ld	($FFFC), a
 	ld	a, ($C2C5)
@@ -1231,7 +1231,7 @@ LABEL_73A:
 	ret
 
 GameMode_LoadIntro:
-	call	LABEL_7B05
+	call	FadeOut2
 	di
 	call	LABEL_3E
 	call	CallSndInit
@@ -1338,7 +1338,7 @@ LABEL_847:
 
 GameMode_Ship:
 	ld	hl, $2009
-	ld	($C21B), hl
+	ld	(Fade_timer), hl
 -
 	ld	a, (Game_is_paused)
 	or	a
@@ -1359,7 +1359,7 @@ GameMode_Ship:
 __
 	ld	a, $16
 	call	WaitForVInt
-	ld	a, ($C21B)
+	ld	a, (Fade_timer)
 	or	a
 	jr	nz, _b
 	jr	+
@@ -1402,7 +1402,7 @@ __
 	ldir
 	ld	a, $8F
 	ld	($C004), a
-	call	LABEL_7B20
+	call	FadeIn2
 	ld	hl, 0
 	ld	($C2F2), hl
 	ld	a, $08
@@ -1511,7 +1511,7 @@ LABEL_998:
 	ld	a, ($C2F3)
 	cp	$07
 	ret	nz
-	ld	a, ($C21B)
+	ld	a, (Fade_timer)
 	or	a
 	call	nz, LABEL_7B40
 	ret
@@ -1696,7 +1696,7 @@ LABEL_B41:
 	ret
 
 GameMode_LoadMap:
-	call	LABEL_7B05
+	call	FadeOut2
 	di
 	call	LABEL_3E
 	ei
@@ -2085,7 +2085,7 @@ GameMode_Dungeon:
 
 
 GameMode_LoadDungeon:
-	call	LABEL_7B05
+	call	FadeOut2
 	call	LABEL_6DE2
 	ld	hl, Game_mode
 	inc	(hl) ; GameMode_Dungeon
@@ -2121,7 +2121,7 @@ GameMode_LoadDungeon:
 	or	a
 	ret	nz
 	ld	hl, LABEL_B12_B392
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	call	LABEL_1BE1
 	ld	a, ($C315)
@@ -2130,7 +2130,7 @@ GameMode_LoadDungeon:
 	ld	a, $FF
 	ld	($C315), a
 	call	LABEL_6D7F
-	jp	LABEL_7B20
+	jp	FadeIn2
 
 +
 	ld	hl, Game_mode
@@ -2366,7 +2366,7 @@ LABEL_1148:
 	jr	z, +
 	ld	hl, LABEL_B12_B1FC
 +
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1188:
@@ -2452,7 +2452,7 @@ LABEL_120B:
 
 LABEL_1212:
 	ld	hl, LABEL_B12_BEA1
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	jr	LABEL_120B
 
@@ -2480,7 +2480,7 @@ LABEL_121D:
 	ld	a, $BB
 	ld	($C004), a
 	ld	hl, LABEL_B12_B108
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1251:
@@ -2547,7 +2547,7 @@ LABEL_128C:
 	jr	z, +
 	ld	hl, LABEL_B12_B203
 +
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_12B9:
@@ -2594,7 +2594,7 @@ LABEL_12FA:
 	xor	a
 	ld	($C2EF), a
 	ld	hl, LABEL_B12_B1C1
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1305:
@@ -2626,7 +2626,7 @@ LABEL_130C:
 	jr	nz, +
 	ld	hl, LABEL_B12_B118
 +
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 
 LABEL_1344:
@@ -2634,7 +2634,7 @@ LABEL_1344:
 	call	LABEL_187D
 	jr	nz, LABEL_1379
 	ld	hl, LABEL_B12_B728
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, ($C2E6)
 	cp	$46
 	jr	nz, LABEL_1376
@@ -2654,7 +2654,7 @@ LABEL_1344:
 	or	a
 	jr	z, LABEL_1376
 	ld	hl, LABEL_B12_BF3B
-	call	PlaySound
+	call	ShowDialogue_B12
 
 LABEL_1376:
 	call	LABEL_3464
@@ -2680,7 +2680,7 @@ LABEL_1386:
 	and	$80
 	jr	z, _f
 	ld	hl, LABEL_B12_B1B2
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 __
 	call	LABEL_5B1
@@ -2698,7 +2698,7 @@ __
 	ld	a, $A1
 	ld	($C004), a
 	ld	hl, LABEL_B12_B1EE
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_13CC:
@@ -2724,7 +2724,7 @@ LABEL_13CC:
 	ld	($C004), a
 	call	LABEL_3105
 	ld	hl, LABEL_B12_B1D8
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_13FF:
@@ -2738,7 +2738,7 @@ LABEL_13FF:
 	ld	a, $A1
 	ld	($C004), a
 	ld	hl, LABEL_B12_BCC2
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1421:
@@ -2784,14 +2784,14 @@ LABEL_1443
 	and	$80
 	jr	z, +
 	ld	hl, LABEL_B12_B1B2
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 +
 	ld	a, ($C2C2)
 	call	LABEL_187D
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 +
 	ld	b, $04
@@ -2836,14 +2836,14 @@ LABEL_14A9:
 	and	$80
 	jr	z, +
 	ld	hl, LABEL_B12_B1B2
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 +
 	ld	a, ($C2C2)
 	call	LABEL_187D
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 +
 	ld	b, $04
@@ -2899,7 +2899,7 @@ LABEL_152F:
 	ld	(hl), a
 	call	LABEL_18CE
 	ld	hl, LABEL_B12_BE93
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	b, $04
 	
@@ -3037,9 +3037,9 @@ LABEL_1613:
 	ld	a, (Party_curr_num)
 	or	a
 	ld	hl, LABEL_B12_BD17
-	call	nz, PlaySound
+	call	nz, ShowDialogue_B12
 	ld	hl, LABEL_B12_BD23
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	hl, Game_mode
 	ld	(hl), $02 ; GameMode_LoadIntro
 	jp	LABEL_3464
@@ -3095,7 +3095,7 @@ LABEL_1688:
 	ld	a, $D8
 	ld	($C004), a
 	ld	hl, LABEL_B12_B71B
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_170D
 	call	UpdateCharStats
 	ld	hl, ($C2DD)
@@ -3104,7 +3104,7 @@ LABEL_1688:
 	or	h
 	ret	z
 	ld	hl, LABEL_B12_BCE1
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_16B2
 	call	LABEL_2D25
 	jp	LABEL_28DB
@@ -3137,26 +3137,26 @@ LABEL_16B2:
 
 
 ; Data from 16F1 to 187C (396 bytes)
-LABEL_16F1:
-	ld	(iy+0), 1
-	ld	(iy+5), 1
+UnlockCharacter:
+	ld	(iy+status), 1
+	ld	(iy+level), 1
 	push	iy
 	call	UpdateCharStats
 	pop	iy
-	ld	a, (iy+6)
-	ld	(iy+1), a
-	ld	a, (iy+7)
-	ld	(iy+2), a
+	ld	a, (iy+max_hp)
+	ld	(iy+curr_hp), a
+	ld	a, (iy+max_mp)
+	ld	(iy+curr_mp), a
 	ret
 
 LABEL_170D:
-	ld	hl, ($C2D0)
+	ld	hl, (CurrentBattle_EXPReward)
 	ld	($C2C5), hl
 	ld	a, l
 	or	h
 	ret	z
 	ld	hl, LABEL_B12_B604
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	iy, Alis_stats
 	ld	de, B03_AlisLevelTable
 	xor	a
@@ -3192,10 +3192,10 @@ CalculateExp:
 	pop	ix		; ix = level table
 	ld	e, (iy+exp)
 	ld	d, (iy+exp+1)	; de = char's exp
-	ld	hl, ($C2D0)
+	ld	hl, (CurrentBattle_EXPReward)
 	add	hl, de
 	jr	nc, +
-	ld	hl, $FFFF
+	ld	hl, $FFFF ; Set exp to 65535 if overflow is detected
 +
 	ld	(iy+exp), l
 	ld	(iy+exp+1), h
@@ -3214,7 +3214,7 @@ CalculateExp:
 	ld	a, $BA
 	ld	($C004), a
 	ld	hl, LABEL_B12_B621
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
 	inc	(iy+level)
@@ -3226,7 +3226,7 @@ CalculateExp:
 	ret	z
 +
 	ld	hl, LABEL_B12_B635
-	jp	PlaySound
+	jp	ShowDialogue_B12
 
 
 UpdateCharStats:
@@ -3326,7 +3326,7 @@ LABEL_188E:
 	push	hl
 	ld   ($C2C2), a
 	ld   hl, LABEL_B12_B730
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	pop  hl
 	pop  de
@@ -3424,7 +3424,7 @@ BattleMenu_Talk:
 	ld	a, ($C267)
 	ld	($C2C2), a
 	ld	hl, LABEL_B12_B128
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, ($C2E8)
 	and	$80
 	jr	z, LABEL_1951
@@ -3439,12 +3439,12 @@ LABEL_1951
 	ld	a, $FF
 	ld	($C2D4), a
 	ld	hl, LABEL_B12_B13D
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1964:
 	ld	hl, LABEL_B12_B132
-	call	PlaySound
+	call	ShowDialogue_B12
 	
 -
 	call	LABEL_5B1
@@ -3460,7 +3460,7 @@ LABEL_1964:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $06
 	ld	($C267), a
 	jp	LABEL_3464
@@ -3503,7 +3503,7 @@ LABEL_19C5:
 	ld	a, ($C267)
 	ld	($C2C2), a
 	ld	hl, LABEL_B12_B15E
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $04
 	ld	($C267), a
 	ld	a, $FF
@@ -3516,7 +3516,7 @@ BattleMenu_Magic:
 	cp	$02
 	jp	nz, LABEL_19F2
 	ld	hl, LABEL_B12_B5BA
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_19F2:
@@ -3574,12 +3574,12 @@ LABEL_1A3F:
 
 LABEL_1A42:
 	ld	hl, LABEL_B12_B5C8
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1A4B:
 	ld	hl, LABEL_B12_B6F7
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	jp	LABEL_34C9
 
@@ -3726,7 +3726,7 @@ LABEL_1B42:
 	ld	a, $AC
 	ld	($C004), a
 	ld	hl, LABEL_B12_B132
-	call	PlaySound
+	call	ShowDialogue_B12
 	
 -
 	call	LABEL_5B1
@@ -3742,7 +3742,7 @@ LABEL_1B42:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $06
 	ld	($C267), a
 	ld	a, $D5
@@ -3971,16 +3971,16 @@ LABEL_1CDC:
 
 PlayerMenu_Save:
 	ld	hl, LABEL_B12_BA62
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_39A5
 	ld	hl, LABEL_B12_BA82
-	call	PlaySound
-	call	LABEL_2D19
+	call	ShowDialogue_B12
+	call	ShowYesNoPrompt
 	jr	nz, LABEL_1D3B
 	ld	a, (Game_mode)
 	ld	($C316), a
 	ld	hl, LABEL_B12_BA93
-	call	PlaySound
+	call	ShowDialogue_B12
 	push	bc
 	ld	a, ($C2C5)
 	ld	h, a
@@ -4010,7 +4010,7 @@ PlayerMenu_Save:
 	pop	bc
 	jr	z, LABEL_1D41
 	ld	hl, LABEL_B12_BAA3
-	call	PlaySound
+	call	ShowDialogue_B12
 
 LABEL_1D3B:
 	call	LABEL_39DD
@@ -4101,13 +4101,13 @@ LABEL_1DC5:
 	ld	hl, LABEL_B12_B5BA
 
 LABEL_1DC8:
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	jp	LABEL_36BB
 
 LABEL_1DD1:
 	ld	hl, LABEL_B12_B6F7
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	jr	LABEL_1DB7
 	
@@ -4192,7 +4192,7 @@ LABEL_1E53:
 LABEL_1E5F:
 	push	de
 	ld	hl, LABEL_B12_B1D0
-	call	PlaySound
+	call	ShowDialogue_B12
 	pop	de
 	ld	a, $C1
 	ld	($C004), a
@@ -4229,7 +4229,7 @@ LABEL_1E90:
 	ld	a, c
 	ld	($C2EF), a
 	ld	hl, LABEL_B12_B18B
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1EA7:
@@ -4373,7 +4373,7 @@ LABEL_1F76:
 	ld	hl, LABEL_B12_B1E0
 
 LABEL_1F7A:
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1F80:
@@ -4399,14 +4399,14 @@ LABEL_1F89:
 	jr	z, +
 	ld	hl, LABEL_B12_B2CD
 +
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1FAC:
 	ld	a, $BC
 	ld	($C004), a
 	ld	hl, LABEL_B12_B25F
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	a, $05
 	ld	($C267), a
@@ -4424,7 +4424,7 @@ LABEL_1FC0:
 	call	LABEL_187D
 	set	7, (hl)
 	ld	hl, LABEL_B12_B22F
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_1FDF:
@@ -4463,7 +4463,7 @@ LABEL_2011:
 	ld	hl, LABEL_B12_B24C
 
 LABEL_2016:
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_201C:
@@ -4487,7 +4487,7 @@ LABEL_201C:
 	ld	(hl), $00
 	ld	hl, LABEL_B12_B28E
 +:	
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 ++:	
@@ -4497,7 +4497,7 @@ LABEL_201C:
 	jr	z, +
 	ld	hl, LABEL_B12_B28E
 +:	
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $3D
 	ld	($C80F), a
 	jp	LABEL_28EE
@@ -4510,14 +4510,14 @@ LABEL_2064:
 	or	a
 	jr	z, LABEL_2078
 	ld	hl, LABEL_B12_B172
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_2078:
 	ld	a, $BF
 	ld	($C004), a
 	ld	hl, LABEL_B12_B59C
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	a, $FF
 	ld	($C2D8), a
@@ -4536,7 +4536,7 @@ LABEL_2091:
 	jr	z, +
 -:	
 	ld	hl, LABEL_B12_B172
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 +:	
@@ -4582,7 +4582,7 @@ LABEL_20BF:
 	ldi
 	ld	hl, LABEL_B12_B5B0
 ++:	
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 +++:	
 	jp	LABEL_36CC
@@ -4606,7 +4606,7 @@ LABEL_2102:
 	jr	z, +
 	ld	hl, LABEL_B12_B404
 +:	
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $D5
 	ld	($C004), a
 	jp	LABEL_3464
@@ -4618,7 +4618,7 @@ LABEL_2102:
 	jr	z, +
 	ld	hl, LABEL_B12_B404
 +:	
-	call	PlaySound
+	call	ShowDialogue_B12
 	ld	a, $D5
 	ld	($C004), a
 	jp	LABEL_28DB
@@ -4633,12 +4633,12 @@ LABEL_2140:
 	or	a
 	jr	nz, LABEL_2159
 	ld	hl, LABEL_B12_B172
-	call	PlaySound
+	call	ShowDialogue_B12
 	jp	LABEL_3464
 
 LABEL_2159:	
 	ld	hl, LABEL_B12_B59C
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	a, $08
 	ld	($C2D8), a
@@ -4690,7 +4690,7 @@ PlayerMenu_Item:
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B30A
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	jp LABEL_21F5
 
@@ -4804,24 +4804,24 @@ LABEL_220A:
 
 LABEL_228A:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_B2CD
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2299:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jp nz, LABEL_1F89
 	ld hl, LABEL_B12_B312
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_22AF:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld e, $04
 
 LABEL_22B7:	
@@ -4845,12 +4845,12 @@ LABEL_22B7:
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B305
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_22E5:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C308)
 	cp $04
 	ld hl, LABEL_B12_B2E3
@@ -4871,18 +4871,18 @@ LABEL_22E5:
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B305
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_231A:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C308)
 	cp $02
 	ld e, $0C
 	jp z, LABEL_22B7
 	ld hl, LABEL_B12_B2E3
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2333:
@@ -4907,7 +4907,7 @@ LABEL_2337:
 	jr z, ++
 	push de
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	pop de
 	call LABEL_1E5F
 	call Inventory_RemoveItem
@@ -4919,14 +4919,14 @@ LABEL_2337:
 
 LABEL_2369:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $C2
 	ld ($C004), a
 	ld a, ($C29D)
 	or a
 	jr nz, +
 	ld hl, LABEL_B12_BFC4
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $D5
 	ld ($C004), a
 	ld a, ($C29E)
@@ -4936,7 +4936,7 @@ LABEL_2369:
 
 +:	
 	ld hl, LABEL_B12_B322
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $D5
 	ld ($C004), a
 	jp LABEL_3464
@@ -4947,9 +4947,9 @@ LABEL_239D:
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_B35C
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -4958,9 +4958,9 @@ LABEL_239D:
 	jr z, +
 -:	
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_B375
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -4968,7 +4968,7 @@ LABEL_239D:
 	or a
 	jr nz, -
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	call Inventory_RemoveItem
 	ld a, $FF
@@ -4984,12 +4984,12 @@ LABEL_23E2:
 
 LABEL_23EC:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B2CD
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5000,28 +5000,28 @@ LABEL_23EC:
 	pop af
 	jp nz, LABEL_2159
 	ld hl, LABEL_B12_B312
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2416:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jp nz, LABEL_1B17
 	ld hl, LABEL_B12_B2CD
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_242F:
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5034,20 +5034,20 @@ LABEL_242F:
 -:	
 	ld hl, LABEL_B12_B3E3
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 ++:	
 	call LABEL_24BE
 	jr z, -
 	ld hl, LABEL_B12_B3B1
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	call Inventory_RemoveItem
 	ld iy, Odin_stats
-	ld (iy+weapon), $06
-	ld (iy+armor), $13
-	call LABEL_16F1
+	ld (iy+weapon), ItemID_IronAxe
+	ld (iy+armor), ItemID_IronArmor
+	call UnlockCharacter
 	ld a, $02
 	ld (Party_curr_num), a
 	ld hl, $C600
@@ -5060,12 +5060,12 @@ LABEL_242F:
 
 LABEL_2491:
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5077,7 +5077,7 @@ LABEL_2491:
 	jr z, +
 	ld hl, LABEL_B12_B3F9
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_24BE:
@@ -5094,12 +5094,12 @@ LABEL_24BE:
 	call LABEL_24BE
 	jr nz, +
 	ld hl, LABEL_B12_B3E3
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B3B1
-	call PlaySound
+	call ShowDialogue_B12
 	call Inventory_RemoveItem
 	call LABEL_5546
 	jp LABEL_3464
@@ -5111,14 +5111,14 @@ LABEL_24E9:
 	
 LABEL_24EF:	
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_B569
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld b, $01
 	call LABEL_6BE9
 	and $07
@@ -5132,14 +5132,14 @@ LABEL_24EF:
 
 +:	
 	ld hl, LABEL_B12_B2CD
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 
 LABEL_2524:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jp nz, LABEL_1B36
@@ -5147,12 +5147,12 @@ LABEL_2524:
 
 LABEL_2537:
 	ld hl, LABEL_B12_B458
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B431
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5160,7 +5160,7 @@ LABEL_2537:
 	cp $AF
 	jr z, +
 	ld hl, LABEL_B12_B312
-	call PlaySound
+	call ShowDialogue_B12
 	jp	LABEL_3464
 
 +:	
@@ -5171,13 +5171,13 @@ LABEL_2537:
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, LABEL_B12_B49A
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B471
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	ld a, ItemID_Nuts
 	ld ($C2C4), a
@@ -5187,12 +5187,12 @@ LABEL_2537:
 
 LABEL_2589:
 	ld hl, LABEL_B12_B458
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5201,7 +5201,7 @@ LABEL_2589:
 	jr z, +
 -:	
 	ld hl, LABEL_B12_B312
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5209,7 +5209,7 @@ LABEL_2589:
 	cp $FF
 	jr z, -
 	ld hl, LABEL_B12_B4D5
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $06
 	ld ($C2D8), a
 	jp LABEL_3464
@@ -5227,14 +5227,14 @@ LABEL_25C3:
 
 LABEL_25D7:	
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	ld hl, LABEL_B12_B500
 	jr z, +
 	ld hl, LABEL_B12_B35C
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 ++:	
@@ -5243,7 +5243,7 @@ LABEL_25D7:
 	jr nz, LABEL_25D7
 -:	
 	ld hl, LABEL_B12_B743
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	ld a, $07
 	ld ($C2D8), a
@@ -5263,14 +5263,14 @@ LABEL_2613:
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_B52C
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B544
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2631:
@@ -5279,14 +5279,14 @@ LABEL_2631:
 	jr z, ++
 -:	
 	ld hl, LABEL_B12_B366
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	ld hl, LABEL_B12_B375
 	jr z, +
 	ld hl, LABEL_B12_B35C
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 ++:	
@@ -5294,7 +5294,7 @@ LABEL_2631:
 	or a
 	jr nz, -
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, (Dungeon_direction)
 	and $03
 	ld hl, LABEL_B12_BD01
@@ -5307,7 +5307,7 @@ LABEL_2631:
 	jr z, +
 	ld hl, LABEL_B12_BCF7
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_267C:
@@ -5315,7 +5315,7 @@ LABEL_267C:
 	or a
 	jp nz, LABEL_24EF
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld b, $01
 	call LABEL_6BE9
 	bit 7, (hl)
@@ -5334,19 +5334,19 @@ LABEL_267C:
 
 ++:	
 	ld hl, LABEL_B12_B2CD
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_26B0:
 	ld hl, LABEL_B12_B2AC
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C29D)
 	or a
 	ld hl, LABEL_B12_B312
 	jr nz, +
 	ld hl, LABEL_B12_B555
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_26C8:
@@ -5367,7 +5367,7 @@ LABEL_26C8:
 	and $0F
 	jp nz, +
 	ld hl, LABEL_B12_B5F0
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5412,7 +5412,7 @@ LABEL_26C8:
 	ld a, ($C2C4)
 	ld (de), a
 	ld hl, LABEL_B12_B2B6
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, ($C2C2)
 	call LABEL_3707
 	call LABEL_2D25
@@ -5428,7 +5428,7 @@ LABEL_2741:
 
 +:	
 	ld hl, LABEL_B12_B5DE
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	jr LABEL_2741
 
@@ -5446,12 +5446,12 @@ LABEL_2752:
 	and $04
 	jr z, +
 	ld hl, LABEL_B12_B6DE
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B2C2
-	call PlaySound
+	call ShowDialogue_B12
 	call Inventory_RemoveItem
 	jp LABEL_3464
 
@@ -5499,21 +5499,21 @@ Inventory_AddItem:
 
 LABEL_27BC:	
 	ld hl, LABEL_B12_B671
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr z, LABEL_27D8
 	ld hl, LABEL_B12_B6C1
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr nz, LABEL_27D8
 	ld hl, LABEL_B12_B6D0
-	jp PlaySound
+	jp ShowDialogue_B12
 	
 LABEL_27D8:	
 	ld a, ($C2C4)
 	push af
 	ld hl, LABEL_B12_B68C
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_34D5
 	call LABEL_3656
 	bit 4, c
@@ -5531,14 +5531,14 @@ LABEL_27D8:
 	and $04
 	jr z, +
 	ld hl, LABEL_B12_B6DE
-	call PlaySound
+	call ShowDialogue_B12
 	pop af
 	ld ($C2C4), a
 	jp LABEL_27D8
 
 +:	
 	ld hl, LABEL_B12_B69E
-	call PlaySound
+	call ShowDialogue_B12
 	pop af
 	ld ($C2C4), a
 	ld hl, ($C29B)
@@ -5546,7 +5546,7 @@ LABEL_27D8:
 	ld a, $B3
 	ld ($C004), a
 	ld hl, LABEL_B12_B6AD
-	jp PlaySound
+	jp ShowDialogue_B12
 
 ++:	
 	pop af
@@ -5569,7 +5569,7 @@ PlayerMenu_Search:
 	jr nz, +
 	call LABEL_30B7
 	ld hl, LABEL_B12_B569
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_28DB
 	jp LABEL_2ED9
 
@@ -5639,7 +5639,7 @@ PlayerMenu_Search:
 	call Inventory_FindFreeSlot
 	jr z, LABEL_28C5
 	ld hl, LABEL_B12_B592
-	call PlaySound
+	call ShowDialogue_B12
 	call Inventory_AddItem
 	jp LABEL_3464
 
@@ -5650,12 +5650,12 @@ LABEL_28C5:
 	cp $A3
 	jp z, LABEL_558C
 	ld hl, LABEL_B12_B569
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_28DB:
 	ld   hl, LABEL_B12_B656
-	call	PlaySound
+	call	ShowDialogue_B12
 	call	LABEL_37A3
 	push	af
 	call	LABEL_37C3
@@ -5685,7 +5685,7 @@ LABEL_28EE:
 	or a
 	jr nz, +
 	ld hl, LABEL_B12_B665
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $D0
 	ld ($C900), a
 	jp LABEL_3464
@@ -5697,13 +5697,13 @@ LABEL_28EE:
 	ld a, h
 	or l
 	ld hl, LABEL_B12_B648
-	call nz, PlaySound
+	call nz, ShowDialogue_B12
 	ld a, ($C2DF)
 	ld ($C2C4), a
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B592
-	call PlaySound
+	call ShowDialogue_B12
 	call Inventory_AddItem
 +:	
 	ld a, $D0
@@ -5759,14 +5759,14 @@ LABEL_2989:
 	
 LABEL_298D:	
 	ld hl, LABEL_B12_B8C8
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jp nz, LABEL_2A55
 LABEL_2999:	
 	ld a, (Party_curr_num)
 	or a
 	ld hl, LABEL_B12_B925
-	call nz, PlaySound
+	call nz, ShowDialogue_B12
 	call LABEL_3665
 	bit Button_1, c
 	jp nz, LABEL_2A52
@@ -5774,7 +5774,7 @@ LABEL_2999:
 	call LABEL_187D
 	jr nz, +
 	ld hl, LABEL_B12_B730
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_2A48
 
 +:	
@@ -5787,12 +5787,12 @@ LABEL_2999:
 	cp (iy+7)
 	jr nz, +
 	ld hl, LABEL_B12_B96B
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, (Party_curr_num)
 	or a
 	jr nz, LABEL_2A48
 	ld hl, LABEL_B12_B964
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
@@ -5806,9 +5806,9 @@ LABEL_2999:
 	ld h, $00
 	ld ($C2C5), hl
 	ld hl, LABEL_B12_B8E0
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_39E9
-	call LABEL_2D19
+	call ShowYesNoPrompt
 	push af
 	call nz, LABEL_3A12
 	pop af
@@ -5827,14 +5827,14 @@ LABEL_2999:
 	ld a, (iy+7)
 	ld (iy+2), a
 	ld hl, LABEL_B12_B938
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3A12
 	ld a, (Party_curr_num)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B90A
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr nz, LABEL_2A52
 
 LABEL_2A48:	
@@ -5846,14 +5846,14 @@ LABEL_2A52:
 	call LABEL_36BB
 LABEL_2A55:	
 	ld hl, LABEL_B12_B951
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2A5E:	
 	call LABEL_3A12
 	call LABEL_36BB
 	ld hl, LABEL_B12_BD57
-	call PlaySound
+	call ShowDialogue_B12
 +:	
 	jp LABEL_3464
 
@@ -5881,8 +5881,8 @@ LABEL_2A85:
 	ld a, ($C2DB)
 	ld ($C317), a
 	ld hl, LABEL_B12_B97F
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	or a
 	jp nz, LABEL_2B46
 LABEL_2A98:	
@@ -5890,7 +5890,7 @@ LABEL_2A98:
 	or a
 	jp z, LABEL_2B31
 	ld hl, LABEL_B12_B9D3
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3665
 	bit Button_1, c
 	jp nz, LABEL_2B43
@@ -5911,15 +5911,15 @@ LABEL_2A98:
 	add hl, de
 	ld ($C2C5), hl
 	ld hl, LABEL_B12_B9EE
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_39E9
-	call LABEL_2D19
+	call ShowYesNoPrompt
 	push af
 	call nz, LABEL_3A12
 	pop af
 	jr nz, LABEL_2B15
 	ld hl, LABEL_B12_B9B0
-	call PlaySound
+	call ShowDialogue_B12
 	ld de, ($C2C5)
 	ld hl, (Current_money)
 	or a
@@ -5933,29 +5933,29 @@ LABEL_2A98:
 	ld a, (iy+7)
 	ld (iy+2), a
 	ld hl, LABEL_B12_B9C4
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, $C5
 	ld ($C004), a
 	call LABEL_2D33
 	call LABEL_3A12
 LABEL_2B15:	
 	ld hl, LABEL_B12_B9E5
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr nz, LABEL_2B43
 	call LABEL_36BB
 	jp LABEL_2A98
 
 +:	
 	ld hl, LABEL_B12_BD9F
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3A12
 	jr LABEL_2B15
 
 LABEL_2B31:	
 	ld ($C2C2), a
 	ld hl, LABEL_B12_BA56
-	call PlaySound
+	call ShowDialogue_B12
 	ld a, (Party_curr_num)
 	or a
 	jr nz, LABEL_2B15
@@ -5964,9 +5964,9 @@ LABEL_2B43:
 	call LABEL_36BB
 LABEL_2B46:	
 	ld hl, LABEL_B12_BA3C
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BA04
-	call PlaySound
+	call ShowDialogue_B12
 	call +
 	jp LABEL_3464
 
@@ -5994,7 +5994,7 @@ LABEL_2B46:
 	cp $1E
 	jr c, +
 	ld hl, LABEL_B12_BDFF
-	jp PlaySound
+	jp ShowDialogue_B12
 
 +:	
 	ld hl, $FFFF
@@ -6015,17 +6015,17 @@ LABEL_2B46:
 	sbc hl, de
 	ld ($C2C5), hl
 	ld hl, LABEL_B12_BA1F
-	jp PlaySound
+	jp ShowDialogue_B12
 
 	
 LABEL_2BC0:	
 	ld hl, LABEL_B12_B7C7
-	call PlaySound
+	call ShowDialogue_B12
 LABEL_2BC6:	
-	call LABEL_2D19
+	call ShowYesNoPrompt
 	jr z, LABEL_2BD4
 	ld hl, LABEL_B12_B7E3
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_2BD4:	
@@ -6035,7 +6035,7 @@ LABEL_2BD4:
 	pop bc
 LABEL_2BDC:	
 	ld hl, LABEL_B12_B7F5
-	call PlaySound
+	call ShowDialogue_B12
 	push bc
 	call LABEL_38D9
 	bit 4, c
@@ -6070,14 +6070,14 @@ LABEL_2BDC:
 	call Inventory_AddItem
 ++:	
 	ld hl, LABEL_B12_B807
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr z, LABEL_2BDC
 
 LABEL_2C2D:	
 	ld hl, LABEL_B12_B7E3
 -:	
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3A12
 	call LABEL_3999
 	jp LABEL_3464
@@ -6101,7 +6101,7 @@ LABEL_2C46:
 +:	
 	inc a
 	ld ($C2EC), a
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3A12
 	call LABEL_3999
 	jp LABEL_3464
@@ -6119,19 +6119,19 @@ LABEL_2C46:
 	call LABEL_39F7
 	call Inventory_AddItem
 	ld hl, $0146
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3A12
 	call LABEL_3999
 	jp LABEL_3464
 
 LABEL_2C8F:	
 	ld hl, LABEL_B12_B832
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_2BC6
 
 LABEL_2C98:	
 	ld hl, LABEL_B12_B85D
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3777
 	push af
 	push bc
@@ -6144,7 +6144,7 @@ LABEL_2C98:
 	jp z, LABEL_2BD4
 LABEL_2CB1:	
 	ld hl, LABEL_B12_B882
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_34D5
 	bit 4, c
 	push af
@@ -6170,18 +6170,18 @@ LABEL_2CB1:
 	or h
 	jr nz, +
 	ld hl, LABEL_B12_BD7E
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_2CB1
 
 LABEL_2CEA:	
 	ld hl, LABEL_B12_B7E3
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 +:	
 	ld hl, LABEL_B12_B89A
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jr z, +
 	jp LABEL_2CB1
 
@@ -6190,12 +6190,12 @@ LABEL_2CEA:
 	ld hl, ($C2C5)
 	call LABEL_297A
 	ld hl, LABEL_B12_B8BC
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	jp z, LABEL_2CB1
 	jp LABEL_2CEA
 
-LABEL_2D19:
+ShowYesNoPrompt:
 	push	bc
 	call	LABEL_37A3
 	push	af
@@ -6756,7 +6756,7 @@ LABEL_3105:
 	ld   de, $781C
 	ld   bc, $0114
 	call	LABEL_3A83
-	ld   hl, $C2C8
+	ld   hl, CurrentBattle_EnemyName
 	ld   c, $00
 	call	LABEL_315C
 	ld   c, $01
@@ -6862,7 +6862,7 @@ LABEL_31CB:
 	dec  hl
 	jp   LABEL_3235
 
-PlaySound:
+ShowDialogue_B12:
 	ld   a, :Bank12
 	ld   ($FFFF), a
 	
@@ -6949,7 +6949,7 @@ LABEL_3262:
 	cp   $5C
 	jr   nz, LABEL_3274
 	push	hl
-	ld   hl, $C2C8
+	ld   hl, CurrentBattle_EnemyName
 	ld   a, $08
 	call	LABEL_336C
 	pop  hl
@@ -8326,7 +8326,7 @@ LABEL_3C2A:
 GameMode_LoadInteraction:
 	ld a, $D6
 	ld ($C004), a
-	call LABEL_7B05
+	call FadeOut2
 	ld a, ($C308)
 	or a
 	jr nz, +
@@ -8781,7 +8781,7 @@ LABEL_402C:
 	ret
 
 GameMode_LoadNameInput:
-	call LABEL_7B05
+	call FadeOut2
 	ld de, $7800
 	ld bc, $0300
 	ld hl, $0000
@@ -9108,7 +9108,7 @@ LABEL_4280:
 LABEL_42AC:
 	ld a, $D7
 	ld ($C004), a
-	call LABEL_7B05
+	call FadeOut2
 	ld hl, $FFFF
 	ld (hl), :Bank23
 	ld hl, LABEL_B23_B767
@@ -9141,7 +9141,7 @@ LABEL_42AC:
 	ei
 	ld a, $8C
 	ld ($C004), a
-	call LABEL_7B20
+	call FadeIn2
 	ld a, $02
 	ld ($C264), a
 	ld a, $02
@@ -9164,7 +9164,7 @@ LABEL_42AC:
 	xor a
 	ld ($C264), a
 	ld ($C307), a
-	call LABEL_7B05
+	call FadeOut2
 	ld a, $08
 	ld ($C29E), a
 	call LABEL_3D47
@@ -9181,7 +9181,7 @@ LABEL_42AC:
 	ld ($C300), a
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld hl, $FFFF
 	ld (hl), :Bank18
 	ld hl, LABEL_B18_BEF4
@@ -9279,11 +9279,11 @@ LABEL_4414:
 	call LABEL_46D1
 	ld hl, LABEL_B7D1
 	call LABEL_337D
-	call LABEL_7B05
+	call FadeOut2
 	call LABEL_FF3
 	ld a, $D8
 	ld ($C004), a
-	jp LABEL_7B20
+	jp FadeIn2
 
 LABEL_4461:	
 	call LABEL_467C
@@ -9342,7 +9342,7 @@ LABEL_4497:
 	ld (hl), $30
 	inc hl
 	djnz -
-	call LABEL_7B20
+	call FadeIn2
 	call LABEL_2D33
 	ld hl, $FFFF
 	ld (hl), :Bank11
@@ -9372,7 +9372,7 @@ LABEL_4514:
 .db $00 $40 $4C
 
 LABEL_4517:	
-	call LABEL_7B05
+	call FadeOut2
 	ld a, $0F
 	ld ($C29E), a
 	call LABEL_3D47
@@ -9387,14 +9387,14 @@ LABEL_4517:
 	call LABEL_3FA
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld a, $15
 	ld ($C800), a
 	call LABEL_18B9
-	jp LABEL_7B05
+	jp FadeOut2
 
 LABEL_454E:	
-	call LABEL_7B05
+	call FadeOut2
 	ld a, $D0
 	ld ($C900), a
 	ld a, $8B
@@ -9404,22 +9404,22 @@ LABEL_454E:
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld b, $80
 	call LABEL_2D49
 	call LABEL_7CE4
 	ld hl, LABEL_B12_BEB6
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BED0
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BEE8
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BEFD
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BF09
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, LABEL_B12_BF21
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 	call LABEL_467C
 	ld a, $03
@@ -9444,7 +9444,7 @@ LABEL_454E:
 	call LABEL_337D
 	ld hl, LABEL_BA54
 	call LABEL_337D
-	call LABEL_7B05
+	call FadeOut2
 	ld hl, $FFFF
 	ld (hl), :Bank31
 	ld hl, LABEL_B31_9676
@@ -9467,7 +9467,7 @@ LABEL_454E:
 	call LABEL_6E64
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	call LABEL_2D47
 	ld hl, LABEL_3DF6+1
 	ld (Dungeon_position), hl
@@ -9517,7 +9517,7 @@ LABEL_454E:
 	ret
 
 LABEL_467C:
-	call LABEL_7B05
+	call FadeOut2
 	ld hl, $FFFF
 	ld (hl), :Bank16
 	ld hl, LABEL_B16_BAD8
@@ -9551,7 +9551,7 @@ LABEL_467C:
 
 LABEL_46D1:
 	push	af
-	call	LABEL_7AFD
+	call	FadeOut
 	pop	af
 	ld	l, a
 	add	a, a
@@ -9591,7 +9591,7 @@ LABEL_46D1:
 	ld   hl, $0800
 	call	LABEL_363
 	ei
-	jp   LABEL_7B18
+	jp   FadeIn
 
 
 LABEL_471E:
@@ -9638,7 +9638,7 @@ LABEL_4773:
 .dw	LABEL_4934
 .dw	LABEL_493A
 .dw	LABEL_4940
-.dw LABEL_495A
+.dw	LABEL_495A
 .dw	LABEL_4960
 .dw	LABEL_4966
 .dw	LABEL_4973
@@ -9646,7 +9646,7 @@ LABEL_4773:
 .dw	LABEL_4997
 .dw	LABEL_499D
 .dw	LABEL_49A3
-.dw LABEL_49A9
+.dw	LABEL_49A9
 .dw	LABEL_49AF
 .dw	LABEL_49B5
 .dw	LABEL_49B5
@@ -9654,7 +9654,7 @@ LABEL_4773:
 .dw	LABEL_49E6
 .dw	LABEL_4A3E
 .dw	LABEL_4A44
-.dw LABEL_4A4A
+.dw	LABEL_4A4A
 .dw	LABEL_4A50
 .dw	LABEL_4AA9
 .dw	LABEL_4ABE
@@ -9662,7 +9662,7 @@ LABEL_4773:
 .dw	LABEL_4B43
 .dw	LABEL_4B52
 .dw	LABEL_4B61
-.dw LABEL_4B67
+.dw	LABEL_4B67
 .dw	LABEL_4B6D
 .dw	LABEL_4B73
 .dw	LABEL_4B79
@@ -9670,7 +9670,7 @@ LABEL_4773:
 .dw	LABEL_4B85
 .dw	LABEL_4B8B
 .dw	LABEL_4B91
-.dw LABEL_4B97
+.dw	LABEL_4B97
 .dw	LABEL_4B9D
 .dw	LABEL_4BBD
 .dw	LABEL_4BD1
@@ -9678,7 +9678,7 @@ LABEL_4773:
 .dw	LABEL_4BDD
 .dw	LABEL_4BE3
 .dw	LABEL_4BE9
-.dw LABEL_4BEF
+.dw	LABEL_4BEF
 .dw	LABEL_4BF5
 .dw	LABEL_4BFB
 .dw	LABEL_4C01
@@ -9686,7 +9686,7 @@ LABEL_4773:
 .dw	LABEL_4C0D
 .dw	LABEL_4C70
 .dw	LABEL_4D74
-.dw LABEL_4D7A
+.dw	LABEL_4D7A
 .dw	LABEL_4D9F
 .dw	LABEL_4DA5
 .dw	LABEL_4DAB
@@ -9694,7 +9694,7 @@ LABEL_4773:
 .dw	LABEL_4DFB
 .dw	LABEL_4E9C
 .dw	LABEL_4EB3
-.dw LABEL_4EB9
+.dw	LABEL_4EB9
 .dw	LABEL_4EBF
 .dw	LABEL_4EC5
 .dw	LABEL_4ED9
@@ -9702,7 +9702,7 @@ LABEL_4773:
 .dw	LABEL_4EE5
 .dw	LABEL_4EEB
 .dw	LABEL_4EF1
-.dw LABEL_4EF7
+.dw	LABEL_4EF7
 .dw	LABEL_4EFD
 .dw	LABEL_4F03
 .dw	LABEL_4F09
@@ -9710,7 +9710,7 @@ LABEL_4773:
 .dw	LABEL_4F15
 .dw	LABEL_4F34
 .dw	LABEL_4F3A
-.dw LABEL_4F40
+.dw	LABEL_4F40
 .dw	LABEL_4F46
 .dw	LABEL_4F4C
 .dw	LABEL_4F52
@@ -9718,7 +9718,7 @@ LABEL_4773:
 .dw	LABEL_4F71
 .dw	LABEL_4F77
 .dw	LABEL_4F7D
-.dw LABEL_4F83
+.dw	LABEL_4F83
 .dw	LABEL_4F89
 .dw	LABEL_4F8F
 .dw	LABEL_4F95
@@ -9726,7 +9726,7 @@ LABEL_4773:
 .dw	LABEL_4FD8
 .dw	LABEL_4FDE
 .dw	LABEL_4FE4
-.dw LABEL_4FEA
+.dw	LABEL_4FEA
 .dw	LABEL_4FF0
 .dw	LABEL_4FF6
 .dw	LABEL_4FFC
@@ -9734,7 +9734,7 @@ LABEL_4773:
 .dw	LABEL_5008
 .dw	LABEL_500E
 .dw	LABEL_5014
-.dw LABEL_501A
+.dw	LABEL_501A
 .dw	LABEL_5020
 .dw	LABEL_5026
 .dw	LABEL_502C
@@ -9742,7 +9742,7 @@ LABEL_4773:
 .dw	LABEL_5046
 .dw	LABEL_504C
 .dw	LABEL_5058
-.dw LABEL_505E
+.dw	LABEL_505E
 .dw	LABEL_5064
 .dw	LABEL_506A
 .dw	LABEL_5070
@@ -9750,7 +9750,7 @@ LABEL_4773:
 .dw	LABEL_50BA
 .dw	LABEL_50C0
 .dw	LABEL_50C6
-.dw LABEL_50DA
+.dw	LABEL_50DA
 .dw	LABEL_5101
 .dw	LABEL_5107
 .dw	LABEL_510D
@@ -9758,7 +9758,7 @@ LABEL_4773:
 .dw	LABEL_516F
 .dw	LABEL_51B1
 .dw	LABEL_51D6
-.dw LABEL_51DC
+.dw	LABEL_51DC
 .dw	LABEL_521D
 .dw	LABEL_5249
 .dw	LABEL_5270
@@ -9766,7 +9766,7 @@ LABEL_4773:
 .dw	LABEL_528A
 .dw	LABEL_5290
 .dw	LABEL_52A4
-.dw LABEL_52B2
+.dw	LABEL_52B2
 .dw	LABEL_52B8
 .dw	LABEL_52BE
 .dw	LABEL_52C4
@@ -9774,7 +9774,7 @@ LABEL_4773:
 .dw	LABEL_52D0
 .dw	LABEL_5337
 .dw	LABEL_4F8F
-.dw LABEL_4F95
+.dw	LABEL_4F95
 .dw	LABEL_4F9B
 .dw	LABEL_534B
 .dw	LABEL_5395
@@ -9782,7 +9782,7 @@ LABEL_4773:
 .dw	LABEL_53A1
 .dw	LABEL_53A7
 .dw	LABEL_53AD
-.dw LABEL_53B3
+.dw	LABEL_53B3
 .dw	LABEL_53B9
 .dw	LABEL_53BF
 .dw	LABEL_5401
@@ -9790,7 +9790,7 @@ LABEL_4773:
 .dw	LABEL_54D0
 .dw	LABEL_54FB
 .dw	LABEL_552F
-.dw LABEL_5535
+.dw	LABEL_5535
 .dw	LABEL_5535
 .dw	LABEL_5538
 .dw	LABEL_5595
@@ -9798,7 +9798,7 @@ LABEL_4773:
 .dw	LABEL_55A9
 .dw	LABEL_55BB
 .dw	LABEL_55CD
-.dw LABEL_55E1
+.dw	LABEL_55E1
 .dw	LABEL_55EF
 .dw	LABEL_5619
 .dw	LABEL_5666
@@ -9806,7 +9806,7 @@ LABEL_4773:
 .dw	LABEL_56A2
 .dw	LABEL_5535
 .dw	LABEL_5535
-.dw LABEL_56CD
+.dw	LABEL_56CD
 .dw	LABEL_56D3
 .dw	LABEL_56D9
 .dw	LABEL_56E9
@@ -9821,10 +9821,10 @@ LABEL_48DF:
 	jr nz, +
 	ld (hl), $01
 	ld hl, $0002
-	call LABEL_575A
+	call ShowDialogue_B2
 +:	
 	ld hl, $0006
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, $C1
 	ld ($C004), a
 	jp LABEL_2A6D
@@ -9834,7 +9834,7 @@ LABEL_48FC:
 	or a
 	jr nz, +
 	ld hl, $0008
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_LaconiaPot
 	ld ($C2C4), a
 	call Inventory_AddItem
@@ -9845,65 +9845,65 @@ LABEL_48FC:
 	ld ($C502), a
 +:	
 	ld hl, $0010
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4922:
 	ld	hl, $12
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4928:
 	ld	hl, $14
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_492E:
 	ld	hl, $16
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4934:
 	ld	hl, $18
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_493A:
 	ld	hl, $1A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4940:
 	ld hl, $0062
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0060
 	jr z, +
 	ld hl, $0003
 	ld ($C2C5), hl
 	ld hl, $0064
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_495A:
 	ld	hl, $1C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4960:
 	ld	hl, $1E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4966:
 	ld a, $33
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $0020
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4973:
 	ld a, $33
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $0022
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0024
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ($C309)
 	rrca
 	dec a
@@ -9913,35 +9913,35 @@ LABEL_4973:
 
 LABEL_4991:
 	ld	hl, $26
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4997:
 	ld	hl, $28
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_499D:
 	ld	hl, $2A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_49A3:
 	ld	hl, $2E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_49A9:
 	ld	hl, $30
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_49AF:
 	ld	hl, $32
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_49B5:
 	ld a, ($C504)
 	cp $07
 	jp nc, LABEL_4A8C
 	ld hl, $0070
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0020
 	jr nz, +
 	ld a, $34
@@ -9952,11 +9952,11 @@ LABEL_49B5:
 	ld ($C2E9), a
 	ld hl, $0024
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_49E0:
 	ld	hl, $286
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_49E6:
 	ld a, $47
@@ -9966,15 +9966,15 @@ LABEL_49E6:
 	or a
 	jr z, +
 	ld hl, $0296
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld a, $AE
 	ld ($C004), a
 	ld a, $01
 	ld ($C2C2), a
 	ld hl, LABEL_B12_B728
-	call PlaySound
+	call ShowDialogue_B12
 	ld hl, $0000
 	ld (Myau_stats), hl
 	ld hl, $0298
@@ -9983,7 +9983,7 @@ LABEL_49E6:
 +:	
 	ld hl, $029A
 ++:	
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	ld a, (Party_curr_num)
 	or a
@@ -10000,37 +10000,37 @@ LABEL_49E6:
 
 LABEL_4A3E:
 	ld	hl, $6A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4A44:
 	ld	hl, $6C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4A4A:
 	ld	hl, $6E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4A50:
 	ld a, ($C504)
 	cp $07
 	jr nc, LABEL_4A8C
 	ld hl, $0070
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $0020
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $34
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $00CE
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0024
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ($C305)
 	cp $60
 	ld hl, LABEL_4AA3
@@ -10042,7 +10042,7 @@ LABEL_4A50:
 
 LABEL_4A8C:	
 	ld hl, $019E
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, $34
 	call Inventory_FindFreeSlot
 	ret nz
@@ -10050,7 +10050,7 @@ LABEL_4A8C:
 	call Inventory_RemoveItem2
 	pop bc
 	ld hl, $01A0
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4AA3:
 .db $05, $20, $17
@@ -10067,7 +10067,7 @@ LABEL_4AA9:
 	ld ($C2E9), a
 	ld hl, $0024
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4ABE:
 	ld a, $33
@@ -10078,41 +10078,41 @@ LABEL_4ABE:
 	ld ($C2E9), a
 	ld hl, $0024
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4AD3:
 	ld hl, $0072
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $007C
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0074
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld hl, $007E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0076
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld hl, $007E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $64
 	ld ($C2C5), hl
 	ld hl, $0078
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $007C
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld de, $0064
@@ -10121,12 +10121,12 @@ LABEL_4AD3:
 	sbc hl, de
 	jr nc, +
 	ld hl, LABEL_B12_BD57
-	jp PlaySound
+	jp ShowDialogue_B12
 
 +:	
 	ld (Current_money), hl
 	ld hl, $007A
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_Passport
 	ld ($C2C4), a
 	call Inventory_FindFreeSlot
@@ -10140,7 +10140,7 @@ LABEL_4B43:
 	jr z, +
 	ld hl, $003A
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4B52:
 	ld a, (Party_curr_num)
@@ -10149,52 +10149,52 @@ LABEL_4B52:
 	jr z, +
 	ld hl, $0040
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4B61:
 	ld	hl, $42
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B67:
 	ld	hl, $44
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B6D:
 	ld	hl, $46
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B73:
 	ld	hl, $48
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B79:
 	ld	hl, $4A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B7F:
 	ld	hl, $4C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B85:
 	ld	hl, $4E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B8B:
 	ld	hl, $50
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B91:
 	ld	hl, $52
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B97:
 	ld	hl, $54
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4B9D:
 	ld hl, $0056
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0060
 	jr nz, ++
 	ld a, $2D
@@ -10205,74 +10205,74 @@ LABEL_4B9D:
 +:	
 	ld hl, $0058
 ++:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4BBD:
 	ld hl, $005C
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0060
 	jr z, +
 	ld hl, $005E
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4BD1:
 	ld	hl, $80
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BD7:
 	ld	hl, $82
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BDD:
 	ld	hl, $84
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BE3:
 	ld	hl, $86
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BE9:
 	ld	hl, $88
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BEF:
 	ld	hl, $8A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BF5:
 	ld	hl, $8C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4BFB:
 	ld	hl, $8E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4C01:
 	ld	hl, $90
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4C07:
 	ld	hl, $288
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4C0D:
 	ld a, (Party_curr_num)
 	or a
 	jr z, +
 	ld hl, $028A
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $000A
 	ld ($C2C5), hl
 	ld hl, $0092
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld hl, $0094
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, ItemID_LaconiaPot
@@ -10280,19 +10280,19 @@ LABEL_4C0D:
 	jr nz, +
 	push hl
 	ld hl, $0096
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	pop hl
 	jr nz, +
 	push bc
 	call Inventory_RemoveItem2
 	pop bc
 	ld hl, $009A
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	pop hl
 	ld iy, Myau_stats
-	call LABEL_16F1
+	call UnlockCharacter
 	ld a, $01
 	ld (Party_curr_num), a
 	ld a, ItemID_Alsulin
@@ -10302,14 +10302,14 @@ LABEL_4C0D:
 
 +:	
 	ld hl, $007C
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4C70:
 	ld a, ($C516)
 	or a
 	jr z, +
 	ld hl, $02A6
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	pop hl
 	ld hl, $22E6
@@ -10334,13 +10334,13 @@ LABEL_4C70:
 	jr nz, ++
 +:	
 	ld hl, $029E
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld hl, $00AA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 ++:	
 	ld hl, $00A4
-	call LABEL_575A
+	call ShowDialogue_B2
 	push bc
 	ld a, ItemID_Letter
 	ld ($C2C4), a
@@ -10350,8 +10350,8 @@ LABEL_4C70:
 	call Inventory_FindFreeSlot
 	ret nz
 	ld hl, $029C
-	call LABEL_575A
-	call LABEL_7B05
+	call ShowDialogue_B2
+	call FadeOut2
 	call LABEL_3464
 	ld a, $20
 	ld ($C29E), a
@@ -10364,9 +10364,9 @@ LABEL_4C70:
 	ld de, $C240
 	ld bc, $0008
 	ldir
-	call LABEL_7B20
+	call FadeIn2
 	ld hl, $02A0
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	ld a, $A0
 	ld ($C004), a
@@ -10387,28 +10387,28 @@ LABEL_4C70:
 	ld (Myau_stats), a
 	pop af
 	ld (Char_stats), a
-	call LABEL_7B05
+	call FadeOut2
 	call LABEL_3D47
 	ld a, $D0
 	ld ($C900), a
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld hl, $02A2
-	call LABEL_575A
-	call LABEL_7B05
+	call ShowDialogue_B2
+	call FadeOut2
 	ld a, $1D
 	ld ($C29E), a
 	call LABEL_3D47
 	call LABEL_2A6D
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld a, $35
 	call LABEL_617D
 	call LABEL_576A
 	ld hl, $00AA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4D6C:
 .db	$00, $00, $3F, $00, $00, $00, $00
@@ -10416,12 +10416,12 @@ LABEL_4D6C:
 
 LABEL_4D74:
 	ld	hl, $B4
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4D7A:
 	ld hl, $00B6
-	call LABEL_575A
-	call LABEL_7B05
+	call ShowDialogue_B2
+	call FadeOut2
 	call LABEL_3464
 	ld a, $A0
 	ld ($C004), a
@@ -10429,25 +10429,25 @@ LABEL_4D7A:
 	call LABEL_2A6D
 	ld a, $C1
 	ld ($C004), a
-	call LABEL_7B20
+	call FadeIn2
 	ld hl, $00B8
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4D9F:
 	ld	hl, $102
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4DA5:
 	ld	hl, $106
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4DAB:
 	ld hl, $00BA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $00C2
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $24
@@ -10457,19 +10457,19 @@ LABEL_4DAB:
 	call Inventory_RemoveItem2
 	pop bc
 	ld hl, $00BC
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $020E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4DD4:
 	ld hl, $00BA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $00C2
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $24
@@ -10477,11 +10477,11 @@ LABEL_4DD4:
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld hl, $00C4
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $020E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4DFB:
 	ld a, ($C504)
@@ -10494,13 +10494,13 @@ LABEL_4DFB:
 	cp $07
 	jr c, +
 	ld hl, $00D8
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	cp $02
 	jr nc, +
 	ld hl, $00CA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	cp $03
@@ -10508,11 +10508,11 @@ LABEL_4DFB:
 	ld hl, $04B0
 	ld ($C2C5), hl
 	ld hl, $028C
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $00DA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld de, $04B0
@@ -10521,14 +10521,14 @@ LABEL_4DFB:
 	sbc hl, de
 	jr nc, +
 	ld hl, $00D0
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld (Current_money), hl
 	ld a, $03
 	ld ($C504), a
 	ld hl, $0290
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 ++:	
 	cp $05
@@ -10536,7 +10536,7 @@ LABEL_4DFB:
 	inc a
 	ld ($C504), a
 	ld hl, $0292
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	cp $06
@@ -10544,24 +10544,24 @@ LABEL_4DFB:
 	inc a
 	ld ($C504), a
 	ld hl, $00D2
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, $32
 	call Inventory_FindFreeSlot
 	jr z, ++
 	ld hl, $00D6
-	call LABEL_575A
+	call ShowDialogue_B2
 +:	
 	ld a, $32
 	call Inventory_FindFreeSlot
 	jr z, ++
 	ld hl, $0104
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 ++:	
 	ld a, $07
 	ld ($C504), a
 	ld hl, $0294
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4E9C:
 	ld hl, $C504
@@ -10572,74 +10572,74 @@ LABEL_4E9C:
 	call LABEL_617D
 	call LABEL_576A
 	ld hl, $00DC
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4EB3:
 	ld	hl, $118
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EB9:
 	ld	hl, $10E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EBF:
 	ld	hl, $112
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EC5:
 	ld hl, $0114
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0116
 	jr nz, +
 	ld hl, $013C
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4ED9:
 	ld	hl, $10C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EDF:
 	ld	hl, $11C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EE5:
 	ld	hl, $11E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EEB:
 	ld	hl, $120
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EF1:
 	ld	hl, $126
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EF7:
 	ld	hl, $128
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4EFD:
 	ld	hl, $12E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F03:
 	ld	hl, $130
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F09:
 	ld	hl, $132
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F0F:
 	ld	hl, $134
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F15:
 	ld hl, $013A
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $013C
 	jr z, ++
 	ld a, ($C507)
@@ -10650,81 +10650,81 @@ LABEL_4F15:
 +:	
 	ld hl, $013E
 ++:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4F34:
 	ld	hl, $136
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F3A:
 	ld	hl, $166
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F40:
 	ld	hl, $168
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F46:
 	ld	hl, $16A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F4C:
 	ld	hl, $16C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F52:
 	ld	hl, $170
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F58:
 	ld hl, $0172
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $017C
 	jr nz, +
 	ld a, $01
 	ld ($C508), a
 	ld hl, $0174
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_4F71:
 	ld	hl, $17E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F77:
 	ld	hl, $180
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F7D:
 	ld	hl, $184
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F83:
 	ld	hl, $186
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F89:
 	ld	hl, $188
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F8F:
 	ld	hl, $18C
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F95:
 	ld	hl, $190
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4F9B:
 	ld hl, $03E8
 	ld ($C2C5), hl
 	ld hl, $0194
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $019C
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld de, $03E8
@@ -10733,12 +10733,12 @@ LABEL_4F9B:
 	sbc hl, de
 	jr nc, +
 	ld hl, $019A
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld (Current_money), hl
 	ld hl, $0198
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_GasShield
 	ld ($C2C4), a
 	call Inventory_FindFreeSlot
@@ -10747,109 +10747,109 @@ LABEL_4F9B:
 
 LABEL_4FD8:
 	ld	hl, $1A2
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FDE:
 	ld	hl, $1A4
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FE4:
 	ld	hl, $1A6
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FEA:
 	ld	hl, $1AA
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FF0:
 	ld	hl, $1B2
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FF6:
 	ld	hl, $1B8
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_4FFC:
 	ld	hl, $1BA
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5002:
 	ld	hl, $1BC
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5008:
 	ld	hl, $1BE
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_500E:
 	ld	hl, $1C4
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5014:
 	ld	hl, $1C8
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_501A:
 	ld	hl, $1CA
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5020:
 	ld	hl, $1CC
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5026:
 	ld	hl, $1D0
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_502C:
 	ld hl, $01D6
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $01DA
 	jr z, +
 	ld hl, $01D8
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_5040:
 	ld	hl, $1DC
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5046:
 	ld	hl, $1DE
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_504C:
 	ld hl, $000A
 	ld ($C2C5), hl
 	ld hl, $01E0
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_5058:
 	ld	hl, $1E2
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_505E:
 	ld	hl, $1E4
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5064:
 	ld	hl, $1E6
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_506A:
 	ld	hl, $1E8
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5070:
 	ld hl, $0190
 	ld ($C2C5), hl
 	ld hl, $01EA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $01F0
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld de, $0190
@@ -10858,50 +10858,50 @@ LABEL_5070:
 	sbc hl, de
 	jr nc, +
 	ld hl, $01F2
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld (Current_money), hl
 	ld a, $01
 	ld ($C509), a
 	ld hl, $01F4
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_50A6:
 	ld hl, $01FA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $01FC
 	jr z, +
 	ld hl, $01FE
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_50BA:
 	ld	hl, $200
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_50C0:
 	ld	hl, $202
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_50C6:
 	ld hl, $0204
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0206
 	jr z, +
 	ld hl, $0208
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_50DA:
 	ld hl, $00BA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $020C
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $24
@@ -10909,30 +10909,30 @@ LABEL_50DA:
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld hl, $020A
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $020E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 	
 
 LABEL_5101:
 	ld	hl, $210
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5107:
 	ld	hl, $26A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_510D:
 	ld hl, $0118
 	ld ($C2C5), hl
 	ld hl, $024A
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, LABEL_B12_B7E3
-	jp PlaySound
+	jp ShowDialogue_B12
 
 +:	
 	ld de, $0118
@@ -10941,19 +10941,19 @@ LABEL_510D:
 	sbc hl, de
 	jr nc, +
 	ld hl, LABEL_B12_BD57
-	jp PlaySound
+	jp ShowDialogue_B12
 
 +:	
 	ld a, (Inventory_curr_num)
 	cp $18
 	jr c, +
 	ld hl, LABEL_B12_B813
-	jp PlaySound
+	jp ShowDialogue_B12
 
 +:	
 	ld (Current_money), hl
 	ld hl, $020A
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_Cake
 	ld ($C2C4), a
 	call Inventory_FindFreeSlot
@@ -10970,7 +10970,7 @@ LABEL_5157:
 	jr nz, +
 	ld hl, $00B2
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_516F:
 	ld a, (Party_curr_num)
@@ -10980,7 +10980,7 @@ LABEL_516F:
 	call LABEL_617D
 	call LABEL_576A
 	ld hl, $00AE
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_Letter
 	call Inventory_FindFreeSlot
 	ret nz
@@ -10991,9 +10991,9 @@ LABEL_516F:
 	ld a, $01
 	ld ($C506), a
 	ld iy, Noah_stats
-	ld (iy+10), $01
-	ld (iy+11), $11
-	call LABEL_16F1
+	ld (iy+weapon), ItemID_WoodCane
+	ld (iy+armor), ItemID_WhiteMantle
+	call UnlockCharacter
 	ld a, $03
 	ld (Party_curr_num), a
 	jp LABEL_4461
@@ -11015,11 +11015,11 @@ LABEL_51B1:
 	ld de, $00F6
 +:	
 	ex de, hl
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_51D6:
 	ld	hl, $F8
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_51DC:
 	ld a, ($C504)
@@ -11034,54 +11034,54 @@ LABEL_51DC:
 	jr nz, +
 	inc (hl)
 	ld hl, $00DE
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	cp $01
 	jr nz, +
 	inc (hl)
 	ld hl, $00E0
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $00E2
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $00D4
 	jr nz, +
 	ld hl, $C504
 	ld (hl), $01
 	ld hl, $00E4
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_521D:
 	ld a, $2E
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $00E6
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld a, $33
 	call Inventory_FindFreeSlot
 	jr nz, +
 	ld hl, $0024
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $00E8
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	jp LABEL_5389
 
 LABEL_5249:
 	ld hl, $00BA
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $00C2
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $24
@@ -11089,106 +11089,106 @@ LABEL_5249:
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld hl, $00EA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $00CE
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_5270:
 	ld hl, $00EC
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $013C
 	jr z, +
 	ld hl, $0124
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_5284:
 	ld	hl, $EE
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_528A:
 	ld	hl, $F0
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_5290:
 	ld hl, $00F2
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $014C
 	jr z, +
 	ld hl, $013C
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_52A4:
 	ld a, $16
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $00F4
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_52B2:
 	ld	hl, $FC
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_52B8:
 	ld	hl, $FE
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_52BE:
 	ld	hl, $100
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_52C4:
 	ld	hl, $10A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_52CA:
 	ld	hl, $21A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_52D0:
 	ld hl, $0148
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 
 LABEL_52DB:	
 	ld hl, $0152
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $014E
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld hl, $0150
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, LABEL_52DB
 	ld hl, $014E
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld hl, $0154
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, LABEL_52DB
 	ld hl, $014E
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld hl, $0156
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld hl, $0158
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $015A
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, LABEL_52DB
 	ld hl, $015C
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_Crystal
 	ld ($C2C4), a
 	call Inventory_FindFreeSlot
@@ -11197,27 +11197,27 @@ LABEL_52DB:
 
 LABEL_5337:
 	ld hl, $0160
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0162
 	jr z, +
 	ld hl, $0164
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_534B:
 	ld a, $2E
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $021C
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr nz, +
 	ld a, $33
 	call Inventory_FindFreeSlot
 	jr nz, +
 	ld hl, $021E
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	pop hl
 	ld hl, $159C
@@ -11230,7 +11230,7 @@ LABEL_534B:
 
 +:	
 	ld hl, $00E8
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 LABEL_5389:	
 	call LABEL_100F
@@ -11242,42 +11242,42 @@ LABEL_5389:
 
 LABEL_5395:
 	ld	hl, $222
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_539B:
 	ld	hl, $224
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53A1:
 	ld	hl, $226
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53A7:
 	ld	hl, $22E
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53AD:
 	ld	hl, $232
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53B3:
 	ld	hl, $218
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53B9:
 	ld	hl, $214
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_53BF:
 	ld a, $2E
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $009C
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $00A2
-	call LABEL_575A
+	call ShowDialogue_B2
 	jr ++
 
 +:	
@@ -11290,11 +11290,11 @@ LABEL_53BF:
 	ld a, $FF
 	ld ($C511), a
 	ld hl, $009E
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $00A0
-	call LABEL_575A
+	call ShowDialogue_B2
 ++:	
 	pop hl
 	call LABEL_3464
@@ -11303,11 +11303,11 @@ LABEL_53BF:
 
 LABEL_5401:
 	ld hl, $023E
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	jr z, +
 	ld hl, $0246
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld a, $3A
@@ -11318,11 +11318,11 @@ LABEL_5401:
 	ld ($C2C4), a
 	call Inventory_AddItem
 	ld hl, $0244
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0248
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_5430:
 	ld a, $31
@@ -11337,33 +11337,33 @@ LABEL_5430:
 	jr nz, ++
 +:	
 	ld hl, $0258
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 ++:	
 	ld a, (Party_curr_num)
 	cp $03
 	jr nc, ++
 	ld hl, $025A
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $025E
 	jr z, +
 	ld hl, $0260
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 ++:	
 	ld hl, $024C
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, (Noah_stats)
 	or a
 	jr nz, +
 	ld hl, $02A8
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $024E
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	ld a, (Noah_stats+curr_hp)
 	push af
@@ -11394,11 +11394,11 @@ LABEL_5430:
 	ld a, $01
 	ld (Noah_stats), a
 	ld hl, $0256
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0250
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ItemID_FradeMantle
 	ld ($C2C4), a
 	jp Inventory_AddItem
@@ -11408,13 +11408,13 @@ LABEL_54D0:
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $0262
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	call LABEL_54EF
 	ld a, $FF
 	ld ($C517), a
 	ld hl, $0266
-	jp LABEL_575A
+	jp ShowDialogue_B2
 	
 LABEL_54EF:	
 	call LABEL_100F
@@ -11433,23 +11433,23 @@ LABEL_54FB:
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $026C
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $026E
 	jr z, +
 	ld hl, $0270
 +:	
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	call LABEL_54EF
 	ld a, $01
 	ld ($C516), a
 	ld hl, $02AA
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_552F:
 	ld	hl, LABEL_B12_B7AA
-	jp	PlaySound
+	jp	ShowDialogue_B12
 
 LABEL_5535:
 	call	LABEL_2D25
@@ -11461,7 +11461,7 @@ LABEL_5538:
 
 LABEL_553D:	
 	ld hl, LABEL_B12_B569
-	call PlaySound
+	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_5546:
@@ -11475,7 +11475,7 @@ LABEL_5546:
 	call LABEL_576A
 	call LABEL_2D25
 	ld hl, $012C
-	call LABEL_575A
+	call ShowDialogue_B2
 	jp Inventory_AddItem
 
 LABEL_5566:
@@ -11491,13 +11491,13 @@ LABEL_5566:
 	call Inventory_FindFreeSlot
 	jr z, LABEL_553D
 	ld hl, $0178
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	jp Inventory_AddItem
 
 LABEL_558C:
 	ld hl, $00FA
-	call LABEL_575A
+	call ShowDialogue_B2
 	jp LABEL_3464
 
 LABEL_5595:
@@ -11505,11 +11505,11 @@ LABEL_5595:
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $0234
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_55A3:
 	ld	hl, $234
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_55A9:
 	ld a, $1B
@@ -11518,7 +11518,7 @@ LABEL_55A9:
 	xor a
 	ld ($CBC3), a
 	ld hl, $0238
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_55BB:
 	ld a, $26
@@ -11531,31 +11531,31 @@ LABEL_55BB:
 
 LABEL_55CD:
 	ld hl, $0228
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $022C
 	jr z, +
 	ld hl, $022A
 +:	
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_55E1:
 	ld a, $08
 	ld ($C2E6), a
 	call LABEL_5FFE
 	ld hl, $0212
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 LABEL_55EF:
 	ld a, ($C504)
 	cp $07
 	jr nc, +
 	ld hl, $0282
-	jp LABEL_575A
+	jp ShowDialogue_B2
 
 +:	
 	ld hl, $0284
-	call LABEL_575A
+	call ShowDialogue_B2
 	ld a, ($C301)
 	cp $40
 	ld hl, LABEL_5613
@@ -11586,7 +11586,7 @@ LABEL_5619:
 	ldir
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld a, $49
 	ld ($C2E6), a
 	call LABEL_5FFE
@@ -11599,35 +11599,35 @@ LABEL_5619:
 	or a
 	jr nz, LABEL_5666
 	ld hl, LABEL_B12_BF64
-	call PlaySound
+	call ShowDialogue_B12
 	call LABEL_3464
 
 LABEL_5666:
-	call LABEL_7B05
+	call FadeOut2
 	ld a, $1D
 	ld ($C29E), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
-	call LABEL_7B20
+	call FadeIn2
 	ld a, $35
 	call LABEL_617D
 	call LABEL_576A
 	ld hl, $0272
-	call LABEL_575A
-	call LABEL_2D19
+	call ShowDialogue_B2
+	call ShowYesNoPrompt
 	ld hl, $0212
 	jr z, +
 	ld hl, $0230
 +:	
-	call LABEL_575A
+	call ShowDialogue_B2
 	call LABEL_3464
 	pop hl
 	jp LABEL_454E
 
 LABEL_569C:
 	ld	hl, $2A4
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_56A2:
 	ld a, ($C2F0)
@@ -11639,7 +11639,7 @@ LABEL_56A2:
 	rr d
 	push de
 	ld hl, LABEL_B12_B728
-	call c, PlaySound
+	call c, ShowDialogue_B12
 	pop de
 	inc e
 	ld a, e
@@ -11659,16 +11659,16 @@ LABEL_56A2:
 
 LABEL_56CD:
 	ld	hl, $23A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_56D3:
 	ld	hl, $27A
-	jp	LABEL_575A
+	jp	ShowDialogue_B2
 
 LABEL_56D9:
 	ld hl, LABEL_B12_BDCE
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	ret nz
 	ld a, $81
 	ld ($C2E9), a
@@ -11676,8 +11676,8 @@ LABEL_56D9:
 
 LABEL_56E9:
 	ld hl, LABEL_B12_BDE6
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	ret nz
 	ld a, $82
 	ld ($C2E9), a
@@ -11685,7 +11685,7 @@ LABEL_56E9:
 
 LABEL_56F9:
 	ld hl, LABEL_B12_B754
-	call PlaySound
+	call ShowDialogue_B12
 	push bc
 	call LABEL_3A21
 	bit 4, c
@@ -11708,7 +11708,7 @@ LABEL_56F9:
 	jr z, +
 	ld hl, LABEL_B12_B785
 +:	
-	call PlaySound
+	call ShowDialogue_B12
 	jr LABEL_56F9
 
 ++:	
@@ -11722,8 +11722,8 @@ LABEL_56F9:
 	ld hl, LABEL_B12_B761
 +:	
 	push de
-	call PlaySound
-	call LABEL_2D19
+	call ShowDialogue_B12
+	call ShowYesNoPrompt
 	pop de
 	jr nz, LABEL_56F9
 	ld a, e
@@ -11742,7 +11742,7 @@ LABEL_5752:
 .db	$81
 .db $83, $84, $85, $82, $86, $87, $88
 
-LABEL_575A:
+ShowDialogue_B2:
 	ld a, :Bank02
 	ld ($FFFF), a
 	ld de, DialogueBlock-2
@@ -12843,7 +12843,7 @@ LABEL_5FFE:
 	add  hl, hl
 	ld   de, B03_EnemyData
 	add  hl, de
-	ld   de, $C2C8
+	ld   de, CurrentBattle_EnemyName
 	ld   bc, $0008
 	ldir
 	ld   de, $C258
@@ -12937,7 +12937,7 @@ LABEL_6095:
 	ld   c, a
 	ld   b, $00
 	call	LABEL_44C
-	ld   ($C2D0), hl
+	ld   (CurrentBattle_EXPReward), hl
 	pop  hl
 	inc  hl
 	ld   a, (hl)
@@ -13550,7 +13550,7 @@ LABEL_6442:
 	ret
 
 LABEL_64A3:
-	ld a, ($C21B)
+	ld a, (Fade_timer)
 	or a
 	ret nz
 	ld a, (Game_mode)
@@ -13578,7 +13578,7 @@ LABEL_64A3:
 	ret
 
 LABEL_64CF:
-	ld a, ($C21B)
+	ld a, (Fade_timer)
 	or a
 	ret nz
 	ld a, (Game_mode)
@@ -13816,7 +13816,7 @@ LABEL_6729:
 	bit  3, b
 	jp   nz, LABEL_68BC
 LABEL_6731:
-	call	LABEL_7B05
+	call	FadeOut2
 	ld   a, (Dungeon_direction)
 	and  $03
 	ld   hl, $6ADF
@@ -13831,7 +13831,7 @@ LABEL_6731:
 	ld   (Dungeon_position), a
 	xor  a
 	call	LABEL_6AE5
-	call	LABEL_7B20
+	call	FadeIn2
 	ld	b, $01
 	jp	LABEL_6963
 
@@ -14108,7 +14108,7 @@ LABEL_68EC:
 	cp   $FF
 	jr   nz, LABEL_6947
 	push	hl
-	call	LABEL_7B05
+	call	FadeOut2
 	ld   hl, $FFFF
 	ld   (hl), :Bank09
 	ld   hl, LABEL_B09_B471
@@ -14123,7 +14123,7 @@ LABEL_68EC:
 LABEL_691D:
 	ld   a, $0C
 	call	WaitForVInt
-	call	LABEL_7B20
+	call	FadeIn2
 LABEL_6925:
 	ld   hl, $FFFF
 	ld   (hl), :Bank03
@@ -14135,18 +14135,18 @@ LABEL_6925:
 	cp   $0B ; GameMode_Dungeon
 	ret  nz
 
-	call	LABEL_7B05
+	call	FadeOut2
 	xor  a
 	call	LABEL_6AE5
 	call	LABEL_6D7F
 	call	LABEL_6DE2
-	call	LABEL_7B20
+	call	FadeIn2
 	ret
 
 LABEL_6947:
 	push	hl
 	push	af
-	call	LABEL_7B05
+	call	FadeOut2
 	pop  af
 	ld   c, $0D
 	cp   $FE
@@ -14234,7 +14234,7 @@ LABEL_69C7:
 	ret  nz
 
 	ld   hl, LABEL_B12_BD97
-	call	PlaySound
+	call	ShowDialogue_B12
 	push	bc
 	call	LABEL_16B2
 	pop  bc
@@ -16584,30 +16584,30 @@ LABEL_7AC0:
 .db $5A, $01, $26, $29, $02, $5B, $2C, $02, $38, $49, $02, $5B, $2C, $02, $38, $49
 .db $00, $16, $6A
 
-LABEL_7AFD:
+FadeOut:
 	ld hl, $1009
-	ld ($C21B), hl
+	ld (Fade_timer), hl
 	jr LABEL_7B0B
 
-LABEL_7B05:
+FadeOut2:
 	ld   hl, $2009
-	ld   ($C21B), hl
+	ld   (Fade_timer), hl
 LABEL_7B0B:
 	ld   a, $16
 	call	WaitForVInt
-	ld   a, ($C21B)
+	ld   a, (Fade_timer)
 	or   a
 	jp   nz, LABEL_7B0B
 	ret
 
-LABEL_7B18:
+FadeIn:
 	ld   hl, $1089
-	ld   ($C21B), hl
+	ld   (Fade_timer), hl
 	jr   LABEL_7B33
 
-LABEL_7B20:
+FadeIn2:
 	ld   hl, $2089
-	ld   ($C21B), hl
+	ld   (Fade_timer), hl
 	ld   hl, $C220
 	ld   de, $C221
 	ld   bc, $001F
@@ -16616,7 +16616,7 @@ LABEL_7B20:
 LABEL_7B33:
 	ld   a, $16
 	call	WaitForVInt
-	ld   a, ($C21B)
+	ld   a, (Fade_timer)
 	or   a
 	jp   nz, LABEL_7B33
 	ret
@@ -16627,7 +16627,7 @@ LABEL_7B40:
 	dec (hl)
 	ret p
 	ld (hl), $03
-	ld hl, $C21B
+	ld hl, Fade_timer
 	ld a, (hl)
 	bit 7, a
 	jp nz, ++
@@ -17132,1839 +17132,1473 @@ DialogueBlock:
 .db $B2, $F7, $B2, $1B, $B3, $34, $B3, $4D
 .db $B3, $67, $B3, $8F, $B3, $C5, $B3, $DE
 .db $B3, $F0, $B3, $01, $B4, $21, $B4, $4E
-.db $B4, $49, $40, $4D, $20, $53, $55, $45
-.db $4C, $4F, $2E, $20, $49, $20, $BE, $60
-.db $48, $4F, $57, $20, $CE, $20, $46, $45
-.db $45, $4C, $2C, $61, $44, $45, $41, $52
-.db $2C, $4E, $4F, $20, $FD, $20, $43, $41
-.db $4E, $60, $53, $54, $4F, $50, $20, $E1
-.db $FE, $61, $44, $4F, $49, $4E, $47, $20
-.db $57, $48, $41, $54, $20, $E1, $60, $BE
-.db $20, $CE, $20, $44, $4F, $2E, $61, $42
-.db $55, $54, $20, $49, $46, $20, $E1, $53
-.db $48, $4F, $55, $4C, $44, $60, $45, $56
-.db $45, $52, $20, $42, $45, $20, $57, $4F
-.db $55, $4E, $44, $45, $44, $61, $49, $4E
-.db $20, $42, $41, $54, $54, $4C, $45, $2C
-.db $43, $4F, $4D, $45, $60, $D2, $20, $54
-.db $4F, $20, $BF, $2E, $65, $C9, $BF, $60
-.db $A9, $2E, $61, $E1, $EC, $E0, $60, $D2
-.db $20, $41, $54, $20, $F6, $9F, $2E, $65
-.db $49, $40, $4D, $20, $4E, $45, $4B, $49
-.db $53, $45, $2E, $20, $FD, $60, $48, $45
-.db $41, $52, $53, $20, $4C, $4F, $54, $53
-.db $20, $4F, $46, $61, $53, $54, $4F, $52
-.db $49, $45, $53, $2C, $20, $E1, $BE, $2C
-.db $42, $55, $54, $20, $D5, $20, $53, $41
-.db $59, $20, $DC, $61, $41, $20, $46, $49
-.db $47, $48, $54, $45, $52, $20, $E7, $60
-.db $4F, $44, $49, $4E, $20, $4C, $49, $56
-.db $45, $53, $20, $49, $4E, $20, $41, $61
-.db $B9, $20, $43, $41, $4C, $4C, $45, $44
-.db $20, $96, $2E, $60, $41, $4C, $53, $4F
-.db $2C, $20, $49, $20, $E3, $41, $61, $A6
-.db $20, $47, $49, $56, $45, $4E, $60, $42
-.db $59, $20, $B2, $2E, $20, $DC, $61, $57
-.db $4F, $55, $4C, $44, $20, $42, $45, $20
-.db $48, $45, $4C, $50, $46, $55, $4C, $60
-.db $54, $4F, $20, $E1, $49, $4E, $20, $E2
-.db $61, $54, $41, $53, $4B, $2E, $65, $49
-.db $20, $97, $20, $49, $20, $43, $4F, $55
-.db $4C, $44, $60, $CA, $20, $E1, $4D, $4F
-.db $52, $45, $2E, $61, $49, $20, $50, $52
-.db $41, $59, $20, $46, $4F, $52, $20, $E2
-.db $60, $53, $41, $46, $45, $54, $59, $2E
-.db $65, $DE, $43, $41, $4D, $49, $4E, $45
-.db $45, $54, $60, $D6, $61, $49, $53, $20
-.db $55, $4E, $44, $45, $52, $60, $4D, $41
-.db $52, $54, $49, $41, $4C, $20, $4C, $41
-.db $57, $2E, $65, $E1, $4E, $45, $45, $44
-.db $20, $41, $60, $D8, $20, $4B, $45, $59
-.db $20, $54, $4F, $61, $4F, $50, $45, $4E
-.db $20, $4C, $4F, $43, $4B, $45, $44, $20
-.db $44, $4F, $4F, $52, $53, $2E, $65, $49
-.db $4E, $20, $D5, $20, $D8, $53, $60, $CB
-.db $20, $F8, $47, $45, $54, $61, $46, $41
-.db $52, $20, $57, $49, $54, $48, $4F, $55
-.db $54, $20, $D5, $60, $53, $4F, $52, $54
-.db $20, $4F, $46, $20, $4C, $49, $47, $48
-.db $54, $2E, $65, $DA, $20, $41, $60, $98
-.db $20, $54, $4F, $20, $DE, $61, $57, $45
-.db $53, $54, $20, $4F, $46, $20, $43, $41
-.db $4D, $49, $4E, $45, $45, $54, $2E, $65
-.db $49, $46, $20, $E1, $F9, $54, $4F, $60
-.db $4D, $41, $4B, $45, $20, $41, $20, $44
-.db $45, $41, $4C, $2C, $20, $E1, $61, $53
-.db $48, $4F, $55, $4C, $44, $20, $48, $45
-.db $41, $44, $20, $46, $4F, $52, $60, $DE
-.db $50, $4F, $52, $54, $20, $B9, $2E, $65
-.db $E1, $48, $41, $44, $20, $42, $45, $54
-.db $54, $45, $52, $60, $F8, $4C, $45, $41
-.db $56, $45, $20, $DE, $61, $D6, $2E, $65
-.db $55, $4E, $4C, $45, $53, $53, $20, $E1
-.db $48, $4F, $50, $45, $20, $54, $4F, $44
-.db $49, $45, $2C, $20, $E1, $48, $41, $44
-.db $20, $42, $45, $53, $54, $61, $53, $54
-.db $41, $59, $20, $D2, $2E, $65, $E1, $4D
-.db $41, $59, $20, $F8, $A2, $2E, $65, $E1
-.db $88, $20, $A2, $60, $57, $49, $54, $48
-.db $4F, $55, $54, $20, $A0, $2E, $65, $E1
-.db $4D, $41, $59, $20, $50, $52, $4F, $43
-.db $45, $45, $44, $2E, $65, $E4, $49, $53
-.db $20, $50, $41, $52, $4F, $4C, $49, $54
-.db $60, $D6, $2E, $65, $DE, $C4, $20, $49
-.db $53, $20, $41, $60, $44, $41, $4E, $47
-.db $45, $52, $4F, $55, $53, $20, $50, $4C
-.db $41, $43, $45, $2E, $65, $EA, $20, $48
-.db $41, $53, $20, $42, $45, $45, $4E, $60
-.db $52, $45, $42, $4F, $52, $4E, $20, $41
-.db $4E, $44, $20, $4C, $49, $56, $45, $53
-.db $61, $49, $4E, $20, $41, $20, $43, $41
-.db $56, $45, $20, $54, $4F, $20, $DE, $60
-.db $53, $4F, $55, $54, $48, $2E, $20, $49
-.db $46, $20, $E1, $53, $45, $45, $61, $48
-.db $45, $52, $2C, $20, $CB, $20, $42, $45
-.db $60, $91, $2E, $65, $54, $4F, $20, $DE
-.db $45, $41, $53, $54, $20, $4C, $49, $45
-.db $53, $60, $41, $20, $50, $4F, $52, $54
-.db $20, $B9, $61, $43, $41, $4C, $4C, $45
-.db $44, $20, $96, $2E, $65, $FE, $DE, $98
-.db $60, $E1, $43, $41, $4E, $20, $47, $4F
-.db $20, $54, $4F, $61, $50, $41, $53, $45
-.db $4F, $20, $4F, $4E, $20, $94, $2E, $65
-.db $DA, $20, $41, $4E, $60, $55, $4E, $44
-.db $45, $52, $47, $52, $4F, $55, $4E, $44
-.db $61, $BA, $20, $54, $4F, $20, $DE, $60
-.db $95, $20, $C4, $61, $D5, $D0, $20, $54
-.db $4F, $20, $DE, $60, $57, $45, $53, $54
-.db $20, $4F, $46, $20, $50, $41, $52, $4F
-.db $4C, $49, $54, $2E, $65, $4F, $44, $49
-.db $4E, $20, $53, $45, $54, $20, $4F, $46
-.db $46, $20, $54, $4F, $60, $4B, $49, $4C
-.db $4C, $20, $EA, $2E, $20, $48, $45, $61
-.db $57, $45, $4E, $54, $20, $57, $49, $54
-.db $48, $20, $41, $4E, $60, $41, $4E, $49
-.db $4D, $41, $4C, $20, $DC, $20, $43, $41
-.db $4E, $61, $53, $50, $45, $41, $4B, $21
-.db $20, $DE, $41, $4E, $49, $4D, $41, $4C
-.db $60, $48, $41, $44, $20, $41, $20, $42
-.db $4F, $54, $54, $4C, $45, $20, $4F, $46
-.db $61, $4D, $45, $44, $49, $43, $49, $4E
-.db $45, $20, $48, $41, $4E, $47, $49, $4E
-.db $47, $60, $FE, $49, $54, $53, $20, $4E
-.db $45, $43, $4B, $2C, $20, $42, $55, $54
-.db $61, $49, $20, $44, $4F, $4E, $40, $54
-.db $20, $BE, $20, $57, $48, $41, $54, $60
-.db $DC, $20, $49, $53, $20, $46, $4F, $52
-.db $2E, $65, $49, $20, $48, $45, $41, $52
-.db $20, $E1, $EC, $60, $47, $4F, $49, $4E
-.db $47, $20, $54, $4F, $20, $54, $52, $59
-.db $61, $54, $4F, $20, $4B, $49, $4C, $4C
-.db $20, $D4, $2E, $60, $42, $45, $53, $54
-.db $20, $4F, $46, $20, $4C, $55, $43, $4B
-.db $21, $65, $49, $20, $52, $45, $43, $45
-.db $4E, $54, $4C, $59, $20, $46, $4F, $55
-.db $4E, $44, $20, $41, $54, $41, $4C, $4B
-.db $49, $4E, $47, $20, $42, $45, $41, $53
-.db $54, $20, $49, $4E, $61, $DE, $43, $41
-.db $56, $45, $20, $D0, $60, $EA, $20, $4C
-.db $49, $56, $45, $53, $2E, $61, $49, $20
-.db $53, $4F, $4C, $44, $20, $48, $49, $4D
-.db $20, $46, $4F, $52, $20, $41, $60, $47
-.db $4F, $4F, $44, $20, $50, $52, $49, $43
-.db $45, $20, $54, $4F, $20, $41, $61, $4D
-.db $45, $52, $43, $48, $41, $4E, $54, $20
-.db $FE, $60, $50, $41, $53, $45, $4F, $21
-.db $65, $54, $49, $4D, $45, $53, $20, $EC
-.db $48, $41, $52, $44, $2E, $60, $D1, $20
-.db $44, $4F, $45, $53, $4E, $40, $54, $20
-.db $53, $45, $45, $4D, $61, $54, $4F, $20
-.db $42, $45, $20, $F6, $57, $41, $59, $20
-.db $54, $4F, $60, $4D, $41, $4B, $45, $20
-.db $4D, $FD, $59, $2E, $65, $41, $20, $43
-.db $41, $56, $45, $20, $43, $41, $4C, $4C
-.db $45, $44, $20, $49, $41, $4C, $41, $43
-.db $41, $4E, $20, $42, $45, $20, $46, $4F
-.db $55, $4E, $44, $20, $4F, $4E, $61, $DE
-.db $50, $45, $4E, $49, $4E, $53, $55, $4C
-.db $41, $20, $54, $4F, $60, $DE, $53, $4F
-.db $55, $54, $48, $20, $4F, $46, $20, $96
-.db $65, $E4, $49, $53, $20, $DE, $50, $4F
-.db $52, $54, $60, $B9, $20, $96, $2E, $61
-.db $4C, $4F, $4E, $47, $20, $41, $47, $4F
-.db $2C, $20, $57, $45, $60, $54, $48, $52
-.db $49, $56, $45, $44, $20, $4F, $4E, $20
-.db $54, $52, $41, $44, $45, $2E, $65, $E1
-.db $4E, $45, $45, $44, $20, $41, $20, $43
-.db $4F, $4D, $50, $41, $53, $53, $54, $4F
-.db $20, $A2, $20, $DD, $61, $DE, $45, $50
-.db $50, $49, $20, $C4, $2E, $65, $41, $20
-.db $44, $4F, $4F, $52, $20, $4C, $4F, $43
-.db $4B, $45, $44, $20, $57, $49, $54, $48
-.db $84, $43, $41, $4E, $20, $4F, $4E, $4C
-.db $59, $20, $42, $45, $61, $4F, $50, $45
-.db $4E, $45, $44, $20, $57, $49, $54, $48
-.db $20, $EF, $2E, $65, $DA, $20, $41, $20
-.db $AB, $60, $E7, $C2, $61, $54, $4F, $20
-.db $DE, $4E, $4F, $52, $54, $48, $20, $4F
-.db $46, $60, $E4, $B9, $2E, $61, $42, $55
-.db $54, $20, $4E, $FD, $20, $4F, $46, $20
-.db $55, $53, $60, $44, $EC, $41, $50, $50
-.db $52, $4F, $41, $43, $48, $20, $49, $54
-.db $2E, $65, $41, $20, $43, $41, $56, $45
-.db $20, $43, $41, $4C, $4C, $45, $44, $60
-.db $4E, $41, $55, $4C, $41, $20, $4C, $49
-.db $45, $53, $20, $4F, $4E, $20, $DE, $61
-.db $4E, $4F, $52, $54, $48, $20, $43, $4F
-.db $41, $53, $54, $20, $4F, $46, $60, $C2
-.db $2E, $65, $DE, $AA, $20, $4F, $46, $60
-.db $94, $20, $4D, $49, $47, $48, $54, $61
-.db $50, $4F, $53, $53, $49, $42, $4C, $59
-.db $20, $CA, $20, $E1, $57, $45, $4C, $4C
-.db $2E, $65, $4E, $4F, $41, $48, $20, $4C
-.db $49, $56, $45, $53, $20, $4F, $4E, $60
-.db $94, $2E, $65, $44, $52, $2E, $AD, $20
-.db $48, $41, $44, $20, $41, $60, $BD, $20
-.db $49, $4E, $20, $DE, $61, $95, $20, $C4
-.db $20, $4C, $4F, $4E, $47, $41, $47, $4F
-.db $2C, $20, $49, $54, $20, $49, $53, $20
-.db $53, $41, $49, $44, $2E, $65, $E0, $54
-.db $4F, $20, $45, $50, $50, $49, $2E, $65
-.db $EC, $E1, $4C, $4F, $4F, $4B, $49, $4E
-.db $47, $60, $46, $4F, $52, $20, $41, $20
-.db $D8, $20, $4B, $45, $59, $3F, $62, $49
-.db $40, $56, $45, $20, $48, $49, $44, $44
-.db $45, $4E, $20, $41, $60, $D8, $20, $4B
-.db $45, $59, $20, $49, $4E, $20, $54, $48
-.db $45, $61, $57, $41, $52, $45, $48, $4F
-.db $55, $53, $45, $20, $49, $4E, $20, $DE
-.db $60, $4F, $55, $54, $53, $4B, $49, $52
-.db $54, $53, $20, $4F, $46, $20, $DE, $61
-.db $43, $41, $4D, $49, $4E, $45, $45, $54
-.db $2E, $65, $C3, $20, $57, $48, $41, $54
-.db $60, $DE, $48, $41, $52, $44, $45, $53
-.db $54, $2C, $61, $53, $54, $52, $4F, $4E
-.db $47, $45, $53, $54, $20, $4D, $41, $54
-.db $45, $52, $49, $41, $4C, $49, $4E, $20
-.db $4F, $55, $52, $20, $B5, $20, $49, $53
-.db $3F, $62, $49, $54, $40, $53, $20, $BC
-.db $21, $60, $41, $52, $4D, $53, $20, $4D
-.db $41, $44, $45, $20, $57, $49, $54, $48
-.db $61, $BC, $20, $EC, $DE, $60, $42, $45
-.db $53, $54, $20, $54, $4F, $20, $48, $41
-.db $56, $45, $2E, $65, $4F, $2E, $4B, $2E
-.db $20, $47, $4F, $4F, $44, $20, $44, $41
-.db $59, $2E, $65, $C3, $20, $41, $42, $4F
-.db $55, $54, $60, $DE, $B8, $20, $4F, $46
-.db $61, $DE, $9B, $20, $53, $54, $41, $52
-.db $60, $9C, $3F, $62, $DB, $20, $54, $48
-.db $52, $45, $45, $60, $B8, $3B, $20, $CF
-.db $61, $94, $20, $41, $4E, $44, $60, $93
-.db $2E, $61, $CF, $20, $49, $53, $20, $41
-.db $20, $B5, $60, $4F, $46, $20, $47, $52
-.db $45, $45, $4E, $2E, $61, $94, $20, $49
-.db $53, $20, $41, $20, $B5, $60, $4F, $46
-.db $20, $53, $41, $4E, $44, $2E, $61, $93
-.db $20, $49, $53, $20, $41, $20, $B5, $60
-.db $4F, $46, $20, $49, $43, $45, $2E, $61
-.db $DE, $9B, $20, $53, $54, $41, $52, $60
-.db $9C, $20, $49, $53, $61, $90, $20, $FB
-.db $60, $41, $20, $E6, $43, $52, $49, $53
-.db $49, $53, $2E, $65, $E4, $49, $53, $20
-.db $50, $41, $4C, $4D, $41, $40, $53, $60
-.db $98, $2E, $61, $FE, $DE, $98, $60, $E1
-.db $43, $41, $4E, $20, $47, $4F, $20, $54
-.db $4F, $61, $50, $41, $53, $45, $4F, $20
-.db $4F, $4E, $20, $94, $2E, $65, $DE, $AA
-.db $20, $49, $53, $20, $49, $4E, $50, $41
-.db $53, $45, $4F, $2E, $20, $48, $45, $20
-.db $52, $55, $4C, $45, $53, $61, $41, $4C
-.db $4C, $20, $4F, $46, $20, $94, $2E, $65
-.db $4C, $4F, $4E, $47, $20, $41, $47, $4F
-.db $2C, $20, $41, $60, $E8, $20, $57, $41
-.db $53, $61, $42, $55, $49, $4C, $54, $20
-.db $49, $4E, $20, $DE, $60, $95, $20, $BD
-.db $2E, $65, $C5, $20, $E2, $60, $99, $3F
-.db $62, $E1, $43, $41, $4E, $20, $46, $49
-.db $4C, $45, $20, $46, $4F, $52, $20, $41
-.db $60, $99, $20, $D2, $2E, $61, $C6, $20
-.db $F9, $41, $60, $99, $3F, $62, $E3, $E1
-.db $45, $56, $45, $52, $20, $44, $FD, $60
-.db $F6, $F7, $20, $49, $4C, $4C, $45, $47
-.db $41, $4C, $3F, $20, $62, $C6, $20, $43
-.db $55, $52, $52, $45, $4E, $54, $4C, $59
-.db $60, $E3, $41, $4E, $20, $49, $4C, $4C
-.db $4E, $45, $53, $53, $3F, $62, $DE, $99
-.db $20, $46, $45, $45, $60, $49, $53, $20
-.db $31, $30, $30, $20, $A1, $2E, $61, $57
-.db $4F, $55, $4C, $44, $20, $E1, $50, $41
-.db $59, $20, $49, $54, $3F, $62, $E2, $99
-.db $20, $49, $53, $60, $52, $45, $41, $44
-.db $59, $2C, $20, $D2, $2E, $65, $B7, $2E
-.db $20, $E3, $41, $20, $47, $4F, $4F, $44
-.db $44, $41, $59, $2E, $65, $DC, $40, $53
-.db $20, $F8, $47, $4F, $4F, $44, $2E, $60
-.db $59, $4F, $55, $40, $4C, $4C, $20, $E3
-.db $54, $4F, $61, $43, $4F, $4D, $45, $20
-.db $42, $41, $43, $4B, $20, $4C, $41, $54
-.db $45, $52, $2E, $65, $E0, $54, $4F, $20
-.db $DE, $60, $50, $41, $53, $45, $4F, $20
-.db $98, $61, $4F, $4E, $20, $94, $2E, $65
-.db $49, $54, $20, $49, $53, $20, $53, $41
-.db $49, $44, $20, $DC, $60, $A3, $53, $20
-.db $52, $4F, $41, $4D, $61, $49, $4E, $20
-.db $DE, $44, $45, $53, $45, $52, $54, $2E
-.db $65, $DA, $20, $41, $20, $43, $41, $4B
-.db $45, $60, $53, $48, $4F, $50, $20, $49
-.db $4E, $20, $DE, $43, $41, $56, $45, $61
-.db $43, $41, $4C, $4C, $45, $44, $20, $4E
-.db $41, $55, $4C, $41, $20, $4F, $4E, $60
-.db $CF, $21, $65, $94, $40, $53, $20, $AA
-.db $41, $4E, $44, $20, $D4, $20, $EC, $4E
-.db $4F, $54, $61, $4F, $4E, $20, $47, $4F
-.db $4F, $44, $20, $54, $45, $52, $4D, $53
-.db $2C, $20, $49, $54, $60, $49, $53, $20
-.db $53, $41, $49, $44, $2E, $65, $41, $20
-.db $47, $49, $46, $54, $20, $49, $53, $20
-.db $4E, $45, $45, $44, $45, $44, $60, $49
-.db $46, $20, $E1, $97, $20, $54, $4F, $20
-.db $53, $45, $45, $61, $DE, $AA, $2E, $65
-.db $DE, $AA, $20, $4C, $4F, $56, $45, $53
-.db $53, $57, $45, $45, $54, $53, $2C, $20
-.db $49, $20, $48, $45, $41, $52, $2E, $65
-.db $DA, $20, $41, $20, $43, $41, $56, $45
-.db $60, $43, $41, $4C, $4C, $45, $44, $20
-.db $A7, $20, $49, $4E, $61, $41, $20, $E5
-.db $20, $54, $4F, $20, $DE, $60, $4E, $4F
-.db $52, $54, $48, $20, $4F, $46, $20, $50
-.db $41, $53, $45, $4F, $2E, $65, $E4, $49
-.db $53, $20, $50, $41, $53, $45, $4F, $60
-.db $94, $40, $53, $20, $43, $41, $50, $49
-.db $54, $41, $4C, $2E, $65, $49, $54, $40
-.db $53, $20, $F8, $50, $4F, $53, $53, $49
-.db $42, $4C, $45, $60, $54, $4F, $20, $A2
-.db $20, $DD, $61, $A3, $20, $4F, $4E, $20
-.db $46, $4F, $4F, $54, $2E, $65, $49, $20
-.db $E3, $41, $4E, $20, $52, $41, $52, $45
-.db $60, $41, $4E, $49, $4D, $41, $4C, $20
-.db $D2, $2E, $20, $57, $4F, $55, $4C, $44
-.db $61, $E1, $50, $41, $59, $20, $31, $20
-.db $42, $49, $4C, $4C, $49, $4F, $4E, $60
-.db $A1, $20, $46, $4F, $52, $20, $49, $54
-.db $3F, $62, $E1, $EC, $41, $20, $4C, $49
-.db $41, $52, $21, $65, $B7, $20, $E1, $E3
-.db $41, $60, $AC, $20, $50, $4F, $54, $2E
-.db $61, $53, $48, $41, $4C, $4C, $20, $49
-.db $20, $54, $52, $41, $44, $45, $20, $DE
-.db $60, $41, $4E, $49, $4D, $41, $4C, $20
-.db $46, $4F, $52, $20, $49, $54, $3F, $62
-.db $41, $4C, $4C, $20, $52, $49, $47, $48
-.db $54, $2C, $20, $D1, $60, $E1, $47, $4F
-.db $20, $57, $49, $54, $48, $20, $48, $49
-.db $4D, $2E, $65, $C5, $20, $41, $60, $DF
-.db $20, $54, $4F, $20, $47, $49, $56, $45
-.db $20, $54, $4F, $61, $DE, $AA, $3F, $62
-.db $49, $40, $4C, $4C, $20, $54, $41, $4B
-.db $45, $20, $DE, $60, $53, $48, $4F, $52
-.db $54, $43, $41, $4B, $45, $20, $4E, $4F
-.db $57, $2E, $65, $49, $20, $44, $4F, $4E
-.db $40, $54, $20, $54, $48, $49, $4E, $4B
-.db $20, $E1, $60, $E3, $41, $20, $53, $55
-.db $49, $54, $41, $42, $4C, $45, $61, $DF
-.db $2E, $65, $47, $4F, $20, $42, $41, $43
-.db $4B, $20, $54, $4F, $20, $E2, $60, $48
-.db $4F, $4D, $45, $20, $4E, $4F, $57, $2E
-.db $65, $49, $40, $4D, $20, $DE, $AA, $2E
-.db $60, $49, $40, $4D, $20, $54, $4F, $4C
-.db $44, $20, $DC, $20, $E1, $61, $49, $4E
-.db $54, $45, $4E, $44, $20, $54, $4F, $20
-.db $54, $52, $59, $20, $54, $4F, $60, $4B
-.db $49, $4C, $4C, $20, $D4, $2E, $61, $49
-.db $20, $41, $44, $4D, $49, $52, $45, $20
-.db $E2, $60, $43, $4F, $55, $52, $41, $47
-.db $45, $2E, $20, $49, $4E, $20, $DE, $61
-.db $A7, $20, $43, $41, $56, $45, $20, $4C
-.db $49, $56, $45, $53, $60, $41, $4E, $20
-.db $45, $53, $50, $41, $52, $20, $E7, $61
-.db $4E, $4F, $41, $48, $2E, $20, $CC, $20
-.db $47, $49, $56, $45, $60, $E1, $41, $20
-.db $4C, $45, $54, $54, $45, $52, $20, $4F
-.db $46, $61, $49, $4E, $54, $52, $4F, $44
-.db $55, $43, $54, $49, $4F, $4E, $20, $54
-.db $4F, $60, $DF, $20, $54, $4F, $20, $48
-.db $45, $52, $2E, $61, $49, $20, $E3, $46
-.db $41, $49, $54, $48, $20, $DC, $60, $CB
-.db $20, $4B, $49, $4C, $4C, $61, $D4, $20
-.db $41, $4E, $44, $20, $52, $45, $54, $55
-.db $52, $4E, $60, $D2, $20, $45, $56, $45
-.db $4E, $54, $55, $41, $4C, $4C, $59, $2E
-.db $65, $49, $46, $20, $DE, $AA, $60, $4F
-.db $52, $44, $45, $52, $53, $20, $4E, $4F
-.db $41, $48, $20, $54, $4F, $20, $44, $4F
-.db $61, $D5, $F7, $2C, $48, $45, $20, $57
-.db $49, $4C, $4C, $60, $4C, $49, $4B, $45
-.db $4C, $59, $20, $4F, $42, $45, $59, $2E
-.db $65, $57, $48, $4F, $20, $EC, $59, $4F
-.db $55, $3F, $20, $49, $40, $4D, $60, $42
-.db $55, $53, $59, $20, $57, $49, $54, $48
-.db $20, $4D, $59, $61, $54, $52, $41, $49
-.db $4E, $49, $4E, $47, $20, $4E, $4F, $57
-.db $21, $20, $44, $4F, $60, $F8, $42, $45
-.db $20, $41, $20, $4E, $55, $49, $53, $41
-.db $4E, $43, $45, $21, $65, $48, $45, $4C
-.db $4C, $4F, $21, $65, $5A, $5A, $5A, $2E
-.db $2E, $2E, $5A, $5A, $5A, $2E, $2E, $2E
-.db $65, $C9, $BF, $20, $E2, $60, $57, $45
-.db $41, $52, $59, $20, $42, $FD, $53, $2E
-.db $65, $49, $20, $41, $4D, $20, $50, $52
-.db $41, $59, $49, $4E, $47, $20, $46, $4F
-.db $52, $60, $E2, $53, $41, $46, $45, $54
-.db $59, $2E, $65, $43, $4F, $55, $4C, $44
-.db $20, $59, $41, $20, $53, $50, $EC, $4D
-.db $45, $60, $41, $20, $43, $55, $50, $20
-.db $4F, $46, $20, $43, $4F, $4C, $41, $3F
-.db $62, $B3, $21, $20, $E4, $57, $41, $53
-.db $60, $4F, $4E, $43, $45, $20, $DE, $4C
-.db $41, $42, $2E, $20, $4F, $46, $61, $44
-.db $52, $2E, $AD, $2E, $20, $48, $45, $20
-.db $57, $45, $4E, $54, $42, $4F, $4E, $4B
-.db $45, $52, $53, $2C, $20, $54, $48, $4F
-.db $55, $47, $48, $61, $41, $4E, $44, $20
-.db $42, $45, $20, $49, $4E, $50, $52, $49
-.db $53, $FD, $44, $60, $49, $4E, $20, $54
-.db $52, $49, $41, $44, $41, $20, $54, $4F
-.db $20, $DE, $61, $53, $4F, $55, $54, $48
-.db $20, $4F, $46, $20, $D2, $2E, $65, $49
-.db $20, $47, $4F, $54, $20, $4E, $4F, $54
-.db $48, $49, $4E, $40, $20, $54, $4F, $60
-.db $53, $41, $59, $20, $54, $40, $59, $41
-.db $21, $47, $45, $54, $20, $4C, $4F, $53
-.db $54, $21, $65, $44, $4F, $4E, $40, $54
-.db $20, $47, $4F, $20, $4E, $45, $41, $52
-.db $20, $DE, $60, $9D, $20, $41, $54, $20
-.db $DE, $46, $41, $52, $61, $45, $4E, $44
-.db $20, $4F, $46, $20, $DE, $4E, $41, $52
-.db $52, $4F, $57, $60, $52, $4F, $41, $44
-.db $20, $57, $48, $49, $43, $48, $20, $47
-.db $4F, $45, $53, $61, $FE, $DE, $95, $60
-.db $C4, $20, $DD, $20, $54, $48, $45, $61
-.db $E5, $53, $2E, $20, $41, $20, $EF, $42
-.db $45, $41, $53, $54, $20, $4C, $49, $56
-.db $45, $53, $20, $D1, $2E, $61, $4C, $4F
-.db $4F, $4B, $20, $41, $54, $20, $49, $54
-.db $20, $41, $4E, $44, $20, $59, $41, $60
-.db $54, $55, $52, $4E, $20, $54, $4F, $20
-.db $53, $54, $FD, $2E, $65, $41, $48, $2C
-.db $20, $49, $54, $40, $53, $20, $47, $45
-.db $54, $54, $49, $4E, $47, $60, $4C, $41
-.db $54, $45, $21, $20, $46, $45, $54, $43
-.db $48, $20, $4D, $59, $61, $41, $53, $53
-.db $49, $53, $54, $41, $4E, $54, $2E, $20
-.db $48, $45, $40, $53, $60, $4C, $49, $4B
-.db $45, $4C, $59, $20, $48, $49, $44, $49
-.db $4E, $47, $61, $49, $4E, $20, $DE, $55
-.db $4E, $44, $45, $52, $47, $52, $4F, $55
-.db $4E, $44, $BA, $2E, $65, $EB, $65, $E1
-.db $44, $4F, $4E, $40, $54, $20, $E3, $60
-.db $45, $4E, $4F, $55, $47, $48, $2E, $20
-.db $43, $4F, $4D, $45, $20, $42, $41, $43
-.db $4B, $61, $41, $47, $41, $49, $4E, $20
-.db $57, $48, $45, $4E, $20, $E1, $60, $E3
-.db $45, $4E, $4F, $55, $47, $48, $20, $46
-.db $55, $4E, $44, $53, $2E, $65, $53, $55
-.db $43, $43, $45, $53, $53, $21, $20, $49
-.db $20, $DF, $41, $20, $53, $55, $50, $45
-.db $52, $42, $20, $E8, $61, $DE, $AD, $2E
-.db $65, $49, $46, $20, $E1, $44, $4F, $4E
-.db $40, $54, $20, $4F, $42, $45, $59, $60
-.db $4D, $45, $2C, $20, $49, $20, $88, $20
-.db $CA, $2E, $65, $42, $55, $54, $20, $E1
-.db $88, $20, $46, $4C, $59, $60, $41, $20
-.db $E8, $2E, $65, $48, $4F, $57, $20, $49
-.db $53, $20, $DE, $AD, $3F, $55, $53, $45
-.db $20, $49, $54, $20, $57, $45, $4C, $4C
-.db $2E, $65, $DC, $40, $53, $20, $54, $4F
-.db $4F, $20, $42, $41, $44, $2E, $60, $41
-.db $4E, $44, $20, $E1, $E3, $43, $4F, $4D
-.db $45, $61, $53, $4F, $20, $46, $41, $52
-.db $2C, $20, $54, $4F, $4F, $2E, $65, $49
-.db $40, $4D, $20, $42, $55, $53, $59, $2E
-.db $44, $4F, $4E, $40, $54, $60, $42, $4F
-.db $54, $48, $45, $52, $20, $4D, $45, $2E
-.db $65, $49, $40, $4D, $20, $AD, $2E, $20
-.db $49, $46, $60, $59, $4F, $55, $40, $56
-.db $45, $20, $43, $4F, $4D, $45, $20, $46
-.db $4F, $52, $61, $CA, $2C, $20, $E1, $48
-.db $41, $44, $20, $42, $45, $53, $54, $46
-.db $4F, $52, $47, $45, $54, $20, $49, $54
-.db $2E, $20, $4C, $45, $41, $56, $45, $21
-.db $65, $E1, $F9, $4D, $45, $20, $54, $4F
-.db $60, $42, $55, $49, $4C, $44, $20, $41
-.db $20, $E8, $61, $46, $4F, $52, $20, $E1
-.db $3F, $20, $F8, $41, $60, $43, $48, $41
-.db $4E, $43, $45, $21, $20, $49, $20, $43
-.db $41, $4E, $40, $54, $61, $41, $43, $43
-.db $45, $50, $54, $20, $53, $55, $43, $48
-.db $60, $52, $45, $53, $50, $4F, $4E, $53
-.db $49, $42, $49, $4C, $49, $54, $59, $2E
-.db $65, $E1, $EC, $43, $45, $52, $54, $41
-.db $49, $4E, $4C, $59, $60, $50, $45, $52
-.db $53, $49, $53, $49, $54, $45, $4E, $54
-.db $2E, $20, $57, $45, $4C, $4C, $2C, $61
-.db $49, $46, $20, $CB, $20, $44, $4F, $20
-.db $41, $53, $60, $49, $20, $53, $41, $59
-.db $2C, $20, $CC, $20, $CA, $61, $59, $4F
-.db $55, $2E, $20, $49, $53, $20, $49, $54
-.db $20, $41, $20, $44, $45, $41, $4C, $3F
-.db $62, $4F, $2E, $4B, $2E, $20, $CC, $20
-.db $47, $4F, $20, $54, $4F, $60, $95, $20
-.db $9E, $61, $4E, $45, $41, $52, $42, $59
-.db $20, $54, $4F, $20, $4D, $41, $4B, $45
-.db $60, $50, $52, $45, $50, $41, $52, $41
-.db $54, $49, $4F, $4E, $53, $2E, $20, $43
-.db $4F, $4D, $45, $61, $54, $48, $45, $4E
-.db $2E, $20, $44, $4F, $20, $F8, $57, $41
-.db $53, $54, $45, $57, $4F, $52, $52, $59
-.db $20, $4F, $4E, $20, $4D, $45, $2E, $65
-.db $C5, $20, $E2, $60, $A0, $3F, $62, $E1
-.db $EC, $41, $20, $46, $4F, $4F, $4C, $21
-.db $60, $CB, $20, $44, $49, $45, $21, $65
-.db $53, $50, $49, $44, $45, $52, $20, $4D
-.db $4F, $4E, $53, $54, $45, $52, $53, $60
-.db $EC, $41, $43, $54, $55, $41, $4C, $4C
-.db $59, $61, $56, $45, $52, $59, $20, $49
-.db $4E, $54, $45, $4C, $4C, $49, $47, $45
-.db $4E, $54, $2E, $65, $C3, $20, $DE, $60
-.db $52, $4F, $42, $4F, $54, $20, $8A, $3F
-.db $62, $4F, $4E, $20, $DE, $46, $41, $52
-.db $20, $53, $49, $44, $45, $20, $4F, $46
-.db $DE, $E5, $53, $20, $4C, $49, $45, $53
-.db $61, $41, $20, $50, $4F, $4F, $4C, $20
-.db $4F, $46, $20, $4D, $4F, $4C, $54, $45
-.db $4E, $60, $4C, $41, $56, $41, $20, $43
-.db $52, $45, $41, $54, $45, $44, $20, $42
-.db $59, $20, $41, $61, $56, $4F, $4C, $43
-.db $41, $4E, $49, $43, $20, $45, $52, $55
-.db $50, $54, $49, $4F, $4E, $2E, $65, $DE
-.db $9D, $20, $44, $45, $45, $50, $20, $49
-.db $4E, $60, $DE, $95, $61, $E5, $53, $20
-.db $49, $53, $20, $4B, $4E, $4F, $57, $4E
-.db $41, $53, $20, $EA, $40, $53, $20, $9D
-.db $2E, $65, $49, $20, $48, $41, $56, $45
-.db $4E, $40, $54, $20, $53, $45, $45, $4E
-.db $60, $F6, $FD, $20, $46, $4F, $52, $20
-.db $41, $20, $4C, $4F, $4E, $47, $61, $9F
+.db $B4
 
-; Data from 92F9 to 9320 (40 bytes)
-.db ". ", $CD, "`TALK WITH ME?bPOLYMETERAL ", $C7, "`DISSOLVE"
-.db	$20, $41, $4C, $4C, $61, $4D, $41, $54, $45, $52, $49, $41, $4C, $53, $20, $45
-.db	$58, $43, $45, $50, $54, $60, $46, $4F, $52, $20, $BC, $2E, $65, $57, $48, $41
-.db	$54, $3F, $20, $44, $52, $2E, $AD, $60, $48, $41, $53, $20, $52, $45, $54, $55
-.db	$52, $4E, $45, $44, $3F, $61, $48, $45, $20, $C7
+.db "I", Dialogue_Apostrophe, "M SUELO. I ", $BE, Dialogue_NewLine
+.db "HOW ", $CE, " FEEL,", Dialogue_NewPage
+.db "DEAR,NO ", $FD, " CAN", Dialogue_NewLine
+.db "STOP ", $E1, $FE, Dialogue_NewPage
+.db "DOING WHAT ", $E1, Dialogue_NewLine
+.db $BE, " ", $CE, " DO.", Dialogue_NewPage
+.db "BUT IF ", $E1, "SHOULD", Dialogue_NewLine
+.db "EVER BE WOUNDED", Dialogue_NewPage
+.db "IN BATTLE,COME", Dialogue_NewLine
+.db $D2, " TO ", $BF, ".", Dialogue_Terminator65
 
-; Data from 935B to 9363 (9 bytes)
-.db " BUILD`AN"
-.db	$4F
+.db $C9, $BF, Dialogue_NewLine
+.db $A9, ".", Dialogue_NewPage
+.db $E1, $EC, $E0, Dialogue_NewLine
+.db $D2, " AT ", $F6, $9F, ".", Dialogue_Terminator65
 
-; Data from 9365 to 9375 (17 bytes)
-.db "THER ", $E8, "?aI ", $C7, " BE ", $D1, "`"
-.db	$52
+.db "I", Dialogue_Apostrophe, "M NEKISE. ", $FD, Dialogue_NewLine
+.db "HEARS LOTS OF", Dialogue_NewPage
+.db "STORIES, ", $E1, $BE, ",BUT ", $D5, " SAY ", $DC, Dialogue_NewPage
+.db "A FIGHTER ", $E7, Dialogue_NewLine
+.db "ODIN LIVES IN A", Dialogue_NewPage
+.db $B9, " CALLED ", $96, ".", Dialogue_NewLine
+.db "ALSO, I ", $E3, "A", Dialogue_NewPage
+.db $A6, " GIVEN", Dialogue_NewLine
+.db "BY ", $B2, ". ", $DC, Dialogue_NewPage
+.db "WOULD BE HELPFUL", Dialogue_NewLine
+.db "TO ", $E1, "IN ", $E2, Dialogue_NewPage
+.db "TASK.", Dialogue_Terminator65
 
-; Data from 9377 to 9388 (18 bytes)
-.db "IGHT AWAY.eNO MAN "
-.db	$DC, $20, $47, $4F
+.db "I ", $97, " I COULD", Dialogue_NewLine
+.db $CA, " ", $E1, "MORE.", Dialogue_NewPage
+.db "I PRAY FOR ", $E2, Dialogue_NewLine
+.db "SAFETY.", Dialogue_Terminator65
 
-; Data from 938D to 939F (19 bytes)
-.db "ES`INTO ", $DE, "ROOM INa", $DE, "F"
-.db	$41
+.db $DE, "CAMINEET", Dialogue_NewLine
+.db $D6, Dialogue_NewPage
+.db "IS UNDER", Dialogue_NewLine
+.db "MARTIAL LAW.", Dialogue_Terminator65
 
-; Data from 93A1 to 94E5 (325 bytes)
-.db "R CORNER HASEVER COME OUTaALIVE! AHA-HA-HA!eIT SEEMS TO BE "
-.db	"A`MAN WHO HAS BEENa"
-.db $91, "!`I WONDER IF HE CANaBE RETURNED TO HISORIGINAL FORM?e"
-.db	$CB, " SOON FIND`"
-.db "OUT ", $DE, "TRUTH!eHALT! GO BACK!`", $E2, "LAST CHANCE!e"
-.db	"HOW BRAVE! BUT BE`", $ED, ""
-.db " OF TRAPS!e", $A8, " IS MY`TURF. DON@T YAaMESS @ROUND "
-.db	$D2, ",`NOW GIT!e", $CE, ""
-.db " FIND A`ROBOT ", $E7, "a", $8A, ". HE CAN FLYA ", $E8
-.db	".eIN ", $E4, "PILE OF`J"
-.db "UNK, ", $D5, $D0, ",a", $DA, " S@P"
-.db	$50
+.db $E1, "NEED A", Dialogue_NewLine
+.db $D8, " KEY TO", Dialogue_NewPage
+.db "OPEN LOCKED DOORS.", Dialogue_Terminator65
 
-; Data from 94E7 to 94FF (25 bytes)
-.db "OSED`T@BE A USABLEaROBOT,"
-.db	$42, $55, $54, $20, $E1, $BE, $60, $48, $4F, $57, $20, $52, $55, $4D, $4F, $52
-.db	$53, $20, $42, $45, $2E, $65, $50, $4F, $4C, $59, $4D, $45, $54, $45, $52, $41
-.db	$4C, $20, $49, $53, $20, $46, $4F, $52, $60, $53, $41, $4C, $45, $20, $49, $4E
-.db	$20, $41, $42, $49, $4F, $4E, $2E, $65, $E4, $B9, $20, $49, $53, $60, $43, $41
-.db	$4C, $4C, $45, $44, $20, $4C, $4F, $41, $52, $2E, $61, $57, $45, $20, $E3, $42
-.db	$45, $45, $4E, $20, $49, $4E, $60, $44, $45, $43, $4C, $49, $4E, $45, $20, $B3
-.db	$20, $54, $4F, $61, $DE, $57, $4F, $52, $4B, $20, $4F, $46, $60, $D4, $2E, $65
-.db	$E3, $E1, $48, $45, $41, $52, $44, $20, $4F
+.db "IN ", $D5, " ", $D8, "S", Dialogue_NewLine
+.db $CB, " ", $F8, "GET", Dialogue_NewPage
+.db "FAR WITHOUT ", $D5, Dialogue_NewLine
+.db "SORT OF LIGHT.", Dialogue_Terminator65
 
-; Data from 9579 to 9591 (25 bytes)
-.db "F`A GEM CALLED ", $22, $DE, "aAMBER E"
-.db	$59
+.db $DA, " A", Dialogue_NewLine
+.db $98, " TO ", $DE, Dialogue_NewPage
+.db "WEST OF CAMINEET.", Dialogue_Terminator65
 
-; Data from 9593 to 959D (11 bytes)
-.db "E", $22, "?`", $D5, " SAY ", $DE
-.db	$43
+.db "IF ", $E1, $F9, "TO", Dialogue_NewLine
+.db "MAKE A DEAL, ", $E1, Dialogue_NewPage
+.db "SHOULD HEAD FOR", Dialogue_NewLine
+.db $DE, "PORT ", $B9, ".", Dialogue_Terminator65
 
-; Data from 959F to 95B5 (23 bytes)
-.db "ASBAaDRAGON HAS ", $FD, ".e", $DA, " A "
-.db	$9E
+.db $E1, "HAD BETTER", Dialogue_NewLine
+.db $F8, "LEAVE ", $DE, Dialogue_NewPage
+.db $D6, ".", Dialogue_Terminator65
 
-; Data from 95B7 to 95B9 (3 bytes)
-.db "CAL"
-.db	$4C
+.db "UNLESS ", $E1, "HOPE TODIE, ", $E1, "HAD BEST", Dialogue_NewPage
+.db "STAY ", $D2, ".", Dialogue_Terminator65
 
-; Data from 95BB to 95C7 (13 bytes)
-.db "ED ABION ONa", $DE
-.db	$57
+.db $E1, "MAY ", $F8, $A2, ".", Dialogue_Terminator65
 
-; Data from 95C9 to BFFF (10807 bytes)
-.db $45, $53, $54, $45, $52, $4E, $20, $45
-.db $44, $47, $45, $60, $4F, $4E, $20, $E4
-.db $49, $53, $4C, $41, $4E, $44, $2E, $65
-.db $C3, $20, $41, $42, $4F, $55, $54, $60
-.db $D7, $20, $54, $52, $45, $45, $53, $3F
-.db $62, $54, $48, $45, $59, $20, $47, $52
-.db $4F, $57, $20, $4F, $4E, $20, $DE, $60
-.db $41, $4C, $54, $49, $50, $4C, $41, $4E
-.db $4F, $20, $50, $4C, $41, $54, $45, $41
-.db $55, $61, $4F, $4E, $20, $DE, $9A, $60
-.db $93, $2E, $65, $E1, $EC, $47, $4F, $49
-.db $4E, $47, $20, $54, $4F, $60, $54, $52
-.db $59, $20, $54, $4F, $20, $4B, $49, $4C
-.db $4C, $20, $D4, $61, $49, $20, $48, $45
-.db $41, $52, $2E, $20, $DC, $40, $53, $60
-.db $47, $52, $45, $41, $54, $21, $61, $49
-.db $20, $E3, $48, $45, $41, $52, $44, $20
-.db $DC, $60, $41, $20, $43, $45, $52, $54
-.db $41, $49, $4E, $61, $43, $52, $59, $53
-.db $54, $41, $4C, $20, $C7, $20, $42, $4C
-.db $4F, $43, $4B, $60, $45, $56, $49, $4C
-.db $20, $EF, $2E, $65, $E0, $54, $4F, $20
-.db $41, $42, $49, $4F, $4E, $2E, $65, $CA
-.db $21, $20, $D4, $20, $48, $41, $53, $60
-.db $43, $4F, $4D, $45, $20, $54, $4F, $20
-.db $E4, $B9, $21, $65, $41, $20, $AC, $20
-.db $4D, $41, $4E, $20, $43, $41, $4D, $45
-.db $54, $4F, $20, $E4, $B9, $2E, $20, $48
-.db $45, $61, $53, $45, $45, $4D, $53, $20
-.db $54, $4F, $20, $42, $45, $60, $50, $45
-.db $52, $46, $4F, $52, $4D, $49, $4E, $47
-.db $20, $41, $4E, $49, $4D, $41, $4C, $61
-.db $45, $58, $50, $45, $52, $49, $4D, $45
-.db $4E, $54, $53, $2E, $20, $48, $45, $60
-.db $42, $52, $4F, $55, $47, $48, $54, $20
-.db $41, $20, $4C, $41, $52, $47, $45, $61
-.db $50, $4F, $54, $20, $4F, $52, $20, $D5
-.db $F7, $2E, $65, $49, $54, $40, $53, $20
-.db $41, $20, $52, $4F, $42, $4F, $54, $20
-.db $4D, $41, $44, $45, $60, $4F, $46, $20
-.db $BC, $2E, $20, $42, $55, $54, $61, $49
-.db $54, $20, $48, $41, $53, $20, $42, $45
-.db $45, $4E, $60, $41, $42, $41, $4E, $44
-.db $FD, $44, $61, $D5, $D0, $20, $41, $53
-.db $60, $42, $45, $49, $4E, $47, $20, $55
-.db $53, $45, $4C, $45, $53, $53, $2E, $65
-.db $49, $40, $44, $20, $4C, $49, $4B, $45
-.db $20, $54, $4F, $20, $54, $52, $41, $56
-.db $45, $4C, $49, $4E, $20, $4F, $55, $54
-.db $45, $52, $20, $53, $50, $41, $43, $45
-.db $2E, $65, $D5, $20, $43, $41, $54, $53
-.db $2C, $20, $49, $46, $20, $54, $48, $45
-.db $59, $45, $41, $54, $20, $41, $20, $43
-.db $45, $52, $54, $41, $49, $4E, $20, $54
-.db $59, $50, $45, $61, $4F, $46, $20, $4E
-.db $55, $54, $2C, $54, $48, $45, $59, $20
-.db $42, $45, $43, $4F, $4D, $45, $48, $55
-.db $47, $45, $20, $41, $4E, $44, $20, $43
-.db $41, $4E, $20, $46, $4C, $59, $2E, $61
-.db $49, $54, $40, $53, $20, $52, $45, $41
-.db $4C, $4C, $59, $20, $56, $45, $52, $59
-.db $60, $57, $49, $45, $52, $44, $2E, $65
-.db $49, $40, $4D, $20, $8A, $2E, $60, $B3
-.db $20, $46, $4F, $52, $20, $46, $49, $4E
-.db $44, $49, $4E, $47, $61, $4D, $45, $2E
-.db $20, $49, $20, $43, $41, $4E, $20, $46
-.db $4C, $59, $20, $DE, $60, $AD, $20, $46
-.db $4F, $52, $20, $59, $4F, $55, $2E, $65
-.db $E4, $B9, $20, $49, $53, $60, $43, $41
-.db $4C, $4C, $45, $44, $20, $55, $5A, $4F
-.db $2E, $65, $49, $46, $20, $E1, $55, $53
-.db $45, $20, $41, $60, $56, $45, $48, $49
-.db $43, $4C, $45, $20, $43, $41, $4C, $4C
-.db $45, $44, $20, $54, $48, $45, $61, $4C
-.db $41, $4E, $44, $20, $52, $4F, $56, $45
-.db $52, $2C, $20, $DE, $60, $A3, $20, $C7
-.db $20, $4E, $4F, $54, $61, $42, $45, $20
-.db $41, $42, $4C, $45, $20, $54, $4F, $20
-.db $48, $41, $52, $4D, $60, $59, $4F, $55
-.db $2E, $65, $DA, $20, $41, $20, $B9, $60
-.db $43, $41, $4C, $4C, $45, $44, $20, $43
-.db $41, $53, $42, $41, $20, $54, $4F, $61
-.db $DE, $53, $4F, $55, $54, $48, $20, $4F
-.db $46, $20, $D2, $2E, $65, $DB, $20, $44
-.db $52, $41, $47, $4F, $4E, $53, $60, $4C
-.db $49, $56, $49, $4E, $47, $20, $49, $4E
-.db $20, $DE, $61, $43, $41, $53, $42, $41
-.db $20, $43, $41, $56, $45, $2E, $20, $54
-.db $48, $45, $53, $45, $60, $44, $52, $41
-.db $47, $4F, $4E, $53, $20, $E3, $47, $45
-.db $4D, $53, $61, $49, $4E, $20, $54, $48
-.db $45, $49, $52, $20, $48, $45, $41, $44
-.db $53, $21, $65, $E3, $E1, $48, $45, $41
-.db $52, $44, $60, $41, $42, $4F, $55, $54
-.db $20, $4D, $41, $4E, $54, $4C, $45, $53
-.db $20, $4D, $41, $44, $45, $61, $4F, $46
-.db $20, $46, $52, $41, $44, $20, $46, $49
-.db $42, $45, $52, $53, $3F, $60, $54, $48
-.db $45, $59, $20, $EC, $4C, $49, $47, $48
-.db $54, $2C, $61, $42, $55, $54, $20, $50
-.db $52, $4F, $56, $49, $44, $45, $20, $E6
-.db $60, $50, $52, $4F, $54, $45, $43, $54
-.db $49, $4F, $4E, $2E, $65, $E3, $E1, $48
-.db $45, $41, $52, $44, $60, $41, $42, $4F
-.db $55, $54, $20, $DE, $61, $A4, $3F, $62
-.db $4F, $48, $2C, $20, $4E, $45, $56, $45
-.db $52, $20, $4D, $49, $4E, $44, $2E, $65
-.db $49, $54, $40, $53, $20, $41, $20, $A5
-.db $2C, $20, $42, $55, $54, $49, $20, $42
-.db $55, $52, $49, $45, $44, $20, $FD, $20
-.db $41, $54, $61, $DE, $4F, $55, $54, $53
-.db $4B, $49, $52, $54, $53, $20, $4F, $46
-.db $60, $DE, $B9, $20, $4F, $46, $20, $95
-.db $61, $4F, $4E, $20, $CF, $2E, $20, $44
-.db $4F, $4E, $40, $54, $60, $54, $45, $4C
-.db $4C, $20, $F6, $FD, $2E, $65, $49, $20
-.db $44, $4F, $4E, $40, $54, $20, $BE, $20
-.db $57, $48, $4F, $60, $54, $4F, $4C, $44
-.db $20, $E1, $DC, $2E, $61, $E1, $48, $41
-.db $44, $20, $42, $45, $53, $54, $60, $46
-.db $4F, $52, $47, $45, $54, $20, $49, $54
-.db $2E, $65, $49, $20, $54, $45, $4C, $4C
-.db $20, $E1, $4E, $4F, $20, $FD, $60, $43
-.db $41, $4E, $20, $44, $4F, $2E, $47, $4F
-.db $20, $4F, $4E, $20, $42, $41, $43, $4B
-.db $61, $54, $4F, $20, $57, $48, $45, $52
-.db $45, $56, $45, $52, $20, $E1, $60, $43
-.db $41, $4D, $45, $20, $46, $52, $4F, $4D
-.db $2E, $65, $41, $4C, $4C, $20, $52, $49
-.db $47, $48, $54, $2C, $20, $41, $4C, $4C
-.db $60, $52, $49, $47, $48, $54, $2E, $20
-.db $49, $20, $47, $49, $56, $45, $20, $55
-.db $50, $2E, $61, $42, $55, $54, $20, $44
-.db $4F, $4E, $40, $54, $20, $54, $45, $4C
-.db $4C, $60, $F6, $FD, $20, $D0, $20, $E1
-.db $61, $47, $4F, $54, $20, $54, $48, $49
-.db $53, $2C, $20, $4F, $2E, $4B, $2E, $3F
-.db $65, $49, $40, $4D, $20, $DE, $E6, $60
-.db $44, $41, $4D, $4F, $52, $2C, $20, $BB
-.db $21, $61, $C6, $20, $42, $45, $4C, $49
-.db $45, $56, $45, $20, $49, $4E, $60, $4D
-.db $59, $20, $50, $52, $4F, $50, $48, $45
-.db $43, $49, $45, $53, $3F, $62, $49, $40
-.db $56, $45, $20, $47, $4F, $54, $20, $41
-.db $20, $46, $52, $49, $45, $4E, $44, $60
-.db $49, $4E, $20, $A8, $2E, $20, $48, $45
-.db $40, $53, $61, $50, $52, $4F, $42, $41
-.db $42, $4C, $59, $20, $48, $41, $56, $49
-.db $4E, $47, $20, $41, $60, $48, $41, $52
-.db $44, $20, $9F, $20, $42, $45, $43, $41
-.db $55, $53, $45, $61, $4F, $46, $20, $DE
-.db $4C, $41, $56, $41, $2E, $20, $57, $48
-.db $59, $60, $F8, $56, $49, $53, $49, $54
-.db $20, $48, $49, $4D, $3F, $65, $47, $4F
-.db $4F, $44, $21, $65, $59, $4F, $55, $40
-.db $52, $45, $20, $53, $45, $41, $52, $43
-.db $48, $49, $4E, $47, $60, $46, $4F, $52
-.db $20, $D5, $F7, $3F, $62, $4C, $45, $41
-.db $56, $45, $20, $4D, $59, $20, $53, $49
-.db $47, $48, $54, $2C, $60, $55, $4E, $42
-.db $45, $4C, $49, $45, $56, $45, $52, $21
-.db $65, $E1, $EC, $53, $45, $41, $52, $43
-.db $48, $49, $4E, $47, $60, $46, $4F, $52
-.db $20, $41, $4C, $45, $58, $20, $4F, $53
-.db $53, $41, $4C, $45, $3F, $62, $45, $56
-.db $45, $52, $59, $F7, $20, $49, $40, $56
-.db $45, $60, $53, $41, $49, $44, $20, $49
-.db $53, $20, $43, $4F, $52, $52, $45, $43
-.db $54, $3F, $62, $54, $48, $45, $4E, $2C
-.db $20, $43, $4F, $4D, $45, $20, $41, $47
-.db $41, $49, $4E, $2C, $60, $F6, $9F, $2E
-.db $65, $C6, $20, $43, $4F, $4E, $54, $52
-.db $41, $44, $49, $43, $54, $60, $DE, $E6
-.db $44, $41, $4D, $4F, $52, $3F, $21, $3F
-.db $62, $4F, $46, $20, $43, $4F, $55, $52
-.db $53, $45, $20, $4E, $4F, $54, $21, $59
-.db $4F, $55, $60, $EC, $41, $20, $50, $52
-.db $4F, $4D, $49, $53, $49, $4E, $47, $61
-.db $59, $4F, $55, $4E, $47, $20, $4C, $41
-.db $53, $53, $21, $20, $CC, $47, $49, $56
-.db $45, $20, $E1, $41, $20, $EF, $61, $43
-.db $52, $59, $53, $54, $41, $4C, $20, $46
-.db $4F, $52, $20, $41, $60, $52, $45, $57
-.db $41, $52, $44, $2E, $65, $C6, $20, $43
-.db $4F, $4D, $45, $20, $49, $4E, $60, $46
-.db $55, $4C, $4C, $20, $4B, $4E, $4F, $57
-.db $4C, $45, $44, $47, $45, $20, $4F, $46
-.db $61, $DE, $9D, $20, $4F, $46, $20, $C0
-.db $60, $C1, $3F, $62, $CB, $20, $53, $55
-.db $52, $45, $4C, $59, $60, $49, $4E, $43
-.db $55, $52, $20, $DE, $57, $52, $41, $54
-.db $48, $61, $4F, $46, $20, $DE, $48, $45
-.db $41, $56, $45, $4E, $53, $21, $65, $47
-.db $4F, $20, $42, $41, $43, $4B, $20, $42
-.db $45, $46, $4F, $52, $45, $20, $49, $54
-.db $60, $49, $53, $20, $54, $4F, $4F, $20
-.db $4C, $41, $54, $45, $2E, $65, $E4, $B9
-.db $20, $49, $53, $60, $43, $41, $4C, $4C
-.db $45, $44, $20, $43, $41, $53, $42, $41
-.db $2E, $65, $46, $49, $45, $52, $43, $45
-.db $20, $44, $52, $41, $47, $4F, $4E, $53
-.db $60, $4C, $49, $56, $45, $20, $49, $4E
-.db $20, $DE, $43, $41, $56, $45, $61, $4E
-.db $45, $41, $52, $20, $D2, $2C, $41, $4E
-.db $44, $20, $49, $40, $4D, $60, $53, $43
-.db $41, $52, $45, $44, $20, $4F, $46, $20
-.db $54, $48, $45, $4D, $2E, $65, $44, $4F
-.db $4E, $40, $54, $20, $42, $45, $4C, $49
-.db $45, $56, $45, $20, $59, $4F, $55, $52
-.db $60, $4F, $57, $4E, $20, $45, $59, $45
-.db $53, $20, $49, $4E, $20, $DE, $61, $44
-.db $45, $50, $54, $48, $20, $4F, $46, $20
-.db $DE, $60, $D8, $53, $2E, $65, $DB, $20
-.db $4C, $45, $47, $45, $4E, $44, $53, $60
-.db $4F, $46, $20, $41, $20, $4D, $59, $53
-.db $54, $49, $43, $20, $B6, $61, $49, $4E
-.db $20, $41, $20, $9E, $60, $53, $55, $52
-.db $52, $4F, $55, $4E, $44, $45, $44, $20
-.db $49, $4E, $20, $4D, $49, $53, $54, $61
-.db $49, $54, $20, $49, $53, $20, $DE, $B6
-.db $60, $50, $45, $52, $53, $45, $55, $53
-.db $20, $55, $53, $45, $44, $20, $49, $4E
-.db $61, $44, $41, $59, $53, $20, $54, $4F
-.db $20, $43, $4F, $4E, $51, $55, $45, $52
-.db $60, $84, $42, $45, $41, $53, $54, $53
-.db $2E, $65, $DA, $20, $50, $4F, $49, $53
-.db $4F, $4E, $60, $47, $41, $53, $20, $41
-.db $42, $4F, $56, $45, $20, $DE, $53, $45
-.db $41, $61, $54, $4F, $20, $DE, $57, $45
-.db $53, $54, $2E, $20, $4E, $4F, $60, $FD
-.db $20, $43, $41, $4E, $20, $47, $4F, $20
-.db $4E, $45, $41, $52, $61, $D1, $20, $57
-.db $49, $54, $48, $4F, $55, $54, $20, $D5
-.db $50, $52, $4F, $54, $45, $43, $54, $49
-.db $4F, $4E, $2E, $65, $E3, $E1, $48, $45
-.db $41, $52, $44, $20, $4F, $46, $60, $56
-.db $45, $48, $49, $43, $4C, $45, $20, $43
-.db $41, $4C, $4C, $45, $44, $61, $DE, $48
-.db $4F, $56, $45, $52, $43, $52, $41, $46
-.db $54, $3F, $62, $49, $20, $42, $4F, $55
-.db $47, $48, $54, $20, $49, $54, $20, $49
-.db $4E, $60, $96, $20, $4F, $4E, $20, $CF
-.db $61, $42, $55, $54, $20, $49, $54, $20
-.db $53, $45, $45, $4D, $45, $44, $60, $42
-.db $52, $4F, $4B, $45, $4E, $20, $53, $4F
-.db $20, $49, $61, $41, $42, $41, $4E, $44
-.db $FD, $44, $20, $49, $54, $20, $49, $4E
-.db $60, $A8, $2E, $20, $49, $54, $61, $50
-.db $52, $4F, $42, $41, $42, $4C, $59, $20
-.db $43, $41, $4E, $20, $53, $54, $49, $4C
-.db $4C, $42, $45, $20, $55, $53, $45, $44
-.db $2C, $20, $54, $48, $4F, $55, $47, $48
-.db $2E, $65, $E1, $46, $4F, $55, $4E, $44
-.db $20, $DE, $60, $48, $4F, $56, $45, $52
-.db $43, $52, $41, $46, $54, $2E, $8A, $61
-.db $48, $41, $53, $20, $52, $45, $53, $54
-.db $4F, $52, $45, $44, $20, $49, $54, $20
-.db $54, $4F, $60, $57, $4F, $52, $4B, $49
-.db $4E, $47, $20, $4F, $52, $44, $45, $52
-.db $2E, $65, $49, $54, $40, $53, $20, $41
-.db $20, $47, $4F, $4F, $44, $20, $F7, $60
-.db $54, $4F, $20, $48, $41, $56, $45, $2E
-.db $20, $49, $54, $20, $F3, $53, $61, $41
-.db $43, $52, $4F, $53, $53, $20, $57, $41
-.db $54, $45, $52, $2E, $65, $E0, $54, $4F
-.db $20, $44, $52, $41, $53, $47, $4F, $57
-.db $2D, $2D, $20, $41, $20, $53, $4D, $41
-.db $4C, $4C, $20, $B9, $61, $4F, $4E, $20
-.db $DE, $4F, $43, $45, $41, $4E, $2E, $65
-.db $E1, $EC, $44, $41, $52, $49, $4E, $47
-.db $20, $54, $4F, $60, $E3, $46, $4F, $55
-.db $4E, $44, $20, $E2, $61, $57, $41, $59
-.db $20, $D2, $20, $45, $56, $45, $4E, $60
-.db $54, $48, $4F, $55, $47, $48, $20, $DE
-.db $53, $45, $41, $61, $4C, $41, $4E, $45
-.db $53, $20, $EC, $43, $4C, $4F, $53, $45
-.db $44, $60, $54, $4F, $20, $53, $48, $49
-.db $50, $53, $2E, $65, $DA, $20, $41, $20
-.db $EF, $60, $53, $57, $4F, $52, $44, $20
-.db $49, $4E, $20, $41, $20, $9D, $61, $4F
-.db $4E, $20, $41, $20, $46, $4F, $52, $47
-.db $4F, $54, $54, $45, $4E, $60, $49, $53
-.db $4C, $41, $4E, $44, $2E, $65, $4C, $4F
-.db $4E, $47, $20, $41, $47, $4F, $2C, $20
-.db $49, $20, $53, $41, $57, $20, $41, $60
-.db $47, $49, $41, $4E, $54, $20, $52, $4F
-.db $43, $4B, $20, $46, $4C, $4F, $41, $54
-.db $61, $DD, $20, $DE, $53, $4B, $59, $2E
-.db $65, $DE, $54, $4F, $50, $20, $4F, $46
-.db $20, $DE, $60, $AB, $20, $43, $41, $4C
-.db $4C, $45, $44, $20, $C0, $61, $C1, $20
-.db $49, $53, $20, $41, $4C, $57, $41, $59
-.db $53, $60, $48, $49, $44, $44, $45, $4E
-.db $20, $42, $59, $20, $43, $4C, $4F, $55
-.db $44, $53, $2E, $61, $D5, $F7, $20, $C8
-.db $20, $42, $45, $60, $55, $50, $20, $D1
-.db $21, $65, $49, $20, $48, $45, $41, $52
-.db $44, $20, $DC, $20, $54, $48, $45, $59
-.db $60, $53, $45, $4C, $4C, $20, $47, $41
-.db $53, $20, $B6, $61, $D2, $2C, $20, $42
-.db $55, $54, $20, $49, $20, $44, $4F, $4E
-.db $40, $54, $60, $BE, $20, $D0, $20, $DE
-.db $61, $53, $48, $4F, $50, $20, $49, $53
-.db $21, $60, $57, $48, $41, $54, $20, $41
-.db $20, $4D, $45, $53, $53, $21, $65, $E0
-.db $54, $4F, $20, $4F, $55, $52, $60, $53
-.db $54, $4F, $52, $45, $2E, $20, $57, $48
-.db $41, $54, $20, $43, $41, $4E, $20, $49
-.db $61, $CA, $20, $E1, $57, $49, $54, $48
-.db $3F, $61, $41, $48, $48, $2C, $20, $49
-.db $20, $57, $41, $53, $20, $50, $55, $4C
-.db $4C, $49, $4E, $47, $E2, $4C, $45, $47
-.db $21, $20, $57, $48, $41, $54, $40, $53
-.db $61, $41, $20, $4D, $41, $54, $54, $45
-.db $52, $2C, $20, $43, $41, $4E, $40, $54
-.db $60, $E1, $54, $41, $4B, $45, $20, $41
-.db $20, $4A, $4F, $4B, $45, $3F, $65, $49
-.db $20, $42, $45, $54, $20, $E1, $EC, $60
-.db $53, $55, $52, $50, $52, $49, $53, $45
-.db $44, $20, $54, $4F, $20, $53, $45, $45
-.db $20, $41, $61, $53, $48, $4F, $50, $20
-.db $49, $4E, $20, $41, $20, $50, $4C, $41
-.db $43, $45, $60, $4C, $49, $4B, $45, $20
-.db $54, $48, $49, $53, $21, $61, $41, $20
-.db $47, $41, $53, $20, $B6, $20, $49, $53
-.db $60, $4F, $4E, $4C, $59, $20, $31, $30
-.db $30, $30, $20, $A1, $21, $61, $50, $52
-.db $45, $54, $54, $59, $20, $43, $48, $45
-.db $41, $50, $2C, $20, $48, $55, $48, $3F
-.db $CD, $20, $42, $55, $59, $20, $FD, $3F
-.db $62, $B3, $21, $20, $53, $45, $45, $20
-.db $E1, $60, $41, $47, $41, $49, $4E, $2E
-.db $65, $E1, $44, $4F, $4E, $40, $54, $20
-.db $E3, $60, $45, $4E, $4F, $55, $47, $48
-.db $20, $4D, $FD, $59, $21, $65, $53, $4F
-.db $52, $52, $59, $2C, $20, $DC, $20, $57
-.db $41, $53, $60, $E2, $4F, $4E, $4C, $59
-.db $20, $43, $48, $41, $4E, $43, $45, $2E
-.db $65, $DE, $98, $20, $49, $53, $60, $43
-.db $4C, $4F, $53, $45, $44, $2E, $65, $8B
-.db $43, $4F, $4E, $46, $49, $53, $43, $41
-.db $54, $2D, $60, $49, $4E, $47, $20, $E2
-.db $99, $2E, $65, $E0, $54, $4F, $20, $53
-.db $4B, $55, $52, $45, $60, $4F, $4E, $20
-.db $93, $2E, $61, $49, $54, $40, $53, $20
-.db $46, $52, $45, $45, $5A, $49, $4E, $47
-.db $60, $4F, $55, $54, $53, $49, $44, $45
-.db $2C, $20, $49, $53, $4E, $40, $54, $20
-.db $49, $54, $3F, $65, $4D, $4F, $53, $54
-.db $20, $45, $4D, $49, $47, $52, $41, $4E
-.db $54, $53, $60, $FE, $CF, $61, $53, $45
-.db $54, $54, $4C, $45, $20, $D2, $2E, $65
-.db $49, $20, $44, $4F, $4E, $40, $54, $20
-.db $BE, $20, $41, $20, $4C, $4F, $54, $41
-.db $42, $4F, $55, $54, $20, $E4, $9A, $2C
-.db $61, $42, $55, $54, $20, $57, $4F, $52
-.db $44, $20, $48, $41, $53, $20, $49, $54
-.db $60, $DC, $20, $DA, $20, $41, $61, $B9
-.db $20, $4F, $46, $20, $4E, $41, $54, $49
-.db $56, $45, $60, $F4, $53, $20, $49, $4E
-.db $20, $DE, $61, $46, $41, $52, $20, $52
-.db $45, $41, $43, $48, $45, $53, $20, $4F
-.db $46, $20, $54, $48, $45, $E5, $53, $2E
-.db $65, $49, $46, $20, $E1, $52, $45, $41
-.db $4C, $4C, $59, $20, $48, $4F, $50, $45
-.db $54, $4F, $20, $4B, $49, $4C, $4C, $20
-.db $D4, $2C, $61, $E1, $48, $41, $44, $20
-.db $42, $45, $53, $54, $20, $46, $49, $4E
-.db $44, $60, $41, $20, $53, $57, $4F, $52
-.db $44, $2C, $20, $41, $58, $45, $2C, $61
-.db $B6, $2C, $20, $41, $52, $4D, $4F, $52
-.db $60, $4D, $41, $44, $45, $20, $4F, $46
-.db $20, $BC, $2E, $61, $53, $55, $43, $48
-.db $20, $57, $45, $41, $50, $4F, $4E, $53
-.db $20, $EC, $60, $53, $54, $52, $4F, $4E
-.db $47, $45, $53, $54, $2E, $61, $49, $20
-.db $50, $52, $41, $59, $20, $46, $4F, $52
-.db $20, $E2, $60, $53, $41, $46, $45, $54
-.db $59, $2E, $65, $41, $52, $4D, $53, $20
-.db $4D, $41, $44, $45, $20, $4F, $46, $60
-.db $BC, $20, $43, $4F, $4E, $43, $45, $41
-.db $4C, $61, $48, $4F, $4C, $59, $20, $50
-.db $4F, $57, $45, $52, $2E, $20, $D4, $46
-.db $45, $41, $52, $53, $20, $E4, $50, $4F
-.db $57, $45, $52, $61, $41, $4E, $44, $20
-.db $48, $41, $53, $20, $42, $45, $45, $4E
-.db $60, $52, $55, $4E, $4E, $49, $4E, $47
-.db $20, $41, $4E, $44, $20, $48, $49, $44
-.db $49, $4E, $47, $61, $49, $4E, $20, $44
-.db $49, $46, $46, $45, $52, $45, $4E, $54
-.db $60, $50, $4C, $41, $43, $45, $53, $20
-.db $49, $4E, $20, $DE, $61, $B8, $20, $4F
-.db $46, $20, $DE, $60, $9B, $20, $9C, $2E
-.db $65, $93, $20, $49, $53, $20, $41, $60
-.db $B5, $20, $4F, $46, $20, $49, $43, $45
-.db $2E, $65, $DB, $20, $50, $4C, $41, $43
-.db $45, $53, $60, $49, $4E, $20, $DE, $E5
-.db $53, $61, $57, $48, $45, $52, $45, $20
-.db $54, $48, $45, $20, $49, $43, $45, $20
-.db $49, $53, $60, $53, $4F, $46, $54, $20
-.db $41, $4E, $44, $61, $49, $4D, $50, $41
-.db $53, $53, $41, $42, $4C, $45, $20, $54
-.db $4F, $60, $54, $48, $4F, $53, $45, $20
-.db $4F, $4E, $20, $46, $4F, $4F, $54, $2E
-.db $65, $DE, $41, $4C, $54, $49, $50, $4C
-.db $41, $4E, $4F, $60, $50, $4C, $41, $54
-.db $45, $41, $55, $20, $49, $53, $20, $41
-.db $54, $20, $DE, $61, $54, $4F, $50, $20
-.db $4F, $46, $20, $DE, $49, $43, $45, $60
-.db $E5, $2E, $65, $41, $4E, $20, $45, $43
-.db $4C, $49, $50, $53, $45, $20, $4F, $43
-.db $43, $55, $52, $53, $60, $4F, $4E, $20
-.db $E4, $9A, $61, $4F, $4E, $43, $45, $20
-.db $45, $56, $45, $52, $59, $20, $48, $55
-.db $4E, $44, $52, $45, $44, $59, $45, $41
-.db $52, $53, $2E, $20, $41, $20, $54, $4F
-.db $52, $43, $48, $61, $4C, $49, $54, $20
-.db $44, $55, $52, $49, $4E, $47, $20, $41
-.db $4E, $60, $45, $43, $4C, $49, $50, $53
-.db $45, $20, $49, $53, $20, $43, $41, $4C
-.db $4C, $45, $44, $61, $41, $4E, $20, $22
-.db $45, $43, $4C, $49, $50, $53, $45, $20
-.db $54, $4F, $52, $43, $48, $22, $41, $4E
-.db $44, $20, $49, $53, $20, $52, $45, $47
-.db $41, $52, $44, $45, $44, $61, $41, $53
-.db $20, $48, $4F, $4C, $59, $20, $42, $59
-.db $20, $DE, $60, $F4, $53, $2E, $65, $DE
-.db $44, $45, $41, $44, $20, $47, $55, $41
-.db $52, $4F, $4E, $60, $4D, $4F, $52, $47
-.db $55, $45, $20, $E3, $42, $45, $45, $4E
-.db $61, $43, $41, $4C, $4C, $45, $44, $20
-.db $42, $41, $43, $4B, $20, $54, $4F, $60
-.db $4C, $49, $46, $45, $21, $20, $57, $48
-.db $41, $54, $20, $46, $45, $41, $52, $21
-.db $65, $DE, $4E, $45, $49, $42, $4F, $52
-.db $49, $4E, $47, $60, $9E, $20, $EC, $41
-.db $4C, $4C, $61, $4C, $49, $41, $52, $53
-.db $21, $20, $44, $4F, $4E, $40, $54, $60
-.db $4C, $49, $53, $54, $45, $4E, $20, $54
-.db $4F, $20, $54, $48, $45, $4D, $21, $65
-.db $5A, $45, $20, $43, $4F, $52, $4F, $4E
-.db $41, $20, $9D, $60, $53, $54, $41, $4E
-.db $44, $53, $20, $4F, $4E, $20, $5A, $45
-.db $61, $46, $41, $52, $20, $53, $49, $44
-.db $45, $20, $4F, $46, $20, $5A, $45, $60
-.db $E5, $20, $54, $4F, $20, $5A, $45, $61
-.db $4E, $4F, $52, $54, $48, $20, $4F, $46
-.db $20, $5A, $49, $53, $60, $9E, $2E, $65
-.db $54, $4F, $20, $5A, $45, $20, $57, $45
-.db $53, $54, $20, $4F, $46, $20, $5A, $45
-.db $60, $43, $4F, $52, $4F, $4E, $41, $20
-.db $9D, $20, $49, $53, $61, $5A, $45, $20
-.db $93, $20, $43, $41, $56, $45, $2E, $60
-.db $4F, $55, $52, $20, $46, $52, $49, $45
-.db $4E, $44, $53, $20, $EC, $49, $4E, $61
-.db $5A, $45, $52, $45, $2E, $20, $47, $49
-.db $56, $45, $20, $5A, $45, $4D, $60, $4F
-.db $55, $52, $20, $42, $45, $53, $54, $2C
-.db $20, $4F, $2E, $4B, $2E, $3F, $65, $D7
-.db $20, $54, $52, $45, $45, $53, $20, $47
-.db $52, $4F, $57, $60, $5A, $45, $20, $D7
-.db $20, $42, $45, $52, $52, $49, $45, $53
-.db $2E, $61, $5A, $4F, $53, $45, $20, $42
-.db $45, $52, $52, $49, $45, $53, $20, $EC
-.db $60, $4F, $55, $52, $20, $4D, $4F, $53
-.db $54, $20, $49, $4D, $50, $4F, $52, $54
-.db $41, $4E, $54, $61, $46, $4F, $4F, $44
-.db $2C, $20, $42, $55, $54, $20, $49, $54
-.db $60, $53, $48, $52, $49, $56, $45, $4C
-.db $53, $20, $55, $50, $20, $41, $46, $54
-.db $45, $52, $61, $41, $20, $46, $45, $57
-.db $20, $4D, $4F, $4D, $45, $4E, $54, $53
-.db $2C, $60, $55, $4E, $4C, $45, $53, $53
-.db $20, $49, $54, $20, $49, $53, $20, $50
-.db $55, $54, $61, $49, $4E, $20, $A6, $2E
-.db $65, $C3, $20, $57, $48, $41, $54, $60
-.db $41, $4E, $20, $41, $45, $52, $4F, $50
-.db $52, $49, $53, $4D, $20, $49, $53, $3F
-.db $62, $49, $54, $20, $4C, $45, $54, $53
-.db $20, $E1, $53, $45, $45, $60, $41, $4E
-.db $4F, $54, $48, $45, $52, $20, $B5, $2E
-.db $65, $49, $40, $44, $20, $4C, $49, $4B
-.db $45, $20, $54, $4F, $20, $53, $45, $45
-.db $60, $FD, $20, $D5, $9F, $2E, $65, $57
-.db $45, $20, $4F, $46, $20, $5A, $49, $53
-.db $20, $B9, $60, $48, $41, $54, $45, $20
-.db $E9, $2E, $65, $DA, $20, $41, $20, $53
-.db $50, $52, $49, $4E, $47, $60, $4F, $46
-.db $20, $4C, $49, $46, $45, $20, $49, $4E
-.db $20, $DE, $61, $43, $4F, $52, $4F, $4E
-.db $41, $20, $9D, $2C, $60, $DA, $2C, $20
-.db $59, $45, $53, $2E, $65, $E1, $43, $41
-.db $4E, $20, $57, $41, $52, $50, $20, $FE
-.db $60, $DE, $31, $30, $54, $48, $20, $4C
-.db $45, $56, $45, $4C, $20, $4F, $46, $61
-.db $DE, $D8, $20, $55, $4E, $44, $45, $52
-.db $60, $93, $2C, $59, $45, $53, $2E, $65
-.db $D7, $20, $42, $45, $52, $52, $49, $45
-.db $53, $20, $41, $52, $45, $60, $42, $4C
-.db $55, $45, $20, $D7, $20, $4E, $55, $54
-.db $53, $60, $55, $53, $45, $44, $20, $49
-.db $4E, $20, $44, $59, $45, $53, $2C, $59
-.db $45, $53, $2C, $61, $54, $48, $45, $59
-.db $20, $EC, $2C, $20, $D3, $2E, $65, $49
-.db $46, $20, $E1, $55, $53, $45, $20, $41
-.db $60, $43, $52, $59, $53, $54, $41, $4C
-.db $20, $49, $4E, $20, $46, $52, $4F, $4E
-.db $54, $61, $4F, $46, $20, $41, $20, $D7
-.db $20, $54, $52, $45, $45, $2C, $60, $49
-.db $54, $20, $C7, $20, $42, $45, $43, $4F
-.db $4D, $45, $2C, $61, $59, $45, $53, $2C
-.db $20, $41, $20, $D7, $20, $4E, $55, $54
-.db $2C, $59, $45, $53, $2C, $20, $D3, $2E
-.db $65, $E4, $B9, $20, $57, $45, $4C, $43
-.db $4F, $4D, $45, $53, $41, $4C, $4C, $20
-.db $E9, $2C, $59, $45, $53, $2C, $61, $D3
-.db $2C, $20, $57, $45, $20, $44, $4F, $2E
-.db $65, $E4, $B9, $20, $49, $53, $60, $43
-.db $41, $4C, $4C, $45, $44, $20, $53, $4F
-.db $50, $49, $41, $2E, $61, $E1, $EC, $42
-.db $52, $41, $56, $45, $20, $54, $4F, $60
-.db $50, $45, $4E, $45, $54, $52, $41, $54
-.db $45, $20, $DE, $47, $41, $53, $2E, $65
-.db $49, $40, $4D, $20, $DE, $48, $45, $41
-.db $44, $20, $4F, $46, $60, $E4, $9E, $2E
-.db $61, $42, $45, $43, $41, $55, $53, $45
-.db $20, $4F, $46, $20, $DE, $60, $43, $4C
-.db $4F, $55, $44, $20, $4F, $46, $20, $47
-.db $41, $53, $2C, $61, $8B, $43, $55, $54
-.db $20, $4F, $46, $46, $60, $FE, $4F, $54
-.db $48, $45, $52, $20, $54, $4F, $57, $4E
-.db $53, $2C, $61, $8B, $54, $48, $45, $52
-.db $45, $46, $4F, $52, $45, $60, $56, $45
-.db $52, $59, $20, $50, $4F, $4F, $52, $2E
-.db $61, $CD, $20, $44, $4F, $4E, $41, $54
-.db $45, $60, $34, $30, $30, $20, $A1, $3F
-.db $62, $B7, $2E, $20, $57, $45, $20, $C8
-.db $20, $47, $4F, $60, $4F, $4E, $20, $53
-.db $55, $46, $46, $45, $52, $49, $4E, $47
-.db $2E, $2E, $2E, $65, $E1, $E3, $41, $20
-.db $4C, $49, $54, $54, $4C, $45, $60, $4D
-.db $FD, $59, $2C, $54, $4F, $4F, $2C, $20
-.db $B7, $2E, $65, $B3, $21, $20, $41, $43
-.db $43, $4F, $52, $44, $49, $4E, $47, $60
-.db $54, $4F, $20, $4F, $55, $52, $20, $4C
-.db $45, $47, $45, $4E, $44, $53, $2C, $61
-.db $DE, $56, $45, $52, $59, $20, $B6, $2C
-.db $60, $50, $45, $52, $53, $45, $55, $53
-.db $20, $55, $53, $45, $44, $20, $54, $4F
-.db $61, $4F, $56, $45, $52, $43, $4F, $4D
-.db $45, $20, $EA, $2C, $49, $53, $42, $55
-.db $52, $49, $45, $44, $20, $4F, $4E, $20
-.db $DE, $61, $53, $4D, $41, $4C, $4C, $20
-.db $49, $53, $4C, $41, $4E, $44, $20, $49
-.db $4E, $60, $DE, $4D, $49, $44, $44, $4C
-.db $45, $20, $4F, $46, $20, $41, $61, $4C
-.db $41, $4B, $45, $2E, $65, $48, $49, $21
-.db $20, $49, $40, $4D, $20, $4D, $49, $4B
-.db $49, $21, $60, $C6, $20, $4C, $49, $4B
-.db $45, $61, $53, $45, $47, $41, $20, $FA
-.db $53, $3F, $62, $4F, $46, $20, $43, $4F
-.db $55, $52, $53, $45, $21, $20, $53, $45
-.db $47, $41, $60, $FA, $53, $20, $EC, $42
-.db $45, $53, $54, $2E, $65, $49, $20, $43
-.db $41, $4E, $40, $54, $20, $42, $45, $4C
-.db $49, $45, $56, $45, $60, $49, $54, $2E
-.db $20, $49, $46, $20, $E1, $44, $4F, $4E
-.db $40, $54, $61, $4C, $49, $4B, $45, $20
-.db $DE, $FA, $2C, $2E, $2E, $2E, $2E, $60
-.db $57, $48, $59, $20, $E3, $E1, $61, $50
-.db $4C, $41, $59, $45, $44, $20, $53, $4F
-.db $20, $46, $41, $52, $21, $3F, $21, $65
-.db $42, $45, $46, $4F, $52, $45, $20, $D4
-.db $20, $43, $41, $4D, $45, $54, $4F, $20
-.db $50, $4F, $57, $45, $52, $2C, $20, $45
-.db $56, $45, $4E, $20, $4F, $55, $52, $61
-.db $B9, $20, $48, $41, $44, $20, $50, $4C
-.db $45, $4E, $54, $59, $2E, $65, $DA, $20
-.db $41, $20, $4D, $4F, $4E, $4B, $60, $E7
-.db $54, $41, $4A, $49, $4D, $20, $49, $4E
-.db $20, $54, $48, $45, $61, $E5, $53, $20
-.db $54, $4F, $20, $DE, $60, $53, $4F, $55
-.db $54, $48, $20, $4F, $46, $20, $DE, $4C
-.db $41, $4B, $45, $2E, $65, $49, $40, $56
-.db $45, $20, $48, $45, $41, $52, $44, $20
-.db $DC, $60, $DE, $CF, $20, $49, $53, $20
-.db $41, $61, $42, $45, $41, $55, $54, $49
-.db $46, $55, $4C, $20, $9A, $2E, $60, $49
-.db $53, $20, $DC, $20, $54, $52, $55, $45
-.db $3F, $62, $49, $40, $44, $20, $4C, $49
-.db $4B, $45, $20, $54, $4F, $20, $47, $4F
-.db $60, $56, $49, $53, $49, $54, $49, $4E
-.db $47, $20, $D5, $44, $41, $59, $2E, $65
-.db $4E, $4F, $3F, $20, $49, $40, $44, $20
-.db $4C, $49, $4B, $45, $20, $54, $4F, $20
-.db $47, $4F, $D5, $D0, $20, $DE, $41, $49
-.db $52, $61, $49, $53, $20, $4D, $4F, $52
-.db $45, $20, $43, $4C, $45, $41, $4E, $60
-.db $41, $4E, $44, $20, $46, $52, $45, $53
-.db $48, $2E, $65, $B3, $21, $60, $43, $4F
-.db $4D, $45, $20, $41, $47, $41, $49, $4E
-.db $21, $65, $54, $49, $47, $48, $54, $57
-.db $41, $4E, $44, $21, $65, $EB, $65, $2E
-.db $2E, $2E, $2E, $2E, $2E, $2E, $2E, $2E
-.db $2E, $65, $54, $48, $45, $4E, $20, $E1
-.db $EC, $DE, $60, $56, $45, $52, $59, $20
-.db $B0, $20, $4F, $46, $20, $DE, $61, $45
-.db $4E, $54, $49, $52, $45, $20, $9C, $2E
-.db $20, $49, $60, $C7, $20, $41, $53, $53
-.db $49, $53, $54, $20, $E1, $49, $4E, $61
-.db $41, $4C, $4C, $20, $57, $41, $59, $53
-.db $20, $50, $4F, $53, $53, $49, $42, $4C
-.db $45, $2E, $65, $E1, $E3, $42, $45, $45
-.db $4E, $60, $4C, $4F, $43, $4B, $45, $44
-.db $20, $55, $50, $2C, $54, $4F, $4F, $61
-.db $DA, $20, $41, $20, $57, $41, $59, $60
-.db $4F, $55, $54, $2C, $20, $42, $55, $54
-.db $20, $49, $20, $4C, $49, $4B, $45, $61
-.db $49, $54, $20, $49, $4E, $20, $D2, $2C
-.db $60, $4D, $59, $53, $45, $4C, $46, $2E
-.db $65, $DB, $20, $47, $55, $41, $52, $44
-.db $53, $60, $55, $50, $20, $41, $48, $45
-.db $41, $44, $21, $65, $49, $46, $20, $E1
-.db $50, $4C, $41, $4E, $20, $54, $4F, $20
-.db $47, $4F, $60, $42, $41, $43, $4B, $2C
-.db $20, $4E, $4F, $57, $20, $49, $53, $20
-.db $DE, $61, $9F, $20, $54, $4F, $20, $4C
-.db $45, $41, $56, $45, $2E, $65, $C5, $20
-.db $E2, $60, $A0, $3F, $62, $E4, $49, $53
-.db $20, $41, $20, $46, $41, $4B, $45, $21
-.db $60, $C6, $20, $54, $48, $49, $4E, $4B
-.db $20, $E1, $61, $43, $41, $4E, $20, $46
-.db $4F, $4F, $4C, $20, $41, $20, $52, $4F
-.db $42, $4F, $54, $3F, $60, $4F, $46, $46
-.db $20, $54, $4F, $20, $4A, $41, $49, $4C
-.db $20, $57, $45, $20, $47, $4F, $21, $65
-.db $47, $45, $54, $20, $4D, $45, $20, $4F
-.db $55, $54, $20, $D2, $3F, $60, $42, $55
-.db $54, $20, $49, $54, $40, $53, $20, $49
-.db $4E, $20, $56, $41, $49, $4E, $2E, $65
-.db $49, $54, $40, $53, $20, $46, $4F, $4F
-.db $4C, $49, $53, $48, $20, $54, $4F, $60
-.db $54, $52, $59, $20, $54, $4F, $20, $47
-.db $45, $54, $20, $D4, $21, $65, $D4, $20
-.db $49, $53, $20, $47, $4F, $4E, $4E, $41
-.db $60, $53, $41, $43, $52, $49, $46, $49
-.db $43, $45, $20, $55, $53, $21, $20, $41
-.db $47, $48, $21, $65, $E3, $E1, $46, $4F
-.db $55, $4E, $44, $20, $54, $48, $45, $60
-.db $41, $52, $4D, $4F, $52, $20, $49, $4E
-.db $20, $47, $55, $41, $52, $4F, $4E, $3F
-.db $62, $49, $54, $20, $43, $41, $4E, $20
-.db $42, $45, $20, $46, $4F, $55, $4E, $44
-.db $20, $41, $54, $DE, $46, $41, $52, $20
-.db $53, $49, $44, $45, $20, $4F, $46, $61
-.db $41, $20, $50, $49, $54, $20, $54, $52
-.db $41, $50, $2E, $65, $57, $45, $4C, $4C
-.db $2C, $41, $52, $45, $4E, $40, $54, $20
-.db $E1, $60, $D5, $F7, $3F, $65, $41, $4C
-.db $4C, $20, $57, $48, $4F, $20, $46, $41
-.db $43, $45, $60, $D4, $20, $4C, $4F, $53
-.db $45, $20, $54, $48, $45, $49, $52, $61
-.db $53, $4F, $55, $4C, $53, $20, $54, $4F
-.db $20, $48, $49, $53, $60, $EF, $21, $65
-.db $4E, $4F, $3F, $20, $DC, $40, $53, $20
-.db $46, $49, $4E, $45, $2C, $60, $49, $46
-.db $20, $E1, $53, $4F, $20, $44, $45, $53
-.db $49, $52, $45, $2E, $61, $CB, $20, $41
-.db $4C, $57, $41, $59, $53, $20, $42, $45
-.db $E0, $D2, $2E, $65, $DA, $20, $41, $20
-.db $9D, $60, $4F, $46, $20, $DE, $54, $4F
-.db $50, $20, $4F, $46, $61, $C2, $2E, $60
-.db $D5, $F7, $20, $A5, $61, $49, $53, $20
-.db $48, $49, $44, $44, $45, $4E, $20, $41
-.db $54, $20, $DE, $60, $54, $4F, $50, $20
-.db $4F, $46, $20, $DE, $9D, $21, $65, $57
-.db $48, $41, $54, $20, $E3, $E1, $43, $4F
-.db $4D, $45, $46, $4F, $52, $3F, $20, $C6
-.db $20, $49, $4E, $54, $45, $4E, $44, $61
-.db $D5, $20, $4D, $49, $53, $43, $48, $49
-.db $45, $46, $3F, $65, $49, $20, $E3, $41
-.db $4E, $20, $55, $4E, $45, $41, $53, $59
-.db $60, $46, $45, $45, $4C, $49, $4E, $47
-.db $2E, $65, $42, $45, $20, $ED, $20, $55
-.db $50, $60, $41, $48, $45, $41, $44, $2E
-.db $20, $41, $54, $20, $DE, $61, $42, $52
-.db $45, $41, $4B, $20, $49, $4E, $20, $DE
-.db $52, $4F, $41, $44, $2C, $47, $4F, $20
-.db $54, $4F, $20, $DE, $4C, $45, $46, $54
-.db $21, $65, $D4, $20, $4C, $49, $56, $45
-.db $53, $20, $49, $4E, $60, $46, $45, $41
-.db $52, $20, $4F, $46, $20, $DE, $61, $43
-.db $52, $59, $53, $54, $41, $4C, $20, $50
-.db $4F, $53, $53, $45, $53, $53, $45, $44
-.db $60, $42, $59, $20, $DE, $BB, $61, $E7
-.db $44, $41, $4D, $4F, $52, $2E, $20, $D1
-.db $49, $53, $20, $D5, $F7, $61, $53, $50
-.db $45, $43, $49, $41, $4C, $20, $41, $42
-.db $4F, $55, $54, $20, $49, $54, $2C, $60
-.db $57, $49, $54, $48, $4F, $55, $54, $20
-.db $41, $20, $44, $4F, $55, $42, $54, $2E
-.db $65, $E4, $46, $49, $52, $45, $20, $57
-.db $41, $53, $20, $4C, $49, $54, $60, $44
-.db $55, $52, $49, $4E, $47, $20, $DE, $45
-.db $43, $4C, $49, $50, $53, $45, $61, $57
-.db $48, $49, $43, $48, $20, $4F, $43, $43
-.db $55, $52, $53, $20, $4F, $4E, $43, $45
-.db $60, $45, $56, $45, $52, $59, $20, $31
-.db $30, $30, $20, $59, $45, $41, $52, $53
-.db $2E, $61, $49, $46, $20, $E1, $47, $49
-.db $56, $45, $20, $4D, $45, $20, $41, $60
-.db $47, $45, $4D, $20, $FE, $41, $20, $44
-.db $52, $41, $47, $4F, $4E, $2C, $61, $49
-.db $40, $4C, $4C, $20, $47, $49, $56, $45
-.db $20, $E1, $D5, $4F, $46, $20, $E4, $46
-.db $49, $52, $45, $2E, $61, $48, $4F, $57
-.db $20, $41, $42, $4F, $55, $54, $20, $49
-.db $54, $3F, $62, $D2, $2C, $20, $54, $41
-.db $4B, $45, $20, $E4, $60, $45, $43, $4C
-.db $49, $50, $53, $45, $20, $54, $4F, $52
-.db $43, $48, $2E, $65, $4E, $4F, $3F, $20
-.db $54, $48, $45, $4E, $20, $57, $48, $41
-.db $54, $20, $44, $49, $44, $60, $E1, $43
-.db $4F, $4D, $45, $20, $46, $4F, $52, $3F
-.db $65, $E1, $E3, $4E, $4F, $20, $47, $45
-.db $4D, $21, $60, $44, $4F, $20, $49, $20
-.db $4C, $4F, $4F, $4B, $20, $4C, $49, $4B
-.db $45, $20, $41, $61, $46, $4F, $4F, $4C
-.db $20, $4F, $52, $20, $D5, $F7, $3F, $65
-.db $49, $40, $4D, $20, $53, $4F, $52, $52
-.db $59, $20, $49, $20, $E3, $41, $60, $53
-.db $48, $4F, $50, $20, $49, $4E, $20, $53
-.db $55, $43, $48, $20, $41, $61, $50, $4C
-.db $41, $43, $45, $2E, $20, $53, $48, $4F
-.db $52, $54, $43, $41, $4B, $45, $60, $46
-.db $4F, $52, $20, $31, $30, $30, $30, $20
-.db $A1, $21, $61, $CD, $20, $42, $55, $59
-.db $20, $FD, $3F, $62, $41, $48, $2C, $4D
-.db $59, $20, $59, $4F, $55, $4E, $47, $20
-.db $50, $55, $50, $49, $4C, $2C, $4E, $4F
-.db $41, $48, $2E, $20, $E1, $EC, $61, $50
-.db $52, $45, $50, $41, $52, $49, $4E, $47
-.db $20, $54, $4F, $20, $46, $41, $43, $45
-.db $60, $D4, $3F, $65, $43, $4F, $4D, $45
-.db $2C, $CE, $20, $A2, $60, $E2, $46, $49
-.db $4E, $41, $4C, $20, $54, $45, $53, $54
-.db $2D, $2D, $2D, $61, $57, $45, $20, $C7
-.db $20, $44, $55, $45, $4C, $21, $65, $E1
-.db $E3, $42, $45, $43, $4F, $4D, $45, $60
-.db $4D, $55, $43, $48, $20, $53, $54, $52
-.db $4F, $4E, $47, $45, $52, $2E, $2E, $2E
-.db $61, $E1, $EC, $57, $45, $4C, $4C, $60
-.db $50, $52, $45, $50, $41, $52, $45, $44
-.db $2E, $61, $49, $40, $4C, $4C, $20, $47
-.db $49, $56, $45, $20, $E1, $41, $60, $46
-.db $52, $41, $44, $20, $4D, $41, $4E, $54
-.db $4C, $45, $20, $41, $53, $20, $41, $61
-.db $47, $49, $46, $54, $2E, $20, $49, $54
-.db $20, $50, $52, $4F, $54, $45, $43, $54
-.db $53, $60, $E1, $FE, $44, $41, $4E, $47
-.db $45, $52, $21, $65, $E1, $EC, $F8, $59
-.db $45, $54, $60, $52, $45, $41, $44, $59
-.db $21, $20, $CE, $20, $47, $4F, $61, $53
-.db $54, $49, $4C, $4C, $20, $55, $4E, $44
-.db $45, $52, $47, $4F, $20, $4D, $4F, $52
-.db $45, $54, $52, $41, $49, $4E, $49, $4E
-.db $47, $2E, $65, $49, $20, $E3, $4E, $4F
-.db $F7, $20, $54, $4F, $60, $54, $45, $41
-.db $43, $48, $20, $E1, $4D, $4F, $52, $45
-.db $2E, $65, $41, $4E, $44, $20, $57, $48
-.db $4F, $20, $EC, $59, $4F, $55, $3F, $60
-.db $46, $49, $4E, $44, $20, $4D, $59, $20
-.db $50, $55, $50, $49, $4C, $20, $4E, $4F
-.db $41, $48, $61, $49, $4E, $20, $DE, $A7
-.db $60, $43, $41, $56, $45, $2E, $C3, $61
-.db $48, $49, $4D, $3F, $62, $49, $40, $56
-.db $45, $20, $D5, $F7, $60, $49, $20, $C8
-.db $20, $54, $45, $4C, $4C, $20, $48, $49
-.db $4D, $2E, $61, $42, $52, $49, $4E, $47
-.db $20, $48, $49, $4D, $20, $D2, $2E, $65
-.db $49, $4E, $20, $DC, $20, $43, $41, $53
-.db $45, $2C, $60, $DA, $20, $4E, $4F, $20
-.db $50, $4F, $49, $4E, $54, $61, $49, $4E
-.db $20, $46, $55, $52, $54, $48, $45, $52
-.db $60, $43, $4F, $4E, $56, $45, $52, $53
-.db $41, $54, $49, $4F, $4E, $2E, $65, $49
-.db $20, $E3, $57, $41, $54, $43, $48, $45
-.db $44, $60, $41, $4C, $4C, $20, $E2, $41
-.db $43, $54, $49, $4F, $4E, $53, $2E, $61
-.db $82, $20, $4D, $45, $20, $4E, $4F, $57
-.db $2C, $20, $49, $46, $60, $E1, $44, $41
-.db $52, $45, $2E, $65, $49, $40, $4D, $20
-.db $42, $55, $54, $20, $4F, $4E, $4C, $59
-.db $60, $D4, $40, $53, $20, $53, $48, $41
-.db $44, $4F, $57, $21, $61, $45, $56, $45
-.db $4E, $20, $49, $46, $20, $E1, $44, $45
-.db $46, $45, $41, $54, $4D, $45, $2C, $20
-.db $59, $4F, $55, $40, $56, $45, $20, $47
-.db $41, $49, $4E, $45, $44, $61, $4E, $4F
-.db $F7, $20, $41, $54, $20, $41, $4C, $4C
-.db $21, $65, $44, $4F, $4E, $40, $54, $20
-.db $47, $4F, $20, $41, $47, $41, $49, $4E
-.db $53, $54, $60, $D4, $21, $65, $41, $48
-.db $2C, $20, $4D, $59, $20, $43, $48, $49
-.db $4C, $44, $52, $45, $4E, $2C, $60, $E1
-.db $E3, $44, $FD, $20, $56, $45, $52, $59
-.db $61, $57, $45, $4C, $4C, $20, $54, $4F
-.db $20, $43, $4F, $4D, $45, $20, $E4, $60
-.db $46, $41, $52, $2E, $20, $E1, $EC, $56
-.db $45, $52, $59, $61, $4C, $55, $43, $4B
-.db $59, $20, $D3, $2E, $20, $44, $4F, $60
-.db $E1, $52, $45, $41, $4C, $4C, $59, $20
-.db $97, $20, $54, $4F, $61, $4B, $49, $4C
-.db $4C, $20, $41, $4E, $20, $4F, $4C, $44
-.db $20, $4D, $41, $4E, $3F, $62, $41, $4C
-.db $4C, $20, $52, $49, $47, $48, $54, $21
-.db $20, $54, $48, $45, $4E, $60, $57, $45
-.db $20, $C7, $20, $46, $4F, $52, $47, $45
-.db $54, $61, $E4, $41, $53, $20, $41, $4E
-.db $20, $55, $4E, $46, $4F, $52, $2D, $60
-.db $54, $55, $4E, $41, $54, $45, $20, $4D
-.db $49, $53, $54, $41, $4B, $45, $2E, $65
-.db $45, $56, $45, $4E, $20, $4E, $4F, $57
-.db $20, $E1, $54, $52, $59, $60, $54, $4F
-.db $20, $46, $4F, $4F, $4C, $20, $57, $49
-.db $54, $48, $20, $4D, $45, $3F, $61, $E1
-.db $53, $48, $41, $4C, $4C, $20, $52, $45
-.db $50, $45, $4E, $54, $21, $65, $49, $40
-.db $4D, $20, $53, $4F, $52, $52, $59, $2C
-.db $20, $49, $20, $C8, $60, $E3, $42, $45
-.db $45, $4E, $61, $50, $4F, $53, $53, $45
-.db $53, $53, $45, $44, $20, $42, $4F, $44
-.db $59, $20, $41, $4E, $44, $53, $4F, $55
-.db $4C, $20, $42, $59, $20, $45, $56, $49
-.db $4C, $2E, $61, $E1, $52, $45, $53, $43
-.db $55, $45, $44, $20, $4F, $55, $52, $60
-.db $B5, $20, $4A, $55, $53, $54, $20, $49
-.db $4E, $20, $DE, $61, $4E, $49, $43, $4B
-.db $20, $4F, $46, $20, $9F, $21, $20, $49
-.db $46, $60, $E1, $48, $41, $44, $20, $43
-.db $4F, $4D, $45, $20, $F6, $61, $4C, $41
-.db $54, $45, $52, $2C, $20, $49, $54, $20
-.db $4D, $49, $47, $48, $54, $60, $E3, $42
-.db $45, $45, $4E, $20, $54, $4F, $4F, $20
-.db $4C, $41, $54, $45, $61, $57, $45, $20
-.db $41, $4C, $4C, $20, $B4, $60, $FE, $DE
-.db $42, $4F, $54, $54, $4F, $4D, $61, $4F
-.db $46, $20, $4F, $55, $52, $20, $48, $45
-.db $41, $52, $54, $53, $2E, $60, $80, $2C
-.db $20, $E2, $B1, $61, $57, $41, $53, $20
-.db $4F, $4E, $43, $45, $20, $AF, $20, $4F
-.db $46, $60, $9B, $2E, $20, $DE, $44, $41
-.db $52, $4B, $61, $89, $20, $48, $41, $53
-.db $20, $42, $45, $45, $4E, $60, $44, $45
-.db $53, $54, $52, $4F, $59, $45, $44, $2C
-.db $20, $D4, $61, $4B, $49, $4C, $4C, $45
-.db $44, $2E, $2E, $2E, $20, $C6, $2C, $60
-.db $80, $2C, $97, $20, $54, $4F, $61, $41
-.db $53, $43, $45, $4E, $44, $20, $E2, $60
-.db $B1, $40, $53, $20, $54, $48, $52, $FD
-.db $61, $41, $4E, $44, $20, $42, $45, $43
-.db $4F, $4D, $45, $20, $DE, $60, $B0, $20
-.db $4F, $46, $20, $9B, $3F, $62, $52, $41
-.db $49, $53, $45, $20, $DE, $60, $41, $45
-.db $52, $4F, $50, $52, $49, $53, $4D, $20
-.db $54, $4F, $57, $41, $52, $44, $53, $61
-.db $DE, $48, $45, $41, $56, $45, $4E, $53
-.db $2D, $20, $E1, $60, $53, $48, $4F, $55
-.db $4C, $44, $20, $54, $48, $45, $4E, $20
-.db $42, $45, $61, $41, $42, $4C, $45, $20
-.db $54, $4F, $20, $53, $45, $45, $20, $DE
-.db $60, $44, $41, $52, $4B, $20, $89, $2E
-.db $65, $41, $4C, $52, $49, $47, $48, $54
-.db $21, $20, $E1, $53, $41, $56, $45, $44
-.db $41, $4C, $4C, $20, $4F, $46, $20, $9B
-.db $21, $65, $8B, $20, $41, $4C, $4C, $60
-.db $54, $48, $41, $4E, $4B, $46, $55, $4C
-.db $20, $46, $4F, $52, $20, $E2, $61, $42
-.db $52, $41, $56, $45, $20, $44, $45, $45
-.db $44, $53, $21, $20, $57, $45, $60, $4C
-.db $4F, $56, $45, $20, $E1, $21, $65, $52
-.db $45, $50, $4F, $52, $54, $20, $51, $55
-.db $49, $43, $4B, $4C, $59, $20, $54, $4F
-.db $60, $DE, $AA, $21, $65, $E1, $88, $20
-.db $43, $4F, $4D, $45, $60, $DD, $20, $D2
-.db $2E, $61, $E4, $49, $53, $20, $4D, $59
-.db $20, $41, $52, $45, $41, $2E, $65, $57
-.db $45, $4C, $4C, $2C, $49, $46, $20, $44
-.db $52, $2E, $AD, $60, $53, $45, $4E, $54
-.db $20, $E1, $2C, $49, $20, $47, $55, $45
-.db $53, $53, $61, $49, $20, $E3, $54, $4F
-.db $20, $4C, $45, $54, $20, $E1, $60, $DD
-.db $2E, $65, $54, $48, $45, $59, $20, $53
-.db $41, $59, $20, $DC, $60, $DB, $20, $94
-.db $4E, $61, $4C, $49, $56, $49, $4E, $47
-.db $20, $4F, $4E, $20, $94, $60, $41, $4E
-.db $44, $20, $F4, $4E, $20, $4F, $4E, $61
-.db $93, $2E, $20, $49, $40, $44, $20, $53
-.db $55, $52, $45, $60, $4C, $49, $4B, $45
-.db $20, $41, $20, $43, $48, $41, $4E, $43
-.db $45, $20, $54, $4F, $61, $54, $41, $4C
-.db $4B, $20, $54, $4F, $20, $D5, $FD, $2E
-.db $65, $D5, $20, $49, $4E, $54, $45, $4C
-.db $4C, $49, $47, $45, $4E, $54, $60, $4D
-.db $4F, $4E, $53, $54, $45, $52, $53, $20
-.db $E3, $61, $54, $48, $45, $49, $52, $20
-.db $4F, $57, $4E, $60, $D9, $2E, $65, $49
-.db $20, $53, $4F, $4C, $44, $20, $DC, $60
-.db $A6, $20, $46, $4F, $52, $61, $41, $20
-.db $E6, $44, $45, $41, $4C, $20, $4F, $46
-.db $60, $4D, $FD, $59, $2E, $20, $B3, $2E
-.db $65, $4E, $4F, $57, $20, $DC, $20, $4D
-.db $59, $20, $53, $54, $41, $46, $46, $60
-.db $49, $53, $20, $41, $53, $53, $45, $4D
-.db $42, $4C, $45, $44, $61, $49, $20, $43
-.db $41, $4E, $20, $42, $45, $47, $49, $4E
-.db $2E, $D1, $60, $49, $53, $20, $48, $4F
-.db $57, $45, $52, $56, $45, $52, $2C, $20
-.db $41, $61, $53, $4C, $49, $47, $48, $54
-.db $20, $46, $45, $45, $20, $4F, $46, $20
-.db $31, $32, $30, $30, $A1, $20, $49, $4E
-.db $56, $4F, $4C, $56, $45, $44, $2E, $61
-.db $CD, $20, $50, $41, $59, $3F, $62, $B4
-.db $2E, $20, $49, $20, $43, $41, $4E, $60
-.db $4E, $4F, $57, $20, $47, $45, $54, $20
-.db $54, $4F, $20, $57, $4F, $52, $4B, $2E
-.db $61, $C9, $57, $41, $49, $54, $20, $FD
-.db $60, $4D, $4F, $4D, $45, $4E, $54, $2E
-.db $65, $49, $54, $20, $88, $20, $42, $45
-.db $60, $48, $55, $52, $52, $49, $45, $44
-.db $21, $20, $C9, $61, $53, $48, $4F, $57
-.db $20, $41, $20, $42, $49, $54, $20, $4D
-.db $4F, $52, $45, $60, $50, $41, $54, $49
-.db $45, $4E, $43, $45, $21, $65, $57, $45
-.db $20, $43, $41, $4E, $20, $42, $4F, $41
-.db $52, $44, $20, $DE, $60, $AD, $20, $41
-.db $4E, $44, $20, $42, $45, $20, $4F, $4E
-.db $61, $4F, $55, $52, $20, $57, $41, $59
-.db $21, $65, $48, $45, $59, $2C, $20, $42
-.db $52, $49, $4E, $47, $20, $DC, $60, $43
-.db $41, $54, $20, $4F, $56, $45, $52, $20
-.db $D2, $21, $62, $4F, $4F, $48, $48, $2C
-.db $48, $41, $2C, $48, $41, $21, $20, $DE
-.db $60, $43, $41, $54, $20, $C7, $20, $44
-.db $49, $45, $21, $65, $49, $20, $C7, $20
-.db $4B, $49, $4C, $4C, $20, $F6, $60, $57
-.db $48, $4F, $20, $49, $4E, $54, $45, $52
-.db $46, $45, $52, $45, $21, $65, $E1, $53
-.db $48, $4F, $55, $4C, $44, $20, $BF, $60
-.db $D2, $20, $41, $57, $48, $49, $4C, $45
-.db $20, $41, $46, $54, $45, $52, $61, $E2
-.db $4C, $4F, $4E, $47, $20, $4A, $4F, $55
-.db $52, $4E, $45, $59, $2E, $65, $DC, $20
-.db $57, $41, $53, $20, $51, $55, $49, $43
-.db $4B, $2D, $4F, $48, $2C, $60, $B7, $2C
-.db $E1, $EC, $F8, $61, $DD, $20, $57, $49
-.db $54, $48, $60, $D4, $2E, $20, $E1, $48
-.db $41, $44, $61, $42, $45, $53, $54, $20
-.db $BF, $20, $41, $54, $20, $DE, $60, $49
-.db $4E, $4E, $2E, $65, $E1, $46, $45, $4C
-.db $4C, $20, $49, $4E, $54, $4F, $20, $41
-.db $60, $44, $45, $45, $50, $20, $53, $4C
-.db $45, $45, $50, $2E, $63, $E1, $48, $41
-.db $44, $20, $41, $20, $42, $41, $44, $60
-.db $44, $52, $45, $41, $4D, $2E, $65, $D2
-.db $20, $49, $53, $20, $DE, $48, $4F, $4D
-.db $45, $60, $4F, $46, $20, $80, $2E, $65
-.db $49, $54, $20, $48, $41, $53, $20, $D5
-.db $F7, $60, $AC, $2E, $61, $D0, $20, $49
-.db $53, $20, $DE, $60, $AA, $2C, $49, $20
-.db $57, $4F, $4E, $44, $45, $52, $3F, $65
-.db $E1, $E3, $47, $4F, $54, $54, $45, $4E
-.db $60, $A9, $20, $4B, $49, $4C, $4C, $45
-.db $44, $3F, $61, $43, $4F, $4D, $45, $2C
-.db $20, $4C, $45, $54, $40, $53, $20, $54
-.db $52, $59, $60, $FD, $20, $4D, $4F, $52
-.db $45, $20, $9F, $2E, $65, $D4, $20, $48
-.db $41, $53, $20, $44, $49, $45, $44, $2E
-.db $60, $80, $20, $41, $43, $43, $4F, $4D
-.db $50, $4C, $49, $53, $48, $45, $44, $61
-.db $48, $45, $52, $20, $97, $2E, $20, $B2
-.db $20, $49, $53, $60, $53, $41, $54, $49
-.db $53, $46, $49, $45, $44, $20, $4E, $4F
-.db $57, $20, $49, $4E, $61, $48, $45, $41
-.db $56, $45, $4E, $2E, $20, $48, $55, $52
-.db $52, $59, $20, $54, $4F, $60, $DE, $AA
-.db $21, $65
+.db $E1, $88, " ", $A2, Dialogue_NewLine
+.db "WITHOUT ", $A0, ".", Dialogue_Terminator65
+
+.db $E1, "MAY PROCEED.", Dialogue_Terminator65
+
+.db $E4, "IS PAROLIT", Dialogue_NewLine
+.db $D6, ".", Dialogue_Terminator65
+
+.db $DE, $C4, " IS A", Dialogue_NewLine
+.db "DANGEROUS PLACE.", Dialogue_Terminator65
+
+.db $EA, " HAS BEEN", Dialogue_NewLine
+.db "REBORN AND LIVES", Dialogue_NewPage
+.db "IN A CAVE TO ", $DE, Dialogue_NewLine
+.db "SOUTH. IF ", $E1, "SEE", Dialogue_NewPage
+.db "HER, ", $CB, " BE", Dialogue_NewLine
+.db $91, ".", Dialogue_Terminator65
+
+.db "TO ", $DE, "EAST LIES", Dialogue_NewLine
+.db "A PORT ", $B9, Dialogue_NewPage
+.db "CALLED ", $96, ".", Dialogue_Terminator65
+
+.db $FE, $DE, $98, Dialogue_NewLine
+.db $E1, "CAN GO TO", Dialogue_NewPage
+.db "PASEO ON ", $94, ".", Dialogue_Terminator65
+
+.db $DA, " AN", Dialogue_NewLine
+.db "UNDERGROUND", Dialogue_NewPage
+.db $BA, " TO ", $DE, Dialogue_NewLine
+.db $95, " ", $C4, Dialogue_NewPage
+.db $D5, $D0, " TO ", $DE, Dialogue_NewLine
+.db "WEST OF PAROLIT.", Dialogue_Terminator65
+
+.db "ODIN SET OFF TO", Dialogue_NewLine
+.db "KILL ", $EA, ". HE", Dialogue_NewPage
+.db "WENT WITH AN", Dialogue_NewLine
+.db "ANIMAL ", $DC, " CAN", Dialogue_NewPage
+.db "SPEAK! ", $DE, "ANIMAL", Dialogue_NewLine
+.db "HAD A BOTTLE OF", Dialogue_NewPage
+.db "MEDICINE HANGING", Dialogue_NewLine
+.db $FE, "ITS NECK, BUT", Dialogue_NewPage
+.db "I DON", Dialogue_Apostrophe, "T ", $BE, " WHAT", Dialogue_NewLine
+.db $DC, " IS FOR.", Dialogue_Terminator65
+
+.db "I HEAR ", $E1, $EC, Dialogue_NewLine
+.db "GOING TO TRY", Dialogue_NewPage
+.db "TO KILL ", $D4, ".", Dialogue_NewLine
+.db "BEST OF LUCK!", Dialogue_Terminator65
+
+.db "I RECENTLY FOUND ATALKING BEAST IN", Dialogue_NewPage
+.db $DE, "CAVE ", $D0, Dialogue_NewLine
+.db $EA, " LIVES.", Dialogue_NewPage
+.db "I SOLD HIM FOR A", Dialogue_NewLine
+.db "GOOD PRICE TO A", Dialogue_NewPage
+.db "MERCHANT ", $FE, Dialogue_NewLine
+.db "PASEO!", Dialogue_Terminator65
+
+.db "TIMES ", $EC, "HARD.", Dialogue_NewLine
+.db $D1, " DOESN", Dialogue_Apostrophe, "T SEEM", Dialogue_NewPage
+.db "TO BE ", $F6, "WAY TO", Dialogue_NewLine
+.db "MAKE M", $FD, "Y.", Dialogue_Terminator65
+
+.db "A CAVE CALLED IALACAN BE FOUND ON", Dialogue_NewPage
+.db $DE, "PENINSULA TO", Dialogue_NewLine
+.db $DE, "SOUTH OF ", $96, Dialogue_Terminator65
+
+.db $E4, "IS ", $DE, "PORT", Dialogue_NewLine
+.db $B9, " ", $96, ".", Dialogue_NewPage
+.db "LONG AGO, WE", Dialogue_NewLine
+.db "THRIVED ON TRADE.", Dialogue_Terminator65
+
+.db $E1, "NEED A COMPASSTO ", $A2, " ", $DD, Dialogue_NewPage
+.db $DE, "EPPI ", $C4, ".", Dialogue_Terminator65
+
+.db "A DOOR LOCKED WITH", $84, "CAN ONLY BE", Dialogue_NewPage
+.db "OPENED WITH ", $EF, ".", Dialogue_Terminator65
+
+.db $DA, " A ", $AB, Dialogue_NewLine
+.db $E7, $C2, Dialogue_NewPage
+.db "TO ", $DE, "NORTH OF", Dialogue_NewLine
+.db $E4, $B9, ".", Dialogue_NewPage
+.db "BUT N", $FD, " OF US", Dialogue_NewLine
+.db "D", $EC, "APPROACH IT.", Dialogue_Terminator65
+
+.db "A CAVE CALLED", Dialogue_NewLine
+.db "NAULA LIES ON ", $DE, Dialogue_NewPage
+.db "NORTH COAST OF", Dialogue_NewLine
+.db $C2, ".", Dialogue_Terminator65
+
+.db $DE, $AA, " OF", Dialogue_NewLine
+.db $94, " MIGHT", Dialogue_NewPage
+.db "POSSIBLY ", $CA, " ", $E1, "WELL.", Dialogue_Terminator65
+
+.db "NOAH LIVES ON", Dialogue_NewLine
+.db $94, ".", Dialogue_Terminator65
+
+.db "DR.", $AD, " HAD A", Dialogue_NewLine
+.db $BD, " IN ", $DE, Dialogue_NewPage
+.db $95, " ", $C4, " LONGAGO, IT IS SAID.", Dialogue_Terminator65
+
+.db $E0, "TO EPPI.", Dialogue_Terminator65
+
+.db $EC, $E1, "LOOKING", Dialogue_NewLine
+.db "FOR A ", $D8, " KEY?", Dialogue_Terminator62
+
+.db "I", Dialogue_Apostrophe, "VE HIDDEN A", Dialogue_NewLine
+.db $D8, " KEY IN THE", Dialogue_NewPage
+.db "WAREHOUSE IN ", $DE, Dialogue_NewLine
+.db "OUTSKIRTS OF ", $DE, Dialogue_NewPage
+.db "CAMINEET.", Dialogue_Terminator65
+
+.db $C3, " WHAT", Dialogue_NewLine
+.db $DE, "HARDEST,", Dialogue_NewPage
+.db "STRONGEST MATERIALIN OUR ", $B5, " IS?", Dialogue_Terminator62
+
+.db "IT", Dialogue_Apostrophe, "S ", $BC, "!", Dialogue_NewLine
+.db "ARMS MADE WITH", Dialogue_NewPage
+.db $BC, " ", $EC, $DE, Dialogue_NewLine
+.db "BEST TO HAVE.", Dialogue_Terminator65
+
+.db "O.K. GOOD DAY.", Dialogue_Terminator65
+
+.db $C3, " ABOUT", Dialogue_NewLine
+.db $DE, $B8, " OF", Dialogue_NewPage
+.db $DE, $9B, " STAR", Dialogue_NewLine
+.db $9C, "?", Dialogue_Terminator62
+
+.db $DB, " THREE", Dialogue_NewLine
+.db $B8, $3B, " ", $CF, Dialogue_NewPage
+.db $94, " AND", Dialogue_NewLine
+.db $93, ".", Dialogue_NewPage
+.db $CF, " IS A ", $B5, Dialogue_NewLine
+.db "OF GREEN.", Dialogue_NewPage
+.db $94, " IS A ", $B5, Dialogue_NewLine
+.db "OF SAND.", Dialogue_NewPage
+.db $93, " IS A ", $B5, Dialogue_NewLine
+.db "OF ICE.", Dialogue_NewPage
+.db $DE, $9B, " STAR", Dialogue_NewLine
+.db $9C, " IS", Dialogue_NewPage
+.db $90, " ", $FB, Dialogue_NewLine
+.db "A ", $E6, "CRISIS.", Dialogue_Terminator65
+
+.db $E4, "IS PALMA", Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db $98, ".", Dialogue_NewPage
+.db $FE, $DE, $98, Dialogue_NewLine
+.db $E1, "CAN GO TO", Dialogue_NewPage
+.db "PASEO ON ", $94, ".", Dialogue_Terminator65
+
+.db $DE, $AA, " IS INPASEO. HE RULES", Dialogue_NewPage
+.db "ALL OF ", $94, ".", Dialogue_Terminator65
+
+.db "LONG AGO, A", Dialogue_NewLine
+.db $E8, " WAS", Dialogue_NewPage
+.db "BUILT IN ", $DE, Dialogue_NewLine
+.db $95, " ", $BD, ".", Dialogue_Terminator65
+
+.db $C5, " ", $E2, Dialogue_NewLine
+.db $99, "?", Dialogue_Terminator62
+
+.db $E1, "CAN FILE FOR A", Dialogue_NewLine
+.db $99, " ", $D2, ".", Dialogue_NewPage
+.db $C6, " ", $F9, "A", Dialogue_NewLine
+.db $99, "?", Dialogue_Terminator62
+
+.db $E3, $E1, "EVER D", $FD, Dialogue_NewLine
+.db $F6, $F7, " ILLEGAL? ", Dialogue_Terminator62
+
+.db $C6, " CURRENTLY", Dialogue_NewLine
+.db $E3, "AN ILLNESS?", Dialogue_Terminator62
+
+.db $DE, $99, " FEE", Dialogue_NewLine
+.db "IS ", $31, $30, $30, " ", $A1, ".", Dialogue_NewPage
+.db "WOULD ", $E1, "PAY IT?", Dialogue_Terminator62
+
+.db $E2, $99, " IS", Dialogue_NewLine
+.db "READY, ", $D2, ".", Dialogue_Terminator65
+
+.db $B7, ". ", $E3, "A GOODDAY.", Dialogue_Terminator65
+
+.db $DC, Dialogue_Apostrophe, "S ", $F8, "GOOD.", Dialogue_NewLine
+.db "YOU", Dialogue_Apostrophe, "LL ", $E3, "TO", Dialogue_NewPage
+.db "COME BACK LATER.", Dialogue_Terminator65
+
+.db $E0, "TO ", $DE, Dialogue_NewLine
+.db "PASEO ", $98, Dialogue_NewPage
+.db "ON ", $94, ".", Dialogue_Terminator65
+
+.db "IT IS SAID ", $DC, Dialogue_NewLine
+.db $A3, "S ROAM", Dialogue_NewPage
+.db "IN ", $DE, "DESERT.", Dialogue_Terminator65
+
+.db $DA, " A CAKE", Dialogue_NewLine
+.db "SHOP IN ", $DE, "CAVE", Dialogue_NewPage
+.db "CALLED NAULA ON", Dialogue_NewLine
+.db $CF, "!", Dialogue_Terminator65
+
+.db $94, Dialogue_Apostrophe, "S ", $AA, "AND ", $D4, " ", $EC, "NOT", Dialogue_NewPage
+.db "ON GOOD TERMS, IT", Dialogue_NewLine
+.db "IS SAID.", Dialogue_Terminator65
+
+.db "A GIFT IS NEEDED", Dialogue_NewLine
+.db "IF ", $E1, $97, " TO SEE", Dialogue_NewPage
+.db $DE, $AA, ".", Dialogue_Terminator65
+
+.db $DE, $AA, " LOVESSWEETS, I HEAR.", Dialogue_Terminator65
+
+.db $DA, " A CAVE", Dialogue_NewLine
+.db "CALLED ", $A7, " IN", Dialogue_NewPage
+.db "A ", $E5, " TO ", $DE, Dialogue_NewLine
+.db "NORTH OF PASEO.", Dialogue_Terminator65
+
+.db $E4, "IS PASEO", Dialogue_NewLine
+.db $94, Dialogue_Apostrophe, "S CAPITAL.", Dialogue_Terminator65
+
+.db "IT", Dialogue_Apostrophe, "S ", $F8, "POSSIBLE", Dialogue_NewLine
+.db "TO ", $A2, " ", $DD, Dialogue_NewPage
+.db $A3, " ON FOOT.", Dialogue_Terminator65
+
+.db "I ", $E3, "AN RARE", Dialogue_NewLine
+.db "ANIMAL ", $D2, ". WOULD", Dialogue_NewPage
+.db $E1, "PAY ", $31, " BILLION", Dialogue_NewLine
+.db $A1, " FOR IT?", Dialogue_Terminator62
+
+.db $E1, $EC, "A LIAR!", Dialogue_Terminator65
+
+.db $B7, " ", $E1, $E3, "A", Dialogue_NewLine
+.db $AC, " POT.", Dialogue_NewPage
+.db "SHALL I TRADE ", $DE, Dialogue_NewLine
+.db "ANIMAL FOR IT?", Dialogue_Terminator62
+
+.db "ALL RIGHT, ", $D1, Dialogue_NewLine
+.db $E1, "GO WITH HIM.", Dialogue_Terminator65
+
+.db $C5, " A", Dialogue_NewLine
+.db $DF, " TO GIVE TO", Dialogue_NewPage
+.db $DE, $AA, "?", Dialogue_Terminator62
+
+.db "I", Dialogue_Apostrophe, "LL TAKE ", $DE, Dialogue_NewLine
+.db "SHORTCAKE NOW.", Dialogue_Terminator65
+
+.db "I DON", Dialogue_Apostrophe, "T THINK ", $E1, Dialogue_NewLine
+.db $E3, "A SUITABLE", Dialogue_NewPage
+.db $DF, ".", Dialogue_Terminator65
+
+.db "GO BACK TO ", $E2, Dialogue_NewLine
+.db "HOME NOW.", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "M ", $DE, $AA, ".", Dialogue_NewLine
+.db "I", Dialogue_Apostrophe, "M TOLD ", $DC, " ", $E1, Dialogue_NewPage
+.db "INTEND TO TRY TO", Dialogue_NewLine
+.db "KILL ", $D4, ".", Dialogue_NewPage
+.db "I ADMIRE ", $E2, Dialogue_NewLine
+.db "COURAGE. IN ", $DE, Dialogue_NewPage
+.db $A7, " CAVE LIVES", Dialogue_NewLine
+.db "AN ESPAR ", $E7, Dialogue_NewPage
+.db "NOAH. ", $CC, " GIVE", Dialogue_NewLine
+.db $E1, "A LETTER OF", Dialogue_NewPage
+.db "INTRODUCTION TO", Dialogue_NewLine
+.db $DF, " TO HER.", Dialogue_NewPage
+.db "I ", $E3, "FAITH ", $DC, Dialogue_NewLine
+.db $CB, " KILL", Dialogue_NewPage
+.db $D4, " AND RETURN", Dialogue_NewLine
+.db $D2, " EVENTUALLY.", Dialogue_Terminator65
+
+.db "IF ", $DE, $AA, Dialogue_NewLine
+.db "ORDERS NOAH TO DO", Dialogue_NewPage
+.db $D5, $F7, ",HE WILL", Dialogue_NewLine
+.db "LIKELY OBEY.", Dialogue_Terminator65
+
+.db "WHO ", $EC, "YOU? I", Dialogue_Apostrophe, "M", Dialogue_NewLine
+.db "BUSY WITH MY", Dialogue_NewPage
+.db "TRAINING NOW! DO", Dialogue_NewLine
+.db $F8, "BE A NUISANCE!", Dialogue_Terminator65
+
+.db "HELLO!", Dialogue_Terminator65
+
+.db "ZZZ...ZZZ...", Dialogue_Terminator65
+
+.db $C9, $BF, " ", $E2, Dialogue_NewLine
+.db "WEARY B", $FD, "S.", Dialogue_Terminator65
+
+.db "I AM PRAYING FOR", Dialogue_NewLine
+.db $E2, "SAFETY.", Dialogue_Terminator65
+
+.db "COULD YA SP", $EC, "ME", Dialogue_NewLine
+.db "A CUP OF COLA?", Dialogue_Terminator62
+
+.db $B3, "! ", $E4, "WAS", Dialogue_NewLine
+.db "ONCE ", $DE, "LAB. OF", Dialogue_NewPage
+.db "DR.", $AD, ". HE WENTBONKERS, THOUGH", Dialogue_NewPage
+.db "AND BE INPRIS", $FD, "D", Dialogue_NewLine
+.db "IN TRIADA TO ", $DE, Dialogue_NewPage
+.db "SOUTH OF ", $D2, ".", Dialogue_Terminator65
+
+.db "I GOT NOTHIN", Dialogue_Apostrophe, " TO", Dialogue_NewLine
+.db "SAY T", Dialogue_Apostrophe, "YA!GET LOST!", Dialogue_Terminator65
+
+.db "DON", Dialogue_Apostrophe, "T GO NEAR ", $DE, Dialogue_NewLine
+.db $9D, " AT ", $DE, "FAR", Dialogue_NewPage
+.db "END OF ", $DE, "NARROW", Dialogue_NewLine
+.db "ROAD WHICH GOES", Dialogue_NewPage
+.db $FE, $DE, $95, Dialogue_NewLine
+.db $C4, " ", $DD, " THE", Dialogue_NewPage
+.db $E5, "S. A ", $EF, "BEAST LIVES ", $D1, ".", Dialogue_NewPage
+.db "LOOK AT IT AND YA", Dialogue_NewLine
+.db "TURN TO ST", $FD, ".", Dialogue_Terminator65
+
+.db "AH, IT", Dialogue_Apostrophe, "S GETTING", Dialogue_NewLine
+.db "LATE! FETCH MY", Dialogue_NewPage
+.db "ASSISTANT. HE", Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db "LIKELY HIDING", Dialogue_NewPage
+.db "IN ", $DE, "UNDERGROUND", $BA, ".", Dialogue_Terminator65
+
+.db $EB, Dialogue_Terminator65
+
+.db $E1, "DON", Dialogue_Apostrophe, "T ", $E3, Dialogue_NewLine
+.db "ENOUGH. COME BACK", Dialogue_NewPage
+.db "AGAIN WHEN ", $E1, Dialogue_NewLine
+.db $E3, "ENOUGH FUNDS.", Dialogue_Terminator65
+
+.db "SUCCESS! I ", $DF, "A SUPERB ", $E8, Dialogue_NewPage
+.db $DE, $AD, ".", Dialogue_Terminator65
+
+.db "IF ", $E1, "DON", Dialogue_Apostrophe, "T OBEY", Dialogue_NewLine
+.db "ME, I ", $88, " ", $CA, ".", Dialogue_Terminator65
+
+.db "BUT ", $E1, $88, " FLY", Dialogue_NewLine
+.db "A ", $E8, ".", Dialogue_Terminator65
+
+.db "HOW IS ", $DE, $AD, "?USE IT WELL.", Dialogue_Terminator65
+
+.db $DC, Dialogue_Apostrophe, "S TOO BAD.", Dialogue_NewLine
+.db "AND ", $E1, $E3, "COME", Dialogue_NewPage
+.db "SO FAR, TOO.", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "M BUSY.DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
+.db "BOTHER ME.", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "M ", $AD, ". IF", Dialogue_NewLine
+.db "YOU", Dialogue_Apostrophe, "VE COME FOR", Dialogue_NewPage
+.db $CA, ", ", $E1, "HAD BESTFORGET IT. LEAVE!", Dialogue_Terminator65
+
+.db $E1, $F9, "ME TO", Dialogue_NewLine
+.db "BUILD A ", $E8, Dialogue_NewPage
+.db "FOR ", $E1, "? ", $F8, "A", Dialogue_NewLine
+.db "CHANCE! I CAN", Dialogue_Apostrophe, "T", Dialogue_NewPage
+.db "ACCEPT SUCH", Dialogue_NewLine
+.db "RESPONSIBILITY.", Dialogue_Terminator65
+
+.db $E1, $EC, "CERTAINLY", Dialogue_NewLine
+.db "PERSISITENT. WELL,", Dialogue_NewPage
+.db "IF ", $CB, " DO AS", Dialogue_NewLine
+.db "I SAY, ", $CC, " ", $CA, Dialogue_NewPage
+.db "YOU. IS IT A DEAL?", Dialogue_Terminator62
+
+.db "O.K. ", $CC, " GO TO", Dialogue_NewLine
+.db $95, " ", $9E, Dialogue_NewPage
+.db "NEARBY TO MAKE", Dialogue_NewLine
+.db "PREPARATIONS. COME", Dialogue_NewPage
+.db "THEN. DO ", $F8, "WASTEWORRY ON ME.", Dialogue_Terminator65
+
+.db $C5, " ", $E2, Dialogue_NewLine
+.db $A0, "?", Dialogue_Terminator62
+
+.db $E1, $EC, "A FOOL!", Dialogue_NewLine
+.db $CB, " DIE!", Dialogue_Terminator65
+
+.db "SPIDER MONSTERS", Dialogue_NewLine
+.db $EC, "ACTUALLY", Dialogue_NewPage
+.db "VERY INTELLIGENT.", Dialogue_Terminator65
+
+.db $C3, " ", $DE, Dialogue_NewLine
+.db "ROBOT ", $8A, "?", Dialogue_Terminator62
+
+.db "ON ", $DE, "FAR SIDE OF", $DE, $E5, "S LIES", Dialogue_NewPage
+.db "A POOL OF MOLTEN", Dialogue_NewLine
+.db "LAVA CREATED BY A", Dialogue_NewPage
+.db "VOLCANIC ERUPTION.", Dialogue_Terminator65
+
+.db $DE, $9D, " DEEP IN", Dialogue_NewLine
+.db $DE, $95, Dialogue_NewPage
+.db $E5, "S IS KNOWNAS ", $EA, Dialogue_Apostrophe, "S ", $9D, ".", Dialogue_Terminator65
+
+.db "I HAVEN", Dialogue_Apostrophe, "T SEEN", Dialogue_NewLine
+.db $F6, $FD, " FOR A LONG", Dialogue_NewPage
+.db $9F, ". ", $CD, Dialogue_NewLine
+.db "TALK WITH ME?", Dialogue_Terminator62
+
+.db "POLYMETERAL ", $C7, Dialogue_NewLine
+.db "DISSOLVE ALL", Dialogue_NewPage
+.db "MATERIALS EXCEPT", Dialogue_NewLine
+.db "FOR ", $BC, ".", Dialogue_Terminator65
+
+.db "WHAT? DR.", $AD, Dialogue_NewLine
+.db "HAS RETURNED?", Dialogue_NewPage
+.db "HE ", $C7, " BUILD", Dialogue_NewLine
+.db "ANOTHER ", $E8, "?", Dialogue_NewPage
+.db "I ", $C7, " BE ", $D1, Dialogue_NewLine
+.db "RIGHT AWAY.", Dialogue_Terminator65
+
+.db "NO MAN ", $DC, " GOES", Dialogue_NewLine
+.db "INTO ", $DE, "ROOM IN", Dialogue_NewPage
+.db $DE, "FAR CORNER HASEVER COME OUT", Dialogue_NewPage
+.db "ALIVE! AHA-HA-HA!", Dialogue_Terminator65
+
+.db "IT SEEMS TO BE A", Dialogue_NewLine
+.db "MAN WHO HAS BEEN", Dialogue_NewPage
+.db $91, "!", Dialogue_NewLine
+.db "I WONDER IF HE CAN", Dialogue_NewPage
+.db "BE RETURNED TO HISORIGINAL FORM?", Dialogue_Terminator65
+
+.db $CB, " SOON FIND", Dialogue_NewLine
+.db "OUT ", $DE, "TRUTH!", Dialogue_Terminator65
+
+.db "HALT! GO BACK!", Dialogue_NewLine
+.db $E2, "LAST CHANCE!", Dialogue_Terminator65
+
+.db "HOW BRAVE! BUT BE", Dialogue_NewLine
+.db $ED, " OF TRAPS!", Dialogue_Terminator65
+
+.db $A8, " IS MY", Dialogue_NewLine
+.db "TURF. DON", Dialogue_Apostrophe, "T YA", Dialogue_NewPage
+.db "MESS ", Dialogue_Apostrophe, "ROUND ", $D2, ",", Dialogue_NewLine
+.db "NOW GIT!", Dialogue_Terminator65
+
+.db $CE, " FIND A", Dialogue_NewLine
+.db "ROBOT ", $E7, Dialogue_NewPage
+.db $8A, ". HE CAN FLYA ", $E8, ".", Dialogue_Terminator65
+
+.db "IN ", $E4, "PILE OF", Dialogue_NewLine
+.db "JUNK, ", $D5, $D0, ",", Dialogue_NewPage
+.db $DA, " S", Dialogue_Apostrophe, "PPOSED", Dialogue_NewLine
+.db "T", Dialogue_Apostrophe, "BE A USABLE", Dialogue_NewPage
+.db "ROBOT,BUT ", $E1, $BE, Dialogue_NewLine
+.db "HOW RUMORS BE.", Dialogue_Terminator65
+
+.db "POLYMETERAL IS FOR", Dialogue_NewLine
+.db "SALE IN ABION.", Dialogue_Terminator65
+
+.db $E4, $B9, " IS", Dialogue_NewLine
+.db "CALLED LOAR.", Dialogue_NewPage
+.db "WE ", $E3, "BEEN IN", Dialogue_NewLine
+.db "DECLINE ", $B3, " TO", Dialogue_NewPage
+.db $DE, "WORK OF", Dialogue_NewLine
+.db $D4, ".", Dialogue_Terminator65
+
+.db $E3, $E1, "HEARD OF", Dialogue_NewLine
+.db "A GEM CALLED \"", $DE, Dialogue_NewPage
+.db "AMBER EYE\"?", Dialogue_NewLine
+.db $D5, " SAY ", $DE, "CASBA", Dialogue_NewPage
+.db "DRAGON HAS ", $FD, ".", Dialogue_Terminator65
+
+.db $DA, " A ", $9E, "CALLED ABION ON", Dialogue_NewPage
+.db $DE, "WESTERN EDGE", Dialogue_NewLine
+.db "ON ", $E4, "ISLAND.", Dialogue_Terminator65
+
+.db $C3, " ABOUT", Dialogue_NewLine
+.db $D7, " TREES?", Dialogue_Terminator62
+
+.db "THEY GROW ON ", $DE, Dialogue_NewLine
+.db "ALTIPLANO PLATEAU", Dialogue_NewPage
+.db "ON ", $DE, $9A, Dialogue_NewLine
+.db $93, ".", Dialogue_Terminator65
+
+.db $E1, $EC, "GOING TO", Dialogue_NewLine
+.db "TRY TO KILL ", $D4, Dialogue_NewPage
+.db "I HEAR. ", $DC, Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db "GREAT!", Dialogue_NewPage
+.db "I ", $E3, "HEARD ", $DC, Dialogue_NewLine
+.db "A CERTAIN", Dialogue_NewPage
+.db "CRYSTAL ", $C7, " BLOCK", Dialogue_NewLine
+.db "EVIL ", $EF, ".", Dialogue_Terminator65
+
+.db $E0, "TO ABION.", Dialogue_Terminator65
+
+.db $CA, "! ", $D4, " HAS", Dialogue_NewLine
+.db "COME TO ", $E4, $B9, "!", Dialogue_Terminator65
+
+.db "A ", $AC, " MAN CAMETO ", $E4, $B9, ". HE", Dialogue_NewPage
+.db "SEEMS TO BE", Dialogue_NewLine
+.db "PERFORMING ANIMAL", Dialogue_NewPage
+.db "EXPERIMENTS. HE", Dialogue_NewLine
+.db "BROUGHT A LARGE", Dialogue_NewPage
+.db "POT OR ", $D5, $F7, ".", Dialogue_Terminator65
+
+.db "IT", Dialogue_Apostrophe, "S A ROBOT MADE", Dialogue_NewLine
+.db "OF ", $BC, ". BUT", Dialogue_NewPage
+.db "IT HAS BEEN", Dialogue_NewLine
+.db "ABAND", $FD, "D", Dialogue_NewPage
+.db $D5, $D0, " AS", Dialogue_NewLine
+.db "BEING USELESS.", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "D LIKE TO TRAVELIN OUTER SPACE.", Dialogue_Terminator65
+
+.db $D5, " CATS, IF THEYEAT A CERTAIN TYPE", Dialogue_NewPage
+.db "OF NUT,THEY BECOMEHUGE AND CAN FLY.", Dialogue_NewPage
+.db "IT", Dialogue_Apostrophe, "S REALLY VERY", Dialogue_NewLine
+.db "WIERD.", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "M ", $8A, ".", Dialogue_NewLine
+.db $B3, " FOR FINDING", Dialogue_NewPage
+.db "ME. I CAN FLY ", $DE, Dialogue_NewLine
+.db $AD, " FOR YOU.", Dialogue_Terminator65
+
+.db $E4, $B9, " IS", Dialogue_NewLine
+.db "CALLED UZO.", Dialogue_Terminator65
+
+.db "IF ", $E1, "USE A", Dialogue_NewLine
+.db "VEHICLE CALLED THE", Dialogue_NewPage
+.db "LAND ROVER, ", $DE, Dialogue_NewLine
+.db $A3, " ", $C7, " NOT", Dialogue_NewPage
+.db "BE ABLE TO HARM", Dialogue_NewLine
+.db "YOU.", Dialogue_Terminator65
+
+.db $DA, " A ", $B9, Dialogue_NewLine
+.db "CALLED CASBA TO", Dialogue_NewPage
+.db $DE, "SOUTH OF ", $D2, ".", Dialogue_Terminator65
+
+.db $DB, " DRAGONS", Dialogue_NewLine
+.db "LIVING IN ", $DE, Dialogue_NewPage
+.db "CASBA CAVE. THESE", Dialogue_NewLine
+.db "DRAGONS ", $E3, "GEMS", Dialogue_NewPage
+.db "IN THEIR HEADS!", Dialogue_Terminator65
+
+.db $E3, $E1, "HEARD", Dialogue_NewLine
+.db "ABOUT MANTLES MADE", Dialogue_NewPage
+.db "OF FRAD FIBERS?", Dialogue_NewLine
+.db "THEY ", $EC, "LIGHT,", Dialogue_NewPage
+.db "BUT PROVIDE ", $E6, Dialogue_NewLine
+.db "PROTECTION.", Dialogue_Terminator65
+
+.db $E3, $E1, "HEARD", Dialogue_NewLine
+.db "ABOUT ", $DE, Dialogue_NewPage
+.db $A4, "?", Dialogue_Terminator62
+
+.db "OH, NEVER MIND.", Dialogue_Terminator65
+
+.db "IT", Dialogue_Apostrophe, "S A ", $A5, ", BUTI BURIED ", $FD, " AT", Dialogue_NewPage
+.db $DE, "OUTSKIRTS OF", Dialogue_NewLine
+.db $DE, $B9, " OF ", $95, Dialogue_NewPage
+.db "ON ", $CF, ". DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
+.db "TELL ", $F6, $FD, ".", Dialogue_Terminator65
+
+.db "I DON", Dialogue_Apostrophe, "T ", $BE, " WHO", Dialogue_NewLine
+.db "TOLD ", $E1, $DC, ".", Dialogue_NewPage
+.db $E1, "HAD BEST", Dialogue_NewLine
+.db "FORGET IT.", Dialogue_Terminator65
+
+.db "I TELL ", $E1, "NO ", $FD, Dialogue_NewLine
+.db "CAN DO.GO ON BACK", Dialogue_NewPage
+.db "TO WHEREVER ", $E1, Dialogue_NewLine
+.db "CAME FROM.", Dialogue_Terminator65
+
+.db "ALL RIGHT, ALL", Dialogue_NewLine
+.db "RIGHT. I GIVE UP.", Dialogue_NewPage
+.db "BUT DON", Dialogue_Apostrophe, "T TELL", Dialogue_NewLine
+.db $F6, $FD, " ", $D0, " ", $E1, Dialogue_NewPage
+.db "GOT THIS, O.K.?", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "M ", $DE, $E6, Dialogue_NewLine
+.db "DAMOR, ", $BB, "!", Dialogue_NewPage
+.db $C6, " BELIEVE IN", Dialogue_NewLine
+.db "MY PROPHECIES?", Dialogue_Terminator62
+
+.db "I", Dialogue_Apostrophe, "VE GOT A FRIEND", Dialogue_NewLine
+.db "IN ", $A8, ". HE", Dialogue_Apostrophe, "S", Dialogue_NewPage
+.db "PROBABLY HAVING A", Dialogue_NewLine
+.db "HARD ", $9F, " BECAUSE", Dialogue_NewPage
+.db "OF ", $DE, "LAVA. WHY", Dialogue_NewLine
+.db $F8, "VISIT HIM?", Dialogue_Terminator65
+
+.db "GOOD!", Dialogue_Terminator65
+
+.db "YOU", Dialogue_Apostrophe, "RE SEARCHING", Dialogue_NewLine
+.db "FOR ", $D5, $F7, "?", Dialogue_Terminator62
+
+.db "LEAVE MY SIGHT,", Dialogue_NewLine
+.db "UNBELIEVER!", Dialogue_Terminator65
+
+.db $E1, $EC, "SEARCHING", Dialogue_NewLine
+.db "FOR ALEX OSSALE?", Dialogue_Terminator62
+
+.db "EVERY", $F7, " I", Dialogue_Apostrophe, "VE", Dialogue_NewLine
+.db "SAID IS CORRECT?", Dialogue_Terminator62
+
+.db "THEN, COME AGAIN,", Dialogue_NewLine
+.db $F6, $9F, ".", Dialogue_Terminator65
+
+.db $C6, " CONTRADICT", Dialogue_NewLine
+.db $DE, $E6, "DAMOR?!?", Dialogue_Terminator62
+
+.db "OF COURSE NOT!YOU", Dialogue_NewLine
+.db $EC, "A PROMISING", Dialogue_NewPage
+.db "YOUNG LASS! ", $CC, "GIVE ", $E1, "A ", $EF, Dialogue_NewPage
+.db "CRYSTAL FOR A", Dialogue_NewLine
+.db "REWARD.", Dialogue_Terminator65
+
+.db $C6, " COME IN", Dialogue_NewLine
+.db "FULL KNOWLEDGE OF", Dialogue_NewPage
+.db $DE, $9D, " OF ", $C0, Dialogue_NewLine
+.db $C1, "?", Dialogue_Terminator62
+
+.db $CB, " SURELY", Dialogue_NewLine
+.db "INCUR ", $DE, "WRATH", Dialogue_NewPage
+.db "OF ", $DE, "HEAVENS!", Dialogue_Terminator65
+
+.db "GO BACK BEFORE IT", Dialogue_NewLine
+.db "IS TOO LATE.", Dialogue_Terminator65
+
+.db $E4, $B9, " IS", Dialogue_NewLine
+.db "CALLED CASBA.", Dialogue_Terminator65
+
+.db "FIERCE DRAGONS", Dialogue_NewLine
+.db "LIVE IN ", $DE, "CAVE", Dialogue_NewPage
+.db "NEAR ", $D2, ",AND I", Dialogue_Apostrophe, "M", Dialogue_NewLine
+.db "SCARED OF THEM.", Dialogue_Terminator65
+
+.db "DON", Dialogue_Apostrophe, "T BELIEVE YOUR", Dialogue_NewLine
+.db "OWN EYES IN ", $DE, Dialogue_NewPage
+.db "DEPTH OF ", $DE, Dialogue_NewLine
+.db $D8, "S.", Dialogue_Terminator65
+
+.db $DB, " LEGENDS", Dialogue_NewLine
+.db "OF A MYSTIC ", $B6, Dialogue_NewPage
+.db "IN A ", $9E, Dialogue_NewLine
+.db "SURROUNDED IN MIST", Dialogue_NewPage
+.db "IT IS ", $DE, $B6, Dialogue_NewLine
+.db "PERSEUS USED IN", Dialogue_NewPage
+.db "DAYS TO CONQUER", Dialogue_NewLine
+.db $84, "BEASTS.", Dialogue_Terminator65
+
+.db $DA, " POISON", Dialogue_NewLine
+.db "GAS ABOVE ", $DE, "SEA", Dialogue_NewPage
+.db "TO ", $DE, "WEST. NO", Dialogue_NewLine
+.db $FD, " CAN GO NEAR", Dialogue_NewPage
+.db $D1, " WITHOUT ", $D5, "PROTECTION.", Dialogue_Terminator65
+
+.db $E3, $E1, "HEARD OF", Dialogue_NewLine
+.db "VEHICLE CALLED", Dialogue_NewPage
+.db $DE, "HOVERCRAFT?", Dialogue_Terminator62
+
+.db "I BOUGHT IT IN", Dialogue_NewLine
+.db $96, " ON ", $CF, Dialogue_NewPage
+.db "BUT IT SEEMED", Dialogue_NewLine
+.db "BROKEN SO I", Dialogue_NewPage
+.db "ABAND", $FD, "D IT IN", Dialogue_NewLine
+.db $A8, ". IT", Dialogue_NewPage
+.db "PROBABLY CAN STILLBE USED, THOUGH.", Dialogue_Terminator65
+
+.db $E1, "FOUND ", $DE, Dialogue_NewLine
+.db "HOVERCRAFT.", $8A, Dialogue_NewPage
+.db "HAS RESTORED IT TO", Dialogue_NewLine
+.db "WORKING ORDER.", Dialogue_Terminator65
+
+.db "IT", Dialogue_Apostrophe, "S A GOOD ", $F7, Dialogue_NewLine
+.db "TO HAVE. IT ", $F3, "S", Dialogue_NewPage
+.db "ACROSS WATER.", Dialogue_Terminator65
+
+.db $E0, "TO DRASGOW-- A SMALL ", $B9, Dialogue_NewPage
+.db "ON ", $DE, "OCEAN.", Dialogue_Terminator65
+
+.db $E1, $EC, "DARING TO", Dialogue_NewLine
+.db $E3, "FOUND ", $E2, Dialogue_NewPage
+.db "WAY ", $D2, " EVEN", Dialogue_NewLine
+.db "THOUGH ", $DE, "SEA", Dialogue_NewPage
+.db "LANES ", $EC, "CLOSED", Dialogue_NewLine
+.db "TO SHIPS.", Dialogue_Terminator65
+
+.db $DA, " A ", $EF, Dialogue_NewLine
+.db "SWORD IN A ", $9D, Dialogue_NewPage
+.db "ON A FORGOTTEN", Dialogue_NewLine
+.db "ISLAND.", Dialogue_Terminator65
+
+.db "LONG AGO, I SAW A", Dialogue_NewLine
+.db "GIANT ROCK FLOAT", Dialogue_NewPage
+.db $DD, " ", $DE, "SKY.", Dialogue_Terminator65
+
+.db $DE, "TOP OF ", $DE, Dialogue_NewLine
+.db $AB, " CALLED ", $C0, Dialogue_NewPage
+.db $C1, " IS ALWAYS", Dialogue_NewLine
+.db "HIDDEN BY CLOUDS.", Dialogue_NewPage
+.db $D5, $F7, " ", $C8, " BE", Dialogue_NewLine
+.db "UP ", $D1, "!", Dialogue_Terminator65
+
+.db "I HEARD ", $DC, " THEY", Dialogue_NewLine
+.db "SELL GAS ", $B6, Dialogue_NewPage
+.db $D2, ", BUT I DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
+.db $BE, " ", $D0, " ", $DE, Dialogue_NewPage
+.db "SHOP IS!", Dialogue_NewLine
+.db "WHAT A MESS!", Dialogue_Terminator65
+
+.db $E0, "TO OUR", Dialogue_NewLine
+.db "STORE. WHAT CAN I", Dialogue_NewPage
+.db $CA, " ", $E1, "WITH?", Dialogue_NewPage
+.db "AHH, I WAS PULLING", $E2, "LEG! WHAT", Dialogue_Apostrophe, "S", Dialogue_NewPage
+.db "A MATTER, CAN", Dialogue_Apostrophe, "T", Dialogue_NewLine
+.db $E1, "TAKE A JOKE?", Dialogue_Terminator65
+
+.db "I BET ", $E1, $EC, Dialogue_NewLine
+.db "SURPRISED TO SEE A", Dialogue_NewPage
+.db "SHOP IN A PLACE", Dialogue_NewLine
+.db "LIKE THIS!", Dialogue_NewPage
+.db "A GAS ", $B6, " IS", Dialogue_NewLine
+.db "ONLY ", $31, $30, $30, $30, " ", $A1, "!", Dialogue_NewPage
+.db "PRETTY CHEAP, HUH?", $CD, " BUY ", $FD, "?", Dialogue_Terminator62
+
+.db $B3, "! SEE ", $E1, Dialogue_NewLine
+.db "AGAIN.", Dialogue_Terminator65
+
+.db $E1, "DON", Dialogue_Apostrophe, "T ", $E3, Dialogue_NewLine
+.db "ENOUGH M", $FD, "Y!", Dialogue_Terminator65
+
+.db "SORRY, ", $DC, " WAS", Dialogue_NewLine
+.db $E2, "ONLY CHANCE.", Dialogue_Terminator65
+
+.db $DE, $98, " IS", Dialogue_NewLine
+.db "CLOSED.", Dialogue_Terminator65
+
+.db $8B, "CONFISCAT-", Dialogue_NewLine
+.db "ING ", $E2, $99, ".", Dialogue_Terminator65
+
+.db $E0, "TO SKURE", Dialogue_NewLine
+.db "ON ", $93, ".", Dialogue_NewPage
+.db "IT", Dialogue_Apostrophe, "S FREEZING", Dialogue_NewLine
+.db "OUTSIDE, ISN", Dialogue_Apostrophe, "T IT?", Dialogue_Terminator65
+
+.db "MOST EMIGRANTS", Dialogue_NewLine
+.db $FE, $CF, Dialogue_NewPage
+.db "SETTLE ", $D2, ".", Dialogue_Terminator65
+
+.db "I DON", Dialogue_Apostrophe, "T ", $BE, " A LOTABOUT ", $E4, $9A, ",", Dialogue_NewPage
+.db "BUT WORD HAS IT", Dialogue_NewLine
+.db $DC, " ", $DA, " A", Dialogue_NewPage
+.db $B9, " OF NATIVE", Dialogue_NewLine
+.db $F4, "S IN ", $DE, Dialogue_NewPage
+.db "FAR REACHES OF THE", $E5, "S.", Dialogue_Terminator65
+
+.db "IF ", $E1, "REALLY HOPETO KILL ", $D4, ",", Dialogue_NewPage
+.db $E1, "HAD BEST FIND", Dialogue_NewLine
+.db "A SWORD, AXE,", Dialogue_NewPage
+.db $B6, ", ARMOR", Dialogue_NewLine
+.db "MADE OF ", $BC, ".", Dialogue_NewPage
+.db "SUCH WEAPONS ", $EC, Dialogue_NewLine
+.db "STRONGEST.", Dialogue_NewPage
+.db "I PRAY FOR ", $E2, Dialogue_NewLine
+.db "SAFETY.", Dialogue_Terminator65
+
+.db "ARMS MADE OF", Dialogue_NewLine
+.db $BC, " CONCEAL", Dialogue_NewPage
+.db "HOLY POWER. ", $D4, "FEARS ", $E4, "POWER", Dialogue_NewPage
+.db "AND HAS BEEN", Dialogue_NewLine
+.db "RUNNING AND HIDING", Dialogue_NewPage
+.db "IN DIFFERENT", Dialogue_NewLine
+.db "PLACES IN ", $DE, Dialogue_NewPage
+.db $B8, " OF ", $DE, Dialogue_NewLine
+.db $9B, " ", $9C, ".", Dialogue_Terminator65
+
+.db $93, " IS A", Dialogue_NewLine
+.db $B5, " OF ICE.", Dialogue_Terminator65
+
+.db $DB, " PLACES", Dialogue_NewLine
+.db "IN ", $DE, $E5, "S", Dialogue_NewPage
+.db "WHERE THE ICE IS", Dialogue_NewLine
+.db "SOFT AND", Dialogue_NewPage
+.db "IMPASSABLE TO", Dialogue_NewLine
+.db "THOSE ON FOOT.", Dialogue_Terminator65
+
+.db $DE, "ALTIPLANO", Dialogue_NewLine
+.db "PLATEAU IS AT ", $DE, Dialogue_NewPage
+.db "TOP OF ", $DE, "ICE", Dialogue_NewLine
+.db $E5, ".", Dialogue_Terminator65
+
+.db "AN ECLIPSE OCCURS", Dialogue_NewLine
+.db "ON ", $E4, $9A, Dialogue_NewPage
+.db "ONCE EVERY HUNDREDYEARS. A TORCH", Dialogue_NewPage
+.db "LIT DURING AN", Dialogue_NewLine
+.db "ECLIPSE IS CALLED", Dialogue_NewPage
+.db "AN \"ECLIPSE TORCH\"AND IS REGARDED", Dialogue_NewPage
+.db "AS HOLY BY ", $DE, Dialogue_NewLine
+.db $F4, "S.", Dialogue_Terminator65
+
+.db $DE, "DEAD GUARON", Dialogue_NewLine
+.db "MORGUE ", $E3, "BEEN", Dialogue_NewPage
+.db "CALLED BACK TO", Dialogue_NewLine
+.db "LIFE! WHAT FEAR!", Dialogue_Terminator65
+
+.db $DE, "NEIBORING", Dialogue_NewLine
+.db $9E, " ", $EC, "ALL", Dialogue_NewPage
+.db "LIARS! DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
+.db "LISTEN TO THEM!", Dialogue_Terminator65
+
+.db "ZE CORONA ", $9D, Dialogue_NewLine
+.db "STANDS ON ZE", Dialogue_NewPage
+.db "FAR SIDE OF ZE", Dialogue_NewLine
+.db $E5, " TO ZE", Dialogue_NewPage
+.db "NORTH OF ZIS", Dialogue_NewLine
+.db $9E, ".", Dialogue_Terminator65
+
+.db "TO ZE WEST OF ZE", Dialogue_NewLine
+.db "CORONA ", $9D, " IS", Dialogue_NewPage
+.db "ZE ", $93, " CAVE.", Dialogue_NewLine
+.db "OUR FRIENDS ", $EC, "IN", Dialogue_NewPage
+.db "ZERE. GIVE ZEM", Dialogue_NewLine
+.db "OUR BEST, O.K.?", Dialogue_Terminator65
+
+.db $D7, " TREES GROW", Dialogue_NewLine
+.db "ZE ", $D7, " BERRIES.", Dialogue_NewPage
+.db "ZOSE BERRIES ", $EC, Dialogue_NewLine
+.db "OUR MOST IMPORTANT", Dialogue_NewPage
+.db "FOOD, BUT IT", Dialogue_NewLine
+.db "SHRIVELS UP AFTER", Dialogue_NewPage
+.db "A FEW MOMENTS,", Dialogue_NewLine
+.db "UNLESS IT IS PUT", Dialogue_NewPage
+.db "IN ", $A6, ".", Dialogue_Terminator65
+
+.db $C3, " WHAT", Dialogue_NewLine
+.db "AN AEROPRISM IS?", Dialogue_Terminator62
+
+.db "IT LETS ", $E1, "SEE", Dialogue_NewLine
+.db "ANOTHER ", $B5, ".", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "D LIKE TO SEE", Dialogue_NewLine
+.db $FD, " ", $D5, $9F, ".", Dialogue_Terminator65
+
+.db "WE OF ZIS ", $B9, Dialogue_NewLine
+.db "HATE ", $E9, ".", Dialogue_Terminator65
+
+.db $DA, " A SPRING", Dialogue_NewLine
+.db "OF LIFE IN ", $DE, Dialogue_NewPage
+.db "CORONA ", $9D, ",", Dialogue_NewLine
+.db $DA, ", YES.", Dialogue_Terminator65
+
+.db $E1, "CAN WARP ", $FE, Dialogue_NewLine
+.db $DE, $31, $30, "TH LEVEL OF", Dialogue_NewPage
+.db $DE, $D8, " UNDER", Dialogue_NewLine
+.db $93, ",YES.", Dialogue_Terminator65
+
+.db $D7, " BERRIES ARE", Dialogue_NewLine
+.db "BLUE ", $D7, " NUTS", Dialogue_NewLine
+.db "USED IN DYES,YES,", Dialogue_NewPage
+.db "THEY ", $EC, ", ", $D3, ".", Dialogue_Terminator65
+
+.db "IF ", $E1, "USE A", Dialogue_NewLine
+.db "CRYSTAL IN FRONT", Dialogue_NewPage
+.db "OF A ", $D7, " TREE,", Dialogue_NewLine
+.db "IT ", $C7, " BECOME,", Dialogue_NewPage
+.db "YES, A ", $D7, " NUT,YES, ", $D3, ".", Dialogue_Terminator65
+
+.db $E4, $B9, " WELCOMESALL ", $E9, ",YES,", Dialogue_NewPage
+.db $D3, ", WE DO.", Dialogue_Terminator65
+
+.db $E4, $B9, " IS", Dialogue_NewLine
+.db "CALLED SOPIA.", Dialogue_NewPage
+.db $E1, $EC, "BRAVE TO", Dialogue_NewLine
+.db "PENETRATE ", $DE, "GAS.", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "M ", $DE, "HEAD OF", Dialogue_NewLine
+.db $E4, $9E, ".", Dialogue_NewPage
+.db "BECAUSE OF ", $DE, Dialogue_NewLine
+.db "CLOUD OF GAS,", Dialogue_NewPage
+.db $8B, "CUT OFF", Dialogue_NewLine
+.db $FE, "OTHER TOWNS,", Dialogue_NewPage
+.db $8B, "THEREFORE", Dialogue_NewLine
+.db "VERY POOR.", Dialogue_NewPage
+.db $CD, " DONATE", Dialogue_NewLine
+.db $34, $30, $30, " ", $A1, "?", Dialogue_Terminator62
+
+.db $B7, ". WE ", $C8, " GO", Dialogue_NewLine
+.db "ON SUFFERING...", Dialogue_Terminator65
+
+.db $E1, $E3, "A LITTLE", Dialogue_NewLine
+.db "M", $FD, "Y,TOO, ", $B7, ".", Dialogue_Terminator65
+
+.db $B3, "! ACCORDING", Dialogue_NewLine
+.db "TO OUR LEGENDS,", Dialogue_NewPage
+.db $DE, "VERY ", $B6, ",", Dialogue_NewLine
+.db "PERSEUS USED TO", Dialogue_NewPage
+.db "OVERCOME ", $EA, ",ISBURIED ON ", $DE, Dialogue_NewPage
+.db "SMALL ISLAND IN", Dialogue_NewLine
+.db $DE, "MIDDLE OF A", Dialogue_NewPage
+.db "LAKE.", Dialogue_Terminator65
+
+.db "HI! I", Dialogue_Apostrophe, "M MIKI!", Dialogue_NewLine
+.db $C6, " LIKE", Dialogue_NewPage
+.db "SEGA ", $FA, "S?", Dialogue_Terminator62
+
+.db "OF COURSE! SEGA", Dialogue_NewLine
+.db $FA, "S ", $EC, "BEST.", Dialogue_Terminator65
+
+.db "I CAN", Dialogue_Apostrophe, "T BELIEVE", Dialogue_NewLine
+.db "IT. IF ", $E1, "DON", Dialogue_Apostrophe, "T", Dialogue_NewPage
+.db "LIKE ", $DE, $FA, ",....", Dialogue_NewLine
+.db "WHY ", $E3, $E1, Dialogue_NewPage
+.db "PLAYED SO FAR!?!", Dialogue_Terminator65
+
+.db "BEFORE ", $D4, " CAMETO POWER, EVEN OUR", Dialogue_NewPage
+.db $B9, " HAD PLENTY.", Dialogue_Terminator65
+
+.db $DA, " A MONK", Dialogue_NewLine
+.db $E7, "TAJIM IN THE", Dialogue_NewPage
+.db $E5, "S TO ", $DE, Dialogue_NewLine
+.db "SOUTH OF ", $DE, "LAKE.", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "VE HEARD ", $DC, Dialogue_NewLine
+.db $DE, $CF, " IS A", Dialogue_NewPage
+.db "BEAUTIFUL ", $9A, ".", Dialogue_NewLine
+.db "IS ", $DC, " TRUE?", Dialogue_Terminator62
+
+.db "I", Dialogue_Apostrophe, "D LIKE TO GO", Dialogue_NewLine
+.db "VISITING ", $D5, "DAY.", Dialogue_Terminator65
+
+.db "NO? I", Dialogue_Apostrophe, "D LIKE TO GO", $D5, $D0, " ", $DE, "AIR", Dialogue_NewPage
+.db "IS MORE CLEAN", Dialogue_NewLine
+.db "AND FRESH.", Dialogue_Terminator65
+
+.db $B3, "!", Dialogue_NewLine
+.db "COME AGAIN!", Dialogue_Terminator65
+
+.db "TIGHTWAND!", Dialogue_Terminator65
+
+.db $EB, Dialogue_Terminator65
+
+.db "..........", Dialogue_Terminator65
+
+.db "THEN ", $E1, $EC, $DE, Dialogue_NewLine
+.db "VERY ", $B0, " OF ", $DE, Dialogue_NewPage
+.db "ENTIRE ", $9C, ". I", Dialogue_NewLine
+.db $C7, " ASSIST ", $E1, "IN", Dialogue_NewPage
+.db "ALL WAYS POSSIBLE.", Dialogue_Terminator65
+
+.db $E1, $E3, "BEEN", Dialogue_NewLine
+.db "LOCKED UP,TOO", Dialogue_NewPage
+.db $DA, " A WAY", Dialogue_NewLine
+.db "OUT, BUT I LIKE", Dialogue_NewPage
+.db "IT IN ", $D2, ",", Dialogue_NewLine
+.db "MYSELF.", Dialogue_Terminator65
+
+.db $DB, " GUARDS", Dialogue_NewLine
+.db "UP AHEAD!", Dialogue_Terminator65
+
+.db "IF ", $E1, "PLAN TO GO", Dialogue_NewLine
+.db "BACK, NOW IS ", $DE, Dialogue_NewPage
+.db $9F, " TO LEAVE.", Dialogue_Terminator65
+
+.db $C5, " ", $E2, Dialogue_NewLine
+.db $A0, "?", Dialogue_Terminator62
+
+.db $E4, "IS A FAKE!", Dialogue_NewLine
+.db $C6, " THINK ", $E1, Dialogue_NewPage
+.db "CAN FOOL A ROBOT?", Dialogue_NewLine
+.db "OFF TO JAIL WE GO!", Dialogue_Terminator65
+
+.db "GET ME OUT ", $D2, "?", Dialogue_NewLine
+.db "BUT IT", Dialogue_Apostrophe, "S IN VAIN.", Dialogue_Terminator65
+
+.db "IT", Dialogue_Apostrophe, "S FOOLISH TO", Dialogue_NewLine
+.db "TRY TO GET ", $D4, "!", Dialogue_Terminator65
+
+.db $D4, " IS GONNA", Dialogue_NewLine
+.db "SACRIFICE US! AGH!", Dialogue_Terminator65
+
+.db $E3, $E1, "FOUND THE", Dialogue_NewLine
+.db "ARMOR IN GUARON?", Dialogue_Terminator62
+
+.db "IT CAN BE FOUND AT", $DE, "FAR SIDE OF", Dialogue_NewPage
+.db "A PIT TRAP.", Dialogue_Terminator65
+
+.db "WELL,AREN", Dialogue_Apostrophe, "T ", $E1, Dialogue_NewLine
+.db $D5, $F7, "?", Dialogue_Terminator65
+
+.db "ALL WHO FACE", Dialogue_NewLine
+.db $D4, " LOSE THEIR", Dialogue_NewPage
+.db "SOULS TO HIS", Dialogue_NewLine
+.db $EF, "!", Dialogue_Terminator65
+
+.db "NO? ", $DC, Dialogue_Apostrophe, "S FINE,", Dialogue_NewLine
+.db "IF ", $E1, "SO DESIRE.", Dialogue_NewPage
+.db $CB, " ALWAYS BE", $E0, $D2, ".", Dialogue_Terminator65
+
+.db $DA, " A ", $9D, Dialogue_NewLine
+.db "OF ", $DE, "TOP OF", Dialogue_NewPage
+.db $C2, ".", Dialogue_NewLine
+.db $D5, $F7, " ", $A5, Dialogue_NewPage
+.db "IS HIDDEN AT ", $DE, Dialogue_NewLine
+.db "TOP OF ", $DE, $9D, "!", Dialogue_Terminator65
+
+.db "WHAT ", $E3, $E1, "COMEFOR? ", $C6, " INTEND", Dialogue_NewPage
+.db $D5, " MISCHIEF?", Dialogue_Terminator65
+
+.db "I ", $E3, "AN UNEASY", Dialogue_NewLine
+.db "FEELING.", Dialogue_Terminator65
+
+.db "BE ", $ED, " UP", Dialogue_NewLine
+.db "AHEAD. AT ", $DE, Dialogue_NewPage
+.db "BREAK IN ", $DE, "ROAD,GO TO ", $DE, "LEFT!", Dialogue_Terminator65
+
+.db $D4, " LIVES IN", Dialogue_NewLine
+.db "FEAR OF ", $DE, Dialogue_NewPage
+.db "CRYSTAL POSSESSED", Dialogue_NewLine
+.db "BY ", $DE, $BB, Dialogue_NewPage
+.db $E7, "DAMOR. ", $D1, "IS ", $D5, $F7, Dialogue_NewPage
+.db "SPECIAL ABOUT IT,", Dialogue_NewLine
+.db "WITHOUT A DOUBT.", Dialogue_Terminator65
+
+.db $E4, "FIRE WAS LIT", Dialogue_NewLine
+.db "DURING ", $DE, "ECLIPSE", Dialogue_NewPage
+.db "WHICH OCCURS ONCE", Dialogue_NewLine
+.db "EVERY ", $31, $30, $30, " YEARS.", Dialogue_NewPage
+.db "IF ", $E1, "GIVE ME A", Dialogue_NewLine
+.db "GEM ", $FE, "A DRAGON,", Dialogue_NewPage
+.db "I", Dialogue_Apostrophe, "LL GIVE ", $E1, $D5, "OF ", $E4, "FIRE.", Dialogue_NewPage
+.db "HOW ABOUT IT?", Dialogue_Terminator62
+
+.db $D2, ", TAKE ", $E4, Dialogue_NewLine
+.db "ECLIPSE TORCH.", Dialogue_Terminator65
+
+.db "NO? THEN WHAT DID", Dialogue_NewLine
+.db $E1, "COME FOR?", Dialogue_Terminator65
+
+.db $E1, $E3, "NO GEM!", Dialogue_NewLine
+.db "DO I LOOK LIKE A", Dialogue_NewPage
+.db "FOOL OR ", $D5, $F7, "?", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "M SORRY I ", $E3, "A", Dialogue_NewLine
+.db "SHOP IN SUCH A", Dialogue_NewPage
+.db "PLACE. SHORTCAKE", Dialogue_NewLine
+.db "FOR ", $31, $30, $30, $30, " ", $A1, "!", Dialogue_NewPage
+.db $CD, " BUY ", $FD, "?", Dialogue_Terminator62
+
+.db "AH,MY YOUNG PUPIL,NOAH. ", $E1, $EC, Dialogue_NewPage
+.db "PREPARING TO FACE", Dialogue_NewLine
+.db $D4, "?", Dialogue_Terminator65
+
+.db "COME,", $CE, " ", $A2, Dialogue_NewLine
+.db $E2, "FINAL TEST---", Dialogue_NewPage
+.db "WE ", $C7, " DUEL!", Dialogue_Terminator65
+
+.db $E1, $E3, "BECOME", Dialogue_NewLine
+.db "MUCH STRONGER...", Dialogue_NewPage
+.db $E1, $EC, "WELL", Dialogue_NewLine
+.db "PREPARED.", Dialogue_NewPage
+.db "I", Dialogue_Apostrophe, "LL GIVE ", $E1, "A", Dialogue_NewLine
+.db "FRAD MANTLE AS A", Dialogue_NewPage
+.db "GIFT. IT PROTECTS", Dialogue_NewLine
+.db $E1, $FE, "DANGER!", Dialogue_Terminator65
+
+.db $E1, $EC, $F8, "YET", Dialogue_NewLine
+.db "READY! ", $CE, " GO", Dialogue_NewPage
+.db "STILL UNDERGO MORETRAINING.", Dialogue_Terminator65
+
+.db "I ", $E3, "NO", $F7, " TO", Dialogue_NewLine
+.db "TEACH ", $E1, "MORE.", Dialogue_Terminator65
+
+.db "AND WHO ", $EC, "YOU?", Dialogue_NewLine
+.db "FIND MY PUPIL NOAH", Dialogue_NewPage
+.db "IN ", $DE, $A7, Dialogue_NewLine
+.db "CAVE.", $C3, Dialogue_NewPage
+.db "HIM?", Dialogue_Terminator62
+
+.db "I", Dialogue_Apostrophe, "VE ", $D5, $F7, Dialogue_NewLine
+.db "I ", $C8, " TELL HIM.", Dialogue_NewPage
+.db "BRING HIM ", $D2, ".", Dialogue_Terminator65
+
+.db "IN ", $DC, " CASE,", Dialogue_NewLine
+.db $DA, " NO POINT", Dialogue_NewPage
+.db "IN FURTHER", Dialogue_NewLine
+.db "CONVERSATION.", Dialogue_Terminator65
+
+.db "I ", $E3, "WATCHED", Dialogue_NewLine
+.db "ALL ", $E2, "ACTIONS.", Dialogue_NewPage
+.db $82, " ME NOW, IF", Dialogue_NewLine
+.db $E1, "DARE.", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "M BUT ONLY", Dialogue_NewLine
+.db $D4, Dialogue_Apostrophe, "S SHADOW!", Dialogue_NewPage
+.db "EVEN IF ", $E1, "DEFEATME, YOU", Dialogue_Apostrophe, "VE GAINED", Dialogue_NewPage
+.db "NO", $F7, " AT ALL!", Dialogue_Terminator65
+
+.db "DON", Dialogue_Apostrophe, "T GO AGAINST", Dialogue_NewLine
+.db $D4, "!", Dialogue_Terminator65
+
+.db "AH, MY CHILDREN,", Dialogue_NewLine
+.db $E1, $E3, "D", $FD, " VERY", Dialogue_NewPage
+.db "WELL TO COME ", $E4, Dialogue_NewLine
+.db "FAR. ", $E1, $EC, "VERY", Dialogue_NewPage
+.db "LUCKY ", $D3, ". DO", Dialogue_NewLine
+.db $E1, "REALLY ", $97, " TO", Dialogue_NewPage
+.db "KILL AN OLD MAN?", Dialogue_Terminator62
+
+.db "ALL RIGHT! THEN", Dialogue_NewLine
+.db "WE ", $C7, " FORGET", Dialogue_NewPage
+.db $E4, "AS AN UNFOR-", Dialogue_NewLine
+.db "TUNATE MISTAKE.", Dialogue_Terminator65
+
+.db "EVEN NOW ", $E1, "TRY", Dialogue_NewLine
+.db "TO FOOL WITH ME?", Dialogue_NewPage
+.db $E1, "SHALL REPENT!", Dialogue_Terminator65
+
+.db "I", Dialogue_Apostrophe, "M SORRY, I ", $C8, Dialogue_NewLine
+.db $E3, "BEEN", Dialogue_NewPage
+.db "POSSESSED BODY ANDSOUL BY EVIL.", Dialogue_NewPage
+.db $E1, "RESCUED OUR", Dialogue_NewLine
+.db $B5, " JUST IN ", $DE, Dialogue_NewPage
+.db "NICK OF ", $9F, "! IF", Dialogue_NewLine
+.db $E1, "HAD COME ", $F6, Dialogue_NewPage
+.db "LATER, IT MIGHT", Dialogue_NewLine
+.db $E3, "BEEN TOO LATE", Dialogue_NewPage
+.db "WE ALL ", $B4, Dialogue_NewLine
+.db $FE, $DE, "BOTTOM", Dialogue_NewPage
+.db "OF OUR HEARTS.", Dialogue_NewLine
+.db $80, ", ", $E2, $B1, Dialogue_NewPage
+.db "WAS ONCE ", $AF, " OF", Dialogue_NewLine
+.db $9B, ". ", $DE, "DARK", Dialogue_NewPage
+.db $89, " HAS BEEN", Dialogue_NewLine
+.db "DESTROYED, ", $D4, Dialogue_NewPage
+.db "KILLED... ", $C6, ",", Dialogue_NewLine
+.db $80, ",", $97, " TO", Dialogue_NewPage
+.db "ASCEND ", $E2, Dialogue_NewLine
+.db $B1, Dialogue_Apostrophe, "S THR", $FD, Dialogue_NewPage
+.db "AND BECOME ", $DE, Dialogue_NewLine
+.db $B0, " OF ", $9B, "?", Dialogue_Terminator62
+
+.db "RAISE ", $DE, Dialogue_NewLine
+.db "AEROPRISM TOWARDS", Dialogue_NewPage
+.db $DE, "HEAVENS- ", $E1, Dialogue_NewLine
+.db "SHOULD THEN BE", Dialogue_NewPage
+.db "ABLE TO SEE ", $DE, Dialogue_NewLine
+.db "DARK ", $89, ".", Dialogue_Terminator65
+
+.db "ALRIGHT! ", $E1, "SAVEDALL OF ", $9B, "!", Dialogue_Terminator65
+
+.db $8B, " ALL", Dialogue_NewLine
+.db "THANKFUL FOR ", $E2, Dialogue_NewPage
+.db "BRAVE DEEDS! WE", Dialogue_NewLine
+.db "LOVE ", $E1, "!", Dialogue_Terminator65
+
+.db "REPORT QUICKLY TO", Dialogue_NewLine
+.db $DE, $AA, "!", Dialogue_Terminator65
+
+.db $E1, $88, " COME", Dialogue_NewLine
+.db $DD, " ", $D2, ".", Dialogue_NewPage
+.db $E4, "IS MY AREA.", Dialogue_Terminator65
+
+.db "WELL,IF DR.", $AD, Dialogue_NewLine
+.db "SENT ", $E1, ",I GUESS", Dialogue_NewPage
+.db "I ", $E3, "TO LET ", $E1, Dialogue_NewLine
+.db $DD, ".", Dialogue_Terminator65
+
+.db "THEY SAY ", $DC, Dialogue_NewLine
+.db $DB, " ", $94, "N", Dialogue_NewPage
+.db "LIVING ON ", $94, Dialogue_NewLine
+.db "AND ", $F4, "N ON", Dialogue_NewPage
+.db $93, ". I", Dialogue_Apostrophe, "D SURE", Dialogue_NewLine
+.db "LIKE A CHANCE TO", Dialogue_NewPage
+.db "TALK TO ", $D5, $FD, ".", Dialogue_Terminator65
+
+.db $D5, " INTELLIGENT", Dialogue_NewLine
+.db "MONSTERS ", $E3, Dialogue_NewPage
+.db "THEIR OWN", Dialogue_NewLine
+.db $D9, ".", Dialogue_Terminator65
+
+.db "I SOLD ", $DC, Dialogue_NewLine
+.db $A6, " FOR", Dialogue_NewPage
+.db "A ", $E6, "DEAL OF", Dialogue_NewLine
+.db "M", $FD, "Y. ", $B3, ".", Dialogue_Terminator65
+
+.db "NOW ", $DC, " MY STAFF", Dialogue_NewLine
+.db "IS ASSEMBLED", Dialogue_NewPage
+.db "I CAN BEGIN.", $D1, Dialogue_NewLine
+.db "IS HOWERVER, A", Dialogue_NewPage
+.db "SLIGHT FEE OF ", $31, $32, $30, $30, $A1, " INVOLVED.", Dialogue_NewPage
+.db $CD, " PAY?", Dialogue_Terminator62
+
+.db $B4, ". I CAN", Dialogue_NewLine
+.db "NOW GET TO WORK.", Dialogue_NewPage
+.db $C9, "WAIT ", $FD, Dialogue_NewLine
+.db "MOMENT.", Dialogue_Terminator65
+
+.db "IT ", $88, " BE", Dialogue_NewLine
+.db "HURRIED! ", $C9, Dialogue_NewPage
+.db "SHOW A BIT MORE", Dialogue_NewLine
+.db "PATIENCE!", Dialogue_Terminator65
+
+.db "WE CAN BOARD ", $DE, Dialogue_NewLine
+.db $AD, " AND BE ON", Dialogue_NewPage
+.db "OUR WAY!", Dialogue_Terminator65
+
+.db "HEY, BRING ", $DC, Dialogue_NewLine
+.db "CAT OVER ", $D2, "!", Dialogue_Terminator62
+
+.db "OOHH,HA,HA! ", $DE, Dialogue_NewLine
+.db "CAT ", $C7, " DIE!", Dialogue_Terminator65
+
+.db "I ", $C7, " KILL ", $F6, Dialogue_NewLine
+.db "WHO INTERFERE!", Dialogue_Terminator65
+
+.db $E1, "SHOULD ", $BF, Dialogue_NewLine
+.db $D2, " AWHILE AFTER", Dialogue_NewPage
+.db $E2, "LONG JOURNEY.", Dialogue_Terminator65
+
+.db $DC, " WAS QUICK-OH,", Dialogue_NewLine
+.db $B7, ",", $E1, $EC, $F8, Dialogue_NewPage
+.db $DD, " WITH", Dialogue_NewLine
+.db $D4, ". ", $E1, "HAD", Dialogue_NewPage
+.db "BEST ", $BF, " AT ", $DE, Dialogue_NewLine
+.db "INN.", Dialogue_Terminator65
+
+.db $E1, "FELL INTO A", Dialogue_NewLine
+.db "DEEP SLEEP.", Dialogue_Terminator63
+
+.db $E1, "HAD A BAD", Dialogue_NewLine
+.db "DREAM.", Dialogue_Terminator65
+
+.db $D2, " IS ", $DE, "HOME", Dialogue_NewLine
+.db "OF ", $80, ".", Dialogue_Terminator65
+
+.db "IT HAS ", $D5, $F7, Dialogue_NewLine
+.db $AC, ".", Dialogue_NewPage
+.db $D0, " IS ", $DE, Dialogue_NewLine
+.db $AA, ",I WONDER?", Dialogue_Terminator65
+
+.db $E1, $E3, "GOTTEN", Dialogue_NewLine
+.db $A9, " KILLED?", Dialogue_NewPage
+.db "COME, LET", Dialogue_Apostrophe, "S TRY", Dialogue_NewLine
+.db $FD, " MORE ", $9F, ".", Dialogue_Terminator65
+
+.db $D4, " HAS DIED.", Dialogue_NewLine
+.db $80, " ACCOMPLISHED", Dialogue_NewPage
+.db "HER ", $97, ". ", $B2, " IS", Dialogue_NewLine
+.db "SATISFIED NOW IN", Dialogue_NewPage
+.db "HEAVEN. HURRY TO", Dialogue_NewLine
+.db $DE, $AA, "!", Dialogue_Terminator65
 
 
 LABEL_B49B:
-.db	$53, $43, $55, $4D, $21, $20
-.db $44, $4F, $20, $4E, $4F, $54, $20, $53
-.db $4E, $49, $46, $46, $60, $41, $52, $4F
-.db $55, $4E, $44, $20, $49, $4E, $20, $D4
-.db $40, $53, $60, $41, $46, $46, $41, $49
-.db $52, $53, $21, $20, $4C, $45, $41, $52
-.db $4E, $60, $54, $48, $49, $53, $20, $4C
-.db $45, $53, $53, $4F, $4E, $20, $57, $45
-.db $4C, $4C, $21, $61, $B2, $21, $20, $57
-.db $48, $41, $54, $20, $48, $41, $50, $50
-.db $2D, $60, $45, $4E, $45, $44, $21, $20
-.db $44, $4F, $4E, $40, $54, $20, $44, $49
-.db $45, $21, $65
+.db "SCUM! DO NOT SNIFF", Dialogue_NewLine
+.db "AROUND IN ", $D4, Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db "AFFAIRS! LEARN", Dialogue_NewLine
+.db "THIS LESSON WELL!", Dialogue_NewPage
+.db $B2, "! WHAT HAPP-", Dialogue_NewLine
+.db "ENED! DON", Dialogue_Apostrophe, "T DIE!", Dialogue_Terminator65
 
 LABEL_B4FC:
-.db	$80, $2C, $4C, $49, $53
-.db $54, $45, $4E, $21, $60, $D4, $20, $49
-.db $53, $20, $4C, $45, $41, $44, $49, $4E
-.db $47, $60, $4F, $55, $52, $20, $B5, $20
-.db $54, $4F, $60, $44, $45, $53, $54, $52
-.db $55, $43, $54, $49, $4F, $4E, $2E, $20
-.db $49, $61, $54, $52, $49, $45, $44, $20
-.db $54, $4F, $20, $44, $49, $53, $43, $4F
-.db $56, $45, $52, $60, $48, $49, $53, $20
-.db $50, $4C, $41, $4E, $53, $2C, $20, $42
-.db $55, $54, $20, $49, $60, $43, $FF, $20
-.db $4E, $4F, $54, $20, $44, $4F, $20, $4D
-.db $55, $43, $48, $60, $42, $59, $20, $4D
-.db $59, $53, $45, $4C, $46, $2E, $61, $49
-.db $20, $E3, $48, $45, $41, $52, $44, $20
-.db $4F, $46, $20, $41, $60, $4D, $41, $4E
-.db $20, $57, $49, $54, $48, $20, $E6, $60
-.db $53, $54, $52, $45, $4E, $47, $54, $48
-.db $20, $E7, $60, $22, $4F, $44, $49, $4E
-.db $2E, $22, $20, $4D, $41, $59, $42, $45
-.db $20, $54, $48, $45, $61, $54, $57, $4F
-.db $20, $4F, $46, $20, $E1, $43, $41, $4E
-.db $60, $53, $54, $4F, $50, $20, $D4, $2E
-.db $60, $80, $2C, $49, $54, $40, $53, $20
-.db $54, $4F, $4F, $20, $4C, $41, $54, $45
-.db $60, $46, $4F, $52, $20, $4D, $45, $2E
-.db $20, $42, $45, $20, $53, $54, $52, $4F
-.db $4E, $47, $2E, $65
+.db $80, ",LISTEN!", Dialogue_NewLine
+.db $D4, " IS LEADING", Dialogue_NewLine
+.db "OUR ", $B5, " TO", Dialogue_NewLine
+.db "DESTRUCTION. I", Dialogue_NewPage
+.db "TRIED TO DISCOVER", Dialogue_NewLine
+.db "HIS PLANS, BUT I", Dialogue_NewLine
+.db "C", $FF, " NOT DO MUCH", Dialogue_NewLine
+.db "BY MYSELF.", Dialogue_NewPage
+.db "I ", $E3, "HEARD OF A", Dialogue_NewLine
+.db "MAN WITH ", $E6, Dialogue_NewLine
+.db "STRENGTH ", $E7, Dialogue_NewLine
+.db "\"ODIN.\" MAYBE THE", Dialogue_NewPage
+.db "TWO OF ", $E1, "CAN", Dialogue_NewLine
+.db "STOP ", $D4, ".", Dialogue_NewLine
+.db $80, ",IT", Dialogue_Apostrophe, "S TOO LATE", Dialogue_NewLine
+.db "FOR ME. BE STRONG.", Dialogue_Terminator65
 
 LABEL_B5D5:
-.db	$49, $20, $C7, $20
-.db $4D, $41, $4B, $45, $20, $53, $55, $52
-.db $45, $60, $DC, $20, $92, $60, $44, $49
-.db $45, $44, $20, $4E, $4F, $54, $20, $49
-.db $4E, $20, $56, $41, $49, $4E, $21, $60
-.db $57, $41, $54, $43, $48, $20, $4F, $56
-.db $45, $52, $20, $41, $4E, $44, $61, $50
-.db $52, $4F, $54, $45, $43, $54, $20, $4D
-.db $45, $2C, $20, $B2, $21, $65
+.db "I ", $C7, " MAKE SURE", Dialogue_NewLine
+.db $DC, " ", $92, Dialogue_NewLine
+.db "DIED NOT IN VAIN!", Dialogue_NewLine
+.db "WATCH OVER AND", Dialogue_NewPage
+.db "PROTECT ME, ", $B2, "!", Dialogue_Terminator65
 
 LABEL_B617:
-.db	$57, $45
-.db $20, $C7, $20, $42, $45, $20, $46, $45
-.db $4C, $4C, $4F, $57, $60, $54, $52, $41
-.db $56, $45, $4C, $45, $52, $53, $2E, $60
-.db $49, $40, $4D, $20, $80, $3B, $20, $57
-.db $48, $41, $54, $40, $53, $60, $E2, $4E
-.db $41, $4D, $45, $3F, $65
+.db "WE ", $C7, " BE FELLOW", Dialogue_NewLine
+.db "TRAVELERS.", Dialogue_NewLine
+.db "I", Dialogue_Apostrophe, "M ", $80, $3B, " WHAT", Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db $E2, "NAME?", Dialogue_Terminator65
 
 LABEL_B646:
-.db	$49, $40, $4D
-.db $20, $81, $2E, $65
+.db "I", Dialogue_Apostrophe, "M ", $81, ".", Dialogue_Terminator65
 
 LABEL_B64D:
-.db	$81, $2C, $20, $E3
-.db $E1, $60, $45, $56, $45, $52, $20, $48
-.db $45, $41, $52, $44, $20, $4F, $46, $20
-.db $41, $60, $4D, $41, $4E, $20, $E7, $4F
-.db $44, $49, $4E, $3F, $65
+.db $81, ", ", $E3, $E1, Dialogue_NewLine
+.db "EVER HEARD OF A", Dialogue_NewLine
+.db "MAN ", $E7, "ODIN?", Dialogue_Terminator65
 
 LABEL_B66E:
-.db	$59, $45, $53
-.db $2C, $20, $42, $55, $54, $20, $48, $45
-.db $20, $49, $53, $60, $91, $21, $60, $49
-.db $46, $20, $48, $45, $20, $44, $52, $49
-.db $4E, $4B, $53, $20, $54, $48, $49, $53
-.db $60, $4D, $45, $44, $49, $43, $49, $4E
-.db $45, $2C, $20, $48, $45, $40, $4C, $4C
-.db $20, $42, $45, $61, $4F, $2E, $4B, $2E
-.db $2C, $20, $42, $55, $54, $20, $49, $20
-.db $88, $60, $4F, $50, $45, $4E, $20, $DE
-.db $42, $4F, $54, $54, $4C, $45, $2E, $65
+.db "YES, BUT HE IS", Dialogue_NewLine
+.db $91, "!", Dialogue_NewLine
+.db "IF HE DRINKS THIS", Dialogue_NewLine
+.db "MEDICINE, HE", Dialogue_Apostrophe, "LL BE", Dialogue_NewPage
+.db "O.K., BUT I ", $88, Dialogue_NewLine
+.db "OPEN ", $DE, "BOTTLE.", Dialogue_Terminator65
 
 LABEL_B6C1:
-.db $57, $45, $4C, $4C, $2C, $20, $54, $48
-.db $45, $4E, $2C, $20, $57, $45, $40, $44
-.db $60, $42, $45, $54, $54, $45, $52, $20
-.db $47, $4F, $20, $8F, $60, $4F, $44, $49
-.db $4E, $20, $54, $4F, $47, $45, $54, $48
-.db $45, $52, $2C, $60, $4F, $2E, $4B, $2E
-.db $3F, $65
+.db "WELL, THEN, WE", Dialogue_Apostrophe, "D", Dialogue_NewLine
+.db "BETTER GO ", $8F, Dialogue_NewLine
+.db "ODIN TOGETHER,", Dialogue_NewLine
+.db "O.K.?", Dialogue_Terminator65
 
 LABEL_B6F3:
-.db	$B3, $20, $46, $4F, $52, $20
-.db $53, $41, $56, $49, $4E, $47, $60, $4D
-.db $45, $2E, $20, $49, $20, $47, $55, $45
-.db $53, $53, $20, $49, $46, $60, $EA, $20
-.db $43, $41, $4E, $20, $53, $54, $4F, $50
-.db $60, $4D, $45, $2C, $20, $49, $20, $44
-.db $4F, $4E, $40, $54, $20, $E3, $61, $4D
-.db $55, $43, $48, $20, $48, $4F, $50, $45
-.db $20, $4F, $46, $60, $4B, $49, $4C, $4C
-.db $49, $4E, $47, $20, $D4, $2C, $60, $44
-.db $4F, $20, $49, $3F, $65
+.db $B3, " FOR SAVING", Dialogue_NewLine
+.db "ME. I GUESS IF", Dialogue_NewLine
+.db $EA, " CAN STOP", Dialogue_NewLine
+.db "ME, I DON", Dialogue_Apostrophe, "T ", $E3, Dialogue_NewPage
+.db "MUCH HOPE OF", Dialogue_NewLine
+.db "KILLING ", $D4, ",", Dialogue_NewLine
+.db "DO I?", Dialogue_Terminator65
 
 LABEL_B746:
-.db	$92, $20, $44
-.db $49, $45, $44, $60, $54, $52, $59, $49
-.db $4E, $47, $20, $54, $4F, $20, $4B, $49
-.db $4C, $4C, $60, $D4, $2E, $20, $42, $45
-.db $46, $4F, $52, $45, $20, $48, $45, $60
-.db $44, $49, $45, $44, $2C, $20, $48, $45
-.db $20, $54, $4F, $4C, $44, $20, $4D, $45
-.db $61, $54, $4F, $20, $53, $45, $45, $4B
-.db $20, $E2, $CA, $2E, $65
+.db $92, " DIED", Dialogue_NewLine
+.db "TRYING TO KILL", Dialogue_NewLine
+.db $D4, ". BEFORE HE", Dialogue_NewLine
+.db "DIED, HE TOLD ME", Dialogue_NewPage
+.db "TO SEEK ", $E2, $CA, ".", Dialogue_Terminator65
 
 LABEL_B786:
-.db	$49, $53, $20
-.db $DC, $20, $53, $4F, $3F, $20, $57, $45
-.db $4C, $4C, $2C, $60, $49, $20, $C8, $20
-.db $4E, $4F, $54, $20, $4C, $45, $54, $60
-.db $E2, $42, $52, $4F, $54, $48, $45, $52
-.db $20, $44, $49, $45, $60, $55, $4E, $41
-.db $56, $45, $4E, $47, $45, $44, $2E, $65
+.db "IS ", $DC, " SO? WELL,", Dialogue_NewLine
+.db "I ", $C8, " NOT LET", Dialogue_NewLine
+.db $E2, "BROTHER DIE", Dialogue_NewLine
+.db "UNAVENGED.", Dialogue_Terminator65
 
 LABEL_B7B9:
-.db $57, $48, $59, $20, $44, $49, $44, $20
-.db $E1, $54, $52, $59, $20, $54, $4F, $60
-.db $4B, $49, $4C, $4C, $20, $EA, $3F, $65
+.db "WHY DID ", $E1, "TRY TO", Dialogue_NewLine
+.db "KILL ", $EA, "?", Dialogue_Terminator65
 
 LABEL_B7D1:
-.db $42, $45, $43, $41, $55, $53, $45, $20
-.db $EA, $20, $48, $41, $53, $60, $41, $20
-.db $4D, $59, $53, $54, $49, $43, $20, $41
-.db $58, $45, $2E, $60, $55, $4E, $46, $4F
-.db $52, $54, $55, $4E, $41, $54, $45, $4C
-.db $59, $2C, $20, $53, $48, $45, $60, $47
-.db $4F, $54, $20, $41, $57, $41, $59, $20
-.db $FE, $4D, $45, $2E, $61, $41, $4E, $59
-.db $48, $4F, $57, $2C, $20, $49, $20, $E3
-.db $60, $53, $54, $41, $53, $48, $45, $44
-.db $20, $41, $20, $43, $4F, $4D, $50, $41
-.db $53, $53, $60, $49, $4E, $20, $4F, $4E
-.db $45, $20, $4F, $46, $20, $54, $48, $45
-.db $60, $BA, $53, $20, $4F, $46, $20, $E4
-.db $61, $43, $41, $56, $45, $2E, $20, $4C
-.db $45, $54, $40, $53, $20, $47, $4F, $20
-.db $41, $4E, $44, $60, $47, $45, $54, $20
-.db $49, $54, $65
+.db "BECAUSE ", $EA, " HAS", Dialogue_NewLine
+.db "A MYSTIC AXE.", Dialogue_NewLine
+.db "UNFORTUNATELY, SHE", Dialogue_NewLine
+.db "GOT AWAY ", $FE, "ME.", Dialogue_NewPage
+.db "ANYHOW, I ", $E3, Dialogue_NewLine
+.db "STASHED A COMPASS", Dialogue_NewLine
+.db "IN ONE OF THE", Dialogue_NewLine
+.db $BA, "S OF ", $E4, Dialogue_NewPage
+.db "CAVE. LET", Dialogue_Apostrophe, "S GO AND", Dialogue_NewLine
+.db "GET IT", Dialogue_Terminator65
 
 LABEL_B85C:
-.db	$49, $40, $56, $45, $20
-.db $52, $45, $43, $45, $49, $56, $45, $44
-.db $20, $41, $60, $4C, $45, $54, $54, $45
-.db $52, $20, $FE, $DE, $60, $AA, $2E, $20
-.db $C9, $60, $52, $45, $41, $44, $20, $49
-.db $54, $2E, $65
+.db "I", Dialogue_Apostrophe, "VE RECEIVED A", Dialogue_NewLine
+.db "LETTER ", $FE, $DE, Dialogue_NewLine
+.db $AA, ". ", $C9, Dialogue_NewLine
+.db "READ IT.", Dialogue_Terminator65
 
 LABEL_B884:
-.db	$4C, $45, $54, $20, $4D
-.db $45, $20, $53, $45, $45, $20, $49, $54
-.db $2E, $2E, $2E, $2E, $2E, $60, $4F, $55
-.db $52, $20, $44, $55, $54, $59, $20, $49
-.db $53, $20, $43, $4C, $45, $41, $52, $3B
-.db $60, $57, $45, $20, $C8, $20, $50, $52
-.db $4F, $54, $45, $43, $54, $60, $DE, $B8
-.db $20, $4F, $46, $20, $54, $48, $45, $61
-.db $9B, $20, $9C, $20, $FE, $60, $45, $56
-.db $49, $4C, $2E, $60, $57, $45, $20, $C8
-.db $20, $46, $49, $52, $53, $54, $20, $47
-.db $4F, $60, $54, $4F, $20, $DE, $95, $61
-.db $46, $4F, $52, $45, $53, $54, $53, $20
-.db $41, $4E, $44, $20, $46, $49, $4E, $44
-.db $60, $44, $52, $2E, $AD, $2E, $20, $57
-.db $45, $20, $43, $41, $4E, $60, $55, $53
-.db $45, $20, $41, $4E, $20, $55, $4E, $44
-.db $45, $52, $47, $52, $4F, $55, $4E, $44
-.db $60, $BA, $20, $FE, $41, $61, $4D, $41
-.db $4E, $48, $4F, $4C, $45, $20, $49, $4E
-.db $20, $54, $48, $45, $60, $98, $2E, $65
+.db "LET ME SEE IT.....", Dialogue_NewLine
+.db "OUR DUTY IS CLEAR", $3B, Dialogue_NewLine
+.db "WE ", $C8, " PROTECT", Dialogue_NewLine
+.db $DE, $B8, " OF THE", Dialogue_NewPage
+.db $9B, " ", $9C, " ", $FE, Dialogue_NewLine
+.db "EVIL.", Dialogue_NewLine
+.db "WE ", $C8, " FIRST GO", Dialogue_NewLine
+.db "TO ", $DE, $95, Dialogue_NewPage
+.db "FORESTS AND FIND", Dialogue_NewLine
+.db "DR.", $AD, ". WE CAN", Dialogue_NewLine
+.db "USE AN UNDERGROUND", Dialogue_NewLine
+.db $BA, " ", $FE, "A", Dialogue_NewPage
+.db "MANHOLE IN THE", Dialogue_NewLine
+.db $98, ".", Dialogue_Terminator65
 
 LABEL_B929:
-.db $57, $48, $45, $4E, $20, $81, $20, $45
-.db $41, $54, $53, $20, $54, $48, $45, $60
-.db $4E, $55, $54, $53, $20, $4F, $46, $20
-.db $D7, $2C, $20, $48, $45, $60, $42, $45
-.db $43, $4F, $4D, $45, $53, $20, $43, $4C
-.db $4F, $54, $48, $45, $44, $20, $49, $4E
-.db $60, $46, $4C, $41, $4D, $45, $20, $41
-.db $4E, $44, $20, $45, $4D, $49, $54, $53
-.db $20, $41, $61, $42, $4C, $49, $4E, $44
-.db $49, $4E, $47, $20, $4C, $49, $47, $48
-.db $54, $2E, $65
+.db "WHEN ", $81, " EATS THE", Dialogue_NewLine
+.db "NUTS OF ", $D7, ", HE", Dialogue_NewLine
+.db "BECOMES CLOTHED IN", Dialogue_NewLine
+.db "FLAME AND EMITS A", Dialogue_NewPage
+.db "BLINDING LIGHT.", Dialogue_Terminator65
 
 LABEL_B97C:
-.db	$57, $48, $45, $4E, $20
-.db $48, $45, $20, $49, $53, $20, $56, $49
-.db $53, $49, $42, $4C, $45, $60, $41, $47
-.db $41, $49, $4E, $2C, $20, $48, $45, $20
-.db $48, $41, $53, $20, $42, $45, $45, $4E
-.db $60, $54, $52, $41, $4E, $53, $46, $4F
-.db $52, $4D, $45, $44, $20, $49, $4E, $54
-.db $4F, $61, $41, $20, $42, $45, $41, $55
-.db $54, $49, $46, $55, $4C, $60, $57, $49
-.db $4E, $47, $45, $44, $20, $42, $45, $41
-.db $53, $54, $2E, $60, $81, $20, $46, $4C
-.db $41, $50, $53, $20, $48, $49, $53, $60
-.db $57, $49, $4E, $47, $53, $20, $50, $4C
-.db $4F, $55, $44, $4C, $59, $2E, $65
+.db "WHEN HE IS VISIBLE", Dialogue_NewLine
+.db "AGAIN, HE HAS BEEN", Dialogue_NewLine
+.db "TRANSFORMED INTO", Dialogue_NewPage
+.db "A BEAUTIFUL", Dialogue_NewLine
+.db "WINGED BEAST.", Dialogue_NewLine
+.db $81, " FLAPS HIS", Dialogue_NewLine
+.db "WINGS PLOUDLY.", Dialogue_Terminator65
 
 LABEL_B9E8:
-.db	$60
-.db $20, $20, $20, $20, $20, $80, $63
+.db Dialogue_NewLine
+.db "     ", $80, Dialogue_Terminator63
 
 LABEL_B9F0:
-.db	$60
-.db $20, $20, $20, $20, $20, $4F, $44, $49
-.db $4E, $63
+.db Dialogue_NewLine
+.db "     ODIN", Dialogue_Terminator63
 
 LABEL_B9FB:
-.db	$60, $20, $20, $20, $20, $20
-.db $4E, $4F, $41, $48, $63
+.db Dialogue_NewLine
+.db "     NOAH", Dialogue_Terminator63
 
 LABEL_BA06:
-.db	$60, $20, $20
-.db $20, $20, $20, $41, $4E, $44, $20, $81
-.db $63
+.db Dialogue_NewLine
+.db "     AND ", $81, Dialogue_Terminator63
 
 LABEL_BA12:
-.db	$45, $56, $45, $4E, $20, $54, $48
-.db $4F, $55, $47, $48, $20, $54, $48, $45
-.db $60, $4D, $45, $4D, $4F, $52, $49, $45
-.db $53, $20, $4F, $46, $20, $45, $56, $49
-.db $4C, $60, $46, $41, $44, $45, $20, $41
-.db $57, $41, $59, $2C, $20, $54, $48, $45
-.db $49, $52, $60, $4E, $41, $4D, $45, $53
-.db $20, $C7, $20, $42, $45, $20, $4B, $45
-.db $50, $54, $63
+.db "EVEN THOUGH THE", Dialogue_NewLine
+.db "MEMORIES OF EVIL", Dialogue_NewLine
+.db "FADE AWAY, THEIR", Dialogue_NewLine
+.db "NAMES ", $C7, " BE KEPT", Dialogue_Terminator63
 
 LABEL_BA54:
-.db	$5F, $49, $4E, $20, $DE
-.db $48, $45, $41, $52, $54, $53, $20, $4F
-.db $46, $60, $DE, $50, $45, $4F, $50, $4C
-.db $45, $20, $4F, $46, $20, $DE, $60, $41
-.db $4C, $47, $4F, $4C, $20, $46, $4F, $52
-.db $45, $56, $45, $52, $21, $21, $21, $63
+.db $5F, "IN ", $DE, "HEARTS OF", Dialogue_NewLine
+.db $DE, "PEOPLE OF ", $DE, Dialogue_NewLine
+.db "ALGOL FOREVER!!!", Dialogue_Terminator63
+
+
 .db $81, $BB, $86, $BB, $8B, $BB, $92, $BB
 .db $9C, $BB, $A3, $BB, $A8, $BB, $AF, $BB
 .db $B8, $BB, $BF, $BB, $C6, $BB, $CD, $BB
@@ -18997,127 +18631,136 @@ LABEL_BA54:
 .db $01, $BF, $0A, $BF, $11, $BF, $15, $BF
 .db $1B, $BF, $20, $BF, $26, $BF, $2B, $BF
 .db $33, $BF, $3A, $BF, $3E, $BF, $44, $BF
-.db $41, $4C, $49, $53, $65, $4D, $59, $41
-.db $55, $65, $41, $54, $54, $41, $43, $4B
-.db $65, $45, $46, $46, $45, $43, $54, $49
-.db $56, $45, $65, $4D, $41, $47, $49, $43
-.db $20, $65, $57, $41, $4C, $4C, $65, $48
-.db $45, $41, $4C, $45, $44, $65, $44, $45
-.db $46, $4C, $45, $43, $54, $53, $65, $43
-.db $41, $4E, $4E, $4F, $54, $65, $43, $41
-.db $53, $54, $4C, $45, $65, $48, $41, $50
-.db $53, $42, $59, $65, $57, $45, $20, $41
-.db $52, $45, $20, $65, $48, $45, $41, $44
-.db $49, $4E, $47, $20, $46, $4F, $52, $65
-.db $43, $41, $52, $52, $59, $65, $52, $45
-.db $53, $55, $52, $52, $45, $43, $54, $65
-.db $53, $41, $56, $45, $65, $43, $55, $52
-.db $52, $45, $4E, $54, $4C, $59, $65, $54
-.db $55, $52, $4E, $45, $44, $20, $54, $4F
-.db $20, $53, $54, $4F, $4E, $45, $65, $4D
-.db $59, $20, $42, $52, $4F, $54, $48, $45
-.db $52, $65, $44, $45, $5A, $4F, $52, $49
-.db $53, $65, $4D, $4F, $54, $41, $56, $49
-.db $41, $65, $47, $4F, $54, $48, $49, $43
-.db $65, $53, $43, $49, $4F, $4E, $65, $57
-.db $49, $53, $48, $65, $53, $50, $41, $43
-.db $45, $50, $4F, $52, $54, $65, $50, $41
-.db $53, $53, $50, $4F, $52, $54, $65, $50
-.db $4C, $41, $4E, $45, $54, $65, $41, $4C
-.db $47, $4F, $4C, $65, $53, $59, $53, $54
-.db $45, $4D, $65, $54, $4F, $57, $45, $52
-.db $65, $56, $49, $4C, $4C, $41, $47, $45
-.db $65, $54, $49, $4D, $45, $65, $52, $4F
-.db $41, $44, $50, $41, $53, $53, $65, $4D
-.db $45, $53, $45, $54, $41, $53, $65, $50
-.db $41, $53, $53, $65, $41, $4E, $54, $20
-.db $4C, $49, $4F, $4E, $65, $53, $4F, $4F
-.db $54, $48, $49, $4E, $47, $20, $46, $4C
-.db $55, $54, $45, $65, $53, $45, $43, $52
-.db $45, $54, $65, $4C, $41, $43, $4F, $4E
-.db $49, $41, $4E, $20, $50, $4F, $54, $65
-.db $4D, $41, $48, $41, $52, $55, $65, $42
-.db $4F, $52, $54, $45, $56, $4F, $65, $59
-.db $4F, $55, $52, $53, $45, $4C, $46, $65
-.db $47, $4F, $56, $45, $52, $4E, $4F, $52
-.db $65, $48, $49, $4C, $4C, $65, $53, $54
-.db $52, $41, $4E, $47, $45, $65, $4C, $55
-.db $56, $45, $4E, $4F, $65, $48, $4F, $57
-.db $45, $56, $45, $52, $65, $4B, $49, $4E
-.db $47, $65, $51, $55, $45, $45, $4E, $65
-.db $46, $41, $54, $48, $45, $52, $65, $4E
-.db $45, $52, $4F, $65, $54, $48, $41, $4E
-.db $4B, $53, $65, $54, $48, $41, $4E, $4B
-.db $20, $59, $4F, $55, $65, $57, $4F, $52
-.db $4C, $44, $65, $53, $48, $49, $45, $4C
-.db $44, $65, $49, $20, $53, $45, $45, $65
-.db $50, $4C, $41, $4E, $45, $54, $53, $65
-.db $54, $4F, $57, $4E, $65, $50, $41, $53
-.db $53, $41, $47, $45, $65, $53, $4F, $4F
-.db $54, $48, $53, $41, $59, $45, $52, $65
-.db $4C, $41, $43, $4F, $4E, $49, $41, $65
-.db $4C, $41, $42, $4F, $52, $41, $54, $4F
-.db $52, $59, $65, $4B, $4E, $4F, $57, $65
-.db $52, $45, $53, $54, $65, $42, $41, $59
-.db $41, $65, $4D, $41, $4C, $41, $59, $65
-.db $42, $41, $59, $41, $20, $4D, $41, $4C
-.db $41, $59, $65, $44, $4F, $20, $59, $4F
-.db $55, $20, $4B, $4E, $4F, $57, $65, $46
-.db $4F, $52, $45, $53, $54, $65, $44, $4F
-.db $20, $59, $4F, $55, $20, $48, $41, $56
-.db $45, $65, $44, $4F, $20, $59, $4F, $55
-.db $65, $57, $49, $4C, $4C, $65, $4D, $55
-.db $53, $54, $65, $50, $4C, $45, $41, $53
-.db $45, $20, $65, $48, $45, $4C, $50, $65
-.db $59, $4F, $55, $20, $57, $49, $4C, $4C
-.db $65, $49, $20, $57, $49, $4C, $4C, $65
-.db $57, $49, $4C, $4C, $20, $59, $4F, $55
-.db $65, $59, $4F, $55, $20, $4D, $55, $53
-.db $54, $65, $50, $41, $4C, $4D, $41, $65
-.db $57, $48, $45, $52, $45, $65, $54, $48
-.db $45, $52, $45, $65, $48, $45, $52, $45
-.db $65, $49, $4E, $44, $45, $45, $44, $65
-.db $4C, $41, $53, $53, $49, $43, $65, $53
-.db $4F, $4D, $45, $65, $52, $45, $53, $49
-.db $44, $45, $4E, $54, $49, $41, $4C, $20
-.db $41, $52, $45, $41, $65, $4C, $41, $45
-.db $52, $4D, $41, $65, $44, $55, $4E, $47
-.db $45, $4F, $4E, $65, $4C, $41, $4E, $47
-.db $55, $41, $47, $45, $65, $54, $48, $45
-.db $52, $45, $20, $49, $53, $65, $54, $48
-.db $45, $52, $45, $20, $41, $52, $45, $65
-.db $54, $48, $41, $54, $65, $54, $48, $52
-.db $4F, $55, $47, $48, $65, $54, $48, $45
-.db $20, $65, $50, $52, $45, $53, $45, $4E
-.db $54, $65, $57, $45, $4C, $43, $4F, $4D
-.db $45, $20, $65, $59, $4F, $55, $20, $65
-.db $59, $4F, $55, $52, $20, $65, $48, $41
-.db $56, $45, $20, $65, $54, $48, $49, $53
-.db $20, $65, $4D, $4F, $55, $4E, $54, $41
-.db $49, $4E, $65, $47, $52, $45, $41, $54
-.db $20, $65, $4E, $41, $4D, $45, $44, $20
-.db $65, $53, $50, $41, $43, $45, $53, $48
-.db $49, $50, $65, $50, $41, $4C, $4D, $41
-.db $4E, $53, $65, $4D, $45, $44, $55, $53
-.db $41, $65, $44, $4F, $4E, $40, $54, $20
-.db $42, $45, $20, $41, $20, $46, $4F, $4F
-.db $4C, $21, $65, $41, $52, $45, $20, $65
-.db $43, $41, $52, $45, $46, $55, $4C, $65
-.db $44, $45, $4C, $45, $54, $45, $65, $4D
-.db $41, $47, $49, $43, $65, $53, $41, $42
-.db $52, $55, $53, $20, $43, $41, $42, $52
-.db $55, $53, $65, $54, $52, $45, $41, $53
-.db $55, $52, $45, $20, $65, $43, $48, $45
-.db $53, $54, $65, $4D, $4F, $56, $45, $65
-.db $44, $45, $5A, $4F, $52, $49, $41, $4E
-.db $65, $45, $4D, $42, $41, $52, $4B, $65
-.db $41, $4E, $59, $65, $54, $48, $49, $4E
-.db $47, $65, $4E, $4F, $54, $20, $65, $57
-.db $41, $4E, $54, $20, $65, $47, $41, $4D
-.db $45, $65, $46, $41, $43, $49, $4E, $47
-.db $20, $65, $53, $45, $4C, $45, $43, $54
-.db $65, $4F, $4E, $45, $65, $46, $52, $4F
-.db $4D, $20, $65, $4F, $55, $4C, $44, $65
+
+
+.db "ALIS", Dialogue_Terminator65
+.db "MYAU", Dialogue_Terminator65
+.db "ATTACK", Dialogue_Terminator65
+.db "EFFECTIVE", Dialogue_Terminator65
+.db "MAGIC ", Dialogue_Terminator65
+.db "WALL", Dialogue_Terminator65
+.db "HEALED", Dialogue_Terminator65
+.db "DEFLECTS", Dialogue_Terminator65
+.db "CANNOT", Dialogue_Terminator65
+.db "CASTLE", Dialogue_Terminator65
+.db "HAPSBY", Dialogue_Terminator65
+.db "WE ARE ", Dialogue_Terminator65
+.db "HEADING FOR", Dialogue_Terminator65
+.db "CARRY", Dialogue_Terminator65
+.db "RESURRECT", Dialogue_Terminator65
+.db "SAVE", Dialogue_Terminator65
+.db "CURRENTLY", Dialogue_Terminator65
+.db "TURNED TO STONE", Dialogue_Terminator65
+.db "MY BROTHER", Dialogue_Terminator65
+.db "DEZORIS", Dialogue_Terminator65
+.db "MOTAVIA", Dialogue_Terminator65
+.db "GOTHIC", Dialogue_Terminator65
+.db "SCION", Dialogue_Terminator65
+.db "WISH", Dialogue_Terminator65
+.db "SPACEPORT", Dialogue_Terminator65
+.db "PASSPORT", Dialogue_Terminator65
+.db "PLANET", Dialogue_Terminator65
+.db "ALGOL", Dialogue_Terminator65
+.db "SYSTEM", Dialogue_Terminator65
+.db "TOWER", Dialogue_Terminator65
+.db "VILLAGE", Dialogue_Terminator65
+.db "TIME", Dialogue_Terminator65
+.db "ROADPASS", Dialogue_Terminator65
+.db "MESETAS", Dialogue_Terminator65
+.db "PASS", Dialogue_Terminator65
+.db "ANT LION", Dialogue_Terminator65
+.db "SOOTHING FLUTE", Dialogue_Terminator65
+.db "SECRET", Dialogue_Terminator65
+.db "LACONIAN POT", Dialogue_Terminator65
+.db "MAHARU", Dialogue_Terminator65
+.db "BORTEVO", Dialogue_Terminator65
+.db "YOURSELF", Dialogue_Terminator65
+.db "GOVERNOR", Dialogue_Terminator65
+.db "HILL", Dialogue_Terminator65
+.db "STRANGE", Dialogue_Terminator65
+.db "LUVENO", Dialogue_Terminator65
+.db "HOWEVER", Dialogue_Terminator65
+.db "KING", Dialogue_Terminator65
+.db "QUEEN", Dialogue_Terminator65
+.db "FATHER", Dialogue_Terminator65
+.db "NERO", Dialogue_Terminator65
+.db "THANKS", Dialogue_Terminator65
+.db "THANK YOU", Dialogue_Terminator65
+.db "WORLD", Dialogue_Terminator65
+.db "SHIELD", Dialogue_Terminator65
+.db "I SEE", Dialogue_Terminator65
+.db "PLANETS", Dialogue_Terminator65
+.db "TOWN", Dialogue_Terminator65
+.db "PASSAGE", Dialogue_Terminator65
+.db "SOOTHSAYER", Dialogue_Terminator65
+.db "LACONIA", Dialogue_Terminator65
+.db "LABORATORY", Dialogue_Terminator65
+.db "KNOW", Dialogue_Terminator65
+.db "REST", Dialogue_Terminator65
+.db "BAYA", Dialogue_Terminator65
+.db "MALAY", Dialogue_Terminator65
+.db "BAYA MALAY", Dialogue_Terminator65
+.db "DO YOU KNOW", Dialogue_Terminator65
+.db "FOREST", Dialogue_Terminator65
+.db "DO YOU HAVE", Dialogue_Terminator65
+.db "DO YOU", Dialogue_Terminator65
+.db "WILL", Dialogue_Terminator65
+.db "MUST", Dialogue_Terminator65
+.db "PLEASE ", Dialogue_Terminator65
+.db "HELP", Dialogue_Terminator65
+.db "YOU WILL", Dialogue_Terminator65
+.db "I WILL", Dialogue_Terminator65
+.db "WILL YOU", Dialogue_Terminator65
+.db "YOU MUST", Dialogue_Terminator65
+.db "PALMA", Dialogue_Terminator65
+.db "WHERE", Dialogue_Terminator65
+.db "THERE", Dialogue_Terminator65
+.db "HERE", Dialogue_Terminator65
+.db "INDEED", Dialogue_Terminator65
+.db "LASSIC", Dialogue_Terminator65
+.db "SOME", Dialogue_Terminator65
+.db "RESIDENTIAL AREA", Dialogue_Terminator65
+.db "LAERMA", Dialogue_Terminator65
+.db "DUNGEON", Dialogue_Terminator65
+.db "LANGUAGE", Dialogue_Terminator65
+.db "THERE IS", Dialogue_Terminator65
+.db "THERE ARE", Dialogue_Terminator65
+.db "THAT", Dialogue_Terminator65
+.db "THROUGH", Dialogue_Terminator65
+.db "THE ", Dialogue_Terminator65
+.db "PRESENT", Dialogue_Terminator65
+.db "WELCOME ", Dialogue_Terminator65
+.db "YOU ", Dialogue_Terminator65
+.db "YOUR ", Dialogue_Terminator65
+.db "HAVE ", Dialogue_Terminator65
+.db "THIS ", Dialogue_Terminator65
+.db "MOUNTAIN", Dialogue_Terminator65
+.db "GREAT ", Dialogue_Terminator65
+.db "NAMED ", Dialogue_Terminator65
+.db "SPACESHIP", Dialogue_Terminator65
+.db "PALMANS", Dialogue_Terminator65
+.db "MEDUSA", Dialogue_Terminator65
+.db "DON", Dialogue_Apostrophe, "T BE A FOOL!", Dialogue_Terminator65
+.db "ARE ", Dialogue_Terminator65
+.db "CAREFUL", Dialogue_Terminator65
+.db "DELETE", Dialogue_Terminator65
+.db "MAGIC", Dialogue_Terminator65
+.db "SABRUS CABRUS", Dialogue_Terminator65
+.db "TREASURE ", Dialogue_Terminator65
+.db "CHEST", Dialogue_Terminator65
+.db "MOVE", Dialogue_Terminator65
+.db "DEZORIAN", Dialogue_Terminator65
+.db "EMBARK", Dialogue_Terminator65
+.db "ANY", Dialogue_Terminator65
+.db "THING", Dialogue_Terminator65
+.db "NOT ", Dialogue_Terminator65
+.db "WANT ", Dialogue_Terminator65
+.db "GAME", Dialogue_Terminator65
+.db "FACING ", Dialogue_Terminator65
+.db "SELECT", Dialogue_Terminator65
+.db "ONE", Dialogue_Terminator65
+.db "FROM ", Dialogue_Terminator65
+.db "OULD", Dialogue_Terminator65
 
 
 .BANK 3
