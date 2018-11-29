@@ -3162,7 +3162,7 @@ LABEL_B12_B635:
 
 LABEL_B12_B648:
 .db $DB, " ", $5E, Dialogue_NewLine
-.db $A1, " INSIDE.", Dialogue_Terminator65
+.db Dialogue_Mesetas, " INSIDE.", Dialogue_Terminator65
 
 LABEL_B12_B656:
 .db $C6, " ", $F9, "TO", Dialogue_NewLine
@@ -3293,7 +3293,7 @@ LABEL_B12_B89A:
 .db $5D, "? LET ME", Dialogue_NewLine
 .db "SEE.....", Dialogue_NewPage
 .db "HOW ABOUT ", $5E, Dialogue_NewLine
-.db $A1, "?", Dialogue_Terminator62
+.db Dialogue_Mesetas, "?", Dialogue_Terminator62
 
 LABEL_B12_B8BC:
 .db $B4, ".", Dialogue_NewLine
@@ -3305,7 +3305,7 @@ LABEL_B12_B8C8:
 LABEL_B12_B8E0:
 .db $DE, "FEE FOR", Dialogue_NewLine
 .db "HEALING IS ", $5E, Dialogue_NewPage
-.db $A1, ". IS ", $DC, Dialogue_NewLine
+.db Dialogue_Mesetas, ". IS ", $DC, Dialogue_NewLine
 .db "ACCEPTABLE?", Dialogue_Terminator62
 
 LABEL_B12_B90A:
@@ -3357,7 +3357,7 @@ LABEL_B12_B9E5:
 
 LABEL_B12_B9EE:
 .db $DC, " REQUIRES", Dialogue_NewLine
-.db $5E, " ", $A1, ". O.K.?", Dialogue_Terminator62
+.db $5E, " ", Dialogue_Mesetas, ". O.K.?", Dialogue_Terminator62
 
 LABEL_B12_BA04:
 .db "TO ADVANCE TO", Dialogue_NewLine

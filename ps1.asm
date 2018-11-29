@@ -6493,16 +6493,16 @@ LABEL_2ED9:
 	ld de, $7CB0
 	ld ix, Noah_stats
 +:	
-	bit 0, (ix+0)
+	bit 0, (ix+status)
 	ret z
 LABEL_2F1B:	
 	ld bc, $0310
 	call LABEL_3A57
 	ld hl, LABEL_30A7
-	ld a, (ix+1)
+	ld a, (ix+curr_hp)
 	call LABEL_2FE1
 	ld hl, LABEL_30AF
-	ld a, (ix+2)
+	ld a, (ix+curr_mp)
 	call LABEL_2FE1
 	ld hl, LABEL_B27_B49B
 	ld bc, $0110
@@ -6525,15 +6525,15 @@ LABEL_2F3C:
 	ld de, $7CB0
 	ld ix, Noah_stats
 +:	
-	bit 0, (ix+0)
+	bit 0, (ix+status)
 	ret z
 	ld bc, $0310
 	call LABEL_3A83
 	ld hl, LABEL_30A7
-	ld a, (ix+1)
+	ld a, (ix+curr_hp)
 	call LABEL_2FE1
 	ld hl, LABEL_30AF
-	ld a, (ix+2)
+	ld a, (ix+curr_mp)
 	call LABEL_2FE1
 	ld hl, LABEL_B27_B49B
 	ld bc, $0110
@@ -17405,7 +17405,7 @@ Dialogue_Index_0076:
 
 Dialogue_Index_0078:
 .db $DE, $99, " FEE", Dialogue_NewLine
-.db "IS 100 ", $A1, ".", Dialogue_NewPage
+.db "IS 100 ", Dialogue_Mesetas, ".", Dialogue_NewPage
 .db "WOULD ", $E1, "PAY IT?", Dialogue_Terminator62
 
 Dialogue_Index_007A:
@@ -17468,7 +17468,7 @@ Dialogue_Index_0092:
 .db "I ", $E3, "AN RARE", Dialogue_NewLine
 .db "ANIMAL ", $D2, ". WOULD", Dialogue_NewPage
 .db $E1, "PAY 1 BILLION", Dialogue_NewLine
-.db $A1, " FOR IT?", Dialogue_Terminator62
+.db Dialogue_Mesetas, " FOR IT?", Dialogue_Terminator62
 
 Dialogue_Index_0094:
 .db $E1, $EC, "A LIAR!", Dialogue_Terminator65
@@ -18108,7 +18108,7 @@ Dialogue_Index_0194:
 
 Dialogue_Index_0196:
 .db "A GAS ", $B6, " IS", Dialogue_NewLine
-.db "ONLY 1000 ", $A1, "!", Dialogue_NewPage
+.db "ONLY 1000 ", Dialogue_Mesetas, "!", Dialogue_NewPage
 .db "PRETTY CHEAP, HUH?", $CD, " BUY ", $FD, "?", Dialogue_Terminator62
 
 Dialogue_Index_0198:
@@ -18330,7 +18330,7 @@ Dialogue_Index_01EC:
 
 Dialogue_Index_01EE:
 .db $CD, " DONATE", Dialogue_NewLine
-.db "400 ", $A1, "?", Dialogue_Terminator62
+.db "400 ", Dialogue_Mesetas, "?", Dialogue_Terminator62
 
 Dialogue_Index_01F0:
 .db $B7, ". WE ", $C8, " GO", Dialogue_NewLine
@@ -18544,7 +18544,7 @@ Dialogue_Index_024A:
 .db "I", Dialogue_Apostrophe, "M SORRY I ", $E3, "A", Dialogue_NewLine
 .db "SHOP IN SUCH A", Dialogue_NewPage
 .db "PLACE. SHORTCAKE", Dialogue_NewLine
-.db "FOR 1000 ", $A1, "!", Dialogue_NewPage
+.db "FOR 1000 ", Dialogue_Mesetas, "!", Dialogue_NewPage
 .db $CD, " BUY ", $FD, "?", Dialogue_Terminator62
 
 Dialogue_Index_024C:
@@ -18731,7 +18731,7 @@ Dialogue_Index_028C:
 .db "IS HOWERVER, A", Dialogue_NewPage
 
 Dialogue_Index_028E:
-.db "SLIGHT FEE OF 1200", $A1, " INVOLVED.", Dialogue_NewPage
+.db "SLIGHT FEE OF 1200", Dialogue_Mesetas, " INVOLVED.", Dialogue_NewPage
 .db $CD, " PAY?", Dialogue_Terminator62
 
 Dialogue_Index_0290:

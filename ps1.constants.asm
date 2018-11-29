@@ -116,6 +116,7 @@
 .define Dialogue_Terminator63 $63
 .define Dialogue_Terminator64 $64
 .define Dialogue_Terminator65 $65
+.define Dialogue_Mesetas $A1
 
 ; RAM
 .define	Game_mode $C202
