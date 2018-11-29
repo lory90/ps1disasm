@@ -3107,7 +3107,7 @@ LABEL_B12_B500:
 
 LABEL_B12_B52C:
 .db $8A, " SHAKES HIS", Dialogue_NewLine
-.db "HEAD ", "\"NO\".", Dialogue_Terminator65
+.db "HEAD \"NO\".", Dialogue_Terminator65
 
 LABEL_B12_B544:
 .db $8A, " IS", Dialogue_NewLine
@@ -3162,7 +3162,7 @@ LABEL_B12_B635:
 
 LABEL_B12_B648:
 .db $DB, " ", $5E, Dialogue_NewLine
-.db $A1, " INSIDE.", Dialogue_Terminator65
+.db Dialogue_Mesetas, " INSIDE.", Dialogue_Terminator65
 
 LABEL_B12_B656:
 .db $C6, " ", $F9, "TO", Dialogue_NewLine
@@ -3255,18 +3255,18 @@ LABEL_B12_B7AA:
 
 LABEL_B12_B7C7:
 .db $E4, "IS AN ARMORY.", $C6, " ", $F9, "TO BUY", Dialogue_NewPage
-.db $D5, $F7, $3F, Dialogue_Terminator62
+.db $D5, $F7, "?", Dialogue_Terminator62
 
 LABEL_B12_B7E3:
 .db "WELL, COME AGAIN.", Dialogue_Terminator65
 
 LABEL_B12_B7F5:
 .db "WHICH ", $C6, " ", $F9, Dialogue_NewLine
-.db "TO BUY", $3F, Dialogue_Terminator62
+.db "TO BUY?", Dialogue_Terminator62
 
 LABEL_B12_B807:
 .db $B4, ".", Dialogue_NewLine
-.db $F6, $F7, " ELSE", $3F, Dialogue_Terminator62
+.db $F6, $F7, " ELSE?", Dialogue_Terminator62
 
 LABEL_B12_B813:
 .db $E1, $88, " ", $8D, Dialogue_NewLine
@@ -3278,7 +3278,7 @@ LABEL_B12_B832:
 .db $E4, "IS A", Dialogue_NewLine
 .db "FIRST FOOD SHOP.", Dialogue_NewPage
 .db "W", $FF, " ", $E1, "LIKE TO", Dialogue_NewLine
-.db "BUY ", $D5, $F7, $3F, Dialogue_Terminator62
+.db "BUY ", $D5, $F7, "?", Dialogue_Terminator62
 
 LABEL_B12_B85D:
 .db $E4, "IS A", Dialogue_NewLine
@@ -3293,19 +3293,19 @@ LABEL_B12_B89A:
 .db $5D, "? LET ME", Dialogue_NewLine
 .db "SEE.....", Dialogue_NewPage
 .db "HOW ABOUT ", $5E, Dialogue_NewLine
-.db $A1, "?", Dialogue_Terminator62
+.db Dialogue_Mesetas, "?", Dialogue_Terminator62
 
 LABEL_B12_B8BC:
 .db $B4, ".", Dialogue_NewLine
 .db $F6, $F7, " ELSE?", Dialogue_Terminator62
 
 LABEL_B12_B8C8:
-.db $E4, "IS A HOSPITAL", $C6, " NEED ", $CA, $3F, Dialogue_Terminator62
+.db $E4, "IS A HOSPITAL", $C6, " NEED ", $CA, "?", Dialogue_Terminator62
 
 LABEL_B12_B8E0:
 .db $DE, "FEE FOR", Dialogue_NewLine
 .db "HEALING IS ", $5E, Dialogue_NewPage
-.db $A1, ". IS ", $DC, Dialogue_NewLine
+.db Dialogue_Mesetas, ". IS ", $DC, Dialogue_NewLine
 .db "ACCEPTABLE?", Dialogue_Terminator62
 
 LABEL_B12_B90A:
@@ -3357,7 +3357,7 @@ LABEL_B12_B9E5:
 
 LABEL_B12_B9EE:
 .db $DC, " REQUIRES", Dialogue_NewLine
-.db $5E, " ", $A1, ". O.K.?", Dialogue_Terminator62
+.db $5E, " ", Dialogue_Mesetas, ". O.K.?", Dialogue_Terminator62
 
 LABEL_B12_BA04:
 .db "TO ADVANCE TO", Dialogue_NewLine
@@ -3418,7 +3418,7 @@ LABEL_B12_BB20:
 .db "TRAPPED.", Dialogue_Terminator65
 
 LABEL_B12_BB3D:
-.db $E1, "THIEF", $21, Dialogue_Terminator65
+.db $E1, "THIEF!", Dialogue_Terminator65
 
 LABEL_B12_BB45:
 .db $8B, "OUTCASTS.", Dialogue_NewLine
@@ -3473,7 +3473,7 @@ LABEL_B12_BC89:
 
 LABEL_B12_BCAA:
 .db $E1, $EC, "BRAVE TO", Dialogue_NewLine
-.db "APPROACH ME", $21, Dialogue_Terminator65
+.db "APPROACH ME!", Dialogue_Terminator65
 
 LABEL_B12_BCC2:
 .db Dialogue_EnemyName, " IS BURST-", Dialogue_NewLine

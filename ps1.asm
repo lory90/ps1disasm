@@ -1834,7 +1834,7 @@ LABEL_C54:
 	rrca
 	rrca
 	and	$0F
-	ld	($C29E), a
+	ld	(Interaction_Type), a
 	ld	a, ($C30E)
 	cp	$10
 	ld	c, $B8
@@ -2147,7 +2147,7 @@ LABEL_FF3:
 	ld	($C900), a
 	call	LABEL_6D56
 	xor	a
-	ld	($C29E), a
+	ld	(Interaction_Type), a
 	jp	LABEL_6AE5
 
 LABEL_100F:
@@ -2994,7 +2994,7 @@ LABEL_15DC:
 	ld   (hl), $00
 	ldir
 	call	LABEL_576A
-	ld   a, ($C29E)
+	ld   a, (Interaction_Type)
 	or   a
 	jp   nz, LABEL_15F9
 	call	LABEL_6B3A
@@ -3053,7 +3053,7 @@ LABEL_163E:
 	pop	af
 	cp	$05
 	ret	nz
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	ret	nz
 	jp	LABEL_688C
@@ -3487,7 +3487,7 @@ BattleMenu_Run:
 	call	LABEL_5B1
 	cp	b
 	jr	nc, LABEL_19C5
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	jr	nz, +
 	call	LABEL_687A
@@ -4387,7 +4387,7 @@ LABEL_1F89:
 	ld	a, ($C2E7)
 	or	a
 	jr	z, +
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	jr	nz, LABEL_1FAC
 	call	LABEL_687A
@@ -4475,7 +4475,7 @@ LABEL_201C:
 	ld	a, ($C800)
 	cp	$0E
 	jr	z, ++
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	ld	hl, LABEL_B12_B569
 	jr	nz, +
@@ -4506,7 +4506,7 @@ LABEL_2064:
 	ld	a, b
 	call	LABEL_1B87
 	ld	(de), a
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	jr	z, LABEL_2078
 	ld	hl, LABEL_B12_B172
@@ -4531,7 +4531,7 @@ LABEL_2091:
 	ld	(de), a
 	ld	a, $AB
 	ld	($C004), a
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	jr	z, +
 -:	
@@ -4597,7 +4597,7 @@ LABEL_2102:
 	ld	a, ($C800)
 	cp	$0E
 	jr	z, ++
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	ld	hl, LABEL_B12_B424
 	jr	nz, +
@@ -4629,7 +4629,7 @@ LABEL_2140:
 	ld	(de), a
 	ld	a, $AB
 	ld	($C004), a
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	jr	nz, LABEL_2159
 	ld	hl, LABEL_B12_B172
@@ -4829,7 +4829,7 @@ LABEL_22B7:
 	cp $04
 	ld hl, LABEL_B12_B2E3
 	jr nc, +
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, +
 	push bc
@@ -4855,7 +4855,7 @@ LABEL_22E5:
 	cp $04
 	ld hl, LABEL_B12_B2E3
 	jr nc, +
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, +
 	push bc
@@ -4929,7 +4929,7 @@ LABEL_2369:
 	call ShowDialogue_B12
 	ld a, $D5
 	ld ($C004), a
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jp z, LABEL_2078
 	jp LABEL_3464
@@ -4953,7 +4953,7 @@ LABEL_239D:
 	jp LABEL_3464
 
 +:	
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, +
 -:	
@@ -4993,7 +4993,7 @@ LABEL_23EC:
 	jp LABEL_3464
 
 +:	
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	push af
 	call nz, Inventory_RemoveItem
@@ -5105,7 +5105,7 @@ LABEL_24BE:
 	jp LABEL_3464
 
 LABEL_24E9:
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, +
 	
@@ -5250,7 +5250,7 @@ LABEL_25D7:
 	ret
 
 +++:	
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, LABEL_25D7
 	ld a, ($C29D)
@@ -5274,7 +5274,7 @@ LABEL_2613:
 	jp LABEL_3464
 
 LABEL_2631:
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, ++
 -:	
@@ -5311,7 +5311,7 @@ LABEL_2631:
 	jp LABEL_3464
 
 LABEL_267C:
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jp nz, LABEL_24EF
 	ld hl, LABEL_B12_B2AC
@@ -6493,16 +6493,16 @@ LABEL_2ED9:
 	ld de, $7CB0
 	ld ix, Noah_stats
 +:	
-	bit 0, (ix+0)
+	bit 0, (ix+status)
 	ret z
 LABEL_2F1B:	
 	ld bc, $0310
 	call LABEL_3A57
 	ld hl, LABEL_30A7
-	ld a, (ix+1)
+	ld a, (ix+curr_hp)
 	call LABEL_2FE1
 	ld hl, LABEL_30AF
-	ld a, (ix+2)
+	ld a, (ix+curr_mp)
 	call LABEL_2FE1
 	ld hl, LABEL_B27_B49B
 	ld bc, $0110
@@ -6525,15 +6525,15 @@ LABEL_2F3C:
 	ld de, $7CB0
 	ld ix, Noah_stats
 +:	
-	bit 0, (ix+0)
+	bit 0, (ix+status)
 	ret z
 	ld bc, $0310
 	call LABEL_3A83
 	ld hl, LABEL_30A7
-	ld a, (ix+1)
+	ld a, (ix+curr_hp)
 	call LABEL_2FE1
 	ld hl, LABEL_30AF
-	ld a, (ix+2)
+	ld a, (ix+curr_mp)
 	call LABEL_2FE1
 	ld hl, LABEL_B27_B49B
 	ld bc, $0110
@@ -8236,7 +8236,7 @@ GameMode_Interaction:
 	jp nz, LABEL_3C1A
 	ld a, ($C2DC)
 	call LABEL_617D
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	sub $10
 	jr nc, +
 	xor a
@@ -8245,7 +8245,7 @@ GameMode_Interaction:
 	ld hl, LABEL_3C2A
 	call GetPtrAndJump
 LABEL_3BC5:	
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	sub $0F
 	jr nc, +
 	xor a
@@ -8263,7 +8263,7 @@ LABEL_3BC5:
 +:	
 	xor a
 	ld ($C29D), a
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	ld ($C2D5), a
 	ld hl, $0000
 	ld ($C2DB), hl
@@ -8330,54 +8330,54 @@ GameMode_LoadInteraction:
 	ld a, ($C308)
 	or a
 	jr nz, +
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	cp $05
 	jr nz, LABEL_3CAD
 	ld a, $04
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
 +:	
 	cp $01
 	jr nz, +
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	cp $01
 	jr nz, LABEL_3CAD
 	ld a, $05
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
 +:	
 	cp $07
 	jr nz, +
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	cp $01
 	jr nz, LABEL_3CAD
 	ld a, $05
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
 +:	
 	cp $08
 	jr nz, +
 	ld a, $06
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
 +:	
 	cp $0A
 	jr nz, LABEL_3CAD
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	cp $09
 	jr nz, LABEL_3CAD
 	ld a, $08
-	ld ($C29E), a
+	ld (Interaction_Type), a
 LABEL_3CAD:	
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr nz, +
 	inc a
-	ld ($C29E), a
+	ld (Interaction_Type), a
 +:	
 	call LABEL_3D47
 	ld hl, $FFFF
@@ -8402,7 +8402,7 @@ LABEL_3CAD:
 	di
 	call LABEL_63A5
 	ei
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	sub $0F
 	jr nc, +
 	xor a
@@ -8449,7 +8449,7 @@ LABEL_3D36:
 	jp   LABEL_3D96
 
 LABEL_3D47:
-	ld   a, ($C29E)
+	ld   a, (Interaction_Type)
 	cp   $20
 	jr   c, LABEL_3D64
 LABEL_3D4E:
@@ -9166,7 +9166,7 @@ LABEL_42AC:
 	ld ($C307), a
 	call FadeOut2
 	ld a, $08
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank16
@@ -9332,7 +9332,7 @@ LABEL_4497:
 	call LABEL_337D
 	call LABEL_4517
 	ld a, $0E
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
@@ -9374,7 +9374,7 @@ LABEL_4514:
 LABEL_4517:	
 	call FadeOut2
 	ld a, $0F
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank22
@@ -9400,7 +9400,7 @@ LABEL_454E:
 	ld a, $8B
 	ld ($C004), a
 	ld a, $0D
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
@@ -9606,7 +9606,7 @@ LABEL_474B:
 	jp   z, LABEL_1BE1
 	ld   de, LABEL_4773-2
 	call	LABEL_4769
-	ld   a, ($C29E)
+	ld   a, (Interaction_Type)
 	or   a
 	jp   nz, LABEL_3464
 	call	LABEL_3464
@@ -10354,7 +10354,7 @@ LABEL_4C70:
 	call FadeOut2
 	call LABEL_3464
 	ld a, $20
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld a, $D0
 	ld ($C900), a
@@ -10398,7 +10398,7 @@ LABEL_4C70:
 	call ShowDialogue_B2
 	call FadeOut2
 	ld a, $1D
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	call LABEL_2A6D
 	ld a, $0C
@@ -11576,7 +11576,7 @@ LABEL_5619:
 	ld ($C004), a
 	call LABEL_2D47
 	ld a, $1F
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank19
@@ -11592,7 +11592,7 @@ LABEL_5619:
 	call LABEL_5FFE
 	call LABEL_2D33
 	ld a, $20
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_54EF
 	call LABEL_3464
 	ld a, (Char_stats)
@@ -11605,7 +11605,7 @@ LABEL_5619:
 LABEL_5666:
 	call FadeOut2
 	ld a, $1D
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
@@ -13377,7 +13377,7 @@ LABEL_63A5:
 	ld a, ($C2D6)
 	or a
 	ret z
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	ret z
 	cp $0C
@@ -14117,7 +14117,7 @@ LABEL_68EC:
 	ld   hl, LABEL_B09_B130
 	call	LABEL_6B62
 	ld   a, $0F
-	ld   ($C29E), a
+	ld   (Interaction_Type), a
 	xor  a
 	ld   ($C250), a
 LABEL_691D:
@@ -14156,7 +14156,7 @@ LABEL_6947:
 	jr   nz, LABEL_6925
 LABEL_6959:
 	ld   a, c
-	ld   ($C29E), a
+	ld   (Interaction_Type), a
 	call	LABEL_3D47
 	jp   LABEL_691D
 
@@ -14306,7 +14306,7 @@ LABEL_6A2F:
 	xor  a
 	ld   ($C800), a
 	ld   ($C29D), a
-	ld   ($C29E), a
+	ld   (Interaction_Type), a
 	ld   ($C2D5), a
 	ld   hl, $0000
 	ld   ($C2DB), hl
@@ -16187,7 +16187,7 @@ LABEL_77AC:
 	rrca
 	rrca
 	and $0F
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	ld a, b
 	and $08
 	jr nz, ++
@@ -16375,7 +16375,7 @@ LABEL_78BD:
 	ld (Game_mode), a
 	inc hl
 	ld a, (hl)
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	inc hl
 	ld a, (hl)
 	inc hl
@@ -17049,183 +17049,176 @@ RomHeader:
 .ORG $0000
 Bank02:
 
+; Pointer table, when ShowDialogue_B2 is called,
+; the value passed in via hl is used as an index into it
 
 DialogueBlock:
-.db	$AA, $82, $F0, $82, $26, $83, $39, $83, $55, $83, $95, $83, $A8, $83, $D0, $83
-.db	$FA, $83, $1C, $84, $40, $84, $6C, $84, $89, $84, $B9, $84, $D1, $84, $F7, $84
-.db	$00, $85, $10, $85, $1E, $85, $2D, $85, $46, $85, $80, $85, $8D, $85, $AE, $85
-.db	$C9, $85, $FE, $85, $19, $86, $52, $86, $8B, $86, $BB, $86, $EF, $86, $22, $87, $56
-.db $87, $92, $87, $C0, $87, $DF, $87, $0D, $88, $43, $88, $73, $88, $93, $88, $A4
-.db $88, $CF, $88, $D9, $88, $F0, $88, $0B
-.db $89, $33, $89, $63, $89, $8D, $89, $9C
-.db $89, $B5, $89, $CB, $89, $01, $8A, $1D
-.db $8A, $47, $8A, $69, $8A, $8B, $8A, $92
-.db $8A, $AF, $8A, $C6, $8A, $DF, $8A, $FF
-.db $8A, $0F, $8B, $1E, $8B, $45, $8B, $59
-.db $8B, $7A, $8B, $A4, $8B, $CF, $8B, $F1
-.db $8B, $09, $8C, $37, $8C, $4E, $8C, $6F
-.db $8C, $A3, $8C, $AD, $8C, $BA, $8C, $D9
-.db $8C, $F4, $8C, $09, $8D, $24, $8D, $43
-.db $8D, $5A, $8D, $88, $8D, $B9, $8D, $ED
-.db $8D, $1A, $8E, $4A, $8E, $65, $8E, $86
-.db $8E, $8D, $8E, $9A, $8E, $AA, $8E, $C4
-.db $8E, $E2, $8E, $F8, $8E, $15, $8F, $40
-.db $8F, $64, $8F, $7E, $8F, $A9, $8F, $DE
-.db $8F, $FE, $8F, $2E, $90, $30, $90, $67
-.db $90, $82, $90, $9C, $90, $AC, $90, $C3
-.db $90, $E8, $90, $02, $91, $3A, $91, $82
-.db $91, $CA, $91, $19, $92, $20, $92, $31
-.db $92, $5D, $92, $6A, $92, $B8, $92, $DB
-.db $92, $0B, $93, $3E, $93, $82, $93, $CD
-.db $93, $26, $94, $3E, $94, $5B, $94, $79
-.db $94, $A8, $94, $CB, $94, $E1, $94, $16
-.db $95, $38, $95, $70, $95, $97, $95, $B2
-.db $95, $E1, $95, $F2, $95, $1C, $96, $48
-.db $96, $75, $96, $80, $96, $95, $96, $C9
-.db $96, $F4, $96, $39, $97, $5B, $97, $A1
-.db $97, $B9, $97, $E9, $97, $FB, $97, $43
-.db $98, $66, $98, $AC, $98, $D7, $98, $FE
-.db $98, $11, $99, $21, $99, $52, $99, $67
-.db $99, $93, $99, $CB, $99, $12, $9A, $23
+.dw Dialogue_Index_0002, Dialogue_Index_0004, Dialogue_Index_0006, Dialogue_Index_0008, Dialogue_Index_000A, Dialogue_Index_000C, Dialogue_Index_000E, Dialogue_Index_0010
+.dw Dialogue_Index_0012, Dialogue_Index_0014, Dialogue_Index_0016, Dialogue_Index_0018, Dialogue_Index_001A, Dialogue_Index_001C, Dialogue_Index_001E, Dialogue_Index_0020
+.dw Dialogue_Index_0022, Dialogue_Index_0024, Dialogue_Index_0026, Dialogue_Index_0028, Dialogue_Index_002A, Dialogue_Index_002C, Dialogue_Index_002E, Dialogue_Index_0030
+.dw Dialogue_Index_0032, Dialogue_Index_0034, Dialogue_Index_0036, Dialogue_Index_0038, Dialogue_Index_003A, Dialogue_Index_003C, Dialogue_Index_003E, Dialogue_Index_0040
+.dw Dialogue_Index_0042, Dialogue_Index_0044, Dialogue_Index_0046, Dialogue_Index_0048, Dialogue_Index_004A, Dialogue_Index_004C, Dialogue_Index_004E, Dialogue_Index_0050
+.dw Dialogue_Index_0052, Dialogue_Index_0054, Dialogue_Index_0056, Dialogue_Index_0058, Dialogue_Index_005A, Dialogue_Index_005C, Dialogue_Index_005E, Dialogue_Index_0060
+.dw Dialogue_Index_0062, Dialogue_Index_0064, Dialogue_Index_0066, Dialogue_Index_0068, Dialogue_Index_006A, Dialogue_Index_006C, Dialogue_Index_006E, Dialogue_Index_0070
+.dw Dialogue_Index_0072, Dialogue_Index_0074, Dialogue_Index_0076, Dialogue_Index_0078, Dialogue_Index_007A, Dialogue_Index_007C, Dialogue_Index_007E, Dialogue_Index_0080
+.dw Dialogue_Index_0082, Dialogue_Index_0084, Dialogue_Index_0086, Dialogue_Index_0088, Dialogue_Index_008A, Dialogue_Index_008C, Dialogue_Index_008E, Dialogue_Index_0090
+.dw Dialogue_Index_0092, Dialogue_Index_0094, Dialogue_Index_0096, Dialogue_Index_0098, Dialogue_Index_009A, Dialogue_Index_009C, Dialogue_Index_009E, Dialogue_Index_00A0
+.dw Dialogue_Index_00A2, Dialogue_Index_00A4, Dialogue_Index_00A6, Dialogue_Index_00A8, Dialogue_Index_00AA, Dialogue_Index_00AC, Dialogue_Index_00AE, Dialogue_Index_00B0
+.dw Dialogue_Index_00B2, Dialogue_Index_00B4, Dialogue_Index_00B6, Dialogue_Index_00B8, Dialogue_Index_00BA, Dialogue_Index_00BC, Dialogue_Index_00BE, Dialogue_Index_00C0
+.dw Dialogue_Index_00C2, Dialogue_Index_00C4, Dialogue_Index_00C6, Dialogue_Index_00C8, Dialogue_Index_00CA, Dialogue_Index_00CC, Dialogue_Index_00CE, Dialogue_Index_00D0
+.dw Dialogue_Index_00D2, Dialogue_Index_00D4, Dialogue_Index_00D6, Dialogue_Index_00D8, Dialogue_Index_00DA, Dialogue_Index_00DC, Dialogue_Index_00DE, Dialogue_Index_00E0
+.dw Dialogue_Index_00E2, Dialogue_Index_00E4, Dialogue_Index_00E6, Dialogue_Index_00E8, Dialogue_Index_00EA, Dialogue_Index_00EC, Dialogue_Index_00EE, Dialogue_Index_00F0
+.dw Dialogue_Index_00F2, Dialogue_Index_00F4, Dialogue_Index_00F6, Dialogue_Index_00F8, Dialogue_Index_00FA, Dialogue_Index_00FC, Dialogue_Index_00FE, Dialogue_Index_0100
+.dw Dialogue_Index_0102, Dialogue_Index_0104, Dialogue_Index_0106, Dialogue_Index_0108, Dialogue_Index_010A, Dialogue_Index_010C, Dialogue_Index_010E, Dialogue_Index_0110
+.dw Dialogue_Index_0112, Dialogue_Index_0114, Dialogue_Index_0116, Dialogue_Index_0118, Dialogue_Index_011A, Dialogue_Index_011C, Dialogue_Index_011E, Dialogue_Index_0120
+.dw Dialogue_Index_0122, Dialogue_Index_0124, Dialogue_Index_0126, Dialogue_Index_0128, Dialogue_Index_012A, Dialogue_Index_012C, Dialogue_Index_012E, Dialogue_Index_0130
+.dw Dialogue_Index_0132, Dialogue_Index_0134, Dialogue_Index_0136, Dialogue_Index_0138, Dialogue_Index_013A, Dialogue_Index_013C, Dialogue_Index_013E, Dialogue_Index_0140
+.dw Dialogue_Index_0142, Dialogue_Index_0144, Dialogue_Index_0146, Dialogue_Index_0148, Dialogue_Index_014A, Dialogue_Index_014C, Dialogue_Index_014E, Dialogue_Index_0150
+.dw Dialogue_Index_0152, Dialogue_Index_0154, Dialogue_Index_0156, Dialogue_Index_0158, Dialogue_Index_015A, Dialogue_Index_015C, Dialogue_Index_015E, Dialogue_Index_0160
+.dw Dialogue_Index_0162, Dialogue_Index_0164, Dialogue_Index_0166, Dialogue_Index_0168, Dialogue_Index_016A, Dialogue_Index_016C, Dialogue_Index_016E, Dialogue_Index_0170
+.dw Dialogue_Index_0172, Dialogue_Index_0174, Dialogue_Index_0176, Dialogue_Index_0178, Dialogue_Index_017A, Dialogue_Index_017C, Dialogue_Index_017E, Dialogue_Index_0180
+.dw Dialogue_Index_0182, Dialogue_Index_0184, Dialogue_Index_0186, Dialogue_Index_0188, Dialogue_Index_018A, Dialogue_Index_018C, Dialogue_Index_018E, Dialogue_Index_0190
+.dw Dialogue_Index_0192, Dialogue_Index_0194, Dialogue_Index_0196, Dialogue_Index_0198, Dialogue_Index_019A, Dialogue_Index_019C, Dialogue_Index_019E, Dialogue_Index_01A0
+.dw Dialogue_Index_01A2, Dialogue_Index_01A4, Dialogue_Index_01A6, Dialogue_Index_01A8, Dialogue_Index_01AA, Dialogue_Index_01AC, Dialogue_Index_01AE, Dialogue_Index_01B0
+.dw Dialogue_Index_01B2, Dialogue_Index_01B4, Dialogue_Index_01B6, Dialogue_Index_01B8, Dialogue_Index_01BA, Dialogue_Index_01BC, Dialogue_Index_01BE, Dialogue_Index_01C0
+.dw Dialogue_Index_01C2, Dialogue_Index_01C4, Dialogue_Index_01C6, Dialogue_Index_01C8, Dialogue_Index_01CA, Dialogue_Index_01CC, Dialogue_Index_01CE, Dialogue_Index_01D0
+.dw Dialogue_Index_01D2, Dialogue_Index_01D4, Dialogue_Index_01D6, Dialogue_Index_01D8, Dialogue_Index_01DA, Dialogue_Index_01DC, Dialogue_Index_01DE, Dialogue_Index_01E0
+.dw Dialogue_Index_01E2, Dialogue_Index_01E4, Dialogue_Index_01E6, Dialogue_Index_01E8, Dialogue_Index_01EA, Dialogue_Index_01EC, Dialogue_Index_01EE, Dialogue_Index_01F0
+.dw Dialogue_Index_01F2, Dialogue_Index_01F4, Dialogue_Index_01F6, Dialogue_Index_01F8, Dialogue_Index_01FA, Dialogue_Index_01FC, Dialogue_Index_01FE, Dialogue_Index_0200
+.dw Dialogue_Index_0202, Dialogue_Index_0204, Dialogue_Index_0206, Dialogue_Index_0208, Dialogue_Index_020A, Dialogue_Index_020C, Dialogue_Index_020E, Dialogue_Index_0210
+.dw Dialogue_Index_0212, Dialogue_Index_0214, Dialogue_Index_0216, Dialogue_Index_0218, Dialogue_Index_021A, Dialogue_Index_021C, Dialogue_Index_021E, Dialogue_Index_0220
+.dw Dialogue_Index_0222, Dialogue_Index_0224, Dialogue_Index_0226, Dialogue_Index_0228, Dialogue_Index_022A, Dialogue_Index_022C, Dialogue_Index_022E, Dialogue_Index_0230
+.dw Dialogue_Index_0232, Dialogue_Index_0234, Dialogue_Index_0236, Dialogue_Index_0238, Dialogue_Index_023A, Dialogue_Index_023C, Dialogue_Index_023E, Dialogue_Index_0240
+.dw Dialogue_Index_0242, Dialogue_Index_0244, Dialogue_Index_0246, Dialogue_Index_0248, Dialogue_Index_024A, Dialogue_Index_024C, Dialogue_Index_024E, Dialogue_Index_0250
+.dw Dialogue_Index_0252, Dialogue_Index_0254, Dialogue_Index_0256, Dialogue_Index_0258, Dialogue_Index_025A, Dialogue_Index_025C, Dialogue_Index_025E, Dialogue_Index_0260
+.dw Dialogue_Index_0262, Dialogue_Index_0264, Dialogue_Index_0266, Dialogue_Index_0268, Dialogue_Index_026A, Dialogue_Index_026C, Dialogue_Index_026E, Dialogue_Index_0270
+.dw Dialogue_Index_0272, Dialogue_Index_0274, Dialogue_Index_0276, Dialogue_Index_0278, Dialogue_Index_027A, Dialogue_Index_027C, Dialogue_Index_027E, Dialogue_Index_0280
+.dw Dialogue_Index_0282, Dialogue_Index_0284, Dialogue_Index_0286, Dialogue_Index_0288, Dialogue_Index_028A, Dialogue_Index_028C, Dialogue_Index_028E, Dialogue_Index_0290
+.dw Dialogue_Index_0292, Dialogue_Index_0294, Dialogue_Index_0296, Dialogue_Index_0298, Dialogue_Index_029A, Dialogue_Index_029C, Dialogue_Index_029E, Dialogue_Index_02A0
+.dw Dialogue_Index_02A2, Dialogue_Index_02A4, Dialogue_Index_02A6, Dialogue_Index_02A8, Dialogue_Index_02AA
 
-.db $9A, $3F, $9A, $97, $9A, $9D, $9A, $B6
-.db $9A, $D2, $9A, $EF, $9A, $0C, $9B, $22
-.db $9B, $3A, $9B, $66, $9B, $86, $9B, $AD
-.db $9B, $D0, $9B, $EF, $9B, $03, $9C, $3F
-.db $9C, $6F, $9C, $A1, $9C, $D3, $9C, $1D
-.db $9D, $44, $9D, $82, $9D, $AB, $9D, $D4
-.db $9D, $E3, $9D, $0E, $9E, $31, $9E, $51
-.db $9E, $75, $9E, $9F, $9E, $CA, $9E, $FD
-.db $9E, $0B, $9F, $43, $9F, $50, $9F, $73
-.db $9F, $B0, $9F, $E7, $9F, $1A, $A0, $2A
-.db $A0, $3F, $A0, $5A, $A0, $68, $A0, $7C
-.db $A0, $AD, $A0, $C9, $A0, $E2, $A0, $22
-.db $A1, $3C, $A1, $6D, $A1, $87, $A1, $9C
-.db $A1, $C0, $A1, $FA, $A1, $12, $A2, $23
-.db $A2, $6A, $A2, $94, $A2, $CD, $A2, $FF
-.db $A2, $20, $A3, $49, $A3, $5A, $A3, $89
-.db $A3, $C9, $A3, $F1, $A3, $20, $A4, $3B
-.db $A4, $8B, $A4, $A2, $A4, $BA, $A4, $D2
-.db $A4, $E8, $A4, $FC, $A4, $26, $A5, $51
-.db $A5, $88, $A5, $D2, $A5, $F2, $A5, $21
-.db $A6, $32, $A6, $7A, $A6, $8A, $A6, $A5
-.db $A6, $BC, $A6, $D9, $A6, $0B, $A7, $2E
-.db $A7, $4C, $A7, $66, $A7, $A9, $A7, $D7
-.db $A7, $06, $A8, $33, $A8, $51, $A8, $84
-.db $A8, $93, $A8, $9E, $A8, $A0, $A8, $AB
-.db $A8, $EC, $A8, $01, $A9, $2A, $A9, $3D
-.db $A9, $67, $A9, $6E, $A9, $7A, $A9, $A9
-.db $A9, $C9, $A9, $E7, $A9, $05, $AA, $22
-.db $AA, $4D, $AA, $5F, $AA, $89, $AA, $B5
-.db $AA, $E8, $AA, $0D, $AB, $23, $AB, $53
-.db $AB, $80, $AB, $B2, $AB, $F3, $AB, $26
-.db $AC, $34, $AC, $4D, $AC, $6A, $AC, $91
-.db $AC, $D5, $AC, $05, $AD, $28, $AD, $42
-.db $AD, $53, $AD, $8D, $AD, $BC, $AD, $D3
-.db $AD, $FA, $AD, $06, $AE, $29, $AE, $58
-.db $AE, $71, $AE, $85, $AE, $9E, $AE, $CB
-.db $AE, $DF, $AE, $3F, $AF, $79, $AF, $A7
-.db $AF, $BC, $AF, $DC, $AF, $0F, $B0, $BF
-.db $B0, $0A, $B1, $23, $B1, $50, $B1, $66
-.db $B1, $80, $B1, $AB, $B1, $FA, $B1, $20
-.db $B2, $42, $B2, $7B, $B2, $A0, $B2, $CA
-.db $B2, $F7, $B2, $1B, $B3, $34, $B3, $4D
-.db $B3, $67, $B3, $8F, $B3, $C5, $B3, $DE
-.db $B3, $F0, $B3, $01, $B4, $21, $B4, $4E
-.db $B4
-
+Dialogue_Index_0002:
 .db "I", Dialogue_Apostrophe, "M SUELO. I ", $BE, Dialogue_NewLine
 .db "HOW ", $CE, " FEEL,", Dialogue_NewPage
 .db "DEAR,NO ", $FD, " CAN", Dialogue_NewLine
 .db "STOP ", $E1, $FE, Dialogue_NewPage
 .db "DOING WHAT ", $E1, Dialogue_NewLine
 .db $BE, " ", $CE, " DO.", Dialogue_NewPage
+
+Dialogue_Index_0004:
 .db "BUT IF ", $E1, "SHOULD", Dialogue_NewLine
 .db "EVER BE WOUNDED", Dialogue_NewPage
 .db "IN BATTLE,COME", Dialogue_NewLine
 .db $D2, " TO ", $BF, ".", Dialogue_Terminator65
 
+Dialogue_Index_0006:
 .db $C9, $BF, Dialogue_NewLine
 .db $A9, ".", Dialogue_NewPage
 .db $E1, $EC, $E0, Dialogue_NewLine
 .db $D2, " AT ", $F6, $9F, ".", Dialogue_Terminator65
 
+Dialogue_Index_0008:
 .db "I", Dialogue_Apostrophe, "M NEKISE. ", $FD, Dialogue_NewLine
 .db "HEARS LOTS OF", Dialogue_NewPage
+
+Dialogue_Index_000A:
 .db "STORIES, ", $E1, $BE, ",BUT ", $D5, " SAY ", $DC, Dialogue_NewPage
 .db "A FIGHTER ", $E7, Dialogue_NewLine
 .db "ODIN LIVES IN A", Dialogue_NewPage
 .db $B9, " CALLED ", $96, ".", Dialogue_NewLine
+
+Dialogue_Index_000C:
 .db "ALSO, I ", $E3, "A", Dialogue_NewPage
 .db $A6, " GIVEN", Dialogue_NewLine
+
+Dialogue_Index_000E:
 .db "BY ", $B2, ". ", $DC, Dialogue_NewPage
 .db "WOULD BE HELPFUL", Dialogue_NewLine
 .db "TO ", $E1, "IN ", $E2, Dialogue_NewPage
 .db "TASK.", Dialogue_Terminator65
 
+Dialogue_Index_0010:
 .db "I ", $97, " I COULD", Dialogue_NewLine
 .db $CA, " ", $E1, "MORE.", Dialogue_NewPage
 .db "I PRAY FOR ", $E2, Dialogue_NewLine
 .db "SAFETY.", Dialogue_Terminator65
 
+Dialogue_Index_0012:
 .db $DE, "CAMINEET", Dialogue_NewLine
 .db $D6, Dialogue_NewPage
 .db "IS UNDER", Dialogue_NewLine
 .db "MARTIAL LAW.", Dialogue_Terminator65
 
+Dialogue_Index_0014:
 .db $E1, "NEED A", Dialogue_NewLine
 .db $D8, " KEY TO", Dialogue_NewPage
 .db "OPEN LOCKED DOORS.", Dialogue_Terminator65
 
+Dialogue_Index_0016:
 .db "IN ", $D5, " ", $D8, "S", Dialogue_NewLine
 .db $CB, " ", $F8, "GET", Dialogue_NewPage
 .db "FAR WITHOUT ", $D5, Dialogue_NewLine
 .db "SORT OF LIGHT.", Dialogue_Terminator65
 
+Dialogue_Index_0018:
 .db $DA, " A", Dialogue_NewLine
 .db $98, " TO ", $DE, Dialogue_NewPage
 .db "WEST OF CAMINEET.", Dialogue_Terminator65
 
+Dialogue_Index_001A:
 .db "IF ", $E1, $F9, "TO", Dialogue_NewLine
 .db "MAKE A DEAL, ", $E1, Dialogue_NewPage
 .db "SHOULD HEAD FOR", Dialogue_NewLine
 .db $DE, "PORT ", $B9, ".", Dialogue_Terminator65
 
+Dialogue_Index_001C:
 .db $E1, "HAD BETTER", Dialogue_NewLine
 .db $F8, "LEAVE ", $DE, Dialogue_NewPage
 .db $D6, ".", Dialogue_Terminator65
 
+Dialogue_Index_001E:
 .db "UNLESS ", $E1, "HOPE TODIE, ", $E1, "HAD BEST", Dialogue_NewPage
 .db "STAY ", $D2, ".", Dialogue_Terminator65
 
+Dialogue_Index_0020:
 .db $E1, "MAY ", $F8, $A2, ".", Dialogue_Terminator65
 
+Dialogue_Index_0022:
 .db $E1, $88, " ", $A2, Dialogue_NewLine
 .db "WITHOUT ", $A0, ".", Dialogue_Terminator65
 
+Dialogue_Index_0024:
 .db $E1, "MAY PROCEED.", Dialogue_Terminator65
 
+Dialogue_Index_0026:
 .db $E4, "IS PAROLIT", Dialogue_NewLine
 .db $D6, ".", Dialogue_Terminator65
 
+Dialogue_Index_0028:
 .db $DE, $C4, " IS A", Dialogue_NewLine
 .db "DANGEROUS PLACE.", Dialogue_Terminator65
 
+Dialogue_Index_002A:
 .db $EA, " HAS BEEN", Dialogue_NewLine
 .db "REBORN AND LIVES", Dialogue_NewPage
 .db "IN A CAVE TO ", $DE, Dialogue_NewLine
 .db "SOUTH. IF ", $E1, "SEE", Dialogue_NewPage
+
+Dialogue_Index_002C:
 .db "HER, ", $CB, " BE", Dialogue_NewLine
 .db $91, ".", Dialogue_Terminator65
 
+Dialogue_Index_002E:
 .db "TO ", $DE, "EAST LIES", Dialogue_NewLine
 .db "A PORT ", $B9, Dialogue_NewPage
 .db "CALLED ", $96, ".", Dialogue_Terminator65
 
+Dialogue_Index_0030:
 .db $FE, $DE, $98, Dialogue_NewLine
 .db $E1, "CAN GO TO", Dialogue_NewPage
 .db "PASEO ON ", $94, ".", Dialogue_Terminator65
 
+Dialogue_Index_0032:
 .db $DA, " AN", Dialogue_NewLine
 .db "UNDERGROUND", Dialogue_NewPage
 .db $BA, " TO ", $DE, Dialogue_NewLine
@@ -17233,50 +17226,65 @@ DialogueBlock:
 .db $D5, $D0, " TO ", $DE, Dialogue_NewLine
 .db "WEST OF PAROLIT.", Dialogue_Terminator65
 
+Dialogue_Index_0034:
 .db "ODIN SET OFF TO", Dialogue_NewLine
 .db "KILL ", $EA, ". HE", Dialogue_NewPage
+
+Dialogue_Index_0036:
 .db "WENT WITH AN", Dialogue_NewLine
 .db "ANIMAL ", $DC, " CAN", Dialogue_NewPage
 .db "SPEAK! ", $DE, "ANIMAL", Dialogue_NewLine
 .db "HAD A BOTTLE OF", Dialogue_NewPage
+
+Dialogue_Index_0038:
 .db "MEDICINE HANGING", Dialogue_NewLine
 .db $FE, "ITS NECK, BUT", Dialogue_NewPage
 .db "I DON", Dialogue_Apostrophe, "T ", $BE, " WHAT", Dialogue_NewLine
 .db $DC, " IS FOR.", Dialogue_Terminator65
 
+Dialogue_Index_003A:
 .db "I HEAR ", $E1, $EC, Dialogue_NewLine
 .db "GOING TO TRY", Dialogue_NewPage
 .db "TO KILL ", $D4, ".", Dialogue_NewLine
 .db "BEST OF LUCK!", Dialogue_Terminator65
 
+Dialogue_Index_003C:
 .db "I RECENTLY FOUND ATALKING BEAST IN", Dialogue_NewPage
 .db $DE, "CAVE ", $D0, Dialogue_NewLine
 .db $EA, " LIVES.", Dialogue_NewPage
+
+Dialogue_Index_003E:
 .db "I SOLD HIM FOR A", Dialogue_NewLine
 .db "GOOD PRICE TO A", Dialogue_NewPage
 .db "MERCHANT ", $FE, Dialogue_NewLine
 .db "PASEO!", Dialogue_Terminator65
 
+Dialogue_Index_0040:
 .db "TIMES ", $EC, "HARD.", Dialogue_NewLine
 .db $D1, " DOESN", Dialogue_Apostrophe, "T SEEM", Dialogue_NewPage
 .db "TO BE ", $F6, "WAY TO", Dialogue_NewLine
 .db "MAKE M", $FD, "Y.", Dialogue_Terminator65
 
+Dialogue_Index_0042:
 .db "A CAVE CALLED IALACAN BE FOUND ON", Dialogue_NewPage
 .db $DE, "PENINSULA TO", Dialogue_NewLine
 .db $DE, "SOUTH OF ", $96, Dialogue_Terminator65
 
+Dialogue_Index_0044:
 .db $E4, "IS ", $DE, "PORT", Dialogue_NewLine
 .db $B9, " ", $96, ".", Dialogue_NewPage
 .db "LONG AGO, WE", Dialogue_NewLine
 .db "THRIVED ON TRADE.", Dialogue_Terminator65
 
+Dialogue_Index_0046:
 .db $E1, "NEED A COMPASSTO ", $A2, " ", $DD, Dialogue_NewPage
 .db $DE, "EPPI ", $C4, ".", Dialogue_Terminator65
 
+Dialogue_Index_0048:
 .db "A DOOR LOCKED WITH", $84, "CAN ONLY BE", Dialogue_NewPage
 .db "OPENED WITH ", $EF, ".", Dialogue_Terminator65
 
+Dialogue_Index_004A:
 .db $DA, " A ", $AB, Dialogue_NewLine
 .db $E7, $C2, Dialogue_NewPage
 .db "TO ", $DE, "NORTH OF", Dialogue_NewLine
@@ -17284,264 +17292,352 @@ DialogueBlock:
 .db "BUT N", $FD, " OF US", Dialogue_NewLine
 .db "D", $EC, "APPROACH IT.", Dialogue_Terminator65
 
+Dialogue_Index_004C:
 .db "A CAVE CALLED", Dialogue_NewLine
 .db "NAULA LIES ON ", $DE, Dialogue_NewPage
 .db "NORTH COAST OF", Dialogue_NewLine
 .db $C2, ".", Dialogue_Terminator65
 
+Dialogue_Index_004E:
 .db $DE, $AA, " OF", Dialogue_NewLine
 .db $94, " MIGHT", Dialogue_NewPage
 .db "POSSIBLY ", $CA, " ", $E1, "WELL.", Dialogue_Terminator65
 
+Dialogue_Index_0050:
 .db "NOAH LIVES ON", Dialogue_NewLine
 .db $94, ".", Dialogue_Terminator65
 
+Dialogue_Index_0052:
 .db "DR.", $AD, " HAD A", Dialogue_NewLine
 .db $BD, " IN ", $DE, Dialogue_NewPage
 .db $95, " ", $C4, " LONGAGO, IT IS SAID.", Dialogue_Terminator65
 
+Dialogue_Index_0054:
 .db $E0, "TO EPPI.", Dialogue_Terminator65
 
+Dialogue_Index_0056:
 .db $EC, $E1, "LOOKING", Dialogue_NewLine
 .db "FOR A ", $D8, " KEY?", Dialogue_Terminator62
 
+Dialogue_Index_0058:
 .db "I", Dialogue_Apostrophe, "VE HIDDEN A", Dialogue_NewLine
 .db $D8, " KEY IN THE", Dialogue_NewPage
+
+Dialogue_Index_005A:
 .db "WAREHOUSE IN ", $DE, Dialogue_NewLine
 .db "OUTSKIRTS OF ", $DE, Dialogue_NewPage
 .db "CAMINEET.", Dialogue_Terminator65
 
+Dialogue_Index_005C:
 .db $C3, " WHAT", Dialogue_NewLine
 .db $DE, "HARDEST,", Dialogue_NewPage
 .db "STRONGEST MATERIALIN OUR ", $B5, " IS?", Dialogue_Terminator62
 
+Dialogue_Index_005E:
 .db "IT", Dialogue_Apostrophe, "S ", $BC, "!", Dialogue_NewLine
 .db "ARMS MADE WITH", Dialogue_NewPage
 .db $BC, " ", $EC, $DE, Dialogue_NewLine
 .db "BEST TO HAVE.", Dialogue_Terminator65
 
+Dialogue_Index_0060:
 .db "O.K. GOOD DAY.", Dialogue_Terminator65
 
+Dialogue_Index_0062:
 .db $C3, " ABOUT", Dialogue_NewLine
 .db $DE, $B8, " OF", Dialogue_NewPage
 .db $DE, $9B, " STAR", Dialogue_NewLine
 .db $9C, "?", Dialogue_Terminator62
 
+Dialogue_Index_0064:
 .db $DB, " THREE", Dialogue_NewLine
-.db $B8, $3B, " ", $CF, Dialogue_NewPage
+.db $B8, "; ", $CF, Dialogue_NewPage
 .db $94, " AND", Dialogue_NewLine
 .db $93, ".", Dialogue_NewPage
+
+Dialogue_Index_0066:
 .db $CF, " IS A ", $B5, Dialogue_NewLine
 .db "OF GREEN.", Dialogue_NewPage
 .db $94, " IS A ", $B5, Dialogue_NewLine
 .db "OF SAND.", Dialogue_NewPage
 .db $93, " IS A ", $B5, Dialogue_NewLine
 .db "OF ICE.", Dialogue_NewPage
+
+Dialogue_Index_0068:
 .db $DE, $9B, " STAR", Dialogue_NewLine
 .db $9C, " IS", Dialogue_NewPage
 .db $90, " ", $FB, Dialogue_NewLine
 .db "A ", $E6, "CRISIS.", Dialogue_Terminator65
 
+Dialogue_Index_006A:
 .db $E4, "IS PALMA", Dialogue_Apostrophe, "S", Dialogue_NewLine
 .db $98, ".", Dialogue_NewPage
 .db $FE, $DE, $98, Dialogue_NewLine
 .db $E1, "CAN GO TO", Dialogue_NewPage
 .db "PASEO ON ", $94, ".", Dialogue_Terminator65
 
+Dialogue_Index_006C:
 .db $DE, $AA, " IS INPASEO. HE RULES", Dialogue_NewPage
 .db "ALL OF ", $94, ".", Dialogue_Terminator65
 
+Dialogue_Index_006E:
 .db "LONG AGO, A", Dialogue_NewLine
 .db $E8, " WAS", Dialogue_NewPage
 .db "BUILT IN ", $DE, Dialogue_NewLine
 .db $95, " ", $BD, ".", Dialogue_Terminator65
 
+Dialogue_Index_0070:
 .db $C5, " ", $E2, Dialogue_NewLine
 .db $99, "?", Dialogue_Terminator62
 
+Dialogue_Index_0072:
 .db $E1, "CAN FILE FOR A", Dialogue_NewLine
 .db $99, " ", $D2, ".", Dialogue_NewPage
 .db $C6, " ", $F9, "A", Dialogue_NewLine
 .db $99, "?", Dialogue_Terminator62
 
+Dialogue_Index_0074:
 .db $E3, $E1, "EVER D", $FD, Dialogue_NewLine
 .db $F6, $F7, " ILLEGAL? ", Dialogue_Terminator62
 
+Dialogue_Index_0076:
 .db $C6, " CURRENTLY", Dialogue_NewLine
 .db $E3, "AN ILLNESS?", Dialogue_Terminator62
 
+Dialogue_Index_0078:
 .db $DE, $99, " FEE", Dialogue_NewLine
-.db "IS ", $31, $30, $30, " ", $A1, ".", Dialogue_NewPage
+.db "IS 100 ", Dialogue_Mesetas, ".", Dialogue_NewPage
 .db "WOULD ", $E1, "PAY IT?", Dialogue_Terminator62
 
+Dialogue_Index_007A:
 .db $E2, $99, " IS", Dialogue_NewLine
 .db "READY, ", $D2, ".", Dialogue_Terminator65
 
+Dialogue_Index_007C:
 .db $B7, ". ", $E3, "A GOODDAY.", Dialogue_Terminator65
 
+Dialogue_Index_007E:
 .db $DC, Dialogue_Apostrophe, "S ", $F8, "GOOD.", Dialogue_NewLine
 .db "YOU", Dialogue_Apostrophe, "LL ", $E3, "TO", Dialogue_NewPage
 .db "COME BACK LATER.", Dialogue_Terminator65
 
+Dialogue_Index_0080:
 .db $E0, "TO ", $DE, Dialogue_NewLine
 .db "PASEO ", $98, Dialogue_NewPage
 .db "ON ", $94, ".", Dialogue_Terminator65
 
+Dialogue_Index_0082:
 .db "IT IS SAID ", $DC, Dialogue_NewLine
 .db $A3, "S ROAM", Dialogue_NewPage
 .db "IN ", $DE, "DESERT.", Dialogue_Terminator65
 
+Dialogue_Index_0084:
 .db $DA, " A CAKE", Dialogue_NewLine
 .db "SHOP IN ", $DE, "CAVE", Dialogue_NewPage
 .db "CALLED NAULA ON", Dialogue_NewLine
 .db $CF, "!", Dialogue_Terminator65
 
+Dialogue_Index_0086:
 .db $94, Dialogue_Apostrophe, "S ", $AA, "AND ", $D4, " ", $EC, "NOT", Dialogue_NewPage
 .db "ON GOOD TERMS, IT", Dialogue_NewLine
 .db "IS SAID.", Dialogue_Terminator65
 
+Dialogue_Index_0088:
 .db "A GIFT IS NEEDED", Dialogue_NewLine
 .db "IF ", $E1, $97, " TO SEE", Dialogue_NewPage
 .db $DE, $AA, ".", Dialogue_Terminator65
 
+Dialogue_Index_008A:
 .db $DE, $AA, " LOVESSWEETS, I HEAR.", Dialogue_Terminator65
 
+Dialogue_Index_008C:
 .db $DA, " A CAVE", Dialogue_NewLine
 .db "CALLED ", $A7, " IN", Dialogue_NewPage
 .db "A ", $E5, " TO ", $DE, Dialogue_NewLine
 .db "NORTH OF PASEO.", Dialogue_Terminator65
 
+Dialogue_Index_008E:
 .db $E4, "IS PASEO", Dialogue_NewLine
 .db $94, Dialogue_Apostrophe, "S CAPITAL.", Dialogue_Terminator65
 
+Dialogue_Index_0090:
 .db "IT", Dialogue_Apostrophe, "S ", $F8, "POSSIBLE", Dialogue_NewLine
 .db "TO ", $A2, " ", $DD, Dialogue_NewPage
 .db $A3, " ON FOOT.", Dialogue_Terminator65
 
+Dialogue_Index_0092:
 .db "I ", $E3, "AN RARE", Dialogue_NewLine
 .db "ANIMAL ", $D2, ". WOULD", Dialogue_NewPage
-.db $E1, "PAY ", $31, " BILLION", Dialogue_NewLine
-.db $A1, " FOR IT?", Dialogue_Terminator62
+.db $E1, "PAY 1 BILLION", Dialogue_NewLine
+.db Dialogue_Mesetas, " FOR IT?", Dialogue_Terminator62
 
+Dialogue_Index_0094:
 .db $E1, $EC, "A LIAR!", Dialogue_Terminator65
 
+Dialogue_Index_0096:
 .db $B7, " ", $E1, $E3, "A", Dialogue_NewLine
 .db $AC, " POT.", Dialogue_NewPage
+
+Dialogue_Index_0098:
 .db "SHALL I TRADE ", $DE, Dialogue_NewLine
 .db "ANIMAL FOR IT?", Dialogue_Terminator62
 
+Dialogue_Index_009A:
 .db "ALL RIGHT, ", $D1, Dialogue_NewLine
 .db $E1, "GO WITH HIM.", Dialogue_Terminator65
 
+Dialogue_Index_009C:
 .db $C5, " A", Dialogue_NewLine
 .db $DF, " TO GIVE TO", Dialogue_NewPage
 .db $DE, $AA, "?", Dialogue_Terminator62
 
+Dialogue_Index_009E:
 .db "I", Dialogue_Apostrophe, "LL TAKE ", $DE, Dialogue_NewLine
 .db "SHORTCAKE NOW.", Dialogue_Terminator65
 
+Dialogue_Index_00A0:
 .db "I DON", Dialogue_Apostrophe, "T THINK ", $E1, Dialogue_NewLine
 .db $E3, "A SUITABLE", Dialogue_NewPage
 .db $DF, ".", Dialogue_Terminator65
 
+Dialogue_Index_00A2:
 .db "GO BACK TO ", $E2, Dialogue_NewLine
 .db "HOME NOW.", Dialogue_Terminator65
 
+Dialogue_Index_00A4:
 .db "I", Dialogue_Apostrophe, "M ", $DE, $AA, ".", Dialogue_NewLine
 .db "I", Dialogue_Apostrophe, "M TOLD ", $DC, " ", $E1, Dialogue_NewPage
 .db "INTEND TO TRY TO", Dialogue_NewLine
 .db "KILL ", $D4, ".", Dialogue_NewPage
+
+Dialogue_Index_00A6:
 .db "I ADMIRE ", $E2, Dialogue_NewLine
 .db "COURAGE. IN ", $DE, Dialogue_NewPage
 .db $A7, " CAVE LIVES", Dialogue_NewLine
 .db "AN ESPAR ", $E7, Dialogue_NewPage
+
+Dialogue_Index_00A8:
 .db "NOAH. ", $CC, " GIVE", Dialogue_NewLine
 .db $E1, "A LETTER OF", Dialogue_NewPage
 .db "INTRODUCTION TO", Dialogue_NewLine
 .db $DF, " TO HER.", Dialogue_NewPage
+
+Dialogue_Index_00AA:
 .db "I ", $E3, "FAITH ", $DC, Dialogue_NewLine
 .db $CB, " KILL", Dialogue_NewPage
 .db $D4, " AND RETURN", Dialogue_NewLine
 .db $D2, " EVENTUALLY.", Dialogue_Terminator65
 
+Dialogue_Index_00AC:
 .db "IF ", $DE, $AA, Dialogue_NewLine
 .db "ORDERS NOAH TO DO", Dialogue_NewPage
 .db $D5, $F7, ",HE WILL", Dialogue_NewLine
 .db "LIKELY OBEY.", Dialogue_Terminator65
 
+Dialogue_Index_00AE:
 .db "WHO ", $EC, "YOU? I", Dialogue_Apostrophe, "M", Dialogue_NewLine
 .db "BUSY WITH MY", Dialogue_NewPage
+
+Dialogue_Index_00B0:
 .db "TRAINING NOW! DO", Dialogue_NewLine
 .db $F8, "BE A NUISANCE!", Dialogue_Terminator65
 
+Dialogue_Index_00B2:
 .db "HELLO!", Dialogue_Terminator65
 
+Dialogue_Index_00B4:
 .db "ZZZ...ZZZ...", Dialogue_Terminator65
 
+Dialogue_Index_00B6:
 .db $C9, $BF, " ", $E2, Dialogue_NewLine
 .db "WEARY B", $FD, "S.", Dialogue_Terminator65
 
+Dialogue_Index_00B8:
 .db "I AM PRAYING FOR", Dialogue_NewLine
 .db $E2, "SAFETY.", Dialogue_Terminator65
 
+Dialogue_Index_00BA:
 .db "COULD YA SP", $EC, "ME", Dialogue_NewLine
 .db "A CUP OF COLA?", Dialogue_Terminator62
 
+Dialogue_Index_00BC:
 .db $B3, "! ", $E4, "WAS", Dialogue_NewLine
 .db "ONCE ", $DE, "LAB. OF", Dialogue_NewPage
+
+Dialogue_Index_00BE:
 .db "DR.", $AD, ". HE WENTBONKERS, THOUGH", Dialogue_NewPage
+
+Dialogue_Index_00C0:
 .db "AND BE INPRIS", $FD, "D", Dialogue_NewLine
 .db "IN TRIADA TO ", $DE, Dialogue_NewPage
 .db "SOUTH OF ", $D2, ".", Dialogue_Terminator65
 
+Dialogue_Index_00C2:
 .db "I GOT NOTHIN", Dialogue_Apostrophe, " TO", Dialogue_NewLine
 .db "SAY T", Dialogue_Apostrophe, "YA!GET LOST!", Dialogue_Terminator65
 
+Dialogue_Index_00C4:
 .db "DON", Dialogue_Apostrophe, "T GO NEAR ", $DE, Dialogue_NewLine
 .db $9D, " AT ", $DE, "FAR", Dialogue_NewPage
+
+Dialogue_Index_00C6:
 .db "END OF ", $DE, "NARROW", Dialogue_NewLine
 .db "ROAD WHICH GOES", Dialogue_NewPage
 .db $FE, $DE, $95, Dialogue_NewLine
 .db $C4, " ", $DD, " THE", Dialogue_NewPage
+
+Dialogue_Index_00C8:
 .db $E5, "S. A ", $EF, "BEAST LIVES ", $D1, ".", Dialogue_NewPage
 .db "LOOK AT IT AND YA", Dialogue_NewLine
 .db "TURN TO ST", $FD, ".", Dialogue_Terminator65
 
+Dialogue_Index_00CA:
 .db "AH, IT", Dialogue_Apostrophe, "S GETTING", Dialogue_NewLine
 .db "LATE! FETCH MY", Dialogue_NewPage
+
+Dialogue_Index_00CC:
 .db "ASSISTANT. HE", Dialogue_Apostrophe, "S", Dialogue_NewLine
 .db "LIKELY HIDING", Dialogue_NewPage
 .db "IN ", $DE, "UNDERGROUND", $BA, ".", Dialogue_Terminator65
 
+Dialogue_Index_00CE:
 .db $EB, Dialogue_Terminator65
 
+Dialogue_Index_00D0:
 .db $E1, "DON", Dialogue_Apostrophe, "T ", $E3, Dialogue_NewLine
 .db "ENOUGH. COME BACK", Dialogue_NewPage
 .db "AGAIN WHEN ", $E1, Dialogue_NewLine
 .db $E3, "ENOUGH FUNDS.", Dialogue_Terminator65
 
+Dialogue_Index_00D2:
 .db "SUCCESS! I ", $DF, "A SUPERB ", $E8, Dialogue_NewPage
 .db $DE, $AD, ".", Dialogue_Terminator65
 
+Dialogue_Index_00D4:
 .db "IF ", $E1, "DON", Dialogue_Apostrophe, "T OBEY", Dialogue_NewLine
 .db "ME, I ", $88, " ", $CA, ".", Dialogue_Terminator65
 
+Dialogue_Index_00D6:
 .db "BUT ", $E1, $88, " FLY", Dialogue_NewLine
 .db "A ", $E8, ".", Dialogue_Terminator65
 
+Dialogue_Index_00D8:
 .db "HOW IS ", $DE, $AD, "?USE IT WELL.", Dialogue_Terminator65
 
+Dialogue_Index_00DA:
 .db $DC, Dialogue_Apostrophe, "S TOO BAD.", Dialogue_NewLine
 .db "AND ", $E1, $E3, "COME", Dialogue_NewPage
 .db "SO FAR, TOO.", Dialogue_Terminator65
 
+Dialogue_Index_00DC:
 .db "I", Dialogue_Apostrophe, "M BUSY.DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
 .db "BOTHER ME.", Dialogue_Terminator65
 
+Dialogue_Index_00DE:
 .db "I", Dialogue_Apostrophe, "M ", $AD, ". IF", Dialogue_NewLine
 .db "YOU", Dialogue_Apostrophe, "VE COME FOR", Dialogue_NewPage
 .db $CA, ", ", $E1, "HAD BESTFORGET IT. LEAVE!", Dialogue_Terminator65
 
+Dialogue_Index_00E0:
 .db $E1, $F9, "ME TO", Dialogue_NewLine
 .db "BUILD A ", $E8, Dialogue_NewPage
 .db "FOR ", $E1, "? ", $F8, "A", Dialogue_NewLine
@@ -17549,50 +17645,61 @@ DialogueBlock:
 .db "ACCEPT SUCH", Dialogue_NewLine
 .db "RESPONSIBILITY.", Dialogue_Terminator65
 
+Dialogue_Index_00E2:
 .db $E1, $EC, "CERTAINLY", Dialogue_NewLine
 .db "PERSISITENT. WELL,", Dialogue_NewPage
 .db "IF ", $CB, " DO AS", Dialogue_NewLine
 .db "I SAY, ", $CC, " ", $CA, Dialogue_NewPage
 .db "YOU. IS IT A DEAL?", Dialogue_Terminator62
 
+Dialogue_Index_00E4:
 .db "O.K. ", $CC, " GO TO", Dialogue_NewLine
 .db $95, " ", $9E, Dialogue_NewPage
 .db "NEARBY TO MAKE", Dialogue_NewLine
 .db "PREPARATIONS. COME", Dialogue_NewPage
 .db "THEN. DO ", $F8, "WASTEWORRY ON ME.", Dialogue_Terminator65
 
+Dialogue_Index_00E6:
 .db $C5, " ", $E2, Dialogue_NewLine
 .db $A0, "?", Dialogue_Terminator62
 
+Dialogue_Index_00E8:
 .db $E1, $EC, "A FOOL!", Dialogue_NewLine
 .db $CB, " DIE!", Dialogue_Terminator65
 
+Dialogue_Index_00EA:
 .db "SPIDER MONSTERS", Dialogue_NewLine
 .db $EC, "ACTUALLY", Dialogue_NewPage
 .db "VERY INTELLIGENT.", Dialogue_Terminator65
 
+Dialogue_Index_00EC:
 .db $C3, " ", $DE, Dialogue_NewLine
 .db "ROBOT ", $8A, "?", Dialogue_Terminator62
 
+Dialogue_Index_00EE:
 .db "ON ", $DE, "FAR SIDE OF", $DE, $E5, "S LIES", Dialogue_NewPage
 .db "A POOL OF MOLTEN", Dialogue_NewLine
 .db "LAVA CREATED BY A", Dialogue_NewPage
 .db "VOLCANIC ERUPTION.", Dialogue_Terminator65
 
+Dialogue_Index_00F0:
 .db $DE, $9D, " DEEP IN", Dialogue_NewLine
 .db $DE, $95, Dialogue_NewPage
 .db $E5, "S IS KNOWNAS ", $EA, Dialogue_Apostrophe, "S ", $9D, ".", Dialogue_Terminator65
 
+Dialogue_Index_00F2:
 .db "I HAVEN", Dialogue_Apostrophe, "T SEEN", Dialogue_NewLine
 .db $F6, $FD, " FOR A LONG", Dialogue_NewPage
 .db $9F, ". ", $CD, Dialogue_NewLine
 .db "TALK WITH ME?", Dialogue_Terminator62
 
+Dialogue_Index_00F4:
 .db "POLYMETERAL ", $C7, Dialogue_NewLine
 .db "DISSOLVE ALL", Dialogue_NewPage
 .db "MATERIALS EXCEPT", Dialogue_NewLine
 .db "FOR ", $BC, ".", Dialogue_Terminator65
 
+Dialogue_Index_00F6:
 .db "WHAT? DR.", $AD, Dialogue_NewLine
 .db "HAS RETURNED?", Dialogue_NewPage
 .db "HE ", $C7, " BUILD", Dialogue_NewLine
@@ -17600,45 +17707,57 @@ DialogueBlock:
 .db "I ", $C7, " BE ", $D1, Dialogue_NewLine
 .db "RIGHT AWAY.", Dialogue_Terminator65
 
+Dialogue_Index_00F8:
 .db "NO MAN ", $DC, " GOES", Dialogue_NewLine
 .db "INTO ", $DE, "ROOM IN", Dialogue_NewPage
 .db $DE, "FAR CORNER HASEVER COME OUT", Dialogue_NewPage
 .db "ALIVE! AHA-HA-HA!", Dialogue_Terminator65
 
+Dialogue_Index_00FA:
 .db "IT SEEMS TO BE A", Dialogue_NewLine
 .db "MAN WHO HAS BEEN", Dialogue_NewPage
 .db $91, "!", Dialogue_NewLine
 .db "I WONDER IF HE CAN", Dialogue_NewPage
 .db "BE RETURNED TO HISORIGINAL FORM?", Dialogue_Terminator65
 
+Dialogue_Index_00FC:
 .db $CB, " SOON FIND", Dialogue_NewLine
 .db "OUT ", $DE, "TRUTH!", Dialogue_Terminator65
 
+Dialogue_Index_00FE:
 .db "HALT! GO BACK!", Dialogue_NewLine
 .db $E2, "LAST CHANCE!", Dialogue_Terminator65
 
+Dialogue_Index_0100:
 .db "HOW BRAVE! BUT BE", Dialogue_NewLine
 .db $ED, " OF TRAPS!", Dialogue_Terminator65
 
+Dialogue_Index_0102:
 .db $A8, " IS MY", Dialogue_NewLine
 .db "TURF. DON", Dialogue_Apostrophe, "T YA", Dialogue_NewPage
 .db "MESS ", Dialogue_Apostrophe, "ROUND ", $D2, ",", Dialogue_NewLine
 .db "NOW GIT!", Dialogue_Terminator65
 
+Dialogue_Index_0104:
 .db $CE, " FIND A", Dialogue_NewLine
 .db "ROBOT ", $E7, Dialogue_NewPage
 .db $8A, ". HE CAN FLYA ", $E8, ".", Dialogue_Terminator65
 
+Dialogue_Index_0106:
 .db "IN ", $E4, "PILE OF", Dialogue_NewLine
 .db "JUNK, ", $D5, $D0, ",", Dialogue_NewPage
+
+Dialogue_Index_0108:
 .db $DA, " S", Dialogue_Apostrophe, "PPOSED", Dialogue_NewLine
 .db "T", Dialogue_Apostrophe, "BE A USABLE", Dialogue_NewPage
 .db "ROBOT,BUT ", $E1, $BE, Dialogue_NewLine
 .db "HOW RUMORS BE.", Dialogue_Terminator65
 
+Dialogue_Index_010A:
 .db "POLYMETERAL IS FOR", Dialogue_NewLine
 .db "SALE IN ABION.", Dialogue_Terminator65
 
+Dialogue_Index_010C:
 .db $E4, $B9, " IS", Dialogue_NewLine
 .db "CALLED LOAR.", Dialogue_NewPage
 .db "WE ", $E3, "BEEN IN", Dialogue_NewLine
@@ -17646,45 +17765,60 @@ DialogueBlock:
 .db $DE, "WORK OF", Dialogue_NewLine
 .db $D4, ".", Dialogue_Terminator65
 
+Dialogue_Index_010E:
 .db $E3, $E1, "HEARD OF", Dialogue_NewLine
 .db "A GEM CALLED \"", $DE, Dialogue_NewPage
 .db "AMBER EYE\"?", Dialogue_NewLine
+
+Dialogue_Index_0110:
 .db $D5, " SAY ", $DE, "CASBA", Dialogue_NewPage
 .db "DRAGON HAS ", $FD, ".", Dialogue_Terminator65
 
+Dialogue_Index_0112:
 .db $DA, " A ", $9E, "CALLED ABION ON", Dialogue_NewPage
 .db $DE, "WESTERN EDGE", Dialogue_NewLine
 .db "ON ", $E4, "ISLAND.", Dialogue_Terminator65
 
+Dialogue_Index_0114:
 .db $C3, " ABOUT", Dialogue_NewLine
 .db $D7, " TREES?", Dialogue_Terminator62
 
+Dialogue_Index_0116:
 .db "THEY GROW ON ", $DE, Dialogue_NewLine
 .db "ALTIPLANO PLATEAU", Dialogue_NewPage
 .db "ON ", $DE, $9A, Dialogue_NewLine
 .db $93, ".", Dialogue_Terminator65
 
+Dialogue_Index_0118:
 .db $E1, $EC, "GOING TO", Dialogue_NewLine
 .db "TRY TO KILL ", $D4, Dialogue_NewPage
 .db "I HEAR. ", $DC, Dialogue_Apostrophe, "S", Dialogue_NewLine
 .db "GREAT!", Dialogue_NewPage
+
+Dialogue_Index_011A:
 .db "I ", $E3, "HEARD ", $DC, Dialogue_NewLine
 .db "A CERTAIN", Dialogue_NewPage
 .db "CRYSTAL ", $C7, " BLOCK", Dialogue_NewLine
 .db "EVIL ", $EF, ".", Dialogue_Terminator65
 
+Dialogue_Index_011C:
 .db $E0, "TO ABION.", Dialogue_Terminator65
 
+Dialogue_Index_011E:
 .db $CA, "! ", $D4, " HAS", Dialogue_NewLine
 .db "COME TO ", $E4, $B9, "!", Dialogue_Terminator65
 
+Dialogue_Index_0120:
 .db "A ", $AC, " MAN CAMETO ", $E4, $B9, ". HE", Dialogue_NewPage
 .db "SEEMS TO BE", Dialogue_NewLine
 .db "PERFORMING ANIMAL", Dialogue_NewPage
+
+Dialogue_Index_0122:
 .db "EXPERIMENTS. HE", Dialogue_NewLine
 .db "BROUGHT A LARGE", Dialogue_NewPage
 .db "POT OR ", $D5, $F7, ".", Dialogue_Terminator65
 
+Dialogue_Index_0124:
 .db "IT", Dialogue_Apostrophe, "S A ROBOT MADE", Dialogue_NewLine
 .db "OF ", $BC, ". BUT", Dialogue_NewPage
 .db "IT HAS BEEN", Dialogue_NewLine
@@ -17692,21 +17826,28 @@ DialogueBlock:
 .db $D5, $D0, " AS", Dialogue_NewLine
 .db "BEING USELESS.", Dialogue_Terminator65
 
+Dialogue_Index_0126:
 .db "I", Dialogue_Apostrophe, "D LIKE TO TRAVELIN OUTER SPACE.", Dialogue_Terminator65
 
+Dialogue_Index_0128:
 .db $D5, " CATS, IF THEYEAT A CERTAIN TYPE", Dialogue_NewPage
 .db "OF NUT,THEY BECOMEHUGE AND CAN FLY.", Dialogue_NewPage
+
+Dialogue_Index_012A:
 .db "IT", Dialogue_Apostrophe, "S REALLY VERY", Dialogue_NewLine
 .db "WIERD.", Dialogue_Terminator65
 
+Dialogue_Index_012C:
 .db "I", Dialogue_Apostrophe, "M ", $8A, ".", Dialogue_NewLine
 .db $B3, " FOR FINDING", Dialogue_NewPage
 .db "ME. I CAN FLY ", $DE, Dialogue_NewLine
 .db $AD, " FOR YOU.", Dialogue_Terminator65
 
+Dialogue_Index_012E:
 .db $E4, $B9, " IS", Dialogue_NewLine
 .db "CALLED UZO.", Dialogue_Terminator65
 
+Dialogue_Index_0130:
 .db "IF ", $E1, "USE A", Dialogue_NewLine
 .db "VEHICLE CALLED THE", Dialogue_NewPage
 .db "LAND ROVER, ", $DE, Dialogue_NewLine
@@ -17714,56 +17855,73 @@ DialogueBlock:
 .db "BE ABLE TO HARM", Dialogue_NewLine
 .db "YOU.", Dialogue_Terminator65
 
+Dialogue_Index_0132:
 .db $DA, " A ", $B9, Dialogue_NewLine
 .db "CALLED CASBA TO", Dialogue_NewPage
 .db $DE, "SOUTH OF ", $D2, ".", Dialogue_Terminator65
 
+Dialogue_Index_0134:
 .db $DB, " DRAGONS", Dialogue_NewLine
 .db "LIVING IN ", $DE, Dialogue_NewPage
 .db "CASBA CAVE. THESE", Dialogue_NewLine
 .db "DRAGONS ", $E3, "GEMS", Dialogue_NewPage
 .db "IN THEIR HEADS!", Dialogue_Terminator65
 
+Dialogue_Index_0136:
 .db $E3, $E1, "HEARD", Dialogue_NewLine
 .db "ABOUT MANTLES MADE", Dialogue_NewPage
 .db "OF FRAD FIBERS?", Dialogue_NewLine
+
+Dialogue_Index_0138:
 .db "THEY ", $EC, "LIGHT,", Dialogue_NewPage
 .db "BUT PROVIDE ", $E6, Dialogue_NewLine
 .db "PROTECTION.", Dialogue_Terminator65
 
+Dialogue_Index_013A:
 .db $E3, $E1, "HEARD", Dialogue_NewLine
 .db "ABOUT ", $DE, Dialogue_NewPage
 .db $A4, "?", Dialogue_Terminator62
 
+Dialogue_Index_013C:
 .db "OH, NEVER MIND.", Dialogue_Terminator65
 
+Dialogue_Index_013E:
 .db "IT", Dialogue_Apostrophe, "S A ", $A5, ", BUTI BURIED ", $FD, " AT", Dialogue_NewPage
 .db $DE, "OUTSKIRTS OF", Dialogue_NewLine
 .db $DE, $B9, " OF ", $95, Dialogue_NewPage
+
+Dialogue_Index_0140:
 .db "ON ", $CF, ". DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
 .db "TELL ", $F6, $FD, ".", Dialogue_Terminator65
 
+Dialogue_Index_0142:
 .db "I DON", Dialogue_Apostrophe, "T ", $BE, " WHO", Dialogue_NewLine
 .db "TOLD ", $E1, $DC, ".", Dialogue_NewPage
 .db $E1, "HAD BEST", Dialogue_NewLine
 .db "FORGET IT.", Dialogue_Terminator65
 
+Dialogue_Index_0144:
 .db "I TELL ", $E1, "NO ", $FD, Dialogue_NewLine
 .db "CAN DO.GO ON BACK", Dialogue_NewPage
 .db "TO WHEREVER ", $E1, Dialogue_NewLine
 .db "CAME FROM.", Dialogue_Terminator65
 
+Dialogue_Index_0146:
 .db "ALL RIGHT, ALL", Dialogue_NewLine
 .db "RIGHT. I GIVE UP.", Dialogue_NewPage
 .db "BUT DON", Dialogue_Apostrophe, "T TELL", Dialogue_NewLine
 .db $F6, $FD, " ", $D0, " ", $E1, Dialogue_NewPage
 .db "GOT THIS, O.K.?", Dialogue_Terminator65
 
+Dialogue_Index_0148:
 .db "I", Dialogue_Apostrophe, "M ", $DE, $E6, Dialogue_NewLine
 .db "DAMOR, ", $BB, "!", Dialogue_NewPage
+
+Dialogue_Index_014A:
 .db $C6, " BELIEVE IN", Dialogue_NewLine
 .db "MY PROPHECIES?", Dialogue_Terminator62
 
+Dialogue_Index_014C:
 .db "I", Dialogue_Apostrophe, "VE GOT A FRIEND", Dialogue_NewLine
 .db "IN ", $A8, ". HE", Dialogue_Apostrophe, "S", Dialogue_NewPage
 .db "PROBABLY HAVING A", Dialogue_NewLine
@@ -17771,195 +17929,267 @@ DialogueBlock:
 .db "OF ", $DE, "LAVA. WHY", Dialogue_NewLine
 .db $F8, "VISIT HIM?", Dialogue_Terminator65
 
+Dialogue_Index_014E:
 .db "GOOD!", Dialogue_Terminator65
 
+Dialogue_Index_0150:
 .db "YOU", Dialogue_Apostrophe, "RE SEARCHING", Dialogue_NewLine
 .db "FOR ", $D5, $F7, "?", Dialogue_Terminator62
 
+Dialogue_Index_0152:
 .db "LEAVE MY SIGHT,", Dialogue_NewLine
 .db "UNBELIEVER!", Dialogue_Terminator65
 
+Dialogue_Index_0154:
 .db $E1, $EC, "SEARCHING", Dialogue_NewLine
 .db "FOR ALEX OSSALE?", Dialogue_Terminator62
 
+Dialogue_Index_0156:
 .db "EVERY", $F7, " I", Dialogue_Apostrophe, "VE", Dialogue_NewLine
 .db "SAID IS CORRECT?", Dialogue_Terminator62
 
+Dialogue_Index_0158:
 .db "THEN, COME AGAIN,", Dialogue_NewLine
 .db $F6, $9F, ".", Dialogue_Terminator65
 
+Dialogue_Index_015A:
 .db $C6, " CONTRADICT", Dialogue_NewLine
 .db $DE, $E6, "DAMOR?!?", Dialogue_Terminator62
 
+Dialogue_Index_015C:
 .db "OF COURSE NOT!YOU", Dialogue_NewLine
 .db $EC, "A PROMISING", Dialogue_NewPage
-.db "YOUNG LASS! ", $CC, "GIVE ", $E1, "A ", $EF, Dialogue_NewPage
+.db "YOUNG LASS! ", $CC
+
+Dialogue_Index_015E:
+.db "GIVE ", $E1, "A ", $EF, Dialogue_NewPage
 .db "CRYSTAL FOR A", Dialogue_NewLine
 .db "REWARD.", Dialogue_Terminator65
 
+Dialogue_Index_0160:
 .db $C6, " COME IN", Dialogue_NewLine
 .db "FULL KNOWLEDGE OF", Dialogue_NewPage
 .db $DE, $9D, " OF ", $C0, Dialogue_NewLine
 .db $C1, "?", Dialogue_Terminator62
 
+Dialogue_Index_0162:
 .db $CB, " SURELY", Dialogue_NewLine
 .db "INCUR ", $DE, "WRATH", Dialogue_NewPage
 .db "OF ", $DE, "HEAVENS!", Dialogue_Terminator65
 
+Dialogue_Index_0164:
 .db "GO BACK BEFORE IT", Dialogue_NewLine
 .db "IS TOO LATE.", Dialogue_Terminator65
 
+Dialogue_Index_0166:
 .db $E4, $B9, " IS", Dialogue_NewLine
 .db "CALLED CASBA.", Dialogue_Terminator65
 
+Dialogue_Index_0168:
 .db "FIERCE DRAGONS", Dialogue_NewLine
 .db "LIVE IN ", $DE, "CAVE", Dialogue_NewPage
 .db "NEAR ", $D2, ",AND I", Dialogue_Apostrophe, "M", Dialogue_NewLine
 .db "SCARED OF THEM.", Dialogue_Terminator65
 
+Dialogue_Index_016A:
 .db "DON", Dialogue_Apostrophe, "T BELIEVE YOUR", Dialogue_NewLine
 .db "OWN EYES IN ", $DE, Dialogue_NewPage
 .db "DEPTH OF ", $DE, Dialogue_NewLine
 .db $D8, "S.", Dialogue_Terminator65
 
+Dialogue_Index_016C:
 .db $DB, " LEGENDS", Dialogue_NewLine
 .db "OF A MYSTIC ", $B6, Dialogue_NewPage
 .db "IN A ", $9E, Dialogue_NewLine
 .db "SURROUNDED IN MIST", Dialogue_NewPage
+
+Dialogue_Index_016E:
 .db "IT IS ", $DE, $B6, Dialogue_NewLine
 .db "PERSEUS USED IN", Dialogue_NewPage
 .db "DAYS TO CONQUER", Dialogue_NewLine
 .db $84, "BEASTS.", Dialogue_Terminator65
 
+Dialogue_Index_0170:
 .db $DA, " POISON", Dialogue_NewLine
 .db "GAS ABOVE ", $DE, "SEA", Dialogue_NewPage
 .db "TO ", $DE, "WEST. NO", Dialogue_NewLine
 .db $FD, " CAN GO NEAR", Dialogue_NewPage
 .db $D1, " WITHOUT ", $D5, "PROTECTION.", Dialogue_Terminator65
 
+Dialogue_Index_0172:
 .db $E3, $E1, "HEARD OF", Dialogue_NewLine
 .db "VEHICLE CALLED", Dialogue_NewPage
 .db $DE, "HOVERCRAFT?", Dialogue_Terminator62
 
+Dialogue_Index_0174:
 .db "I BOUGHT IT IN", Dialogue_NewLine
 .db $96, " ON ", $CF, Dialogue_NewPage
 .db "BUT IT SEEMED", Dialogue_NewLine
 .db "BROKEN SO I", Dialogue_NewPage
 .db "ABAND", $FD, "D IT IN", Dialogue_NewLine
+
+Dialogue_Index_0176:
 .db $A8, ". IT", Dialogue_NewPage
 .db "PROBABLY CAN STILLBE USED, THOUGH.", Dialogue_Terminator65
 
+Dialogue_Index_0178:
 .db $E1, "FOUND ", $DE, Dialogue_NewLine
 .db "HOVERCRAFT.", $8A, Dialogue_NewPage
 .db "HAS RESTORED IT TO", Dialogue_NewLine
+
+Dialogue_Index_017A:
 .db "WORKING ORDER.", Dialogue_Terminator65
 
+Dialogue_Index_017C:
 .db "IT", Dialogue_Apostrophe, "S A GOOD ", $F7, Dialogue_NewLine
 .db "TO HAVE. IT ", $F3, "S", Dialogue_NewPage
 .db "ACROSS WATER.", Dialogue_Terminator65
 
+Dialogue_Index_017E:
 .db $E0, "TO DRASGOW-- A SMALL ", $B9, Dialogue_NewPage
 .db "ON ", $DE, "OCEAN.", Dialogue_Terminator65
 
+Dialogue_Index_0180:
 .db $E1, $EC, "DARING TO", Dialogue_NewLine
 .db $E3, "FOUND ", $E2, Dialogue_NewPage
 .db "WAY ", $D2, " EVEN", Dialogue_NewLine
+
+Dialogue_Index_0182:
 .db "THOUGH ", $DE, "SEA", Dialogue_NewPage
 .db "LANES ", $EC, "CLOSED", Dialogue_NewLine
 .db "TO SHIPS.", Dialogue_Terminator65
 
+Dialogue_Index_0184:
 .db $DA, " A ", $EF, Dialogue_NewLine
 .db "SWORD IN A ", $9D, Dialogue_NewPage
 .db "ON A FORGOTTEN", Dialogue_NewLine
 .db "ISLAND.", Dialogue_Terminator65
 
+Dialogue_Index_0186:
 .db "LONG AGO, I SAW A", Dialogue_NewLine
 .db "GIANT ROCK FLOAT", Dialogue_NewPage
 .db $DD, " ", $DE, "SKY.", Dialogue_Terminator65
 
+Dialogue_Index_0188:
 .db $DE, "TOP OF ", $DE, Dialogue_NewLine
 .db $AB, " CALLED ", $C0, Dialogue_NewPage
 .db $C1, " IS ALWAYS", Dialogue_NewLine
 .db "HIDDEN BY CLOUDS.", Dialogue_NewPage
+
+Dialogue_Index_018A:
 .db $D5, $F7, " ", $C8, " BE", Dialogue_NewLine
 .db "UP ", $D1, "!", Dialogue_Terminator65
 
+Dialogue_Index_018C:
 .db "I HEARD ", $DC, " THEY", Dialogue_NewLine
 .db "SELL GAS ", $B6, Dialogue_NewPage
 .db $D2, ", BUT I DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
 .db $BE, " ", $D0, " ", $DE, Dialogue_NewPage
 .db "SHOP IS!", Dialogue_NewLine
+
+Dialogue_Index_018E:
 .db "WHAT A MESS!", Dialogue_Terminator65
 
+Dialogue_Index_0190:
 .db $E0, "TO OUR", Dialogue_NewLine
 .db "STORE. WHAT CAN I", Dialogue_NewPage
 .db $CA, " ", $E1, "WITH?", Dialogue_NewPage
+
+Dialogue_Index_0192:
 .db "AHH, I WAS PULLING", $E2, "LEG! WHAT", Dialogue_Apostrophe, "S", Dialogue_NewPage
 .db "A MATTER, CAN", Dialogue_Apostrophe, "T", Dialogue_NewLine
 .db $E1, "TAKE A JOKE?", Dialogue_Terminator65
 
+Dialogue_Index_0194:
 .db "I BET ", $E1, $EC, Dialogue_NewLine
 .db "SURPRISED TO SEE A", Dialogue_NewPage
 .db "SHOP IN A PLACE", Dialogue_NewLine
 .db "LIKE THIS!", Dialogue_NewPage
+
+Dialogue_Index_0196:
 .db "A GAS ", $B6, " IS", Dialogue_NewLine
-.db "ONLY ", $31, $30, $30, $30, " ", $A1, "!", Dialogue_NewPage
+.db "ONLY 1000 ", Dialogue_Mesetas, "!", Dialogue_NewPage
 .db "PRETTY CHEAP, HUH?", $CD, " BUY ", $FD, "?", Dialogue_Terminator62
 
+Dialogue_Index_0198:
 .db $B3, "! SEE ", $E1, Dialogue_NewLine
 .db "AGAIN.", Dialogue_Terminator65
 
+Dialogue_Index_019A:
 .db $E1, "DON", Dialogue_Apostrophe, "T ", $E3, Dialogue_NewLine
 .db "ENOUGH M", $FD, "Y!", Dialogue_Terminator65
 
+Dialogue_Index_019C:
 .db "SORRY, ", $DC, " WAS", Dialogue_NewLine
 .db $E2, "ONLY CHANCE.", Dialogue_Terminator65
 
+Dialogue_Index_019E:
 .db $DE, $98, " IS", Dialogue_NewLine
 .db "CLOSED.", Dialogue_Terminator65
 
+Dialogue_Index_01A0:
 .db $8B, "CONFISCAT-", Dialogue_NewLine
 .db "ING ", $E2, $99, ".", Dialogue_Terminator65
 
+Dialogue_Index_01A2:
 .db $E0, "TO SKURE", Dialogue_NewLine
 .db "ON ", $93, ".", Dialogue_NewPage
 .db "IT", Dialogue_Apostrophe, "S FREEZING", Dialogue_NewLine
 .db "OUTSIDE, ISN", Dialogue_Apostrophe, "T IT?", Dialogue_Terminator65
 
+Dialogue_Index_01A4:
 .db "MOST EMIGRANTS", Dialogue_NewLine
 .db $FE, $CF, Dialogue_NewPage
 .db "SETTLE ", $D2, ".", Dialogue_Terminator65
 
+Dialogue_Index_01A6:
 .db "I DON", Dialogue_Apostrophe, "T ", $BE, " A LOTABOUT ", $E4, $9A, ",", Dialogue_NewPage
+
+Dialogue_Index_01A8:
 .db "BUT WORD HAS IT", Dialogue_NewLine
 .db $DC, " ", $DA, " A", Dialogue_NewPage
 .db $B9, " OF NATIVE", Dialogue_NewLine
 .db $F4, "S IN ", $DE, Dialogue_NewPage
 .db "FAR REACHES OF THE", $E5, "S.", Dialogue_Terminator65
 
+Dialogue_Index_01AA:
 .db "IF ", $E1, "REALLY HOPETO KILL ", $D4, ",", Dialogue_NewPage
+
+Dialogue_Index_01AC:
 .db $E1, "HAD BEST FIND", Dialogue_NewLine
 .db "A SWORD, AXE,", Dialogue_NewPage
 .db $B6, ", ARMOR", Dialogue_NewLine
 .db "MADE OF ", $BC, ".", Dialogue_NewPage
+
+Dialogue_Index_01AE:
 .db "SUCH WEAPONS ", $EC, Dialogue_NewLine
 .db "STRONGEST.", Dialogue_NewPage
+
+Dialogue_Index_01B0:
 .db "I PRAY FOR ", $E2, Dialogue_NewLine
 .db "SAFETY.", Dialogue_Terminator65
 
+Dialogue_Index_01B2:
 .db "ARMS MADE OF", Dialogue_NewLine
 .db $BC, " CONCEAL", Dialogue_NewPage
-.db "HOLY POWER. ", $D4, "FEARS ", $E4, "POWER", Dialogue_NewPage
+.db "HOLY POWER. ", $D4
+
+Dialogue_Index_01B4:
+.db "FEARS ", $E4, "POWER", Dialogue_NewPage
 .db "AND HAS BEEN", Dialogue_NewLine
 .db "RUNNING AND HIDING", Dialogue_NewPage
 .db "IN DIFFERENT", Dialogue_NewLine
+
+Dialogue_Index_01B6:
 .db "PLACES IN ", $DE, Dialogue_NewPage
 .db $B8, " OF ", $DE, Dialogue_NewLine
 .db $9B, " ", $9C, ".", Dialogue_Terminator65
 
+Dialogue_Index_01B8:
 .db $93, " IS A", Dialogue_NewLine
 .db $B5, " OF ICE.", Dialogue_Terminator65
 
+Dialogue_Index_01BA:
 .db $DB, " PLACES", Dialogue_NewLine
 .db "IN ", $DE, $E5, "S", Dialogue_NewPage
 .db "WHERE THE ICE IS", Dialogue_NewLine
@@ -17967,30 +18197,42 @@ DialogueBlock:
 .db "IMPASSABLE TO", Dialogue_NewLine
 .db "THOSE ON FOOT.", Dialogue_Terminator65
 
+Dialogue_Index_01BC:
 .db $DE, "ALTIPLANO", Dialogue_NewLine
 .db "PLATEAU IS AT ", $DE, Dialogue_NewPage
 .db "TOP OF ", $DE, "ICE", Dialogue_NewLine
 .db $E5, ".", Dialogue_Terminator65
 
+Dialogue_Index_01BE:
 .db "AN ECLIPSE OCCURS", Dialogue_NewLine
 .db "ON ", $E4, $9A, Dialogue_NewPage
 .db "ONCE EVERY HUNDREDYEARS. A TORCH", Dialogue_NewPage
+
+Dialogue_Index_01C0:
 .db "LIT DURING AN", Dialogue_NewLine
 .db "ECLIPSE IS CALLED", Dialogue_NewPage
-.db "AN \"ECLIPSE TORCH\"AND IS REGARDED", Dialogue_NewPage
+.db "AN \"ECLIPSE TORCH\""
+
+Dialogue_Index_01C2:
+.db "AND IS REGARDED", Dialogue_NewPage
 .db "AS HOLY BY ", $DE, Dialogue_NewLine
 .db $F4, "S.", Dialogue_Terminator65
 
+Dialogue_Index_01C4:
 .db $DE, "DEAD GUARON", Dialogue_NewLine
 .db "MORGUE ", $E3, "BEEN", Dialogue_NewPage
 .db "CALLED BACK TO", Dialogue_NewLine
+
+Dialogue_Index_01C6:
 .db "LIFE! WHAT FEAR!", Dialogue_Terminator65
 
+Dialogue_Index_01C8:
 .db $DE, "NEIBORING", Dialogue_NewLine
 .db $9E, " ", $EC, "ALL", Dialogue_NewPage
 .db "LIARS! DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
 .db "LISTEN TO THEM!", Dialogue_Terminator65
 
+Dialogue_Index_01CA:
 .db "ZE CORONA ", $9D, Dialogue_NewLine
 .db "STANDS ON ZE", Dialogue_NewPage
 .db "FAR SIDE OF ZE", Dialogue_NewLine
@@ -17998,187 +18240,248 @@ DialogueBlock:
 .db "NORTH OF ZIS", Dialogue_NewLine
 .db $9E, ".", Dialogue_Terminator65
 
+Dialogue_Index_01CC:
 .db "TO ZE WEST OF ZE", Dialogue_NewLine
 .db "CORONA ", $9D, " IS", Dialogue_NewPage
 .db "ZE ", $93, " CAVE.", Dialogue_NewLine
+
+Dialogue_Index_01CE:
 .db "OUR FRIENDS ", $EC, "IN", Dialogue_NewPage
 .db "ZERE. GIVE ZEM", Dialogue_NewLine
 .db "OUR BEST, O.K.?", Dialogue_Terminator65
 
+Dialogue_Index_01D0:
 .db $D7, " TREES GROW", Dialogue_NewLine
 .db "ZE ", $D7, " BERRIES.", Dialogue_NewPage
+
+Dialogue_Index_01D2:
 .db "ZOSE BERRIES ", $EC, Dialogue_NewLine
 .db "OUR MOST IMPORTANT", Dialogue_NewPage
 .db "FOOD, BUT IT", Dialogue_NewLine
 .db "SHRIVELS UP AFTER", Dialogue_NewPage
 .db "A FEW MOMENTS,", Dialogue_NewLine
+
+Dialogue_Index_01D4:
 .db "UNLESS IT IS PUT", Dialogue_NewPage
 .db "IN ", $A6, ".", Dialogue_Terminator65
 
+Dialogue_Index_01D6:
 .db $C3, " WHAT", Dialogue_NewLine
 .db "AN AEROPRISM IS?", Dialogue_Terminator62
 
+Dialogue_Index_01D8:
 .db "IT LETS ", $E1, "SEE", Dialogue_NewLine
 .db "ANOTHER ", $B5, ".", Dialogue_Terminator65
 
+Dialogue_Index_01DA:
 .db "I", Dialogue_Apostrophe, "D LIKE TO SEE", Dialogue_NewLine
 .db $FD, " ", $D5, $9F, ".", Dialogue_Terminator65
 
+Dialogue_Index_01DC:
 .db "WE OF ZIS ", $B9, Dialogue_NewLine
 .db "HATE ", $E9, ".", Dialogue_Terminator65
 
+Dialogue_Index_01DE:
 .db $DA, " A SPRING", Dialogue_NewLine
 .db "OF LIFE IN ", $DE, Dialogue_NewPage
 .db "CORONA ", $9D, ",", Dialogue_NewLine
 .db $DA, ", YES.", Dialogue_Terminator65
 
+Dialogue_Index_01E0:
 .db $E1, "CAN WARP ", $FE, Dialogue_NewLine
-.db $DE, $31, $30, "TH LEVEL OF", Dialogue_NewPage
+.db $DE, "10TH LEVEL OF", Dialogue_NewPage
 .db $DE, $D8, " UNDER", Dialogue_NewLine
 .db $93, ",YES.", Dialogue_Terminator65
 
+Dialogue_Index_01E2:
 .db $D7, " BERRIES ARE", Dialogue_NewLine
 .db "BLUE ", $D7, " NUTS", Dialogue_NewLine
 .db "USED IN DYES,YES,", Dialogue_NewPage
 .db "THEY ", $EC, ", ", $D3, ".", Dialogue_Terminator65
 
+Dialogue_Index_01E4:
 .db "IF ", $E1, "USE A", Dialogue_NewLine
 .db "CRYSTAL IN FRONT", Dialogue_NewPage
 .db "OF A ", $D7, " TREE,", Dialogue_NewLine
 .db "IT ", $C7, " BECOME,", Dialogue_NewPage
 .db "YES, A ", $D7, " NUT,YES, ", $D3, ".", Dialogue_Terminator65
 
+Dialogue_Index_01E6:
 .db $E4, $B9, " WELCOMESALL ", $E9, ",YES,", Dialogue_NewPage
 .db $D3, ", WE DO.", Dialogue_Terminator65
 
+Dialogue_Index_01E8:
 .db $E4, $B9, " IS", Dialogue_NewLine
 .db "CALLED SOPIA.", Dialogue_NewPage
 .db $E1, $EC, "BRAVE TO", Dialogue_NewLine
 .db "PENETRATE ", $DE, "GAS.", Dialogue_Terminator65
 
+Dialogue_Index_01EA:
 .db "I", Dialogue_Apostrophe, "M ", $DE, "HEAD OF", Dialogue_NewLine
 .db $E4, $9E, ".", Dialogue_NewPage
+
+Dialogue_Index_01EC:
 .db "BECAUSE OF ", $DE, Dialogue_NewLine
 .db "CLOUD OF GAS,", Dialogue_NewPage
 .db $8B, "CUT OFF", Dialogue_NewLine
 .db $FE, "OTHER TOWNS,", Dialogue_NewPage
 .db $8B, "THEREFORE", Dialogue_NewLine
 .db "VERY POOR.", Dialogue_NewPage
-.db $CD, " DONATE", Dialogue_NewLine
-.db $34, $30, $30, " ", $A1, "?", Dialogue_Terminator62
 
+Dialogue_Index_01EE:
+.db $CD, " DONATE", Dialogue_NewLine
+.db "400 ", Dialogue_Mesetas, "?", Dialogue_Terminator62
+
+Dialogue_Index_01F0:
 .db $B7, ". WE ", $C8, " GO", Dialogue_NewLine
 .db "ON SUFFERING...", Dialogue_Terminator65
 
+Dialogue_Index_01F2:
 .db $E1, $E3, "A LITTLE", Dialogue_NewLine
 .db "M", $FD, "Y,TOO, ", $B7, ".", Dialogue_Terminator65
 
+Dialogue_Index_01F4:
 .db $B3, "! ACCORDING", Dialogue_NewLine
 .db "TO OUR LEGENDS,", Dialogue_NewPage
+
+Dialogue_Index_01F6:
 .db $DE, "VERY ", $B6, ",", Dialogue_NewLine
 .db "PERSEUS USED TO", Dialogue_NewPage
 .db "OVERCOME ", $EA, ",ISBURIED ON ", $DE, Dialogue_NewPage
+
+Dialogue_Index_01F8:
 .db "SMALL ISLAND IN", Dialogue_NewLine
 .db $DE, "MIDDLE OF A", Dialogue_NewPage
 .db "LAKE.", Dialogue_Terminator65
 
+Dialogue_Index_01FA:
 .db "HI! I", Dialogue_Apostrophe, "M MIKI!", Dialogue_NewLine
 .db $C6, " LIKE", Dialogue_NewPage
 .db "SEGA ", $FA, "S?", Dialogue_Terminator62
 
+Dialogue_Index_01FC:
 .db "OF COURSE! SEGA", Dialogue_NewLine
 .db $FA, "S ", $EC, "BEST.", Dialogue_Terminator65
 
+Dialogue_Index_01FE:
 .db "I CAN", Dialogue_Apostrophe, "T BELIEVE", Dialogue_NewLine
 .db "IT. IF ", $E1, "DON", Dialogue_Apostrophe, "T", Dialogue_NewPage
 .db "LIKE ", $DE, $FA, ",....", Dialogue_NewLine
 .db "WHY ", $E3, $E1, Dialogue_NewPage
 .db "PLAYED SO FAR!?!", Dialogue_Terminator65
 
+Dialogue_Index_0200:
 .db "BEFORE ", $D4, " CAMETO POWER, EVEN OUR", Dialogue_NewPage
 .db $B9, " HAD PLENTY.", Dialogue_Terminator65
 
+Dialogue_Index_0202:
 .db $DA, " A MONK", Dialogue_NewLine
 .db $E7, "TAJIM IN THE", Dialogue_NewPage
 .db $E5, "S TO ", $DE, Dialogue_NewLine
 .db "SOUTH OF ", $DE, "LAKE.", Dialogue_Terminator65
 
+Dialogue_Index_0204:
 .db "I", Dialogue_Apostrophe, "VE HEARD ", $DC, Dialogue_NewLine
 .db $DE, $CF, " IS A", Dialogue_NewPage
 .db "BEAUTIFUL ", $9A, ".", Dialogue_NewLine
 .db "IS ", $DC, " TRUE?", Dialogue_Terminator62
 
+Dialogue_Index_0206:
 .db "I", Dialogue_Apostrophe, "D LIKE TO GO", Dialogue_NewLine
 .db "VISITING ", $D5, "DAY.", Dialogue_Terminator65
 
+Dialogue_Index_0208:
 .db "NO? I", Dialogue_Apostrophe, "D LIKE TO GO", $D5, $D0, " ", $DE, "AIR", Dialogue_NewPage
 .db "IS MORE CLEAN", Dialogue_NewLine
 .db "AND FRESH.", Dialogue_Terminator65
 
+Dialogue_Index_020A:
 .db $B3, "!", Dialogue_NewLine
 .db "COME AGAIN!", Dialogue_Terminator65
 
+Dialogue_Index_020C:
 .db "TIGHTWAND!", Dialogue_Terminator65
 
+Dialogue_Index_020E:
 .db $EB, Dialogue_Terminator65
 
+Dialogue_Index_0210:
 .db "..........", Dialogue_Terminator65
 
+Dialogue_Index_0212:
 .db "THEN ", $E1, $EC, $DE, Dialogue_NewLine
 .db "VERY ", $B0, " OF ", $DE, Dialogue_NewPage
 .db "ENTIRE ", $9C, ". I", Dialogue_NewLine
 .db $C7, " ASSIST ", $E1, "IN", Dialogue_NewPage
 .db "ALL WAYS POSSIBLE.", Dialogue_Terminator65
 
+Dialogue_Index_0214:
 .db $E1, $E3, "BEEN", Dialogue_NewLine
 .db "LOCKED UP,TOO", Dialogue_NewPage
+
+Dialogue_Index_0216:
 .db $DA, " A WAY", Dialogue_NewLine
 .db "OUT, BUT I LIKE", Dialogue_NewPage
 .db "IT IN ", $D2, ",", Dialogue_NewLine
 .db "MYSELF.", Dialogue_Terminator65
 
+Dialogue_Index_0218:
 .db $DB, " GUARDS", Dialogue_NewLine
 .db "UP AHEAD!", Dialogue_Terminator65
 
+Dialogue_Index_021A:
 .db "IF ", $E1, "PLAN TO GO", Dialogue_NewLine
 .db "BACK, NOW IS ", $DE, Dialogue_NewPage
 .db $9F, " TO LEAVE.", Dialogue_Terminator65
 
+Dialogue_Index_021C:
 .db $C5, " ", $E2, Dialogue_NewLine
 .db $A0, "?", Dialogue_Terminator62
 
+Dialogue_Index_021E:
 .db $E4, "IS A FAKE!", Dialogue_NewLine
+
+Dialogue_Index_0220:
 .db $C6, " THINK ", $E1, Dialogue_NewPage
 .db "CAN FOOL A ROBOT?", Dialogue_NewLine
 .db "OFF TO JAIL WE GO!", Dialogue_Terminator65
 
+Dialogue_Index_0222:
 .db "GET ME OUT ", $D2, "?", Dialogue_NewLine
 .db "BUT IT", Dialogue_Apostrophe, "S IN VAIN.", Dialogue_Terminator65
 
+Dialogue_Index_0224:
 .db "IT", Dialogue_Apostrophe, "S FOOLISH TO", Dialogue_NewLine
 .db "TRY TO GET ", $D4, "!", Dialogue_Terminator65
 
+Dialogue_Index_0226:
 .db $D4, " IS GONNA", Dialogue_NewLine
 .db "SACRIFICE US! AGH!", Dialogue_Terminator65
 
+Dialogue_Index_0228:
 .db $E3, $E1, "FOUND THE", Dialogue_NewLine
 .db "ARMOR IN GUARON?", Dialogue_Terminator62
 
+Dialogue_Index_022A:
 .db "IT CAN BE FOUND AT", $DE, "FAR SIDE OF", Dialogue_NewPage
 .db "A PIT TRAP.", Dialogue_Terminator65
 
+Dialogue_Index_022C:
 .db "WELL,AREN", Dialogue_Apostrophe, "T ", $E1, Dialogue_NewLine
 .db $D5, $F7, "?", Dialogue_Terminator65
 
+Dialogue_Index_022E:
 .db "ALL WHO FACE", Dialogue_NewLine
 .db $D4, " LOSE THEIR", Dialogue_NewPage
 .db "SOULS TO HIS", Dialogue_NewLine
 .db $EF, "!", Dialogue_Terminator65
 
+Dialogue_Index_0230:
 .db "NO? ", $DC, Dialogue_Apostrophe, "S FINE,", Dialogue_NewLine
 .db "IF ", $E1, "SO DESIRE.", Dialogue_NewPage
 .db $CB, " ALWAYS BE", $E0, $D2, ".", Dialogue_Terminator65
 
+Dialogue_Index_0232:
 .db $DA, " A ", $9D, Dialogue_NewLine
 .db "OF ", $DE, "TOP OF", Dialogue_NewPage
 .db $C2, ".", Dialogue_NewLine
@@ -18186,101 +18489,138 @@ DialogueBlock:
 .db "IS HIDDEN AT ", $DE, Dialogue_NewLine
 .db "TOP OF ", $DE, $9D, "!", Dialogue_Terminator65
 
+Dialogue_Index_0234:
 .db "WHAT ", $E3, $E1, "COMEFOR? ", $C6, " INTEND", Dialogue_NewPage
 .db $D5, " MISCHIEF?", Dialogue_Terminator65
 
+Dialogue_Index_0236:
 .db "I ", $E3, "AN UNEASY", Dialogue_NewLine
 .db "FEELING.", Dialogue_Terminator65
 
+Dialogue_Index_0238:
 .db "BE ", $ED, " UP", Dialogue_NewLine
 .db "AHEAD. AT ", $DE, Dialogue_NewPage
 .db "BREAK IN ", $DE, "ROAD,GO TO ", $DE, "LEFT!", Dialogue_Terminator65
 
+Dialogue_Index_023A:
 .db $D4, " LIVES IN", Dialogue_NewLine
 .db "FEAR OF ", $DE, Dialogue_NewPage
 .db "CRYSTAL POSSESSED", Dialogue_NewLine
 .db "BY ", $DE, $BB, Dialogue_NewPage
+
+Dialogue_Index_023C:
 .db $E7, "DAMOR. ", $D1, "IS ", $D5, $F7, Dialogue_NewPage
 .db "SPECIAL ABOUT IT,", Dialogue_NewLine
 .db "WITHOUT A DOUBT.", Dialogue_Terminator65
 
+Dialogue_Index_023E:
 .db $E4, "FIRE WAS LIT", Dialogue_NewLine
 .db "DURING ", $DE, "ECLIPSE", Dialogue_NewPage
 .db "WHICH OCCURS ONCE", Dialogue_NewLine
-.db "EVERY ", $31, $30, $30, " YEARS.", Dialogue_NewPage
+.db "EVERY 100 YEARS.", Dialogue_NewPage
+
+Dialogue_Index_0240:
 .db "IF ", $E1, "GIVE ME A", Dialogue_NewLine
 .db "GEM ", $FE, "A DRAGON,", Dialogue_NewPage
 .db "I", Dialogue_Apostrophe, "LL GIVE ", $E1, $D5, "OF ", $E4, "FIRE.", Dialogue_NewPage
+
+Dialogue_Index_0242:
 .db "HOW ABOUT IT?", Dialogue_Terminator62
 
+Dialogue_Index_0244:
 .db $D2, ", TAKE ", $E4, Dialogue_NewLine
 .db "ECLIPSE TORCH.", Dialogue_Terminator65
 
+Dialogue_Index_0246:
 .db "NO? THEN WHAT DID", Dialogue_NewLine
 .db $E1, "COME FOR?", Dialogue_Terminator65
 
+Dialogue_Index_0248:
 .db $E1, $E3, "NO GEM!", Dialogue_NewLine
 .db "DO I LOOK LIKE A", Dialogue_NewPage
 .db "FOOL OR ", $D5, $F7, "?", Dialogue_Terminator65
 
+Dialogue_Index_024A:
 .db "I", Dialogue_Apostrophe, "M SORRY I ", $E3, "A", Dialogue_NewLine
 .db "SHOP IN SUCH A", Dialogue_NewPage
 .db "PLACE. SHORTCAKE", Dialogue_NewLine
-.db "FOR ", $31, $30, $30, $30, " ", $A1, "!", Dialogue_NewPage
+.db "FOR 1000 ", Dialogue_Mesetas, "!", Dialogue_NewPage
 .db $CD, " BUY ", $FD, "?", Dialogue_Terminator62
 
+Dialogue_Index_024C:
 .db "AH,MY YOUNG PUPIL,NOAH. ", $E1, $EC, Dialogue_NewPage
 .db "PREPARING TO FACE", Dialogue_NewLine
 .db $D4, "?", Dialogue_Terminator65
 
+Dialogue_Index_024E:
 .db "COME,", $CE, " ", $A2, Dialogue_NewLine
 .db $E2, "FINAL TEST---", Dialogue_NewPage
 .db "WE ", $C7, " DUEL!", Dialogue_Terminator65
 
+Dialogue_Index_0250:
 .db $E1, $E3, "BECOME", Dialogue_NewLine
 .db "MUCH STRONGER...", Dialogue_NewPage
+
+Dialogue_Index_0252:
 .db $E1, $EC, "WELL", Dialogue_NewLine
 .db "PREPARED.", Dialogue_NewPage
+
+Dialogue_Index_0254:
 .db "I", Dialogue_Apostrophe, "LL GIVE ", $E1, "A", Dialogue_NewLine
 .db "FRAD MANTLE AS A", Dialogue_NewPage
 .db "GIFT. IT PROTECTS", Dialogue_NewLine
 .db $E1, $FE, "DANGER!", Dialogue_Terminator65
 
+Dialogue_Index_0256:
 .db $E1, $EC, $F8, "YET", Dialogue_NewLine
 .db "READY! ", $CE, " GO", Dialogue_NewPage
 .db "STILL UNDERGO MORETRAINING.", Dialogue_Terminator65
 
+Dialogue_Index_0258:
 .db "I ", $E3, "NO", $F7, " TO", Dialogue_NewLine
 .db "TEACH ", $E1, "MORE.", Dialogue_Terminator65
 
+Dialogue_Index_025A:
 .db "AND WHO ", $EC, "YOU?", Dialogue_NewLine
 .db "FIND MY PUPIL NOAH", Dialogue_NewPage
 .db "IN ", $DE, $A7, Dialogue_NewLine
+
+Dialogue_Index_025C:
 .db "CAVE.", $C3, Dialogue_NewPage
 .db "HIM?", Dialogue_Terminator62
 
+Dialogue_Index_025E:
 .db "I", Dialogue_Apostrophe, "VE ", $D5, $F7, Dialogue_NewLine
 .db "I ", $C8, " TELL HIM.", Dialogue_NewPage
 .db "BRING HIM ", $D2, ".", Dialogue_Terminator65
 
+Dialogue_Index_0260:
 .db "IN ", $DC, " CASE,", Dialogue_NewLine
 .db $DA, " NO POINT", Dialogue_NewPage
 .db "IN FURTHER", Dialogue_NewLine
 .db "CONVERSATION.", Dialogue_Terminator65
 
+Dialogue_Index_0262:
 .db "I ", $E3, "WATCHED", Dialogue_NewLine
 .db "ALL ", $E2, "ACTIONS.", Dialogue_NewPage
+
+Dialogue_Index_0264:
 .db $82, " ME NOW, IF", Dialogue_NewLine
 .db $E1, "DARE.", Dialogue_Terminator65
 
+Dialogue_Index_0266:
 .db "I", Dialogue_Apostrophe, "M BUT ONLY", Dialogue_NewLine
 .db $D4, Dialogue_Apostrophe, "S SHADOW!", Dialogue_NewPage
+
+Dialogue_Index_0268:
 .db "EVEN IF ", $E1, "DEFEATME, YOU", Dialogue_Apostrophe, "VE GAINED", Dialogue_NewPage
 .db "NO", $F7, " AT ALL!", Dialogue_Terminator65
 
+Dialogue_Index_026A:
 .db "DON", Dialogue_Apostrophe, "T GO AGAINST", Dialogue_NewLine
 .db $D4, "!", Dialogue_Terminator65
 
+Dialogue_Index_026C:
 .db "AH, MY CHILDREN,", Dialogue_NewLine
 .db $E1, $E3, "D", $FD, " VERY", Dialogue_NewPage
 .db "WELL TO COME ", $E4, Dialogue_NewLine
@@ -18289,22 +18629,31 @@ DialogueBlock:
 .db $E1, "REALLY ", $97, " TO", Dialogue_NewPage
 .db "KILL AN OLD MAN?", Dialogue_Terminator62
 
+Dialogue_Index_026E:
 .db "ALL RIGHT! THEN", Dialogue_NewLine
 .db "WE ", $C7, " FORGET", Dialogue_NewPage
 .db $E4, "AS AN UNFOR-", Dialogue_NewLine
 .db "TUNATE MISTAKE.", Dialogue_Terminator65
 
+Dialogue_Index_0270:
 .db "EVEN NOW ", $E1, "TRY", Dialogue_NewLine
 .db "TO FOOL WITH ME?", Dialogue_NewPage
 .db $E1, "SHALL REPENT!", Dialogue_Terminator65
 
+Dialogue_Index_0272:
 .db "I", Dialogue_Apostrophe, "M SORRY, I ", $C8, Dialogue_NewLine
 .db $E3, "BEEN", Dialogue_NewPage
+
+Dialogue_Index_0274:
 .db "POSSESSED BODY ANDSOUL BY EVIL.", Dialogue_NewPage
+
+Dialogue_Index_0276:
 .db $E1, "RESCUED OUR", Dialogue_NewLine
 .db $B5, " JUST IN ", $DE, Dialogue_NewPage
 .db "NICK OF ", $9F, "! IF", Dialogue_NewLine
 .db $E1, "HAD COME ", $F6, Dialogue_NewPage
+
+Dialogue_Index_0278:
 .db "LATER, IT MIGHT", Dialogue_NewLine
 .db $E3, "BEEN TOO LATE", Dialogue_NewPage
 .db "WE ALL ", $B4, Dialogue_NewLine
@@ -18322,6 +18671,7 @@ DialogueBlock:
 .db "AND BECOME ", $DE, Dialogue_NewLine
 .db $B0, " OF ", $9B, "?", Dialogue_Terminator62
 
+Dialogue_Index_027A:
 .db "RAISE ", $DE, Dialogue_NewLine
 .db "AEROPRISM TOWARDS", Dialogue_NewPage
 .db $DE, "HEAVENS- ", $E1, Dialogue_NewLine
@@ -18329,25 +18679,31 @@ DialogueBlock:
 .db "ABLE TO SEE ", $DE, Dialogue_NewLine
 .db "DARK ", $89, ".", Dialogue_Terminator65
 
+Dialogue_Index_027C:
 .db "ALRIGHT! ", $E1, "SAVEDALL OF ", $9B, "!", Dialogue_Terminator65
 
+Dialogue_Index_027E:
 .db $8B, " ALL", Dialogue_NewLine
 .db "THANKFUL FOR ", $E2, Dialogue_NewPage
 .db "BRAVE DEEDS! WE", Dialogue_NewLine
 .db "LOVE ", $E1, "!", Dialogue_Terminator65
 
+Dialogue_Index_0280:
 .db "REPORT QUICKLY TO", Dialogue_NewLine
 .db $DE, $AA, "!", Dialogue_Terminator65
 
+Dialogue_Index_0282:
 .db $E1, $88, " COME", Dialogue_NewLine
 .db $DD, " ", $D2, ".", Dialogue_NewPage
 .db $E4, "IS MY AREA.", Dialogue_Terminator65
 
+Dialogue_Index_0284:
 .db "WELL,IF DR.", $AD, Dialogue_NewLine
 .db "SENT ", $E1, ",I GUESS", Dialogue_NewPage
 .db "I ", $E3, "TO LET ", $E1, Dialogue_NewLine
 .db $DD, ".", Dialogue_Terminator65
 
+Dialogue_Index_0286:
 .db "THEY SAY ", $DC, Dialogue_NewLine
 .db $DB, " ", $94, "N", Dialogue_NewPage
 .db "LIVING ON ", $94, Dialogue_NewLine
@@ -18356,50 +18712,63 @@ DialogueBlock:
 .db "LIKE A CHANCE TO", Dialogue_NewPage
 .db "TALK TO ", $D5, $FD, ".", Dialogue_Terminator65
 
+Dialogue_Index_0288:
 .db $D5, " INTELLIGENT", Dialogue_NewLine
 .db "MONSTERS ", $E3, Dialogue_NewPage
 .db "THEIR OWN", Dialogue_NewLine
 .db $D9, ".", Dialogue_Terminator65
 
+Dialogue_Index_028A:
 .db "I SOLD ", $DC, Dialogue_NewLine
 .db $A6, " FOR", Dialogue_NewPage
 .db "A ", $E6, "DEAL OF", Dialogue_NewLine
 .db "M", $FD, "Y. ", $B3, ".", Dialogue_Terminator65
 
+Dialogue_Index_028C:
 .db "NOW ", $DC, " MY STAFF", Dialogue_NewLine
 .db "IS ASSEMBLED", Dialogue_NewPage
 .db "I CAN BEGIN.", $D1, Dialogue_NewLine
 .db "IS HOWERVER, A", Dialogue_NewPage
-.db "SLIGHT FEE OF ", $31, $32, $30, $30, $A1, " INVOLVED.", Dialogue_NewPage
+
+Dialogue_Index_028E:
+.db "SLIGHT FEE OF 1200", Dialogue_Mesetas, " INVOLVED.", Dialogue_NewPage
 .db $CD, " PAY?", Dialogue_Terminator62
 
+Dialogue_Index_0290:
 .db $B4, ". I CAN", Dialogue_NewLine
 .db "NOW GET TO WORK.", Dialogue_NewPage
 .db $C9, "WAIT ", $FD, Dialogue_NewLine
 .db "MOMENT.", Dialogue_Terminator65
 
+Dialogue_Index_0292:
 .db "IT ", $88, " BE", Dialogue_NewLine
 .db "HURRIED! ", $C9, Dialogue_NewPage
 .db "SHOW A BIT MORE", Dialogue_NewLine
 .db "PATIENCE!", Dialogue_Terminator65
 
+Dialogue_Index_0294:
 .db "WE CAN BOARD ", $DE, Dialogue_NewLine
 .db $AD, " AND BE ON", Dialogue_NewPage
 .db "OUR WAY!", Dialogue_Terminator65
 
+Dialogue_Index_0296:
 .db "HEY, BRING ", $DC, Dialogue_NewLine
 .db "CAT OVER ", $D2, "!", Dialogue_Terminator62
 
+Dialogue_Index_0298:
 .db "OOHH,HA,HA! ", $DE, Dialogue_NewLine
 .db "CAT ", $C7, " DIE!", Dialogue_Terminator65
 
+Dialogue_Index_029A:
 .db "I ", $C7, " KILL ", $F6, Dialogue_NewLine
 .db "WHO INTERFERE!", Dialogue_Terminator65
 
+Dialogue_Index_029C:
 .db $E1, "SHOULD ", $BF, Dialogue_NewLine
 .db $D2, " AWHILE AFTER", Dialogue_NewPage
 .db $E2, "LONG JOURNEY.", Dialogue_Terminator65
 
+Dialogue_Index_029E:
 .db $DC, " WAS QUICK-OH,", Dialogue_NewLine
 .db $B7, ",", $E1, $EC, $F8, Dialogue_NewPage
 .db $DD, " WITH", Dialogue_NewLine
@@ -18407,32 +18776,37 @@ DialogueBlock:
 .db "BEST ", $BF, " AT ", $DE, Dialogue_NewLine
 .db "INN.", Dialogue_Terminator65
 
+Dialogue_Index_02A0:
 .db $E1, "FELL INTO A", Dialogue_NewLine
 .db "DEEP SLEEP.", Dialogue_Terminator63
 
+Dialogue_Index_02A2:
 .db $E1, "HAD A BAD", Dialogue_NewLine
 .db "DREAM.", Dialogue_Terminator65
 
+Dialogue_Index_02A4:
 .db $D2, " IS ", $DE, "HOME", Dialogue_NewLine
 .db "OF ", $80, ".", Dialogue_Terminator65
 
+Dialogue_Index_02A6:
 .db "IT HAS ", $D5, $F7, Dialogue_NewLine
 .db $AC, ".", Dialogue_NewPage
 .db $D0, " IS ", $DE, Dialogue_NewLine
 .db $AA, ",I WONDER?", Dialogue_Terminator65
 
+Dialogue_Index_02A8:
 .db $E1, $E3, "GOTTEN", Dialogue_NewLine
 .db $A9, " KILLED?", Dialogue_NewPage
 .db "COME, LET", Dialogue_Apostrophe, "S TRY", Dialogue_NewLine
 .db $FD, " MORE ", $9F, ".", Dialogue_Terminator65
 
+Dialogue_Index_02AA:
 .db $D4, " HAS DIED.", Dialogue_NewLine
 .db $80, " ACCOMPLISHED", Dialogue_NewPage
 .db "HER ", $97, ". ", $B2, " IS", Dialogue_NewLine
 .db "SATISFIED NOW IN", Dialogue_NewPage
 .db "HEAVEN. HURRY TO", Dialogue_NewLine
 .db $DE, $AA, "!", Dialogue_Terminator65
-
 
 LABEL_B49B:
 .db "SCUM! DO NOT SNIFF", Dialogue_NewLine
@@ -18470,7 +18844,7 @@ LABEL_B5D5:
 LABEL_B617:
 .db "WE ", $C7, " BE FELLOW", Dialogue_NewLine
 .db "TRAVELERS.", Dialogue_NewLine
-.db "I", Dialogue_Apostrophe, "M ", $80, $3B, " WHAT", Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db "I", Dialogue_Apostrophe, "M ", $80, "; WHAT", Dialogue_Apostrophe, "S", Dialogue_NewLine
 .db $E2, "NAME?", Dialogue_Terminator65
 
 LABEL_B646:
@@ -18541,7 +18915,7 @@ LABEL_B85C:
 
 LABEL_B884:
 .db "LET ME SEE IT.....", Dialogue_NewLine
-.db "OUR DUTY IS CLEAR", $3B, Dialogue_NewLine
+.db "OUR DUTY IS CLEAR;", Dialogue_NewLine
 .db "WE ", $C8, " PROTECT", Dialogue_NewLine
 .db $DE, $B8, " OF THE", Dialogue_NewPage
 .db $9B, " ", $9C, " ", $FE, Dialogue_NewLine
@@ -18599,38 +18973,41 @@ LABEL_BA54:
 .db "ALGOL FOREVER!!!", Dialogue_Terminator63
 
 
-.db $81, $BB, $86, $BB, $8B, $BB, $92, $BB
-.db $9C, $BB, $A3, $BB, $A8, $BB, $AF, $BB
-.db $B8, $BB, $BF, $BB, $C6, $BB, $CD, $BB
-.db $D5, $BB, $E1, $BB, $E7, $BB, $F1, $BB
-.db $F6, $BB, $00, $BC, $10, $BC, $1B, $BC
-.db $23, $BC, $2B, $BC, $32, $BC, $38, $BC
-.db $3D, $BC, $47, $BC, $50, $BC, $57, $BC
-.db $5D, $BC, $64, $BC, $6A, $BC, $72, $BC
-.db $77, $BC, $80, $BC, $88, $BC, $8D, $BC
-.db $96, $BC, $A5, $BC, $AC, $BC, $B9, $BC
-.db $C0, $BC, $C8, $BC, $D1, $BC, $DA, $BC
-.db $DF, $BC, $E7, $BC, $EE, $BC, $F6, $BC
-.db $FB, $BC, $01, $BD, $08, $BD, $0D, $BD
-.db $14, $BD, $1E, $BD, $24, $BD, $2B, $BD
-.db $31, $BD, $39, $BD, $3E, $BD, $46, $BD
-.db $51, $BD, $59, $BD, $64, $BD, $69, $BD
-.db $6E, $BD, $73, $BD, $79, $BD, $84, $BD
-.db $90, $BD, $97, $BD, $A3, $BD, $AA, $BD
-.db $AF, $BD, $B4, $BD, $BC, $BD, $C1, $BD
-.db $CA, $BD, $D1, $BD, $DA, $BD, $E3, $BD
-.db $E9, $BD, $EF, $BD, $F5, $BD, $FA, $BD
-.db $01, $BE, $08, $BE, $0D, $BE, $1E, $BE
-.db $25, $BE, $2D, $BE, $36, $BE, $3F, $BE
-.db $49, $BE, $4E, $BE, $56, $BE, $5B, $BE
-.db $63, $BE, $6C, $BE, $71, $BE, $77, $BE
-.db $7D, $BE, $83, $BE, $8C, $BE, $93, $BE
-.db $9A, $BE, $A4, $BE, $AC, $BE, $B3, $BE
-.db $C4, $BE, $C9, $BE, $D1, $BE, $D8, $BE
-.db $DE, $BE, $EC, $BE, $F6, $BE, $FC, $BE
-.db $01, $BF, $0A, $BF, $11, $BF, $15, $BF
-.db $1B, $BF, $20, $BF, $26, $BF, $2B, $BF
-.db $33, $BF, $3A, $BF, $3E, $BF, $44, $BF
+; This is a pointer table for the strings below
+; TODO: Add labels for the strings and generate automatically when building ROM
+; See DialogueBlock for example on how to do it
+.dw $BB81, $BB86, $BB8B, $BB92
+.dw $BB9C, $BBA3, $BBA8, $BBAF
+.dw $BBB8, $BBBF, $BBC6, $BBCD
+.dw $BBD5, $BBE1, $BBE7, $BBF1
+.dw $BBF6, $BC00, $BC10, $BC1B
+.dw $BC23, $BC2B, $BC32, $BC38
+.dw $BC3D, $BC47, $BC50, $BC57
+.dw $BC5D, $BC64, $BC6A, $BC72
+.dw $BC77, $BC80, $BC88, $BC8D
+.dw $BC96, $BCA5, $BCAC, $BCB9
+.dw $BCC0, $BCC8, $BCD1, $BCDA
+.dw $BCDF, $BCE7, $BCEE, $BCF6
+.dw $BCFB, $BD01, $BD08, $BD0D
+.dw $BD14, $BD1E, $BD24, $BD2B
+.dw $BD31, $BD39, $BD3E, $BD46
+.dw $BD51, $BD59, $BD64, $BD69
+.dw $BD6E, $BD73, $BD79, $BD84
+.dw $BD90, $BD97, $BDA3, $BDAA
+.dw $BDAF, $BDB4, $BDBC, $BDC1
+.dw $BDCA, $BDD1, $BDDA, $BDE3
+.dw $BDE9, $BDEF, $BDF5, $BDFA
+.dw $BE01, $BE08, $BE0D, $BE1E
+.dw $BE25, $BE2D, $BE36, $BE3F
+.dw $BE49, $BE4E, $BE56, $BE5B
+.dw $BE63, $BE6C, $BE71, $BE77
+.dw $BE7D, $BE83, $BE8C, $BE93
+.dw $BE9A, $BEA4, $BEAC, $BEB3
+.dw $BEC4, $BEC9, $BED1, $BED8
+.dw $BEDE, $BEEC, $BEF6, $BEFC
+.dw $BF01, $BF0A, $BF11, $BF15
+.dw $BF1B, $BF20, $BF26, $BF2B
+.dw $BF33, $BF3A, $BF3E, $BF44
 
 
 .db "ALIS", Dialogue_Terminator65
