@@ -130,6 +130,8 @@
 .define	Cursor_pos $C269
 .define	Option_total_num $C26E	; number of options available for an interactive menu (e.g. player menu)
 
+.define	Interaction_Type $C29E ; Background?
+
 .define	CurrentBattle_EnemyName $C2C8 ; 8 bytes
 .define	CurrentBattle_EXPReward $C2D0 ; unsigned 2 bytes, little endian
 

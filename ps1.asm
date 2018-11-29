@@ -1834,7 +1834,7 @@ LABEL_C54:
 	rrca
 	rrca
 	and	$0F
-	ld	($C29E), a
+	ld	(Interaction_Type), a
 	ld	a, ($C30E)
 	cp	$10
 	ld	c, $B8
@@ -2147,7 +2147,7 @@ LABEL_FF3:
 	ld	($C900), a
 	call	LABEL_6D56
 	xor	a
-	ld	($C29E), a
+	ld	(Interaction_Type), a
 	jp	LABEL_6AE5
 
 LABEL_100F:
@@ -2994,7 +2994,7 @@ LABEL_15DC:
 	ld   (hl), $00
 	ldir
 	call	LABEL_576A
-	ld   a, ($C29E)
+	ld   a, (Interaction_Type)
 	or   a
 	jp   nz, LABEL_15F9
 	call	LABEL_6B3A
@@ -3053,7 +3053,7 @@ LABEL_163E:
 	pop	af
 	cp	$05
 	ret	nz
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	ret	nz
 	jp	LABEL_688C
@@ -3487,7 +3487,7 @@ BattleMenu_Run:
 	call	LABEL_5B1
 	cp	b
 	jr	nc, LABEL_19C5
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	jr	nz, +
 	call	LABEL_687A
@@ -4387,7 +4387,7 @@ LABEL_1F89:
 	ld	a, ($C2E7)
 	or	a
 	jr	z, +
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	jr	nz, LABEL_1FAC
 	call	LABEL_687A
@@ -4475,7 +4475,7 @@ LABEL_201C:
 	ld	a, ($C800)
 	cp	$0E
 	jr	z, ++
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	ld	hl, LABEL_B12_B569
 	jr	nz, +
@@ -4506,7 +4506,7 @@ LABEL_2064:
 	ld	a, b
 	call	LABEL_1B87
 	ld	(de), a
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	jr	z, LABEL_2078
 	ld	hl, LABEL_B12_B172
@@ -4531,7 +4531,7 @@ LABEL_2091:
 	ld	(de), a
 	ld	a, $AB
 	ld	($C004), a
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	jr	z, +
 -:	
@@ -4597,7 +4597,7 @@ LABEL_2102:
 	ld	a, ($C800)
 	cp	$0E
 	jr	z, ++
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	ld	hl, LABEL_B12_B424
 	jr	nz, +
@@ -4629,7 +4629,7 @@ LABEL_2140:
 	ld	(de), a
 	ld	a, $AB
 	ld	($C004), a
-	ld	a, ($C29E)
+	ld	a, (Interaction_Type)
 	or	a
 	jr	nz, LABEL_2159
 	ld	hl, LABEL_B12_B172
@@ -4829,7 +4829,7 @@ LABEL_22B7:
 	cp $04
 	ld hl, LABEL_B12_B2E3
 	jr nc, +
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, +
 	push bc
@@ -4855,7 +4855,7 @@ LABEL_22E5:
 	cp $04
 	ld hl, LABEL_B12_B2E3
 	jr nc, +
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, +
 	push bc
@@ -4929,7 +4929,7 @@ LABEL_2369:
 	call ShowDialogue_B12
 	ld a, $D5
 	ld ($C004), a
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jp z, LABEL_2078
 	jp LABEL_3464
@@ -4953,7 +4953,7 @@ LABEL_239D:
 	jp LABEL_3464
 
 +:	
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, +
 -:	
@@ -4993,7 +4993,7 @@ LABEL_23EC:
 	jp LABEL_3464
 
 +:	
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	push af
 	call nz, Inventory_RemoveItem
@@ -5105,7 +5105,7 @@ LABEL_24BE:
 	jp LABEL_3464
 
 LABEL_24E9:
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, +
 	
@@ -5250,7 +5250,7 @@ LABEL_25D7:
 	ret
 
 +++:	
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, LABEL_25D7
 	ld a, ($C29D)
@@ -5274,7 +5274,7 @@ LABEL_2613:
 	jp LABEL_3464
 
 LABEL_2631:
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr z, ++
 -:	
@@ -5311,7 +5311,7 @@ LABEL_2631:
 	jp LABEL_3464
 
 LABEL_267C:
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jp nz, LABEL_24EF
 	ld hl, LABEL_B12_B2AC
@@ -8236,7 +8236,7 @@ GameMode_Interaction:
 	jp nz, LABEL_3C1A
 	ld a, ($C2DC)
 	call LABEL_617D
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	sub $10
 	jr nc, +
 	xor a
@@ -8245,7 +8245,7 @@ GameMode_Interaction:
 	ld hl, LABEL_3C2A
 	call GetPtrAndJump
 LABEL_3BC5:	
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	sub $0F
 	jr nc, +
 	xor a
@@ -8263,7 +8263,7 @@ LABEL_3BC5:
 +:	
 	xor a
 	ld ($C29D), a
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	ld ($C2D5), a
 	ld hl, $0000
 	ld ($C2DB), hl
@@ -8330,54 +8330,54 @@ GameMode_LoadInteraction:
 	ld a, ($C308)
 	or a
 	jr nz, +
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	cp $05
 	jr nz, LABEL_3CAD
 	ld a, $04
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
 +:	
 	cp $01
 	jr nz, +
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	cp $01
 	jr nz, LABEL_3CAD
 	ld a, $05
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
 +:	
 	cp $07
 	jr nz, +
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	cp $01
 	jr nz, LABEL_3CAD
 	ld a, $05
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
 +:	
 	cp $08
 	jr nz, +
 	ld a, $06
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
 +:	
 	cp $0A
 	jr nz, LABEL_3CAD
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	cp $09
 	jr nz, LABEL_3CAD
 	ld a, $08
-	ld ($C29E), a
+	ld (Interaction_Type), a
 LABEL_3CAD:	
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	jr nz, +
 	inc a
-	ld ($C29E), a
+	ld (Interaction_Type), a
 +:	
 	call LABEL_3D47
 	ld hl, $FFFF
@@ -8402,7 +8402,7 @@ LABEL_3CAD:
 	di
 	call LABEL_63A5
 	ei
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	sub $0F
 	jr nc, +
 	xor a
@@ -8449,7 +8449,7 @@ LABEL_3D36:
 	jp   LABEL_3D96
 
 LABEL_3D47:
-	ld   a, ($C29E)
+	ld   a, (Interaction_Type)
 	cp   $20
 	jr   c, LABEL_3D64
 LABEL_3D4E:
@@ -9166,7 +9166,7 @@ LABEL_42AC:
 	ld ($C307), a
 	call FadeOut2
 	ld a, $08
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank16
@@ -9332,7 +9332,7 @@ LABEL_4497:
 	call LABEL_337D
 	call LABEL_4517
 	ld a, $0E
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
@@ -9374,7 +9374,7 @@ LABEL_4514:
 LABEL_4517:	
 	call FadeOut2
 	ld a, $0F
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank22
@@ -9400,7 +9400,7 @@ LABEL_454E:
 	ld a, $8B
 	ld ($C004), a
 	ld a, $0D
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
@@ -9606,7 +9606,7 @@ LABEL_474B:
 	jp   z, LABEL_1BE1
 	ld   de, LABEL_4773-2
 	call	LABEL_4769
-	ld   a, ($C29E)
+	ld   a, (Interaction_Type)
 	or   a
 	jp   nz, LABEL_3464
 	call	LABEL_3464
@@ -10354,7 +10354,7 @@ LABEL_4C70:
 	call FadeOut2
 	call LABEL_3464
 	ld a, $20
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld a, $D0
 	ld ($C900), a
@@ -10398,7 +10398,7 @@ LABEL_4C70:
 	call ShowDialogue_B2
 	call FadeOut2
 	ld a, $1D
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	call LABEL_2A6D
 	ld a, $0C
@@ -11576,7 +11576,7 @@ LABEL_5619:
 	ld ($C004), a
 	call LABEL_2D47
 	ld a, $1F
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank19
@@ -11592,7 +11592,7 @@ LABEL_5619:
 	call LABEL_5FFE
 	call LABEL_2D33
 	ld a, $20
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_54EF
 	call LABEL_3464
 	ld a, (Char_stats)
@@ -11605,7 +11605,7 @@ LABEL_5619:
 LABEL_5666:
 	call FadeOut2
 	ld a, $1D
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
@@ -13377,7 +13377,7 @@ LABEL_63A5:
 	ld a, ($C2D6)
 	or a
 	ret z
-	ld a, ($C29E)
+	ld a, (Interaction_Type)
 	or a
 	ret z
 	cp $0C
@@ -14117,7 +14117,7 @@ LABEL_68EC:
 	ld   hl, LABEL_B09_B130
 	call	LABEL_6B62
 	ld   a, $0F
-	ld   ($C29E), a
+	ld   (Interaction_Type), a
 	xor  a
 	ld   ($C250), a
 LABEL_691D:
@@ -14156,7 +14156,7 @@ LABEL_6947:
 	jr   nz, LABEL_6925
 LABEL_6959:
 	ld   a, c
-	ld   ($C29E), a
+	ld   (Interaction_Type), a
 	call	LABEL_3D47
 	jp   LABEL_691D
 
@@ -14306,7 +14306,7 @@ LABEL_6A2F:
 	xor  a
 	ld   ($C800), a
 	ld   ($C29D), a
-	ld   ($C29E), a
+	ld   (Interaction_Type), a
 	ld   ($C2D5), a
 	ld   hl, $0000
 	ld   ($C2DB), hl
@@ -16187,7 +16187,7 @@ LABEL_77AC:
 	rrca
 	rrca
 	and $0F
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	ld a, b
 	and $08
 	jr nz, ++
@@ -16375,7 +16375,7 @@ LABEL_78BD:
 	ld (Game_mode), a
 	inc hl
 	ld a, (hl)
-	ld ($C29E), a
+	ld (Interaction_Type), a
 	inc hl
 	ld a, (hl)
 	inc hl
