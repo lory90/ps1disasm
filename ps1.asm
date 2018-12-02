@@ -1061,7 +1061,7 @@ GameMode_Intro:
 	call	CheckOptionSelect
 	or	a
 	jp	nz, LABEL_634
-	
+
 LABEL_5E8:
 	ld	hl, $C300
 	ld	de, $C301
@@ -1608,7 +1608,7 @@ LABEL_A74:
 	ld	de, LABEL_A8C
 	push	de
 	call	LABEL_787B
-	
+
 LABEL_A8C:
 	xor	a
 	ld	(Ctrl_1_held), a
@@ -2208,7 +2208,7 @@ LABEL_1055:
 	ld   ($C2D4), a
 	call	LABEL_30C3
 	call	LABEL_2ED9
-	
+
 LABEL_1074:
 	call	LABEL_187A
 	jp	z, LABEL_1080
@@ -2256,7 +2256,7 @@ LABEL_10B7:
 	call	LABEL_18F2
 	ld	hl, $C2A0
 	ld	b, $0C
-	
+
 LABEL_10D6:
 	push	bc
 	push	hl
@@ -2274,7 +2274,7 @@ LABEL_10E7:
 	ld	hl, $C441
 	ld	de, $10
 	ld	b, $08
-	
+
 -
 	ld	a, (hl)
 	or	a
@@ -2289,7 +2289,7 @@ LABEL_10FC:
 	ld	hl, Char_stats
 	ld	de, $10
 	ld	b, $04
-	
+
 -
 	ld	a, (hl)
 	or	a
@@ -2312,7 +2312,7 @@ LABEL_1111:
 
 LABEL_1121:
 	call	LABEL_2ECD
-	
+
 LABEL_1124:
 	ld	a, ($C267)
 	or	a
@@ -2350,7 +2350,7 @@ LABEL_1148:
 	or	a
 	jr	z, LABEL_1188
 	ld	a, ($C267)
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	call	LABEL_5B1
 	and	$01
 	inc	a
@@ -2375,7 +2375,7 @@ LABEL_1188:
 	cp	$01
 	jp	nz, LABEL_11DC
 	ld	a, ($C267)
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	add	a, a
 	add	a, a
 	add	a, a
@@ -2394,7 +2394,7 @@ LABEL_1188:
 	cp	$0D
 	jr	z, LABEL_11D3
 	call	LABEL_18A9
-	
+
 LABEL_11B5:
 	call	LABEL_5B1
 	and	$07
@@ -2426,7 +2426,7 @@ LABEL_11DC:
 	cp	$03
 	jp	nz, LABEL_11F1
 	ld	a, c
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	ld	a, b
 	and	$1F
 	ld	hl, LABEL_1A8A
@@ -2437,9 +2437,9 @@ LABEL_11F1:
 	cp	$04
 	jp	nz, LABEL_120B
 	ld	a, ($C267)
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	ld	a, b
-	ld	($C2C4), a
+	ld	(CurrentItem), a
 	call	Inventory_FindFreeSlot
 	jr nz, LABEL_1212
 	ld	($C29B), hl
@@ -2500,7 +2500,7 @@ LABEL_125E:
 	call	LABEL_7BAC
 	pop	af
 	add	a, (ix+1)
-	jr	c, + 
+	jr	c, +
 	xor	a
 +
 	ld	(ix+1), a
@@ -2601,13 +2601,13 @@ LABEL_1305:
 	ld	a, ($C2EF)
 	or	a
 	call	nz, LABEL_12D4
-	
+
 LABEL_130C:
 	call	LABEL_5B1
 	and	$03
 	call	LABEL_187D
 	jp	z, LABEL_130C
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	push	hl
 	pop	ix
 	push	af
@@ -2638,14 +2638,14 @@ LABEL_1344:
 	ld	a, ($C2E6)
 	cp	$46
 	jr	nz, LABEL_1376
-	ld	a, ($C2C2)
+	ld	a, (CurrentCharacter)
 	cp	$01
 	jr	nz, LABEL_1376
 	ld	hl, Char_stats
 	ld	de, $10
 	xor	a
 	ld	b, $04
-	
+
 -
 	or	(hl)
 	ld	(hl), $00
@@ -2661,7 +2661,7 @@ LABEL_1376:
 
 LABEL_1379:
 	ld	b, $04
-	
+
 -
 	ld	a, $08
 	call	WaitForVInt
@@ -2687,7 +2687,7 @@ __
 	and $03
 	call	LABEL_187D
 	jr	z, _b
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	ld	a, $0D
 	add	a, l
 	ld	l, a
@@ -2746,13 +2746,13 @@ LABEL_1421:
 	and	$03
 	jp	nz, LABEL_1305
 	call	LABEL_142C
-	
+
 LABEL_142C:
 	ld	a, ($C2EF)
 	and	$80
 	call	nz, LABEL_12D4
 	ld	b, $04
-	
+
 -
 	ld	a, b
 	sub	$04
@@ -2766,7 +2766,7 @@ LABEL_1443
 	and	$03
 	call	LABEL_187D
 	jp	z, LABEL_1443
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	ld	($C2EE), a
 	call	LABEL_2F93
 	call	LABEL_5B1
@@ -2787,7 +2787,7 @@ LABEL_1443
 	call	ShowDialogue_B12
 	call	LABEL_3464
 +
-	ld	a, ($C2C2)
+	ld	a, (CurrentCharacter)
 	call	LABEL_187D
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
@@ -2795,7 +2795,7 @@ LABEL_1443
 	call	LABEL_3464
 +
 	ld	b, $04
-	
+
 -
 	ld	a, $08
 	call	WaitForVInt
@@ -2807,10 +2807,10 @@ LABEL_149D:
 	and	$03
 	jp	nz, LABEL_1305
 	ld	c, $D8
-	
+
 LABEL_14A7:
 	ld	b, $04
-	
+
 LABEL_14A9:
 	push	bc
 	ld	a, ($C2EF)
@@ -2823,7 +2823,7 @@ LABEL_14A9:
 	neg
 	call	LABEL_187D
 	jr	z, LABEL_1501
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	ld	($C2EE), a
 	push	bc
 	call	LABEL_2F93
@@ -2839,7 +2839,7 @@ LABEL_14A9:
 	call	ShowDialogue_B12
 	call	LABEL_3464
 +
-	ld	a, ($C2C2)
+	ld	a, (CurrentCharacter)
 	call	LABEL_187D
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
@@ -2847,7 +2847,7 @@ LABEL_14A9:
 	call	LABEL_3464
 +
 	ld	b, $04
-	
+
 -
 	ld	a, $08
 	call	WaitForVInt
@@ -2882,13 +2882,13 @@ LABEL_151A:
 	ld	a, ($C2EF)
 	or	a
 	call	nz, LABEL_12D4
-	
+
 LABEL_152F:
 	call	LABEL_5B1
 	and	$03
 	call	LABEL_187D
 	jp	z, LABEL_152F
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	ld	($C2EE), a
 	push	hl
 	call	LABEL_2F93
@@ -2902,7 +2902,7 @@ LABEL_152F:
 	call	ShowDialogue_B12
 	call	LABEL_3464
 	ld	b, $04
-	
+
 -
 	ld	a, $08
 	call	WaitForVInt
@@ -2911,7 +2911,7 @@ LABEL_152F:
 
 LABEL_1561:
 	ld	a, ItemID_Crystal
-	ld	($C2C4), a
+	ld	(CurrentItem), a
 	call	Inventory_FindFreeSlot
 	ld	c, $01
 	jp	nz, LABEL_14A7
@@ -3025,7 +3025,7 @@ LABEL_1613:
 	jr	nz, +
 	ld	hl, $C230
 	ld	b, $10
-	
+
 -
 	ld	(hl), $30
 	inc	hl
@@ -3086,11 +3086,11 @@ LABEL_1679:
 	jr	z, LABEL_1683
 	cp	$49
 	jr	nz,LABEL_1688
-	
+
 LABEL_1683:
 	ld	b, $B4
 	call	LABEL_2D49
-	
+
 LABEL_1688:
 	ld	a, $D8
 	ld	($C004), a
@@ -3160,22 +3160,22 @@ LABEL_170D:
 	ld	iy, Alis_stats
 	ld	de, B03_AlisLevelTable
 	xor	a
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	call	CalculateExp
 	ld	iy, Myau_stats
 	ld	de, B03_MyauLevelTable
 	ld	a, $01
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	call	CalculateExp
 	ld	iy, Odin_stats
 	ld	de, B03_OdinLevelTable
 	ld	a, $02
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	call	CalculateExp
 	ld	iy, Noah_stats
 	ld	de, B03_NoahLevelTable
 	ld	a, $03
-	ld	($C2C2), a 
+	ld	(CurrentCharacter), a
 
 CalculateExp:
 	bit	0, (iy+status)
@@ -3201,7 +3201,7 @@ CalculateExp:
 	ld	(iy+exp+1), h
 	ret	c
 	ld	a, (iy+level)
-	cp	30
+	cp	Maximum_Level
 	ret	z
 	ld	a, h
 	sub	(ix+5)
@@ -3324,7 +3324,7 @@ LABEL_188E:
 	push	bc
 	push	de
 	push	hl
-	ld   ($C2C2), a
+	ld   (CurrentCharacter), a
 	ld   hl, LABEL_B12_B730
 	call	ShowDialogue_B12
 	call	LABEL_3464
@@ -3361,7 +3361,7 @@ LABEL_18CE:
 	ld	($C29F), a
 	ld	a, ($C2F1)
 	ld	($C004), a
-	
+
 LABEL_18DB:
 	ld	a, $08
 	call	WaitForVInt
@@ -3377,7 +3377,7 @@ LABEL_18DB:
 LABEL_18F2:
 	ld	hl, $C2A0
 	ld	b, $0C
-	
+
 -
 	call	LABEL_5B1
 	and	$0F
@@ -3422,7 +3422,7 @@ BattleMenu_Talk:
 	call	LABEL_30B7
 	call	LABEL_30E1
 	ld	a, ($C267)
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	ld	hl, LABEL_B12_B128
 	call	ShowDialogue_B12
 	ld	a, ($C2E8)
@@ -3445,7 +3445,7 @@ LABEL_1951
 LABEL_1964:
 	ld	hl, LABEL_B12_B132
 	call	ShowDialogue_B12
-	
+
 -
 	call	LABEL_5B1
 	and	$0F
@@ -3501,7 +3501,7 @@ BattleMenu_Run:
 
 LABEL_19C5:
 	ld	a, ($C267)
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	ld	hl, LABEL_B12_B15E
 	call	ShowDialogue_B12
 	ld	a, $04
@@ -3512,7 +3512,7 @@ LABEL_19C5:
 
 BattleMenu_Magic:
 	ld	a, ($C267)
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	cp	$02
 	jp	nz, LABEL_19F2
 	ld	hl, LABEL_B12_B5BA
@@ -3683,7 +3683,7 @@ LABEL_1AF9:
 
 LABEL_1AFD:
 	ld	c, $03
-	ld	a, ($C2C2)
+	ld	a, (CurrentCharacter)
 	call	LABEL_1BB9
 	ld	a, ($C267)
 	inc	a
@@ -3696,7 +3696,7 @@ LABEL_1B0D:
 	ld	(de), a
 	ld	a, $AB
 	ld	($C004), a
-	
+
 LABEL_1B17:
 	ld	a, ($C2E8)
 	and	$C0
@@ -3714,7 +3714,7 @@ LABEL_1B31:
 	ld	a, b
 	call	LABEL_1B87
 	ld	(de), a
-	
+
 LABEL_1B36:
 	ld	a, ($C2E8)
 	and	$C0
@@ -3727,7 +3727,7 @@ LABEL_1B42:
 	ld	($C004), a
 	ld	hl, LABEL_B12_B132
 	call	ShowDialogue_B12
-	
+
 -
 	call	LABEL_5B1
 	and	$0F
@@ -3749,7 +3749,7 @@ LABEL_1B42:
 	ld	($C004), a
 	jp	LABEL_3464
 
-	
+
 LABEL_1B73:
 .dw	LABEL_B12_BB5C
 .dw	LABEL_B12_BB8D
@@ -3787,7 +3787,7 @@ BattleMenu_Item:
 	call	LABEL_3656
 	bit	4, c
 	ret	nz
-	ld	a, ($C2C4)
+	ld	a, (CurrentItem)
 	ld	b, a
 	ld	c, $04
 	xor	a
@@ -3839,7 +3839,7 @@ LABEL_1BE1:
 	ld   ($C2D8), a
 	call	LABEL_36DD
 	call	LABEL_2ED9
-	
+
 LABEL_1BEE:
 	ld	a, ($C2D8)
 	or	a
@@ -3912,7 +3912,7 @@ LABEL_1C15:
 	ld	de, LABEL_1C7C
 	add	hl, de
 	jp	LABEL_787B
-	
+
 LABEL_1C7C:
 .db $04, $16, $69, $04, $27, $6B, $07
 .db	$29, $2A, $09, $19, $66, $0E, $29, $19, $0F, $15, $43, $11, $53, $52, $16, $15
@@ -3928,7 +3928,7 @@ PlayerMenu_OptionTbl:
 .dw	PlayerMenu_Save
 ; ===========================================
 
-	
+
 PlayerMenu_Stats:
 	call	LABEL_3665
 	bit  Button_1, c
@@ -3960,7 +3960,7 @@ PlayerMenu_Stats:
 	call	LABEL_3478
 	call	LABEL_2D25
 	call	LABEL_34C9
-	
+
 LABEL_1CD6:
 	call	LABEL_38C1
 	call	LABEL_374D
@@ -4034,7 +4034,7 @@ PlayerMenu_Magic:
 	cp	$02	; is it Odin?
 	jp	z, LABEL_1DC5	; jump and display different message for Odin
 	ld	c, a
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	ld	($C267), a
 	add	a, a
 	add	a, a
@@ -4110,7 +4110,7 @@ LABEL_1DD1:
 	call	ShowDialogue_B12
 	call	LABEL_3464
 	jr	LABEL_1DB7
-	
+
 
 LABEL_1DDC:
 .db	$00, $02, $06, $06, $0A, $04, $10, $0C, $04, $02, $0A, $02, $02, $04, $04
@@ -4161,7 +4161,7 @@ LABEL_1E2D:
 	bit	4, c
 	pop	bc
 	jr	nz, +
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	call	LABEL_188E
 	jr	z, +
 	call	LABEL_1E53
@@ -4176,19 +4176,19 @@ LABEL_1E4A:
 	ld	d, $50
 
 LABEL_1E4C:
-	ld	a, ($C2C2)
+	ld	a, (CurrentCharacter)
 	call	LABEL_188E
 	ret	z
-	
+
 LABEL_1E53:
 	push	de
 	ld	a, b
 	call	LABEL_1B87
 	ld	(de), a
-	ld	a, $AB	
+	ld	a, $AB
 	ld	($C004), a
 	pop	de
-	
+
 LABEL_1E5F:
 	push	de
 	ld	hl, LABEL_B12_B1D0
@@ -4196,7 +4196,7 @@ LABEL_1E5F:
 	pop	de
 	ld	a, $C1
 	ld	($C004), a
-	ld	a, ($C2C2)
+	ld	a, (CurrentCharacter)
 	call	LABEL_187D
 	push	hl
 	pop	ix
@@ -4241,7 +4241,7 @@ LABEL_1EA7:
 
 LABEL_1EB2:
 	ld	b, $08
-	
+
 -
 	ld	a, b
 	sub	$0C
@@ -4254,7 +4254,7 @@ LABEL_1EB2:
 	push	de
 	ld	a, e
 	call	LABEL_18A9
-	
+
 LABEL_1EC6:
 	call	LABEL_5B1
 	and	$07
@@ -4281,7 +4281,7 @@ LABEL_1EE6:
 
 LABEL_1EEE:
 	ld	b, $08
-	
+
 LABEL_1EF0:
 	push	bc
 	ld	a, b
@@ -4350,7 +4350,7 @@ LABEL_1F36:
 +
 	ld	de, $0D
 	ld	b, 	$08
-	
+
 -
 	ld	a, b
 	sub	$0C
@@ -4381,8 +4381,8 @@ LABEL_1F80:
 	call	LABEL_1B87
 	ld	(de), a
 	xor	a
-	ld	($C2C4), a
-	
+	ld	(CurrentItem), a
+
 LABEL_1F89:
 	ld	a, ($C2E7)
 	or	a
@@ -4393,7 +4393,7 @@ LABEL_1F89:
 	call	LABEL_687A
 	jr	z, LABEL_1FAC
 +
-	ld	a, ($C2C4)
+	ld	a, (CurrentItem)
 	or	a
 	ld	hl, LABEL_B12_B172
 	jr	z, +
@@ -4418,7 +4418,7 @@ LABEL_1FC0:
 	ld	(de), a
 	ld	a, $AB
 	ld	($C004), a
-	ld	a, ($C2C2)
+	ld	a, (CurrentCharacter)
 	call	LABEL_188E
 	ret	z
 	call	LABEL_187D
@@ -4442,7 +4442,7 @@ LABEL_1FDF:
 	cp	$B2
 	jr	nc, LABEL_200C
 	ld	b, $08
-	
+
 -
 	ld	a, b
 	sub	$0C
@@ -4486,17 +4486,17 @@ LABEL_201C:
 	ld	h, $CB
 	ld	(hl), $00
 	ld	hl, LABEL_B12_B28E
-+:	
++:
 	call	ShowDialogue_B12
 	jp	LABEL_3464
 
-++:	
+++:
 	ld	a, ($C80F)
 	cp	$3D
 	ld	hl, LABEL_B12_B27F
 	jr	z, +
 	ld	hl, LABEL_B12_B28E
-+:	
++:
 	call	ShowDialogue_B12
 	ld	a, $3D
 	ld	($C80F), a
@@ -4534,12 +4534,12 @@ LABEL_2091:
 	ld	a, (Interaction_Type)
 	or	a
 	jr	z, +
--:	
+-:
 	ld	hl, LABEL_B12_B172
 	call	ShowDialogue_B12
 	jp	LABEL_3464
 
-+:	
++:
 	ld	b, $01
 	call	LABEL_6BE9
 	and	$07
@@ -4550,8 +4550,6 @@ LABEL_2091:
 	ld	a, $04
 	ld	($C2D8), a
 	ret
-	
-
 
 LABEL_20BF:
 	ld	a, b
@@ -4564,13 +4562,13 @@ LABEL_20BF:
 	ld	a, $AB
 	ld	($C004), a
 	pop	af
-	ld	($C2C2), a
+	ld	(CurrentCharacter), a
 	call	LABEL_187D
 	jr	z, +
 	ld	hl, LABEL_B12_B709
 	jr	++
 
-+:	
++:
 	ld	(hl), $01
 	ld	a, $06
 	add	a, l
@@ -4581,10 +4579,10 @@ LABEL_20BF:
 	ldi
 	ldi
 	ld	hl, LABEL_B12_B5B0
-++:	
+++:
 	call	ShowDialogue_B12
 	call	LABEL_3464
-+++:	
++++:
 	jp	LABEL_36CC
 
 LABEL_20F8:
@@ -4593,7 +4591,7 @@ LABEL_20F8:
 	ld	(de), a
 	ld	a, $AC
 	ld	($C004), a
-LABEL_2102:	
+LABEL_2102:
 	ld	a, ($C800)
 	cp	$0E
 	jr	z, ++
@@ -4605,19 +4603,19 @@ LABEL_2102:
 	ld	hl, LABEL_B12_B424
 	jr	z, +
 	ld	hl, LABEL_B12_B404
-+:	
++:
 	call	ShowDialogue_B12
 	ld	a, $D5
 	ld	($C004), a
 	jp	LABEL_3464
 
-++:	
+++:
 	ld	a, ($C80F)
 	cp	$3D
 	ld	hl, LABEL_B12_B424
 	jr	z, +
 	ld	hl, LABEL_B12_B404
-+:	
++:
 	call	ShowDialogue_B12
 	ld	a, $D5
 	ld	($C004), a
@@ -4636,7 +4634,7 @@ LABEL_2140:
 	call	ShowDialogue_B12
 	jp	LABEL_3464
 
-LABEL_2159:	
+LABEL_2159:
 	ld	hl, LABEL_B12_B59C
 	call	ShowDialogue_B12
 	call	LABEL_3464
@@ -4651,11 +4649,11 @@ PlayerMenu_Item:
 	call LABEL_34D5
 	jp LABEL_3656
 
-+:	
++:
 	call LABEL_34D5
 	bit 4, c
 	jp nz, LABEL_21F5
-	ld a, ($C2C4)
+	ld a, (CurrentItem)
 	cp $21
 	jr c, +++
 	cp $24
@@ -4677,11 +4675,11 @@ PlayerMenu_Item:
 	pop bc
 	jr ++
 
-+:	
++:
 	push bc
 	call LABEL_7732
 	pop bc
-++:	
+++:
 	ld hl, LABEL_B12_B2FB
 	jr nz, +
 	xor a
@@ -4689,14 +4687,14 @@ PlayerMenu_Item:
 	dec a
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B30A
-+:	
++:
 	call ShowDialogue_B12
 	call LABEL_3464
 	jp LABEL_21F5
 
-+++:	
++++:
 	ld b, $04
--:	
+-:
 	ld a, b
 	sub $04
 	neg
@@ -4705,8 +4703,8 @@ PlayerMenu_Item:
 	djnz -
 	jp LABEL_21F5
 
-+:	
-	ld ($C2C2), a
++:
+	ld (CurrentCharacter), a
 	call LABEL_3759
 	ld hl, $7A72
 	ld (Cursor_pos), hl
@@ -4717,21 +4715,21 @@ PlayerMenu_Item:
 	jp nz, +
 	ld hl, LABEL_21FB
 	call GetPtrAndJump
-+:	
++:
 	call LABEL_376B
-LABEL_21F5:	
+LABEL_21F5:
 	call LABEL_3656
 	jp LABEL_2F3C
-	
 
-LABEL_21FB:	
+
+LABEL_21FB:
 .dw	LABEL_2201
 .dw	LABEL_26C8
 .dw	LABEL_2752
-	
+
 
 LABEL_2201:
-	ld a, ($C2C4)
+	ld a, (CurrentItem)
 	ld hl, LABEL_220A
 	jp GetPtrAndJump
 
@@ -4824,7 +4822,7 @@ LABEL_22AF:
 	call ShowDialogue_B12
 	ld e, $04
 
-LABEL_22B7:	
+LABEL_22B7:
 	ld a, ($C308)
 	cp $04
 	ld hl, LABEL_B12_B2E3
@@ -4844,7 +4842,7 @@ LABEL_22B7:
 	ld a, $FF
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B305
-+:	
++:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
@@ -4870,7 +4868,7 @@ LABEL_22E5:
 	ld a, $FF
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B305
-+:	
++:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
@@ -4891,7 +4889,7 @@ LABEL_2333:
 
 LABEL_2337:
 	ld d, ItemID_Escaper
-+:	
++:
 	ld a, ($C29D)
 	or a
 	ld a, ($C267)
@@ -4901,8 +4899,8 @@ LABEL_2337:
 	pop de
 	bit Button_1, c
 	jr nz, ++
-+:	
-	ld ($C2C2), a
++:
+	ld (CurrentCharacter), a
 	call LABEL_188E
 	jr z, ++
 	push de
@@ -4911,7 +4909,7 @@ LABEL_2337:
 	pop de
 	call LABEL_1E5F
 	call Inventory_RemoveItem
-++:	
+++:
 	ld a, ($C29D)
 	or a
 	ret nz
@@ -4934,7 +4932,7 @@ LABEL_2369:
 	jp z, LABEL_2078
 	jp LABEL_3464
 
-+:	
++:
 	ld hl, LABEL_B12_B322
 	call ShowDialogue_B12
 	ld a, $D5
@@ -4952,18 +4950,18 @@ LABEL_239D:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld a, (Interaction_Type)
 	or a
 	jr z, +
--:	
+-:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
 	ld hl, LABEL_B12_B375
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld a, ($C315)
 	or a
 	jr nz, -
@@ -4992,7 +4990,7 @@ LABEL_23EC:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld a, (Interaction_Type)
 	or a
 	push af
@@ -5024,20 +5022,20 @@ LABEL_242F:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld a, ($C2DB)
 	cp $A3
 	jr z, ++
 	call LABEL_24BE
 	ld hl, LABEL_B12_B569
 	jr nz, +
--:	
+-:
 	ld hl, LABEL_B12_B3E3
-+:	
++:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-++:	
+++:
 	call LABEL_24BE
 	jr z, -
 	ld hl, LABEL_B12_B3B1
@@ -5068,7 +5066,7 @@ LABEL_2491:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld a, ($C2DB)
 	cp $A1
 	jr z, ++
@@ -5076,7 +5074,7 @@ LABEL_2491:
 	ld hl, LABEL_B12_B3E3
 	jr z, +
 	ld hl, LABEL_B12_B3F9
-+:	
++:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
@@ -5090,14 +5088,14 @@ LABEL_24BE:
 	or e
 	ret
 
-++:	
+++:
 	call LABEL_24BE
 	jr nz, +
 	ld hl, LABEL_B12_B3E3
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld hl, LABEL_B12_B3B1
 	call ShowDialogue_B12
 	call Inventory_RemoveItem
@@ -5108,15 +5106,15 @@ LABEL_24E9:
 	ld a, (Interaction_Type)
 	or a
 	jr z, +
-	
-LABEL_24EF:	
+
+LABEL_24EF:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
 	ld hl, LABEL_B12_B569
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld b, $01
@@ -5130,7 +5128,7 @@ LABEL_24EF:
 	ld ($C2D8), a
 	jp LABEL_3464
 
-+:	
++:
 	ld hl, LABEL_B12_B2CD
 	call ShowDialogue_B12
 	jp LABEL_3464
@@ -5155,7 +5153,7 @@ LABEL_2537:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld a, ($C2DB)
 	cp $AF
 	jr z, +
@@ -5163,7 +5161,7 @@ LABEL_2537:
 	call ShowDialogue_B12
 	jp	LABEL_3464
 
-+:	
++:
 	push bc
 	call LABEL_7CA6
 	pop bc
@@ -5174,13 +5172,13 @@ LABEL_2537:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B471
 	call ShowDialogue_B12
 	call LABEL_3464
 	ld a, ItemID_Nuts
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	ret z
 	jp Inventory_AddItem
@@ -5195,16 +5193,16 @@ LABEL_2589:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld a, ($C2DB)
 	cp $B0
 	jr z, +
--:	
+-:
 	ld hl, LABEL_B12_B312
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld a, ($C2DC)
 	cp $FF
 	jr z, -
@@ -5225,7 +5223,7 @@ LABEL_25C3:
 	cp $B0
 	jr z, ++
 
-LABEL_25D7:	
+LABEL_25D7:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
 	ld a, ($C29D)
@@ -5233,15 +5231,15 @@ LABEL_25D7:
 	ld hl, LABEL_B12_B500
 	jr z, +
 	ld hl, LABEL_B12_B35C
-+:	
++:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-++:	
+++:
 	ld a, ($C2DC)
 	cp $FF
 	jr nz, LABEL_25D7
--:	
+-:
 	ld hl, LABEL_B12_B743
 	call ShowDialogue_B12
 	call LABEL_3464
@@ -5249,7 +5247,7 @@ LABEL_25D7:
 	ld ($C2D8), a
 	ret
 
-+++:	
++++:
 	ld a, (Interaction_Type)
 	or a
 	jr z, LABEL_25D7
@@ -5268,7 +5266,7 @@ LABEL_2613:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld hl, LABEL_B12_B544
 	call ShowDialogue_B12
 	jp LABEL_3464
@@ -5277,7 +5275,7 @@ LABEL_2631:
 	ld a, (Interaction_Type)
 	or a
 	jr z, ++
--:	
+-:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
 	ld a, ($C29D)
@@ -5285,11 +5283,11 @@ LABEL_2631:
 	ld hl, LABEL_B12_B375
 	jr z, +
 	ld hl, LABEL_B12_B35C
-+:	
++:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-++:	
+++:
 	ld a, ($C29D)
 	or a
 	jr nz, -
@@ -5306,7 +5304,7 @@ LABEL_2631:
 	ld hl, LABEL_B12_BD0C
 	jr z, +
 	ld hl, LABEL_B12_BCF7
-+:	
++:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
@@ -5327,12 +5325,12 @@ LABEL_267C:
 	cp $06
 	jr nz, ++
 	ld b, $04
-+:	
++:
 	ld a, b
 	ld ($C2D8), a
 	jp LABEL_3464
 
-++:	
+++:
 	ld hl, LABEL_B12_B2CD
 	call ShowDialogue_B12
 	jp LABEL_3464
@@ -5345,14 +5343,14 @@ LABEL_26B0:
 	ld hl, LABEL_B12_B312
 	jr nz, +
 	ld hl, LABEL_B12_B555
-+:	
++:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_26C8:
 	ld hl, $FFFF
 	ld (hl), $02
-	ld a, ($C2C4)
+	ld a, (CurrentItem)
 	ld hl, LABEL_7FAB
 	add a, l
 	ld l, a
@@ -5370,7 +5368,7 @@ LABEL_26C8:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld d, a
 	push de
 	push hl
@@ -5381,12 +5379,12 @@ LABEL_26C8:
 	jp nz, LABEL_2741
 	call LABEL_188E
 	jp z, LABEL_2741
-	ld ($C2C2), a
+	ld (CurrentCharacter), a
 	ld c, a
 	inc a
 	ld b, a
 	ld a, d
--:	
+-:
 	rrca
 	djnz -
 	jp nc, +
@@ -5409,11 +5407,11 @@ LABEL_26C8:
 	ld hl, ($C29B)
 	ld (hl), a
 	push af
-	ld a, ($C2C4)
+	ld a, (CurrentItem)
 	ld (de), a
 	ld hl, LABEL_B12_B2B6
 	call ShowDialogue_B12
-	ld a, ($C2C2)
+	ld a, (CurrentCharacter)
 	call LABEL_3707
 	call LABEL_2D25
 	call LABEL_374D
@@ -5422,11 +5420,11 @@ LABEL_26C8:
 	or a
 	call z, Inventory_RemoveItem
 
-LABEL_2741:	
+LABEL_2741:
 	call UpdateCharStats
 	jp LABEL_36BB
 
-+:	
++:
 	ld hl, LABEL_B12_B5DE
 	call ShowDialogue_B12
 	call LABEL_3464
@@ -5435,7 +5433,7 @@ LABEL_2741:
 LABEL_2752:
 	ld hl, $FFFF
 	ld (hl), $02
-	ld a, ($C2C4)
+	ld a, (CurrentItem)
 	ld hl, LABEL_7FAB
 	add a, l
 	ld l, a
@@ -5449,7 +5447,7 @@ LABEL_2752:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld hl, LABEL_B12_B2C2
 	call ShowDialogue_B12
 	call Inventory_RemoveItem
@@ -5458,7 +5456,7 @@ LABEL_2752:
 Inventory_RemoveItem:
 	ld hl, ($C29B)
 
-Inventory_RemoveItem2:	
+Inventory_RemoveItem2:
 	push bc
 	ld e, l
 	ld d, h
@@ -5470,7 +5468,7 @@ Inventory_RemoveItem2:
 	ld c, a
 	ld b, $00
 	ldir
-+:	
++:
 	ld hl, Inventory
 	ld a, (Inventory_curr_num)
 	dec a
@@ -5483,12 +5481,12 @@ Inventory_RemoveItem2:
 
 Inventory_AddItem:
 	ld a, (Inventory_curr_num)
-	cp $18
+	cp InventoryMaxNum
 	jr nc, LABEL_27BC
 	ld hl, Inventory
 	add a, l
 	ld l, a
-	ld a, ($C2C4)
+	ld a, (CurrentItem)
 	ld (hl), a
 	ld a, (Inventory_curr_num)
 	inc a
@@ -5497,7 +5495,7 @@ Inventory_AddItem:
 	ld ($C004), a
 	ret
 
-LABEL_27BC:	
+LABEL_27BC:
 	ld hl, LABEL_B12_B671
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
@@ -5508,9 +5506,9 @@ LABEL_27BC:
 	jr nz, LABEL_27D8
 	ld hl, LABEL_B12_B6D0
 	jp ShowDialogue_B12
-	
-LABEL_27D8:	
-	ld a, ($C2C4)
+
+LABEL_27D8:
+	ld a, (CurrentItem)
 	push af
 	ld hl, LABEL_B12_B68C
 	call ShowDialogue_B12
@@ -5520,7 +5518,7 @@ LABEL_27D8:
 	jr nz, ++
 	ld hl, $FFFF
 	ld (hl), $02
-	ld a, ($C2C4)
+	ld a, (CurrentItem)
 	ld hl, LABEL_7FAB
 	add a, l
 	ld l, a
@@ -5533,14 +5531,14 @@ LABEL_27D8:
 	ld hl, LABEL_B12_B6DE
 	call ShowDialogue_B12
 	pop af
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	jp LABEL_27D8
 
-+:	
++:
 	ld hl, LABEL_B12_B69E
 	call ShowDialogue_B12
 	pop af
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	ld hl, ($C29B)
 	ld (hl), a
 	ld a, $B3
@@ -5548,15 +5546,15 @@ LABEL_27D8:
 	ld hl, LABEL_B12_B6AD
 	jp ShowDialogue_B12
 
-++:	
+++:
 	pop af
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	jp LABEL_27BC
 
 Inventory_FindFreeSlot:
 	ld hl, Inventory
-	ld b, $18
--:	
+	ld b, InventoryMaxNum
+-:
 	cp (hl)
 	ret z
 	inc hl
@@ -5573,17 +5571,17 @@ PlayerMenu_Search:
 	call LABEL_28DB
 	jp LABEL_2ED9
 
-+:	
++:
 	ld hl, ($C305)
 	ld a, l
 	add a, $60
 	jr c, +
 	cp $C0
 	jr c, ++
-+:	
++:
 	add a, $40
 	inc h
-++:	
+++:
 	ld l, a
 	add hl, hl
 	add hl, hl
@@ -5617,7 +5615,7 @@ PlayerMenu_Search:
 	ld a, $26
 	jr ++
 
-+:	
++:
 	cp $01
 	jr nz, LABEL_28C5
 	ld a, l
@@ -5634,8 +5632,8 @@ PlayerMenu_Search:
 	ld a, $1F
 	cp b
 	jr z, LABEL_28C5
-++:	
-	ld ($C2C4), a
+++:
+	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	jr z, LABEL_28C5
 	ld hl, LABEL_B12_B592
@@ -5643,7 +5641,7 @@ PlayerMenu_Search:
 	call Inventory_AddItem
 	jp LABEL_3464
 
-LABEL_28C5:	
+LABEL_28C5:
 	ld a, ($C2DB)
 	cp $A2
 	jp z, LABEL_5566
@@ -5690,7 +5688,7 @@ LABEL_28EE:
 	ld ($C900), a
 	jp LABEL_3464
 
-+:	
++:
 	ld hl, ($C2DD)
 	ld ($C2C5), hl
 	call LABEL_297A
@@ -5699,33 +5697,33 @@ LABEL_28EE:
 	ld hl, LABEL_B12_B648
 	call nz, ShowDialogue_B12
 	ld a, ($C2DF)
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B592
 	call ShowDialogue_B12
 	call Inventory_AddItem
-+:	
++:
 	ld a, $D0
 	ld ($C900), a
 	jp LABEL_3464
 
-LABEL_2950:	
+LABEL_2950:
 	ld a, ($C80F)
 	cp $3E
 	jr nz, +
 	ld b, $04
--:	
+-:
 	ld a, b
 	dec a
 	call ++
 	djnz -
 	ret
 
-+:	
++:
 	call LABEL_5B1
 	and $03
-++:	
+++:
 	call LABEL_187D
 	ret z
 	inc hl
@@ -5747,7 +5745,7 @@ LABEL_297A:
 	add hl, de
 	jr nc, +
 	ld hl, $FFFF
-+:	
++:
 	ld (Current_money), hl
 	ex de, hl
 	ret
@@ -5756,13 +5754,12 @@ LABEL_2989:
 	call	LABEL_2D25
 	ret
 
-	
-LABEL_298D:	
+LABEL_298D:
 	ld hl, LABEL_B12_B8C8
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
 	jp nz, LABEL_2A55
-LABEL_2999:	
+LABEL_2999:
 	ld a, (Party_curr_num)
 	or a
 	ld hl, LABEL_B12_B925
@@ -5770,14 +5767,14 @@ LABEL_2999:
 	call LABEL_3665
 	bit Button_1, c
 	jp nz, LABEL_2A52
-	ld ($C2C2), a
+	ld (CurrentCharacter), a
 	call LABEL_187D
 	jr nz, +
 	ld hl, LABEL_B12_B730
 	call ShowDialogue_B12
 	jp LABEL_2A48
 
-+:	
++:
 	push hl
 	pop iy
 	ld a, (iy+1)
@@ -5795,7 +5792,7 @@ LABEL_2999:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld a, (iy+6)
 	sub (iy+1)
 	ld b, a
@@ -5837,29 +5834,29 @@ LABEL_2999:
 	call ShowYesNoPrompt
 	jr nz, LABEL_2A52
 
-LABEL_2A48:	
+LABEL_2A48:
 	call LABEL_36BB
 	ld a, (Party_curr_num)
 	or a
 	jp nz, LABEL_2999
-LABEL_2A52:	
+LABEL_2A52:
 	call LABEL_36BB
-LABEL_2A55:	
+LABEL_2A55:
 	ld hl, LABEL_B12_B951
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_2A5E:	
+LABEL_2A5E:
 	call LABEL_3A12
 	call LABEL_36BB
 	ld hl, LABEL_B12_BD57
 	call ShowDialogue_B12
-+:	
++:
 	jp LABEL_3464
 
-LABEL_2A6D:	
+LABEL_2A6D:
 	ld bc, $04FF
--:	
+-:
 	ld a, b
 	dec a
 	call LABEL_187D
@@ -5872,12 +5869,11 @@ LABEL_2A6D:
 	inc de
 	ldi
 	ldi
-+:	
++:
 	djnz -
 	ret
 
-
-LABEL_2A85:	
+LABEL_2A85:
 	ld a, ($C2DB)
 	ld ($C317), a
 	ld hl, LABEL_B12_B97F
@@ -5885,7 +5881,7 @@ LABEL_2A85:
 	call ShowYesNoPrompt
 	or a
 	jp nz, LABEL_2B46
-LABEL_2A98:	
+LABEL_2A98:
 	ld a, (Party_curr_num)
 	or a
 	jp z, LABEL_2B31
@@ -5896,7 +5892,7 @@ LABEL_2A98:
 	jp nz, LABEL_2B43
 	call LABEL_187D
 	jr nz, LABEL_2B31
-	ld ($C2C2), a
+	ld (CurrentCharacter), a
 	push hl
 	pop iy
 	ld a, (iy+5)
@@ -5938,7 +5934,7 @@ LABEL_2A98:
 	ld ($C004), a
 	call LABEL_2D33
 	call LABEL_3A12
-LABEL_2B15:	
+LABEL_2B15:
 	ld hl, LABEL_B12_B9E5
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
@@ -5946,23 +5942,23 @@ LABEL_2B15:
 	call LABEL_36BB
 	jp LABEL_2A98
 
-+:	
++:
 	ld hl, LABEL_B12_BD9F
 	call ShowDialogue_B12
 	call LABEL_3A12
 	jr LABEL_2B15
 
-LABEL_2B31:	
-	ld ($C2C2), a
+LABEL_2B31:
+	ld (CurrentCharacter), a
 	ld hl, LABEL_B12_BA56
 	call ShowDialogue_B12
 	ld a, (Party_curr_num)
 	or a
 	jr nz, LABEL_2B15
 	call LABEL_2D25
-LABEL_2B43:	
+LABEL_2B43:
 	call LABEL_36BB
-LABEL_2B46:	
+LABEL_2B46:
 	ld hl, LABEL_B12_BA3C
 	call ShowDialogue_B12
 	ld hl, LABEL_B12_BA04
@@ -5970,7 +5966,7 @@ LABEL_2B46:
 	call +
 	jp LABEL_3464
 
-+:	
++:
 	ld iy, Alis_stats
 	ld de, B03_AlisLevelTable
 	xor a
@@ -5986,17 +5982,17 @@ LABEL_2B46:
 	ld iy, Noah_stats
 	ld de, B03_NoahLevelTable
 	ld a, $03
-+:	
-	ld ($C2C2), a
++:
+	ld (CurrentCharacter), a
 	bit 0, (iy+status)
 	ret z
 	ld a, (iy+level)
-	cp $1E
+	cp Maximum_Level
 	jr c, +
 	ld hl, LABEL_B12_BDFF
 	jp ShowDialogue_B12
 
-+:	
++:
 	ld hl, $FFFF
 	ld (hl), $03
 	ld l, a
@@ -6017,23 +6013,22 @@ LABEL_2B46:
 	ld hl, LABEL_B12_BA1F
 	jp ShowDialogue_B12
 
-	
-LABEL_2BC0:	
+LABEL_2BC0:
 	ld hl, LABEL_B12_B7C7
 	call ShowDialogue_B12
-LABEL_2BC6:	
+LABEL_2BC6:
 	call ShowYesNoPrompt
 	jr z, LABEL_2BD4
 	ld hl, LABEL_B12_B7E3
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_2BD4:	
+LABEL_2BD4:
 	push bc
 	call LABEL_38CD
 	call LABEL_39E9
 	pop bc
-LABEL_2BDC:	
+LABEL_2BDC:
 	ld hl, LABEL_B12_B7F5
 	call ShowDialogue_B12
 	push bc
@@ -6042,10 +6037,10 @@ LABEL_2BDC:
 	pop bc
 	jr nz, LABEL_2C2D
 	ld a, (Inventory_curr_num)
-	cp $18
+	cp InventoryMaxNum
 	jr nc, LABEL_2C3C
 	ld a, (hl)
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	inc hl
 	ld e, (hl)
 	inc hl
@@ -6054,43 +6049,43 @@ LABEL_2BDC:
 	or a
 	sbc hl, de
 	jr c, LABEL_2C41
-	ld a, ($C2C4)
+	ld a, (CurrentItem)
 	cp $40
 	jr nc, LABEL_2C46
 	ld (Current_money), hl
 	call LABEL_39F7
-	ld a, ($C2C4)
+	ld a, (CurrentItem)
 	cp $21
 	jr c, +
 	cp $24
 	jr nc, +
 	call Inventory_FindFreeSlot
 	jr z, ++
-+:	
++:
 	call Inventory_AddItem
-++:	
+++:
 	ld hl, LABEL_B12_B807
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
 	jr z, LABEL_2BDC
 
-LABEL_2C2D:	
+LABEL_2C2D:
 	ld hl, LABEL_B12_B7E3
--:	
+-:
 	call ShowDialogue_B12
 	call LABEL_3A12
 	call LABEL_3999
 	jp LABEL_3464
 
-LABEL_2C3C:	
+LABEL_2C3C:
 	ld hl, LABEL_B12_B813
 	jr -
 
-LABEL_2C41:	
+LABEL_2C41:
 	ld hl, LABEL_B12_BD57
 	jr -
 
-LABEL_2C46:	
+LABEL_2C46:
 	ld a, ($C2EC)
 	cp $02
 	jr nc, ++
@@ -6098,7 +6093,7 @@ LABEL_2C46:
 	ld hl, $0142
 	jr c, +
 	ld hl, $0144
-+:	
++:
 	inc a
 	ld ($C2EC), a
 	call ShowDialogue_B2
@@ -6106,12 +6101,12 @@ LABEL_2C46:
 	call LABEL_3999
 	jp LABEL_3464
 
-++:	
+++:
 	xor a
 	ld ($C2EC), a
 	push hl
 	ld a, ItemID_RoadPass
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	pop hl
 	jr z, LABEL_2C46
@@ -6124,12 +6119,12 @@ LABEL_2C46:
 	call LABEL_3999
 	jp LABEL_3464
 
-LABEL_2C8F:	
+LABEL_2C8F:
 	ld hl, LABEL_B12_B832
 	call ShowDialogue_B12
 	jp LABEL_2BC6
 
-LABEL_2C98:	
+LABEL_2C98:
 	ld hl, LABEL_B12_B85D
 	call ShowDialogue_B12
 	call LABEL_3777
@@ -6142,7 +6137,7 @@ LABEL_2C98:
 	jp nz, LABEL_2CEA
 	or a
 	jp z, LABEL_2BD4
-LABEL_2CB1:	
+LABEL_2CB1:
 	ld hl, LABEL_B12_B882
 	call ShowDialogue_B12
 	call LABEL_34D5
@@ -6153,7 +6148,7 @@ LABEL_2CB1:
 	jp nz, LABEL_2CEA
 	ld hl, $FFFF
 	ld (hl), $03
-	ld a, ($C2C4)
+	ld a, (CurrentItem)
 	and $3F
 	add a, a
 	ld hl, LABEL_B03_B82F
@@ -6173,19 +6168,19 @@ LABEL_2CB1:
 	call ShowDialogue_B12
 	jp LABEL_2CB1
 
-LABEL_2CEA:	
+LABEL_2CEA:
 	ld hl, LABEL_B12_B7E3
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-+:	
++:
 	ld hl, LABEL_B12_B89A
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
 	jr z, +
 	jp LABEL_2CB1
 
-+:	
++:
 	call Inventory_RemoveItem
 	ld hl, ($C2C5)
 	call LABEL_297A
@@ -6288,7 +6283,7 @@ LABEL_2DA5:
 	ld a, $FF
 	ld ($C268), a
 
-LABEL_2DAA:	
+LABEL_2DAA:
 	ld a, $08
 	call WaitForVInt
 	ld a, (Ctrl_1_pressed)
@@ -6303,7 +6298,7 @@ LABEL_2DAA:
 	sub $01
 	jr nc, +
 	ld a, (hl)
-+:	
++:
 	bit 1, c
 	jr z, +
 	inc a
@@ -6311,11 +6306,11 @@ LABEL_2DAA:
 	jr c, +
 	jr z, +
 	xor a
-+:	
++:
 	ld ($C26B), a
 	jp +++
 
-++:	
+++:
 	ld hl, ($C299)
 	ld a, h
 	or a
@@ -6328,7 +6323,7 @@ LABEL_2DAA:
 	ld a, h
 	jr ++
 
-+:	
++:
 	bit 3, c
 	jr z, +++
 	ld a, l
@@ -6337,11 +6332,11 @@ LABEL_2DAA:
 	jr c, ++
 	jr z, ++
 	xor a
-++:	
+++:
 	ld ($C299), a
 	jr ++++
 
-+++:	
++++:
 	ld a, c
 	and $30
 	jr z, LABEL_2DAA
@@ -6362,7 +6357,7 @@ LABEL_2DAA:
 	dec a
 	ret
 
-+:	
++:
 	ld hl, ($C299)
 	ld a, l
 	add a, $08
@@ -6370,9 +6365,9 @@ LABEL_2DAA:
 	jr c, +
 	jr z, +
 	xor a
-+:	
++:
 	ld ($C299), a
-++++:	
+++++:
 	xor a
 	ld ($C268), a
 	call LABEL_352D
@@ -6384,12 +6379,12 @@ LABEL_2DAA:
 	ld h, $00
 	jr c, +
 	ld h, $01
-+:	
++:
 	sub l
 	cp $08
 	jr c, +
 	ld a, $07
-+:	
++:
 	and $07
 	add a, h
 	ld (Option_total_num), a
@@ -6397,7 +6392,7 @@ LABEL_2DAA:
 	cp l
 	jr nc, +
 	ld l, a
-+:	
++:
 	ld h, l
 	ld ($C26B), hl
 	jp LABEL_2DA5
@@ -6411,7 +6406,7 @@ LABEL_2E62:
 	ld bc, $F0F3
 	jr nz, +
 	ld bc, $FF00
-+:	
++:
 	ld hl, (Cursor_pos)
 	ld a, ($C26C)
 	srl a
@@ -6441,7 +6436,7 @@ LABEL_2E62:
 	ld a, b
 	jr nz, +
 	ld a, c
-+:	
++:
 	out (Port_VDPData), a
 	ret
 
@@ -6492,10 +6487,10 @@ LABEL_2ED9:
 	ld hl, LABEL_B27_B53B
 	ld de, $7CB0
 	ld ix, Noah_stats
-+:	
++:
 	bit 0, (ix+status)
 	ret z
-LABEL_2F1B:	
+LABEL_2F1B:
 	ld bc, $0310
 	call LABEL_3A57
 	ld hl, LABEL_30A7
@@ -6524,7 +6519,7 @@ LABEL_2F3C:
 	ld hl, LABEL_B27_B53B
 	ld de, $7CB0
 	ld ix, Noah_stats
-+:	
++:
 	bit 0, (ix+status)
 	ret z
 	ld bc, $0310
@@ -6546,7 +6541,7 @@ LABEL_2F93:
 	ld bc, $0640
 	call LABEL_3AA6
 	pop af
-LABEL_2FA1:	
+LABEL_2FA1:
 	ld hl, LABEL_B27_B4AB
 	ld de, $7C80
 	ld ix, Char_stats
@@ -6750,7 +6745,7 @@ LABEL_30ED:
 	ld   de, $7830
 	ld   bc, $0A10
 	call	LABEL_3AA6
-	
+
 LABEL_3105:
 	ld   hl, LABEL_B27_BACF
 	ld   de, $781C
@@ -6852,7 +6847,7 @@ LABEL_319E:
 	jp   LABEL_3A57
 
 
-LABEL_31BB:
+CharacterNames:
 .db "ALIS"
 .db	"MYAU"
 .db	"ODIN"
@@ -6865,7 +6860,7 @@ LABEL_31CB:
 ShowDialogue_B12:
 	ld   a, :Bank12
 	ld   ($FFFF), a
-	
+
 LABEL_31D4:
 	ld   a, ($C2D3)
 	or   a
@@ -6926,41 +6921,41 @@ LABEL_3235:
 	jp   LABEL_31FA
 
 LABEL_3244:
-	cp   $5B
+	cp   Dialogue_CurrentCharacter
 	jr   nz, LABEL_3262
 	push	hl
-	ld   a, ($C2C2)
+	ld   a, (CurrentCharacter)
 	and  $03
 	add  a, a
 	add  a, a
-	ld   hl, LABEL_31BB
+	ld   hl, CharacterNames
 	add  a, l
 	ld   l, a
 	adc  a, h
 	sub  l
 	ld   h, a
 	ld   a, $04
-	call	LABEL_336C
+	call	Display65TerminatedString
 	pop  hl
 	inc  hl
 	jp   LABEL_31FA
 
 LABEL_3262:
-	cp   $5C
+	cp   Dialogue_EnemyName
 	jr   nz, LABEL_3274
 	push	hl
 	ld   hl, CurrentBattle_EnemyName
 	ld   a, $08
-	call	LABEL_336C
+	call	Display65TerminatedString
 	pop  hl
 	inc  hl
 	jp   LABEL_31FA
 
 LABEL_3274:
-	cp   $5D
+	cp   Dialogue_CurrentItem
 	jr   nz, LABEL_3292
 	push	hl
-	ld   a, ($C2C4)
+	ld   a, (CurrentItem)
 	ld   l, a
 	ld   h, $00
 	add  hl, hl
@@ -6971,7 +6966,7 @@ LABEL_3274:
 	add  hl, bc
 	pop  bc
 	ld   a, $08
-	call	LABEL_336C
+	call	Display65TerminatedString
 	pop  hl
 	inc  hl
 	jp   LABEL_31FA
@@ -7103,7 +7098,7 @@ LABEL_333E:
 	push	hl
 	and  $7F
 	add  a, a
-	ld   hl, $BA81
+	ld   hl, DialogueWordBlock
 	add  a, l
 	ld   l, a
 	adc  a, h
@@ -7120,7 +7115,7 @@ LABEL_333E:
 LABEL_3357:
 	call	LABEL_33D6
 	ld   a, (hl)
-	cp   $65
+	cp   Dialogue_Terminator65
 	jr   nz, LABEL_3357
 	pop  af
 	ld   ($FFFF), a
@@ -7133,15 +7128,15 @@ LABEL_3357:
 	ld   a, (hl)
 	jp   LABEL_3419
 
-LABEL_336C:
+Display65TerminatedString:
 	push	af
 	call	LABEL_33D6
 	ld   a, (hl)
-	cp   $65
+	cp   Dialogue_Terminator65
 	jr   z, LABEL_337B
 	pop  af
 	dec  a
-	jp   nz, LABEL_336C
+	jp   nz, Display65TerminatedString
 	ret
 
 LABEL_337B:
@@ -7154,9 +7149,9 @@ LABEL_337D:
 	ld ($FFFF), a
 	ld de, $7C0C
 	ld bc, $0000
--:	
+-:
 	push de
-LABEL_3389:	
+LABEL_3389:
 	ld a, (hl)
 	or a
 	jp m, LABEL_3338
@@ -7178,11 +7173,11 @@ LABEL_3389:
 	ex de, hl
 	jp -
 
-+:	
++:
 	call LABEL_33D6
 	jr LABEL_3389
 
-++:	
+++:
 	pop de
 	push hl
 	cp $5F
@@ -7197,12 +7192,12 @@ LABEL_3389:
 	inc hl
 	jp LABEL_337D
 
-+++:	
++++:
 	call LABEL_2D25
 	pop de
 	ret
 
-LABEL_33D1:	
+LABEL_33D1:
 	call LABEL_2D47
 	pop de
 	ret
@@ -7367,7 +7362,7 @@ LABEL_3478:
 	ld b, a
 	jp LABEL_3A57
 
-+:	
++:
 	ld hl, LABEL_B27_BA3F
 	ld bc, $0C0C
 	jp LABEL_3A57
@@ -7395,7 +7390,7 @@ LABEL_34D5:
 	jr c, +
 	ld l, $01
 	ld a, $07
-+:	
++:
 	and $07
 	add a, l
 	ld (Option_total_num), a
@@ -7414,10 +7409,10 @@ LABEL_34D5:
 	ld l, a
 	ld ($C29B), hl
 	ld a, (hl)
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	ret
 
-LABEL_3521:	
+LABEL_3521:
 	ld hl, $DC04
 	ld de, $78AC
 	ld bc, $1514
@@ -7439,7 +7434,7 @@ LABEL_352D:
 	add a, l
 	ld l, a
 	ld b, $08
--:	
+-:
 	ld c, $00
 	call LABEL_356B
 	ld c, $01
@@ -7533,7 +7528,7 @@ LABEL_35CC:
 	inc  hl
 	djnz	LABEL_35CC
 	ld   hl, (Current_money)
-	
+
 LABEL_35D5:
 	ld   bc, $C010
 	ld   de, $2710
@@ -7582,7 +7577,7 @@ LABEL_3614:
 	ld   a, d
 	ld   bc, $C110
 	call	LABEL_3645
-	
+
 LABEL_3620:
 	push	af
 	pop  af
@@ -7929,7 +7924,7 @@ LABEL_38D9:
 	inc hl
 	push hl
 	ld b, $03
--:	
+-:
 	push bc
 	ld c, $00
 	push hl
@@ -7963,7 +7958,7 @@ LABEL_38D9:
 	ld h, a
 	ret
 
-+:	
++:
 	di
 	push de
 	push hl
@@ -7972,7 +7967,7 @@ LABEL_38D9:
 	or a
 	jr nz, +
 	ld c, $00
-+:	
++:
 	ld l, a
 	ld h, $00
 	add hl, hl
@@ -7989,7 +7984,7 @@ LABEL_38D9:
 	ld a, $11
 	out (Port_VDPData), a
 	ld b, $08
--:	
+-:
 	ld a, (hl)
 	sub $20
 	add a, a
@@ -8013,7 +8008,7 @@ LABEL_38D9:
 	ld b, $01
 	jr nz, LABEL_397D
 	ld b, $06
-LABEL_397D:	
+LABEL_397D:
 	push af
 	pop af
 	ld a, $C0
@@ -8102,7 +8097,7 @@ LABEL_3A12:
 	pop bc
 	ret
 
-LABEL_3A21:	
+LABEL_3A21:
 	ld hl, $DE14
 	ld de, $7AE4
 	ld bc, $0710
@@ -8240,16 +8235,16 @@ GameMode_Interaction:
 	sub $10
 	jr nc, +
 	xor a
-+:	
++:
 	and $0F
 	ld hl, LABEL_3C2A
 	call GetPtrAndJump
-LABEL_3BC5:	
+LABEL_3BC5:
 	ld a, (Interaction_Type)
 	sub $0F
 	jr nc, +
 	xor a
-+:	
++:
 	and $0F
 	ld l, a
 	ld h, $00
@@ -8260,7 +8255,7 @@ LABEL_3BC5:
 	jr z, +
 	ld a, $D8
 	ld ($C004), a
-+:	
++:
 	xor a
 	ld ($C29D), a
 	ld (Interaction_Type), a
@@ -8282,16 +8277,16 @@ LABEL_3BC5:
 	ld (Game_mode), a
 	ret
 
-+:	
++:
 	or a
 	ld a, $08 ; GameMode_LoadMap
 	jr z, +
 	ld a, $0E ; GameMode_LoadRoad
-+:	
++:
 	ld (Game_mode), a
 	ret
 
-LABEL_3C1A:	
+LABEL_3C1A:
 	call LABEL_5FFE
 	call LABEL_100F
 	ld a, ($C800)
@@ -8337,7 +8332,7 @@ GameMode_LoadInteraction:
 	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
-+:	
++:
 	cp $01
 	jr nz, +
 	ld a, (Interaction_Type)
@@ -8347,7 +8342,7 @@ GameMode_LoadInteraction:
 	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
-+:	
++:
 	cp $07
 	jr nz, +
 	ld a, (Interaction_Type)
@@ -8357,14 +8352,14 @@ GameMode_LoadInteraction:
 	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
-+:	
++:
 	cp $08
 	jr nz, +
 	ld a, $06
 	ld (Interaction_Type), a
 	jr LABEL_3CAD
 
-+:	
++:
 	cp $0A
 	jr nz, LABEL_3CAD
 	ld a, (Interaction_Type)
@@ -8372,13 +8367,13 @@ GameMode_LoadInteraction:
 	jr nz, LABEL_3CAD
 	ld a, $08
 	ld (Interaction_Type), a
-LABEL_3CAD:	
+LABEL_3CAD:
 	ld a, (Interaction_Type)
 	or a
 	jr nz, +
 	inc a
 	ld (Interaction_Type), a
-+:	
++:
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank16
@@ -8406,7 +8401,7 @@ LABEL_3CAD:
 	sub $0F
 	jr nc, +
 	xor a
-+:	
++:
 	and $0F
 	ld l, a
 	ld h, $00
@@ -8416,7 +8411,7 @@ LABEL_3CAD:
 	or a
 	jr z, +
 	ld ($C004), a
-+:	
++:
 	ld hl, Game_mode
 	inc (hl) ; GameMode_Interaction
 	di
@@ -8577,7 +8572,7 @@ GameMode_NameInput:
 	di
 	call LABEL_414F
 	ei
-+:	
++:
 	ld hl, $C781
 	ld a, (hl)
 	cp $25
@@ -8585,16 +8580,16 @@ GameMode_NameInput:
 	inc (hl)
 	ret
 
-++:	
+++:
 	cp $5E
 	jr z, ++++
--:	
+-:
 	ld a, ($C780)
 	ld c, $00
 	rra
 	jr c, +
 	ld c, $21
-+:	
++:
 	ld hl, $C781
 	ld a, (hl)
 	cp c
@@ -8602,7 +8597,7 @@ GameMode_NameInput:
 	dec (hl)
 	ret
 
-+++:	
++++:
 	ld de, ($C781)
 	ld d, $C7
 	ld a, $20
@@ -8614,7 +8609,7 @@ GameMode_NameInput:
 	ei
 	jp -
 
-++++:	
+++++:
 	ld hl, $C721
 	ld de, $C778
 	ld bc, $0005
@@ -8646,14 +8641,14 @@ GameMode_NameInput:
 	ld a, $0A ; GameMode_LoadDungeon
 	jr z, +
 	ld a, $0C ; GameMode_LoadInteraction
-+:	
++:
 	ld (Game_mode), a
 	ret
 
 LABEL_3F69:
 .db $18, $81, $3C, $81, $60, $81, $84, $81, $A8, $81
 
-LABEL_3F73:	
+LABEL_3F73:
 	ld a, (Ctrl_1_pressed)
 	rra
 	jr c, LABEL_3FB7
@@ -8674,49 +8669,49 @@ LABEL_3F73:
 	ret nc
 	call LABEL_402C
 	ret nz
--:	
+-:
 	ld bc, $C808
 	ld de, $0002
 	ld iy, $C784
 	jr LABEL_3FF2
 
-+:	
++:
 	ld a, $18
 	ld ($C789), a
 	jr -
 
-++:	
+++:
 	call LABEL_402C
 	ret nz
--:	
+-:
 	ld bc, $60F0
 	ld de, $FF80
 	ld iy, $C785
 	jr LABEL_3FF2
 
-LABEL_3FB7:	
+LABEL_3FB7:
 	ld a, $18
 	ld ($C789), a
 	jr -
 
-+++:	
++++:
 	call LABEL_402C
 	ret nz
--:	
+-:
 	ld bc, $9010
 	ld de, $0080
 	ld iy, $C785
 	jr LABEL_3FF2
 
-LABEL_3FCE:	
+LABEL_3FCE:
 	ld a, $18
 	ld ($C789), a
 	jr -
 
-LABEL_3FD5:	
+LABEL_3FD5:
 	call LABEL_402C
 	ret nz
--:	
+-:
 	ld bc, $28F8
 	ld a, ($C788)
 	cp $5C
@@ -8725,7 +8720,7 @@ LABEL_3FD5:
 	ld iy, $C784
 	jr LABEL_3FF2
 
-LABEL_3FEB:	
+LABEL_3FEB:
 	ld a, $18
 	ld ($C789), a
 	jr -
@@ -8738,7 +8733,7 @@ LABEL_3FF2:
 	ld	(iy+0), a
 	ld	hl, ($C786)
 	add	hl, de
-	
+
 ; The next 3 bytes are translated as ld	($C786), hl, but since the instruction is split
 ;  across 2 banks, I can't use it. This will have to do until I find a workaround
 .db $22
@@ -8767,7 +8762,7 @@ LABEL_3FF2:
 	jr z, +
 	ld c, $C8
 	ld l, $B2
-+:	
++:
 	ld ($C786), hl
 	ld a, c
 	ld ($C784), a
@@ -8838,9 +8833,9 @@ GameMode_LoadNameInput:
 	rst $08
 	ei
 	jp LABEL_2FD
-	
 
-LABEL_40C0:	
+
+LABEL_40C0:
 .db $28, $60, $0A, $D3, $41
 
 LABEL_40C5:
@@ -8865,7 +8860,7 @@ LABEL_40C5:
 	ld (de), a
 	inc e
 	ld (de), a
-+:	
++:
 	inc e
 	ld a, $D0
 	ld (de), a
@@ -8877,7 +8872,7 @@ LABEL_40C5:
 	inc l
 	ld (hl), c
 	ld a, ($C784)
--:	
+-:
 	inc l
 	ld (hl), a
 	inc l
@@ -8891,7 +8886,7 @@ LABEL_4100:
 	ld	hl, $C781
 	ld	(hl), $38
 	ld	d, $C7
-	
+
 -:
 	dec	(hl)
 	ret	m
@@ -8915,7 +8910,7 @@ LABEL_4117:
 	jr c, +
 	ld hl, $D246
 	sub $18
-+:	
++:
 	add a, $18
 	ld c, a
 	add a, a
@@ -8968,7 +8963,7 @@ LABEL_414F:
 LABEL_4166:
 	ld hl, LABEL_423C
 	ld de, $D100
---:	
+--:
 	ld a, (hl)
 	inc hl
 	or a
@@ -8979,7 +8974,7 @@ LABEL_4166:
 	and $3F
 	ld b, a
 	ld a, (hl)
--:	
+-:
 	ld (de), a
 	inc de
 	inc de
@@ -8993,20 +8988,20 @@ LABEL_4166:
 	inc hl
 	jr --
 
-+:	
++:
 	and $3F
 	ld c, a
 	ld b, $00
--:	
+-:
 	ldi
 	inc de
 	jp pe, -
 	jr --
 
-++:	
+++:
 	ld b, a
 	ld a, (hl)
--:	
+-:
 	ld (de), a
 	inc de
 	inc de
@@ -9014,7 +9009,7 @@ LABEL_4166:
 	inc hl
 	jr --
 
-+++:	
++++:
 	ld hl, $D146
 	ld de, $F301
 	call +
@@ -9029,10 +9024,10 @@ LABEL_4166:
 	call LABEL_41D5
 	ld hl, $D176
 	ld de, $F303
-+:	
++:
 	ld a, $0D
 	ld bc, $003F
--:	
+-:
 	ld (hl), d
 	inc l
 	ld (hl), e
@@ -9052,9 +9047,9 @@ LABEL_41DB:
 	ld hl, LABEL_4280
 	ld de, $D30A
 	ld a, $04
---:	
+--:
 	ld bc, $000B
--:	
+-:
 	ldi
 	inc de
 	ex de, hl
@@ -9146,7 +9141,7 @@ LABEL_42AC:
 	ld ($C264), a
 	ld a, $02
 	ld ($C307), a
--:	
+-:
 	ld a, $0E
 	call WaitForVInt
 	ld a, (Ctrl_1_pressed)
@@ -9160,7 +9155,7 @@ LABEL_42AC:
 	cp $80
 	jr nz, -
 	call LABEL_2D37
-+:	
++:
 	xor a
 	ld ($C264), a
 	ld ($C307), a
@@ -9206,7 +9201,7 @@ LABEL_42AC:
 	ld ($C004), a
 	ret
 
-LABEL_43AA:	
+LABEL_43AA:
 	ld de, $0001
 	ld a, ($C304)
 	add a, e
@@ -9214,7 +9209,7 @@ LABEL_43AA:
 	jr c, +
 	ld d, $01
 	add a, $20
-+:	
++:
 	ld ($C304), a
 	ld a, ($C307)
 	sub d
@@ -9227,7 +9222,7 @@ LABEL_43AA:
 	ld hl, LABEL_B28_BE88
 	jp LABEL_6B62
 
-LABEL_43CF:	
+LABEL_43CF:
 	call LABEL_467C
 	ld a, $8A
 	ld ($C004), a
@@ -9285,7 +9280,7 @@ LABEL_4414:
 	ld ($C004), a
 	jp FadeIn2
 
-LABEL_4461:	
+LABEL_4461:
 	call LABEL_467C
 	ld a, $8A
 	ld ($C004), a
@@ -9298,7 +9293,7 @@ LABEL_4461:
 	bit 0, (hl)
 	jr nz, +
 	ld a, $04
-+:	
++:
 	call LABEL_46D1
 	ld hl, LABEL_B85C
 	call LABEL_337D
@@ -9318,7 +9313,7 @@ LABEL_4497:
 	ld hl, LABEL_4514
 	jp LABEL_4509
 
-+:	
++:
 	call LABEL_467C
 	ld a, $8A
 	ld ($C004), a
@@ -9338,7 +9333,7 @@ LABEL_4497:
 	call WaitForVInt
 	ld hl, $C250
 	ld b, $10
--:	
+-:
 	ld (hl), $30
 	inc hl
 	djnz -
@@ -9358,20 +9353,20 @@ LABEL_4497:
 	cp $02 ; GameMode_LoadIntro
 	ret z
 	ld hl, LABEL_4511
-LABEL_4509:	
+LABEL_4509:
 	ld a, $08 ; GameMode_LoadMap
 	ld (Game_mode), a
 	jp LABEL_787B
 
 
-LABEL_4511:	
+LABEL_4511:
 .db $17 $28 $1F
 
 
-LABEL_4514:	
+LABEL_4514:
 .db $00 $40 $4C
 
-LABEL_4517:	
+LABEL_4517:
 	call FadeOut2
 	ld a, $0F
 	ld (Interaction_Type), a
@@ -9393,7 +9388,7 @@ LABEL_4517:
 	call LABEL_18B9
 	jp FadeOut2
 
-LABEL_454E:	
+LABEL_454E:
 	call FadeOut2
 	ld a, $D0
 	ld ($C900), a
@@ -9484,7 +9479,7 @@ LABEL_454E:
 	ld a, $91
 	ld ($C004), a
 	ld hl, LABEL_B15_BF80
--:	
+-:
 	ld a, :Bank15
 	ld ($FFFF), a
 	ld a, (hl)
@@ -9497,7 +9492,7 @@ LABEL_454E:
 	inc hl
 	jr -
 
-+:	
++:
 	push hl
 	ld (Ctrl_1_held), a
 	call LABEL_65EE
@@ -9505,7 +9500,7 @@ LABEL_454E:
 	inc hl
 	jr -
 
-++:	
+++:
 	ld a, $D7
 	ld ($C004), a
 	xor a
@@ -9598,7 +9593,7 @@ LABEL_471E:
 .db	$1F, $00, $80, $90, $A8, $1E, $00, $80, $70, $AA, $1E, $62, $8F, $50, $AC, $1E
 .db	$2B, $9C, $30, $AE, $1F, $DB, $8A, $10, $B0, $1D, $2A, $B6, $F0, $B1, $12, $88
 .db	$B3, $D0, $B3, $1E, $4E, $AA, $B0, $B5, $1E, $0C, $B3, $90, $B7
-	
+
 
 LABEL_474B:
 	ld   a, ($C2DB)
@@ -9822,7 +9817,7 @@ LABEL_48DF:
 	ld (hl), $01
 	ld hl, $0002
 	call ShowDialogue_B2
-+:	
++:
 	ld hl, $0006
 	call ShowDialogue_B2
 	ld a, $C1
@@ -9836,14 +9831,14 @@ LABEL_48FC:
 	ld hl, $0008
 	call ShowDialogue_B2
 	ld a, ItemID_LaconiaPot
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_AddItem
 	ld a, $38
 	call Inventory_FindFreeSlot
 	jr nz, +
 	ld a, $01
 	ld ($C502), a
-+:	
++:
 	ld hl, $0010
 	jp ShowDialogue_B2
 
@@ -9876,7 +9871,7 @@ LABEL_4940:
 	ld hl, $0003
 	ld ($C2C5), hl
 	ld hl, $0064
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_495A:
@@ -9901,7 +9896,7 @@ LABEL_4973:
 	ld hl, $0022
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $0024
 	call ShowDialogue_B2
 	ld a, ($C309)
@@ -9951,7 +9946,7 @@ LABEL_49B5:
 	ld a, $06
 	ld ($C2E9), a
 	ld hl, $0024
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_49E0:
@@ -9972,7 +9967,7 @@ LABEL_49E6:
 	ld a, $AE
 	ld ($C004), a
 	ld a, $01
-	ld ($C2C2), a
+	ld (CurrentCharacter), a
 	ld hl, LABEL_B12_B728
 	call ShowDialogue_B12
 	ld hl, $0000
@@ -9980,9 +9975,9 @@ LABEL_49E6:
 	ld hl, $0298
 	jr ++
 
-+:	
++:
 	ld hl, $029A
-++:	
+++:
 	call ShowDialogue_B2
 	call LABEL_3464
 	ld a, (Party_curr_num)
@@ -9995,7 +9990,7 @@ LABEL_49E6:
 	ld ($C2E1), hl
 	ld a, $38
 	ld ($C2DF), a
-+:	
++:
 	jp LABEL_5389
 
 LABEL_4A3E:
@@ -10021,14 +10016,14 @@ LABEL_4A50:
 	ld hl, $0020
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld a, $34
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, $00CE
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $0024
 	call ShowDialogue_B2
 	ld a, ($C305)
@@ -10036,11 +10031,11 @@ LABEL_4A50:
 	ld hl, LABEL_4AA3
 	jr nz, +
 	ld hl, LABEL_4AA6
-+:	
++:
 	call LABEL_787B
 	ret
 
-LABEL_4A8C:	
+LABEL_4A8C:
 	ld hl, $019E
 	call ShowDialogue_B2
 	ld a, $34
@@ -10066,7 +10061,7 @@ LABEL_4AA9:
 	ld a, $04
 	ld ($C2E9), a
 	ld hl, $0024
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_4ABE:
@@ -10077,7 +10072,7 @@ LABEL_4ABE:
 	ld a, $05
 	ld ($C2E9), a
 	ld hl, $0024
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_4AD3:
@@ -10088,7 +10083,7 @@ LABEL_4AD3:
 	ld hl, $007C
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $0074
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10096,7 +10091,7 @@ LABEL_4AD3:
 	ld hl, $007E
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $0076
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10104,7 +10099,7 @@ LABEL_4AD3:
 	ld hl, $007E
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $64
 	ld ($C2C5), hl
 	ld hl, $0078
@@ -10114,7 +10109,7 @@ LABEL_4AD3:
 	ld hl, $007C
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld de, $0064
 	ld hl, (Current_money)
 	or a
@@ -10123,12 +10118,12 @@ LABEL_4AD3:
 	ld hl, LABEL_B12_BD57
 	jp ShowDialogue_B12
 
-+:	
++:
 	ld (Current_money), hl
 	ld hl, $007A
 	call ShowDialogue_B2
 	ld a, ItemID_Passport
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	ret z
 	jp Inventory_AddItem
@@ -10139,7 +10134,7 @@ LABEL_4B43:
 	ld hl, $0034
 	jr z, +
 	ld hl, $003A
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_4B52:
@@ -10148,7 +10143,7 @@ LABEL_4B52:
 	ld hl, $003C
 	jr z, +
 	ld hl, $0040
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_4B61:
@@ -10202,9 +10197,9 @@ LABEL_4B9D:
 	jr z, +
 	ld hl, $C604
 	ld (hl), $00
-+:	
++:
 	ld hl, $0058
-++:	
+++:
 	jp ShowDialogue_B2
 
 LABEL_4BBD:
@@ -10214,7 +10209,7 @@ LABEL_4BBD:
 	ld hl, $0060
 	jr z, +
 	ld hl, $005E
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_4BD1:
@@ -10264,7 +10259,7 @@ LABEL_4C0D:
 	ld hl, $028A
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $000A
 	ld ($C2C5), hl
 	ld hl, $0092
@@ -10274,7 +10269,7 @@ LABEL_4C0D:
 	ld hl, $0094
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld a, ItemID_LaconiaPot
 	call Inventory_FindFreeSlot
 	jr nz, +
@@ -10296,11 +10291,11 @@ LABEL_4C0D:
 	ld a, $01
 	ld (Party_curr_num), a
 	ld a, ItemID_Alsulin
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_AddItem
 	jp LABEL_43CF
 
-+:	
++:
 	ld hl, $007C
 	jp ShowDialogue_B2
 
@@ -10322,7 +10317,7 @@ LABEL_4C70:
 	ld a, $85
 	jp LABEL_C97
 
-+:	
++:
 	ld a, $35
 	call LABEL_617D
 	call LABEL_576A
@@ -10332,18 +10327,18 @@ LABEL_4C70:
 	ld a, $37
 	call Inventory_FindFreeSlot
 	jr nz, ++
-+:	
++:
 	ld hl, $029E
 	call ShowDialogue_B2
 	ld hl, $00AA
 	jp ShowDialogue_B2
 
-++:	
+++:
 	ld hl, $00A4
 	call ShowDialogue_B2
 	push bc
 	ld a, ItemID_Letter
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_AddItem
 	pop bc
 	ld a, $37
@@ -10449,7 +10444,7 @@ LABEL_4DAB:
 	ld hl, $00C2
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld a, $24
 	call Inventory_FindFreeSlot
 	jr nz, +
@@ -10459,7 +10454,7 @@ LABEL_4DAB:
 	ld hl, $00BC
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $020E
 	jp ShowDialogue_B2
 
@@ -10471,7 +10466,7 @@ LABEL_4DD4:
 	ld hl, $00C2
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld a, $24
 	call Inventory_FindFreeSlot
 	jr nz, +
@@ -10479,7 +10474,7 @@ LABEL_4DD4:
 	ld hl, $00C4
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $020E
 	jp ShowDialogue_B2
 
@@ -10496,13 +10491,13 @@ LABEL_4DFB:
 	ld hl, $00D8
 	jp ShowDialogue_B2
 
-+:	
++:
 	cp $02
 	jr nc, +
 	ld hl, $00CA
 	jp ShowDialogue_B2
 
-+:	
++:
 	cp $03
 	jr nc, ++
 	ld hl, $04B0
@@ -10514,7 +10509,7 @@ LABEL_4DFB:
 	ld hl, $00DA
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld de, $04B0
 	ld hl, (Current_money)
 	or a
@@ -10523,14 +10518,14 @@ LABEL_4DFB:
 	ld hl, $00D0
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld (Current_money), hl
 	ld a, $03
 	ld ($C504), a
 	ld hl, $0290
 	jp ShowDialogue_B2
 
-++:	
+++:
 	cp $05
 	jr nc, +
 	inc a
@@ -10538,7 +10533,7 @@ LABEL_4DFB:
 	ld hl, $0292
 	jp ShowDialogue_B2
 
-+:	
++:
 	cp $06
 	jr nc, +
 	inc a
@@ -10550,14 +10545,14 @@ LABEL_4DFB:
 	jr z, ++
 	ld hl, $00D6
 	call ShowDialogue_B2
-+:	
++:
 	ld a, $32
 	call Inventory_FindFreeSlot
 	jr z, ++
 	ld hl, $0104
 	jp ShowDialogue_B2
 
-++:	
+++:
 	ld a, $07
 	ld ($C504), a
 	ld hl, $0294
@@ -10593,7 +10588,7 @@ LABEL_4EC5:
 	ld hl, $0116
 	jr nz, +
 	ld hl, $013C
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_4ED9:
@@ -10647,9 +10642,9 @@ LABEL_4F15:
 	jr nz, +
 	ld a, $01
 	ld ($C507), a
-+:	
++:
 	ld hl, $013E
-++:	
+++:
 	jp ShowDialogue_B2
 
 LABEL_4F34:
@@ -10685,7 +10680,7 @@ LABEL_4F58:
 	ld a, $01
 	ld ($C508), a
 	ld hl, $0174
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_4F71:
@@ -10726,7 +10721,7 @@ LABEL_4F9B:
 	ld hl, $019C
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld de, $03E8
 	ld hl, (Current_money)
 	or a
@@ -10735,12 +10730,12 @@ LABEL_4F9B:
 	ld hl, $019A
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld (Current_money), hl
 	ld hl, $0198
 	call ShowDialogue_B2
 	ld a, ItemID_GasShield
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	ret z
 	jp Inventory_AddItem
@@ -10808,7 +10803,7 @@ LABEL_502C:
 	ld hl, $01DA
 	jr z, +
 	ld hl, $01D8
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_5040:
@@ -10851,7 +10846,7 @@ LABEL_5070:
 	ld hl, $01F0
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld de, $0190
 	ld hl, (Current_money)
 	or a
@@ -10860,7 +10855,7 @@ LABEL_5070:
 	ld hl, $01F2
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld (Current_money), hl
 	ld a, $01
 	ld ($C509), a
@@ -10874,7 +10869,7 @@ LABEL_50A6:
 	ld hl, $01FC
 	jr z, +
 	ld hl, $01FE
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_50BA:
@@ -10892,7 +10887,7 @@ LABEL_50C6:
 	ld hl, $0206
 	jr z, +
 	ld hl, $0208
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_50DA:
@@ -10903,7 +10898,7 @@ LABEL_50DA:
 	ld hl, $020C
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld a, $24
 	call Inventory_FindFreeSlot
 	jr nz, +
@@ -10911,10 +10906,10 @@ LABEL_50DA:
 	ld hl, $020A
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $020E
 	jp ShowDialogue_B2
-	
+
 
 LABEL_5101:
 	ld	hl, $210
@@ -10934,7 +10929,7 @@ LABEL_510D:
 	ld hl, LABEL_B12_B7E3
 	jp ShowDialogue_B12
 
-+:	
++:
 	ld de, $0118
 	ld hl, (Current_money)
 	or a
@@ -10943,19 +10938,19 @@ LABEL_510D:
 	ld hl, LABEL_B12_BD57
 	jp ShowDialogue_B12
 
-+:	
++:
 	ld a, (Inventory_curr_num)
-	cp $18
+	cp InventoryMaxNum
 	jr c, +
 	ld hl, LABEL_B12_B813
 	jp ShowDialogue_B12
 
-+:	
++:
 	ld (Current_money), hl
 	ld hl, $020A
 	call ShowDialogue_B2
 	ld a, ItemID_Cake
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	ret z
 	jp Inventory_AddItem
@@ -10969,7 +10964,7 @@ LABEL_5157:
 	ld hl, $00AC
 	jr nz, +
 	ld hl, $00B2
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_516F:
@@ -11013,7 +11008,7 @@ LABEL_51B1:
 	jr nz, +
 	ld (hl), $02
 	ld de, $00F6
-+:	
++:
 	ex de, hl
 	jp ShowDialogue_B2
 
@@ -11036,14 +11031,14 @@ LABEL_51DC:
 	ld hl, $00DE
 	jp ShowDialogue_B2
 
-+:	
++:
 	cp $01
 	jr nz, +
 	inc (hl)
 	ld hl, $00E0
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $00E2
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11052,7 +11047,7 @@ LABEL_51DC:
 	ld hl, $C504
 	ld (hl), $01
 	ld hl, $00E4
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_521D:
@@ -11069,7 +11064,7 @@ LABEL_521D:
 	ld hl, $0024
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $00E8
 	call ShowDialogue_B2
 	call LABEL_3464
@@ -11083,7 +11078,7 @@ LABEL_5249:
 	ld hl, $00C2
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld a, $24
 	call Inventory_FindFreeSlot
 	jr nz, +
@@ -11091,7 +11086,7 @@ LABEL_5249:
 	ld hl, $00EA
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $00CE
 	jp ShowDialogue_B2
 
@@ -11102,7 +11097,7 @@ LABEL_5270:
 	ld hl, $013C
 	jr z, +
 	ld hl, $0124
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_5284:
@@ -11120,7 +11115,7 @@ LABEL_5290:
 	ld hl, $014C
 	jr z, +
 	ld hl, $013C
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_52A4:
@@ -11156,11 +11151,11 @@ LABEL_52D0:
 	call ShowYesNoPrompt
 	jr z, +
 
-LABEL_52DB:	
+LABEL_52DB:
 	ld hl, $0152
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $014E
 	call ShowDialogue_B2
 	ld hl, $0150
@@ -11182,7 +11177,7 @@ LABEL_52DB:
 	ld hl, $0158
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $015A
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11190,7 +11185,7 @@ LABEL_52DB:
 	ld hl, $015C
 	call ShowDialogue_B2
 	ld a, ItemID_Crystal
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	ret z
 	jp Inventory_AddItem
@@ -11202,7 +11197,7 @@ LABEL_5337:
 	ld hl, $0162
 	jr z, +
 	ld hl, $0164
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_534B:
@@ -11228,11 +11223,11 @@ LABEL_534B:
 	ld (hl), $0A ; GameMode_LoadDungeon
 	ret
 
-+:	
++:
 	ld hl, $00E8
 	call ShowDialogue_B2
 	call LABEL_3464
-LABEL_5389:	
+LABEL_5389:
 	call LABEL_100F
 	ld a, ($C800)
 	or a
@@ -11280,7 +11275,7 @@ LABEL_53BF:
 	call ShowDialogue_B2
 	jr ++
 
-+:	
++:
 	ld a, $36
 	call Inventory_FindFreeSlot
 	jr nz, +
@@ -11292,10 +11287,10 @@ LABEL_53BF:
 	ld hl, $009E
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $00A0
 	call ShowDialogue_B2
-++:	
+++:
 	pop hl
 	call LABEL_3464
 	call LABEL_15DC
@@ -11309,18 +11304,18 @@ LABEL_5401:
 	ld hl, $0246
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld a, $3A
 	call Inventory_FindFreeSlot
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld a, ItemID_EclipseTorch
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_AddItem
 	ld hl, $0244
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $0248
 	jp ShowDialogue_B2
 
@@ -11335,11 +11330,11 @@ LABEL_5430:
 	jr z, +
 	call Inventory_FindFreeSlot
 	jr nz, ++
-+:	
++:
 	ld hl, $0258
 	jp ShowDialogue_B2
 
-++:	
+++:
 	ld a, (Party_curr_num)
 	cp $03
 	jr nc, ++
@@ -11349,10 +11344,10 @@ LABEL_5430:
 	ld hl, $025E
 	jr z, +
 	ld hl, $0260
-+:	
++:
 	jp ShowDialogue_B2
 
-++:	
+++:
 	ld hl, $024C
 	call ShowDialogue_B2
 	ld a, (Noah_stats)
@@ -11361,7 +11356,7 @@ LABEL_5430:
 	ld hl, $02A8
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $024E
 	call ShowDialogue_B2
 	call LABEL_3464
@@ -11396,11 +11391,11 @@ LABEL_5430:
 	ld hl, $0256
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $0250
 	call ShowDialogue_B2
 	ld a, ItemID_FradeMantle
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	jp Inventory_AddItem
 
 LABEL_54D0:
@@ -11415,8 +11410,8 @@ LABEL_54D0:
 	ld ($C517), a
 	ld hl, $0266
 	jp ShowDialogue_B2
-	
-LABEL_54EF:	
+
+LABEL_54EF:
 	call LABEL_100F
 	ld a, (Game_mode)
 	cp $02 ; GameMode_LoadIntro
@@ -11438,7 +11433,7 @@ LABEL_54FB:
 	ld hl, $026E
 	jr z, +
 	ld hl, $0270
-+:	
++:
 	call ShowDialogue_B2
 	call LABEL_3464
 	call LABEL_54EF
@@ -11459,14 +11454,14 @@ LABEL_5538:
 	pop hl
 	ret
 
-LABEL_553D:	
+LABEL_553D:
 	ld hl, LABEL_B12_B569
 	call ShowDialogue_B12
 	jp LABEL_3464
 
 LABEL_5546:
 	ld a, ItemID_Hapsby
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	jr z, LABEL_553D
 	call LABEL_3464
@@ -11483,11 +11478,11 @@ LABEL_5566:
 	or a
 	jr z, LABEL_553D
 	ld a, ItemID_Hapsby
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	jr nz, LABEL_553D
 	ld a, ItemID_Hovercraft
-	ld ($C2C4), a
+	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	jr z, LABEL_553D
 	ld hl, $0178
@@ -11536,7 +11531,7 @@ LABEL_55CD:
 	ld hl, $022C
 	jr z, +
 	ld hl, $022A
-+:	
++:
 	jp ShowDialogue_B2
 
 LABEL_55E1:
@@ -11553,7 +11548,7 @@ LABEL_55EF:
 	ld hl, $0282
 	jp ShowDialogue_B2
 
-+:	
++:
 	ld hl, $0284
 	call ShowDialogue_B2
 	ld a, ($C301)
@@ -11561,10 +11556,10 @@ LABEL_55EF:
 	ld hl, LABEL_5613
 	jr nc, +
 	ld hl, LABEL_5616
-+:	
++:
 	call LABEL_787B
 	ret
-		
+
 LABEL_5613:
 .db $07, $1B, $1B
 
@@ -11619,7 +11614,7 @@ LABEL_5666:
 	ld hl, $0212
 	jr z, +
 	ld hl, $0230
-+:	
++:
 	call ShowDialogue_B2
 	call LABEL_3464
 	pop hl
@@ -11633,9 +11628,9 @@ LABEL_56A2:
 	ld a, ($C2F0)
 	ld d, a
 	ld e, $00
--:	
+-:
 	ld a, e
-	ld ($C2C2), a
+	ld (CurrentCharacter), a
 	rr d
 	push de
 	ld hl, LABEL_B12_B728
@@ -11646,7 +11641,7 @@ LABEL_56A2:
 	cp $04
 	jr nz, -
 	ld b, $04
--:	
+-:
 	ld a, b
 	dec a
 	call LABEL_187D
@@ -11654,7 +11649,7 @@ LABEL_56A2:
 	djnz -
 	jp LABEL_1602
 
-+:	
++:
 	jp LABEL_3464
 
 LABEL_56CD:
@@ -11707,11 +11702,11 @@ LABEL_56F9:
 	ld hl, LABEL_B12_B790
 	jr z, +
 	ld hl, LABEL_B12_B785
-+:	
++:
 	call ShowDialogue_B12
 	jr LABEL_56F9
 
-++:	
+++:
 	ld a, d
 	or a
 	ld hl, LABEL_B12_B77B
@@ -11720,7 +11715,7 @@ LABEL_56F9:
 	ld hl, LABEL_B12_B76F
 	jr z, +
 	ld hl, LABEL_B12_B761
-+:	
++:
 	push de
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
@@ -11951,7 +11946,7 @@ LABEL_588B:
 	ld	hl, $C980
 	ld	de, $7F80
 	rst	$08
-	
+
 LABEL_589E:
 .REPEAT 64
 	outi
@@ -11968,9 +11963,9 @@ LABEL_595E:
 .ENDR
 	ret
 
-LABEL_599F:	
+LABEL_599F:
 	ld b, $01
-LABEL_59A1:	
+LABEL_59A1:
 	push bc
 	call LABEL_5818
 	inc (iy+0)
@@ -11981,7 +11976,7 @@ LABEL_59A1:
 	ld a, $84
 	jr nz, +
 	ld a, $80
-+:	
++:
 	ld (iy+4), a
 	ld (iy+18), $01
 	ld (iy+1), b
@@ -11991,7 +11986,7 @@ LABEL_59A1:
 	ld a, $00
 	jr nz, +
 	ld a, $03
-+:	
++:
 	ld (iy+10), a
 	ld a, $FF
 	ret
@@ -12077,13 +12072,13 @@ LABEL_5A70:
 	ld a, $FF
 	ret
 
-+:	
++:
 	call LABEL_7143
 	ld a, ($C264)
 	and $0F
 	ret z
 	ld c, $FF
--:	
+-:
 	rrca
 	inc c
 	jp nc, -
@@ -12117,40 +12112,40 @@ LABEL_5A98:
 	and $0F
 	jp z, LABEL_5AFC
 	ld b, $FF
--:	
+-:
 	rrca
 	inc b
 	jp nc, -
 	ld (iy+18), b
 	jp LABEL_5B30
 
-+:	
++:
 	bit 0, (iy+10)
 	jr z, +
 	set 1, (iy+10)
-+:	
++:
 	ld a, (iy-28)
 	cp (iy+4)
 	jr nz, +
 	ld a, (iy-30)
 	cp (iy+2)
 	jr z, ++
-+:	
++:
 	bit 1, (iy-22)
 	jr z, ++
 	set 0, (iy+10)
-++:	
+++:
 	ld a, (iy+18)
 	ld (iy+19), a
 	ld a, (iy-13)
 	ld (iy+18), a
 	jp LABEL_5B30
 
-LABEL_5AFC:	
+LABEL_5AFC:
 	ld a, ($C264)
 	and $0F
 	jp nz, LABEL_5B30
---:	
+--:
 	ld a, (iy+18)
 	ld (iy+19), a
 	ld a, c
@@ -12160,26 +12155,26 @@ LABEL_5AFC:
 	and ButtonUp_Mask|ButtonDown_Mask|ButtonLeft_Mask|ButtonRight_Mask
 	jr z, +
 	ld l, $FF
--:	
+-:
 	rrca
 	inc l
 	jp nc, -
 	jr ++
 
-+:	
++:
 	ld a, c
 	or a
 	ld l, (iy+18)
 	jr z, ++
 	ld l, (iy-13)
-++:	
+++:
 	ld h, $00
 	add hl, de
 	ld a, (hl)
 	ld (iy+16), a
 	ret
 
-LABEL_5B30:	
+LABEL_5B30:
 	ld a, c
 	or a
 	call nz, +
@@ -12205,28 +12200,28 @@ LABEL_5B30:
 	ld (iy+16), a
 	ret
 
-+:	
++:
 	bit 0, (iy+10)
 	ld a, (iy+18)
 	call nz, +
 	ld a, ($C812)
 	xor $01
-+:	
++:
 	cp $02
 	jp nc, ++
 	or a
 	jr nz, +
 	dec a
-+:	
++:
 	add a, (iy+2)
 	ld (iy+2), a
 	ret
 
-++:	
+++:
 	sub $02
 	jr nz, +
 	dec a
-+:	
++:
 	add a, (iy+4)
 	ld (iy+4), a
 	ret
@@ -12278,7 +12273,7 @@ LABEL_5BCE:
 	ld a, $FF
 	ret
 
-+:	
++:
 	dec (iy+14)
 	ret p
 	ld a, (iy+24)
@@ -12290,7 +12285,7 @@ LABEL_5BCE:
 	ld (iy+1), a
 	ret
 
-+:	
++:
 	xor a
 	ld (iy+0), a
 	pop hl
@@ -12330,12 +12325,12 @@ LABEL_5C63:
 	jr nc, +
 	cp b
 	jr c, ++
-+:	
++:
 	rrca
 	ld c, $3E
 	jr nc, ++
 	ld c, $43
-++:	
+++:
 	ld (iy+15), c
 	ld a, $FF
 	ret
@@ -12345,7 +12340,7 @@ LABEL_5C99:
 	ld a, $FF
 	ret
 
-+:	
++:
 	bit 0, (iy+10)
 	ret z
 	bit 1, (iy+10)
@@ -12362,7 +12357,7 @@ LABEL_5C99:
 	set 1, (iy+10)
 	ret
 
-+:	
++:
 	bit 2, (iy+10)
 	jr nz, ++
 	dec (iy+14)
@@ -12376,16 +12371,16 @@ LABEL_5C99:
 	ld (iy+0), $00
 	ret
 
-+:	
++:
 	cp $3E
 	ld a, $B1
 	jr z, +
 	inc a
-+:	
++:
 	ld ($C004), a
 	ret
 
-++:	
+++:
 	dec (iy+14)
 	ret p
 	ld (iy+14), $03
@@ -12405,7 +12400,7 @@ LABEL_5C99:
 	ld (iy+0), $00
 	ret
 
-+:	
++:
 	ld a, (iy+1)
 	inc a
 	ld (iy+1), a
@@ -12426,7 +12421,7 @@ LABEL_5D30:
 	jr nz, +
 	ld a, $88
 	ld de, $3050
-+:	
++:
 	ld (iy+2), d
 	ld (iy+4), e
 	ld (iy+1), a
@@ -12441,7 +12436,7 @@ LABEL_5D5B:
 	ld a, $FF
 	ret
 
-+:	
++:
 	dec (iy+14)
 	ret p
 	ld (iy+14), $07
@@ -12458,11 +12453,11 @@ LABEL_5D5B:
 	ld a, (iy+4)
 	cp $90
 	ret nz
--:	
+-:
 	ld (iy+0), $00
 	ret
 
-+:	
++:
 	inc (iy+2)
 	ld a, (iy+2)
 	cp $78
@@ -12477,14 +12472,14 @@ LABEL_5DA0:
 	ld a, (iy+1)
 	ret
 
-+:	
++:
 	ld a, ($C29F)
 	or a
 	ret z
 	ld a, ($C800)
 	or a
 	ret nz
-LABEL_5DB1:	
+LABEL_5DB1:
 	dec (iy+14)
 	ret p
 	ld a, (iy+24)
@@ -12500,7 +12495,7 @@ LABEL_5DB1:
 	jr nz, LABEL_5DD8
 	ld e, (iy+25)
 	ld d, (iy+26)
-LABEL_5DD8:	
+LABEL_5DD8:
 	add hl, de
 	ld a, (hl)
 	or a
@@ -12512,13 +12507,13 @@ LABEL_5DD8:
 	ld ($C2ED), a
 	ld c, a
 	ld a, (de)
-+:	
++:
 	inc c
 	ld (iy+13), c
 	ld (iy+1), a
 	ret
 
-++:	
+++:
 	set 0, (iy+10)
 	inc c
 	ld (iy+13), c
@@ -12531,7 +12526,7 @@ LABEL_5DD8:
 	ld ($C800), a
 	ret
 
-+:	
++:
 	ld a, ($C2ED)
 	or a
 	jr nz, LABEL_5E1D
@@ -12539,7 +12534,7 @@ LABEL_5DD8:
 	ld ($C004), a
 	ret
 
-LABEL_5E1D:	
+LABEL_5E1D:
 	ld a, $AE
 	ld ($C004), a
 	call LABEL_7BC4
@@ -12560,7 +12555,7 @@ LABEL_5E2E:
 	ld hl, LABEL_5EA2
 	jr z, +
 	ld hl, LABEL_5EA8
-+:	
++:
 	ld a, (hl)
 	ld ($C004), a
 	inc hl
@@ -12591,7 +12586,7 @@ LABEL_5E72:
 	ld a, $FF
 	ret
 
-+:	
++:
 	dec (iy+14)
 	ret p
 	ld a, (iy+24)
@@ -12603,7 +12598,7 @@ LABEL_5E72:
 	ld (iy+1), a
 	ret
 
-+:	
++:
 	xor a
 	ld (iy+0), a
 	pop hl
@@ -12627,7 +12622,7 @@ LABEL_5EAE:
 	ld a, (iy+1)
 	ret
 
-+:	
++:
 	ld a, ($C29F)
 	or a
 	ret z
@@ -12648,7 +12643,7 @@ LABEL_5EAE:
 	ld de, LABEL_B03_9511
 	jr z, +
 	ld de, LABEL_B03_951C
-+:	
++:
 	ld c, (iy+13)
 	ld l, c
 	ld h, $00
@@ -12659,7 +12654,7 @@ LABEL_5EEA:
 	ld a, (iy+1)
 	ret
 
-+:	
++:
 	ld a, ($C29F)
 	or a
 	ret z
@@ -12675,7 +12670,7 @@ LABEL_5EEA:
 	jr z, LABEL_5F11
 	ld hl, LABEL_B18_BF80
 
-LABEL_5F11:	
+LABEL_5F11:
 	ld a, :Bank24
 	ld ($FFFF), a
 	ld de, $7A5C
@@ -12685,7 +12680,7 @@ LABEL_5F11:
 	ei
 	ret
 
-+:	
++:
 	cp $03
 	jr nc, ++
 	call LABEL_5DB1
@@ -12693,7 +12688,7 @@ LABEL_5F11:
 	cp $13
 	jr nz, +
 	ld (iy+2), $47
-+:	
++:
 	ld a, ($C29F)
 	or a
 	ret nz
@@ -12703,7 +12698,7 @@ LABEL_5F11:
 	ld (iy+2), $4F
 	ret
 
-++:	
+++:
 	dec (iy+11)
 	ret p
 	ld (iy+11), $07
@@ -12735,7 +12730,7 @@ LABEL_5F63:
 	jr c, +
 	cp $C0
 	ccf
-+:	
++:
 	ld a, $00
 	adc a, d
 	and $07
@@ -12760,7 +12755,7 @@ LABEL_5F63:
 	jr z, +
 	srl b
 	srl b
-+:	
++:
 	call LABEL_5B1
 	cp b
 	jp nc, LABEL_5FF9
@@ -12776,7 +12771,7 @@ LABEL_5F63:
 	or a
 	jr z, +
 	ld a, $0A
-+:	
++:
 	add a, (hl)
 	ld l, a
 	ld h, $00
@@ -13117,7 +13112,7 @@ LABEL_61F5:
 	ld (hl), :Bank28
 	ld ix, $C800
 	ld b, $04
--:	
+-:
 	ld a, (ix+16)
 	cp (ix+17)
 	jp z, +
@@ -13127,7 +13122,7 @@ LABEL_61F5:
 	or a
 	ld hl, LABEL_621F-2
 	jp nz, GetPtrAndJump
-+:	
++:
 	ld de, $0020
 	add ix, de
 	djnz -
@@ -13210,7 +13205,7 @@ LABEL_6293:
 	jr z, +
 	cp $09 ; GameMode_Map
 	ret nz
-+:	
++:
 	ld hl, $FFFF
 	ld (hl), :Bank18
 	ld l, $00
@@ -13255,7 +13250,7 @@ LABEL_62BC:
 	call LABEL_630A
 	ret
 
-LABEL_630A:	
+LABEL_630A:
 	ld a, (hl)
 	or a
 	ret z
@@ -13272,9 +13267,9 @@ LABEL_630A:
 	dec (hl)
 	jr ++
 
-+:	
++:
 	inc (hl)
-++:	
+++:
 	ld a, (hl)
 	and $07
 	ld l, a
@@ -13295,9 +13290,9 @@ LABEL_630A:
 	rst $08
 	ld c, $BE
 	ld a, b
---:	
+--:
 	ld b, $20
--:	
+-:
 	outi
 	nop
 	jp nz, -
@@ -13316,9 +13311,9 @@ LABEL_6345:
 .dw	LABEL_B14_A568
 .dw	LABEL_B14_A868
 .dw	LABEL_B14_A9E8
-	
 
-LABEL_6355:	
+
+LABEL_6355:
 .dw	LABEL_B14_AB68
 .dw	LABEL_B14_AB68
 .dw	LABEL_B14_ABC8
@@ -13327,9 +13322,9 @@ LABEL_6355:
 .dw	LABEL_B14_AC28
 .dw	LABEL_B14_AC88
 .dw	LABEL_B14_AC88
-	
 
-LABEL_6365:	
+
+LABEL_6365:
 .dw	LABEL_B14_BAE8
 .dw	LABEL_B14_BAE8
 .dw	LABEL_B14_BB68
@@ -13338,9 +13333,9 @@ LABEL_6365:
 .dw	LABEL_B14_BBE8
 .dw	LABEL_B14_BB68
 .dw	LABEL_B14_BB68
-	
 
-LABEL_6375:	
+
+LABEL_6375:
 .dw	LABEL_B14_ACE8
 .dw	LABEL_B14_ACE8
 .dw	LABEL_B14_ADA8
@@ -13349,9 +13344,9 @@ LABEL_6375:
 .dw	LABEL_B14_AE68
 .dw	LABEL_B14_AF28
 .dw	LABEL_B14_AF28
-	
 
-LABEL_6385:	
+
+LABEL_6385:
 .dw	LABEL_B14_AFE8
 .dw	LABEL_B14_AFE8
 .dw	LABEL_B14_B0E8
@@ -13360,9 +13355,9 @@ LABEL_6385:
 .dw	LABEL_B14_B1E8
 .dw	LABEL_B14_B0E8
 .dw	LABEL_B14_B0E8
-	
 
-LABEL_6395:	
+
+LABEL_6395:
 .dw	LABEL_B14_B4E8
 .dw	LABEL_B14_B4E8
 .dw	LABEL_B14_B4E8
@@ -13414,7 +13409,7 @@ LABEL_63CF:
 	cp $09
 	jr c, +
 	xor a
-+:	
++:
 	ld (hl), a
 	ld hl, $FFFF
 	ld (hl), :Bank16
@@ -13440,7 +13435,7 @@ LABEL_63F6:
 	cp $0E
 	jr c, +
 	xor a
-+:	
++:
 	ld (hl), a
 	ld hl, $FFFF
 	ld (hl), :Bank16
@@ -13454,7 +13449,7 @@ LABEL_63F6:
 	add hl, de
 	ld b, $03
 
-LABEL_641B:	
+LABEL_641B:
 	push bc
 	ld e, (hl)
 	ld d, $02
@@ -13476,7 +13471,7 @@ LABEL_641B:
 	ld hl, LABEL_B16_A8F6
 	add hl, de
 	ld bc, $8000|Port_VDPData
--:	
+-:
 	outi
 	jp nz, -
 	pop hl
@@ -13495,7 +13490,7 @@ LABEL_6442:
 	cp $06
 	jr c, +
 	xor a
-+:	
++:
 	ld (hl), a
 	ld hl, $FFFF
 	ld (hl), :Bank17
@@ -13510,7 +13505,7 @@ LABEL_6442:
 	ld de, $4020
 	rst $08
 	ld b, $04
---:	
+--:
 	push bc
 	ld d, (hl)
 	inc hl
@@ -13521,14 +13516,14 @@ LABEL_6442:
 	ex de, hl
 	add hl, bc
 	ld bc, $8000|Port_VDPData
--:	
+-:
 	outi
 	jp nz, -
 	pop bc
 	ex de, hl
 	djnz --
 	ld b, $02
---:	
+--:
 	push bc
 	ld d, (hl)
 	inc hl
@@ -13541,7 +13536,7 @@ LABEL_6442:
 	ex de, hl
 	add hl, bc
 	ld bc, $4000|Port_VDPData
--:	
+-:
 	outi
 	jp nz, -
 	pop bc
@@ -13572,7 +13567,7 @@ LABEL_64A3:
 	ld hl, LABEL_65C6
 	add hl, de
 	ld bc, $0300|Port_VDPData
--:	
+-:
 	outi
 	jp nz, -
 	ret
@@ -13600,49 +13595,49 @@ LABEL_64CF:
 	ld hl, LABEL_65CE
 	add hl, de
 	ld bc, $0400|Port_VDPData
--:	
+-:
 	outi
 	jp nz, -
 	ld hl, LABEL_65D6
 	add hl, de
 	ld b, $04
--:	
+-:
 	outi
 	jp nz, -
 	ret
 
 
-LABEL_6506:	
+LABEL_6506:
 .db	$01, $15, $25, $09, $29, $0A, $29, $0A, $01, $00, $05, $0B, $01, $00, $05, $0B
 .db	$05, $01, $09, $0D, $05, $01, $09, $0D, $09, $02, $0D, $0D, $09, $02, $0D, $0D
 .db $0D, $03, $11, $0E, $0D, $03, $11, $0E, $11, $04, $15, $0E, $11, $04, $15, $0E
 .db $15, $05, $19, $0F, $15, $05, $19, $0F, $19, $06, $21, $0F, $19, $06, $21, $0F
 .db	$21, $08, $01, $10, $25, $0C, $29, $11
-	
 
-LABEL_654E:	
+
+LABEL_654E:
 .db	$25, $09, $29, $0A, $29, $0A, $25, $09, $29, $0A, $29, $0A, $25, $09, $29, $0C
 .db	$29, $0C, $21, $08, $25, $0F, $29, $14, $21, $0F, $25, $13, $29, $14, $19, $06
 .db	$1D, $0F, $21, $12, $15, $05, $19, $0E, $1D, $12, $15, $0E, $19, $12, $19, $12
 .db	$15, $0E, $19, $12, $19, $12, $15, $05, $19, $0E, $1D, $12, $19, $06, $1D, $0F
 .db	$21, $12, $1D, $07, $21, $0F, $25, $13, $21, $08, $25, $0C, $29, $11, $25, $09
 .db	$29, $0C, $29, $0C
-	
-LABEL_65A2:	
+
+LABEL_65A2:
 .db	$00, $02, $05, $08, $15, $18, $00, $03, $06, $09, $16, $14, $01, $04, $07, $05
 .db	$17, $14, $02, $00, $08, $05, $18, $15, $03, $00, $09, $06, $14, $16, $04, $01
 .db	$05, $07, $14, $17
-	
 
-LABEL_65C6:	
+
+LABEL_65C6:
 .db	$3F, $3C, $38, $38, $3F, $3C, $38, $38
 
 
-LABEL_65CE:	
+LABEL_65CE:
 .db	$06, $06, $06, $06, $06, $06, $06, $06
-	
 
-LABEL_65D6:	
+
+LABEL_65D6:
 .db	$06, $06, $06, $06, $25, $2A, $3E, $3F, $06, $06, $06, $06, $06, $06, $06, $06
 .db	$06, $06, $06, $06, $06, $06, $06, $06
 
@@ -14000,7 +13995,7 @@ LABEL_684A:
 	ld (hl), :Bank03
 	ld hl, LABEL_B03_AF5C
 	ld de, $0006
--:	
+-:
 	ld a, (hl)
 	cp $FF
 	jr z, +++
@@ -14010,15 +14005,15 @@ LABEL_684A:
 	ld a, (hl)
 	cp c
 	jr z, ++
-+:	
++:
 	add hl, de
 	jp -
 
-++:	
+++:
 	xor a
 	ret
 
-+++:	
++++:
 	ld a, $FF
 	or a
 	ret
@@ -14047,13 +14042,13 @@ LABEL_688C:
 	call LABEL_5B1
 	rrca
 	jr nc, ++
-+:	
++:
 	call LABEL_67E2
 	jr +++
 
-++:	
+++:
 	call LABEL_67B7
-+++:	
++++:
 	call LABEL_6792
 	ld b, $01
 	call LABEL_6963
@@ -14086,8 +14081,6 @@ LABEL_68D4:
 LABEL_68E1:
 	add  hl, de
 	jp   LABEL_68D4
-
-	
 	ret
 
 
@@ -14324,7 +14317,7 @@ LABEL_6A58:
 	ld   l, a
 	ld   a, $FF
 	ld   ($C2D2), a
-	
+
 -:
 	ld   a, (hl)
 	cp   $FF
@@ -14776,7 +14769,7 @@ LABEL_6D6E:
 	inc  de
 	inc  hl
 	djnz	LABEL_6D6E
-	
+
 LABEL_6D7F:
 	ld   hl, $FFFF
 	ld   (hl), :Bank03
@@ -15056,7 +15049,7 @@ LABEL_7143:
 	pop bc
 	ret
 
-+:	
++:
 	ld hl, $C265
 	ld a, (hl)
 	dec (hl)
@@ -15065,7 +15058,7 @@ LABEL_7143:
 	ld c, a
 	jp ++
 
-+:	
++:
 	ld (hl), $00
 	ld a, (Ctrl_1_held)
 	and ButtonUp_Mask|ButtonDown_Mask|ButtonLeft_Mask|ButtonRight_Mask
@@ -15076,15 +15069,15 @@ LABEL_7143:
 	ld a, $0F
 	jr z, +
 	ld a, $07
-+:	
++:
 	ld ($C265), a
-++:	
+++:
 	ld de, $0001
 	ld a, ($C30E)
 	or a
 	jr z, +
 	inc e
-+:	
++:
 	ld a, ($C304)
 	ld d, a
 	ld hl, ($C305)
@@ -15100,7 +15093,7 @@ LABEL_7143:
 	cp $E0
 	jr c, +
 	sub $20
-+:	
++:
 	ld d, a
 	ld a, l
 	sub e
@@ -15108,12 +15101,12 @@ LABEL_7143:
 	jr c, +
 	sub $40
 	dec h
-+:	
++:
 	ld l, a
 	ld a, $01
 	jp +++
 
-++:	
+++:
 	bit 1, c
 	jr z, ++++
 	ld a, $04
@@ -15125,7 +15118,7 @@ LABEL_7143:
 	cp $E0
 	jr c, +
 	add a, $20
-+:	
++:
 	ld d, a
 	ld a, l
 	add a, e
@@ -15133,10 +15126,10 @@ LABEL_7143:
 	jr c, +
 	add a, $40
 	inc h
-+:	
++:
 	ld l, a
 	ld a, $02
-+++:	
++++:
 	ld ($C264), a
 	ld a, $FF
 	ld ($C2D2), a
@@ -15150,7 +15143,7 @@ LABEL_7143:
 	call nz, LABEL_723D
 	jp LABEL_733A
 
-++++:	
+++++:
 	ld d, $00
 	ld hl, ($C301)
 	ld b, h
@@ -15165,7 +15158,7 @@ LABEL_7143:
 	ld a, $04
 	jp ++
 
-+:	
++:
 	bit 3, c
 	jr z, +++
 	ld a, $08
@@ -15174,7 +15167,7 @@ LABEL_7143:
 	jr nz, +++
 	add hl, de
 	ld a, $08
-++:	
+++:
 	ld ($C264), a
 	ld a, $FF
 	ld ($C2D2), a
@@ -15189,7 +15182,7 @@ LABEL_7143:
 	jp nz, LABEL_723D
 	jp LABEL_72A6
 
-+++:	
++++:
 	ld a, $D6
 	ld ($C004), a
 	xor a
@@ -15249,9 +15242,9 @@ LABEL_723D:
 	ld h, (hl)
 	ld l, a
 	ld de, $CF00
-+:	
++:
 	ld b, $00
---:	
+--:
 	ld a, (hl)
 	or a
 	ret z
@@ -15259,14 +15252,14 @@ LABEL_723D:
 	ld b, a
 	inc hl
 	ld a, (hl)
--:	
+-:
 	ld (de), a
 	inc de
 	djnz -
 	inc hl
 	jp --
 
-+:	
++:
 	and $7F
 	ld c, a
 	inc hl
@@ -15288,7 +15281,7 @@ LABEL_72A6:
 	and $08
 	jr nz, +
 	ld c, $08
-+:	
++:
 	ld a, ($C304)
 	and $F0
 	ld l, a
@@ -15314,7 +15307,7 @@ LABEL_72A6:
 	add a, c
 	jr nc, +
 	inc h
-+:	
++:
 	rrca
 	rrca
 	rrca
@@ -15326,9 +15319,9 @@ LABEL_72A6:
 	and $08
 	jr z, +
 	inc h
-+:	
++:
 	ld b, $0E
--:	
+-:
 	push bc
 	push hl
 	ld l, (hl)
@@ -15358,7 +15351,7 @@ LABEL_72A6:
 	sub $C0
 	inc h
 	inc h
-+:	
++:
 	ld l, a
 	ld a, $3C
 	add a, e
@@ -15368,7 +15361,7 @@ LABEL_72A6:
 	sub $D7
 	jr nc, +
 	add a, $07
-+:	
++:
 	add a, $D0
 	ld d, a
 	pop bc
@@ -15389,10 +15382,10 @@ LABEL_733A:
 	cp $20
 	jr c, +
 	add a, $20
-+:	
++:
 	ld b, $C0
 	add a, b
-++:	
+++:
 	and $F0
 	ld l, a
 	ld h, $00
@@ -15430,10 +15423,10 @@ LABEL_733A:
 	jr nc, +
 	add hl, bc
 	ld a, $CC
-+:	
++:
 	ld h, a
 	ld b, $10
--:	
+-:
 	push bc
 	push hl
 	ld l, (hl)
@@ -15463,7 +15456,7 @@ LABEL_733A:
 	ld a, e
 	sub $40
 	ld e, a
-+:	
++:
 	pop hl
 	ld a, l
 	and $F0
@@ -15475,7 +15468,7 @@ LABEL_733A:
 	jr z, +
 	inc h
 	ld l, b
-+:	
++:
 	pop bc
 	djnz -
 	ret
@@ -15497,7 +15490,7 @@ LABEL_73D0:
 	and $08
 	jr nz, +
 	ld c, $08
-+:	
++:
 	ld a, ($C301)
 	add a, c
 	rrca
@@ -15508,7 +15501,7 @@ LABEL_73D0:
 	ld d, $78
 	ld h, $D0
 	ld bc, $1C00|Port_VDPData
--:	
+-:
 	push bc
 	rst $08
 	nop
@@ -15529,7 +15522,7 @@ LABEL_73D0:
 	djnz -
 	ret
 
-++:	
+++:
 	ld a, b
 	and $01
 	ld a, ($C304)
@@ -15538,10 +15531,10 @@ LABEL_73D0:
 	cp $20
 	jr c, +
 	add a, $20
-+:	
++:
 	ld b, $C0
 	add a, b
-++:	
+++:
 	and $F8
 	ld l, a
 	ld h, $00
@@ -15557,7 +15550,7 @@ LABEL_73D0:
 	add a, $D0
 	ld h, a
 	ld bc, $4000|Port_VDPData
--:	
+-:
 	outi
 	nop
 	jp nz, -
@@ -15600,7 +15593,7 @@ LABEL_7481:
 	push bc
 	push hl
 	ld b, $10
--:	
+-:
 	push bc
 	push hl
 	ld l, (hl)
@@ -15630,7 +15623,7 @@ LABEL_7481:
 	ld a, e
 	sub $40
 	ld e, a
-+:	
++:
 	pop hl
 	ld a, l
 	and $F0
@@ -15642,7 +15635,7 @@ LABEL_7481:
 	jr z, +
 	inc h
 	ld l, b
-+:	
++:
 	pop bc
 	djnz -
 	ld a, $80
@@ -15653,7 +15646,7 @@ LABEL_7481:
 	sub $D7
 	jr nc, +
 	add a, $07
-+:	
++:
 	add a, $D0
 	ld d, a
 	pop hl
@@ -15664,7 +15657,7 @@ LABEL_7481:
 	sub $C0
 	inc h
 	inc h
-+:	
++:
 	ld l, a
 	pop bc
 	djnz LABEL_7481
@@ -15691,13 +15684,13 @@ LABEL_74E4:
 	pop bc
 	ret
 
-+:	
++:
 	xor a
 	pop hl
 	pop bc
 	ret
 
-++:	
+++:
 	cp $04
 	jr nz, ++
 	push de
@@ -15713,13 +15706,13 @@ LABEL_74E4:
 	ld a, (de)
 	call LABEL_7764
 	and $01
-+:	
++:
 	pop de
 	pop hl
 	pop bc
 	ret
 
-++:	
+++:
 	cp $08
 	jr nz, ++
 	push de
@@ -15735,13 +15728,13 @@ LABEL_74E4:
 	ld a, (de)
 	call LABEL_7764
 	and $0A
-+:	
++:
 	pop de
 	pop hl
 	pop bc
 	ret
 
-++:	
+++:
 	push de
 	ld b, $00
 	ld hl, LABEL_7A2B
@@ -15764,14 +15757,14 @@ LABEL_74E4:
 	jr z, +
 	ld a, $B7
 	ld ($C004), a
-+:	
++:
 	pop af
 	pop de
 	pop hl
 	pop bc
 	ret
 
-++:	
+++:
 	ld hl, LABEL_7A8D
 	add a, l
 	ld l, a
@@ -15787,18 +15780,18 @@ LABEL_74E4:
 	jr c, +
 	cp $C0
 	jr c, ++
-+:	
++:
 	add a, $40
 	inc h
 	inc h
-++:	
+++:
 	and $F0
 	ld l, a
 	ld a, ($C301)
 	add a, b
 	jr nc, +
 	inc h
-+:	
++:
 	rrca
 	rrca
 	rrca
@@ -15817,11 +15810,11 @@ LABEL_74E4:
 	add a, c
 	jr nc, +
 	add a, $20
-+:	
++:
 	cp $E0
 	jr c, +
 	add a, $20
-+:	
++:
 	and $F0
 	ld l, a
 	ld h, $00
@@ -15841,11 +15834,11 @@ LABEL_74E4:
 	ld hl, LABEL_7AB9
 	di
 	ld bc, $0200|Port_VDPData
---:	
+--:
 	push bc
 	rst $08
 	ld b, $04
--:	
+-:
 	outi
 	nop
 	jp nz, -
@@ -15859,7 +15852,7 @@ LABEL_74E4:
 	pop de
 	ld a, $D7
 	ld e, a
-LABEL_75E8:	
+LABEL_75E8:
 	ld ($C2E5), a
 	ld hl, $FFFF
 	ld (hl), :Bank03
@@ -15873,7 +15866,7 @@ LABEL_75E8:
 	cp $04
 	jr c, +
 	inc h
-+:	
++:
 	ld a, (hl)
 	ret
 
@@ -15891,7 +15884,7 @@ LABEL_7602:
 	ld a, $12
 	call +
 	ld a, $14
-+:	
++:
 	ld hl, LABEL_7A8D
 	add a, l
 	ld l, a
@@ -15907,18 +15900,18 @@ LABEL_7602:
 	jr c, +
 	cp $C0
 	jr c, ++
-+:	
++:
 	add a, $40
 	inc h
 	inc h
-++:	
+++:
 	and $F0
 	ld l, a
 	ld a, ($C301)
 	add a, b
 	jr nc, +
 	inc h
-+:	
++:
 	rrca
 	rrca
 	rrca
@@ -15936,7 +15929,7 @@ LABEL_7602:
 
 LABEL_7656:
 	ld bc, $0400
--:	
+-:
 	push bc
 	ld b, $00
 	ld hl, LABEL_7A35
@@ -15961,7 +15954,7 @@ LABEL_7656:
 	call LABEL_7764
 	and $0D
 	jr z, ++
-+:	
++:
 	pop bc
 	ld a, c
 	add a, $04
@@ -15971,7 +15964,7 @@ LABEL_7656:
 	or a
 	ret
 
-++:	
+++:
 	pop bc
 	ld a, c
 	or a
@@ -15982,7 +15975,7 @@ LABEL_7656:
 	cp $08
 	jr nz, +
 	ld de, $0000
-+:	
++:
 	ld hl, ($C305)
 	ld a, l
 	add a, $10
@@ -15990,11 +15983,11 @@ LABEL_7656:
 	jr c, +
 	add a, $40
 	inc h
-+:	
++:
 	ld l, a
 	ld ($C305), hl
 	ld ($C311), hl
-++:	
+++:
 	ld hl, ($C301)
 	add hl, de
 	ld ($C301), hl
@@ -16004,7 +15997,7 @@ LABEL_7656:
 
 LABEL_76C1:
 	ld bc, $0800
--:	
+-:
 	push bc
 	ld b, $00
 	ld hl, LABEL_7A45
@@ -16029,7 +16022,7 @@ LABEL_76C1:
 	call LABEL_7764
 	and $0A
 	jr z, ++
-+:	
++:
 	pop bc
 	ld a, c
 	add a, $06
@@ -16039,10 +16032,10 @@ LABEL_76C1:
 	or a
 	ret
 
-++:	
+++:
 	ld hl, LABEL_7A49
 
-LABEL_76FD:	
+LABEL_76FD:
 	pop bc
 	ld b, $00
 	add hl, bc
@@ -16057,10 +16050,10 @@ LABEL_76FD:
 	inc d
 	jr ++
 
-+:	
++:
 	sub $40
 	dec d
-++:	
+++:
 	ld e, a
 	ld ($C305), de
 	ld ($C311), de
@@ -16086,7 +16079,7 @@ LABEL_7732:
 	add a, a
 	ld c, a
 	ld b, $08
--:	
+-:
 	push bc
 	ld b, $00
 	ld hl, LABEL_7A75
@@ -16101,14 +16094,14 @@ LABEL_7732:
 	cp $18
 	jr c, +
 	sub $18
-+:	
++:
 	ld c, a
 	djnz -
 	ld a, $FF
 	or a
 	ret
 
-++:	
+++:
 	ld hl, LABEL_7A76
 	jp LABEL_76FD
 
@@ -16128,18 +16121,18 @@ LABEL_7764:
 	jr c, +
 	cp $C0
 	jr c, ++
-+:	
++:
 	add a, $40
 	inc h
 	inc h
-++:	
+++:
 	and $F0
 	ld l, a
 	ld a, ($C301)
 	add a, b
 	jr nc, +
 	inc h
-+:	
++:
 	rrca
 	rrca
 	rrca
@@ -16161,7 +16154,7 @@ LABEL_7764:
 	cp $04
 	jr c, +
 	inc h
-+:	
++:
 	ld a, (hl)
 	ret
 
@@ -16173,7 +16166,7 @@ LABEL_77AC:
 	ld (hl), $00
 	ret
 
-+:	
++:
 	ld a, (hl)
 	or a
 	ret nz
@@ -16215,14 +16208,14 @@ LABEL_77AC:
 	ld a, $14
 	ld e, a
 	call LABEL_7764
-+:	
++:
 	ld hl, ($C305)
 	ld ($C311), hl
 	ld hl, ($C301)
 	ld ($C313), hl
 	ret
 
-++:	
+++:
 	ld a, e
 	ld hl, LABEL_7A8D
 	add a, l
@@ -16236,10 +16229,10 @@ LABEL_77AC:
 	jr c, +
 	cp $C0
 	jr c, ++
-+:	
++:
 	add a, $40
 	inc d
-++:	
+++:
 	ld e, a
 	ex de, hl
 	add hl, hl
@@ -16260,7 +16253,7 @@ LABEL_77AC:
 	ld hl, $FFFF
 	ld (hl), :Bank03
 	ld hl, ($C2D9)
--:	
+-:
 	ld a, (hl)
 	cp $FF
 	ret z
@@ -16276,10 +16269,10 @@ LABEL_77AC:
 	jr c, +
 	add a, $10
 	and $70
-+:	
++:
 	cp d
 	jr nz, +++
-++:	
+++:
 	inc hl
 	ld a, (hl)
 	cp e
@@ -16287,13 +16280,13 @@ LABEL_77AC:
 	inc a
 	cp e
 	jr z, ++++
-+++:	
++++:
 	pop hl
 	ld bc, $0006
 	add hl, bc
 	jp -
 
-++++:	
+++++:
 	pop hl
 	inc hl
 	inc hl
@@ -16369,7 +16362,7 @@ LABEL_78BD:
 	ld ($C30E), a
 	jp LABEL_7908
 
-+:	
++:
 	cp $0C
 	ret nz
 	ld (Game_mode), a
@@ -16428,7 +16421,7 @@ LABEL_792A:
 	ld ($C301), hl
 	jp LABEL_7908
 
-+:	
++:
 	cp $5E
 	jp nz, +
 	ld a, ($C30E)
@@ -16439,7 +16432,7 @@ LABEL_792A:
 	ret z
 	ld hl, $00A0
 	ld ($C2DB), hl
-LABEL_7972:	
+LABEL_7972:
 	ld a, $0C ; GameMode_LoadInteraction
 	ld (Game_mode), a
 	ld hl, ($C311)
@@ -16448,7 +16441,7 @@ LABEL_7972:
 	ld ($C301), hl
 	jp LABEL_7908
 
-+:	
++:
 	cp $5F
 	ret c
 	cp $64
@@ -16460,7 +16453,7 @@ LABEL_7972:
 	ld c, $02
 	jp LABEL_79E2
 
-+:	
++:
 	cp $AD
 	jp nz, +
 	ld a, ($C309)
@@ -16477,7 +16470,7 @@ LABEL_7972:
 	ld a, $08
 	jp LABEL_7877
 
-+:	
++:
 	cp $C3
 	ret c
 	cp $C7
@@ -16491,7 +16484,7 @@ LABEL_7972:
 	ld ($C2E6), a
 	jp LABEL_7972
 
-+:	
++:
 	cp $C7
 	ret c
 	cp $D2
@@ -16502,7 +16495,7 @@ LABEL_7972:
 	call LABEL_7BC4
 	ld c, $1E
 
-LABEL_79E2:	
+LABEL_79E2:
 	ld b, $00
 	ld a, $03
 	call +
@@ -16522,7 +16515,7 @@ LABEL_79E2:
 	ld (Game_mode), a
 	jp LABEL_7908
 
-+:	
++:
 	call LABEL_187D
 	jr z, ++
 	inc hl
@@ -16530,13 +16523,13 @@ LABEL_79E2:
 	sub c
 	jr nc, +
 	xor a
-+:	
++:
 	ld (hl), a
 	jr nz, ++
 	dec hl
 	ld (hl), a
 	sub $01
-++:	
+++:
 	rl b
 	ret
 
@@ -16637,13 +16630,13 @@ LABEL_7B40:
 	inc hl
 	ld b, (hl)
 	ld hl, $C220
--:	
+-:
 	call +
 	inc hl
 	djnz -
 	ret
 
-+:	
++:
 	ld a, (hl)
 	or a
 	ret z
@@ -16652,7 +16645,7 @@ LABEL_7B40:
 	dec (hl)
 	ret
 
-+:	
++:
 	ld a, (hl)
 	and $0C
 	jr z, +
@@ -16661,7 +16654,7 @@ LABEL_7B40:
 	ld (hl), a
 	ret
 
-+:	
++:
 	ld a, (hl)
 	and $30
 	ret z
@@ -16669,26 +16662,26 @@ LABEL_7B40:
 	ld (hl), a
 	ret
 
-++:	
+++:
 	cp $80
 	jr nz, +
 	ld (hl), $00
 	ret
 
-+:	
++:
 	dec (hl)
 	inc hl
 	ld b, (hl)
 	ld hl, $C240
 	ld de, $C220
--:	
+-:
 	call +
 	inc hl
 	inc de
 	djnz -
 	ret
 
-+:	
++:
 	ld a, (de)
 	cp (hl)
 	ret z
@@ -16696,21 +16689,21 @@ LABEL_7B40:
 	cp (hl)
 	jr z, +
 	jr nc, ++
-+:	
++:
 	ld (de), a
 	ret
 
-++:	
+++:
 	ld a, (de)
 	add a, $04
 	cp (hl)
 	jr z, +
 	jr nc, ++
-+:	
++:
 	ld (de), a
 	ret
 
-++:	
+++:
 	ex de, hl
 	inc (hl)
 	ex de, hl
@@ -16721,7 +16714,7 @@ LABEL_7BAC:
 	ld ($C2BE), a
 	ld hl, $0D13
 	ld ($C2C0), hl
--:	
+-:
 	ld a, $16
 	call WaitForVInt
 	ld a, ($C2BE)
@@ -16741,9 +16734,9 @@ LABEL_7BC4:
 	cp $4A
 	jr z, +
 	ld hl, $0D03
-+:	
++:
 	ld ($C2C0), hl
--:	
+-:
 	ld a, $16
 	call WaitForVInt
 	ld a, ($C2BE)
@@ -16765,7 +16758,7 @@ LABEL_7BEE:
 	ldir
 	ret
 
-+:	
++:
 	ld hl, ($C2C0)
 	ld b, h
 	ld a, l
@@ -16773,7 +16766,7 @@ LABEL_7BEE:
 	add a, l
 	ld l, a
 	ld a, $3F
--:	
+-:
 	ld (hl), a
 	inc hl
 	djnz -
@@ -16797,7 +16790,7 @@ LABEL_7C18:
 	ld a, ($C265)
 	or a
 	ret z
-+:	
++:
 	ld hl, $C310
 	dec (hl)
 	ret p
@@ -16810,7 +16803,7 @@ LABEL_7C18:
 	cp $03
 	jr c, +
 	xor a
-+:	
++:
 	ld (hl), a
 	ld c, a
 	ld a, b
@@ -16820,12 +16813,12 @@ LABEL_7C18:
 	jp nz, +
 	ld hl, LABEL_7C73
 	ld de, $C017
-+:	
++:
 	ld b, $00
 	add hl, bc
 	rst $08
 	ld bc, $0300|Port_VDPData
--:	
+-:
 	outi
 	jp nz, -
 	ret
@@ -16852,14 +16845,14 @@ LABEL_7C85:
 	ld (hl), :Bank03
 	ld hl, LABEL_B03_BE1D
 	ld a, $6F
--:	
+-:
 	push af
 	and $0F
 	ld de, $C238
 	ld bc, $0008
 	jr nz, +
 	ldir
-+:	
++:
 	ld a, $16
 	call WaitForVInt
 	pop af
@@ -16885,13 +16878,13 @@ LABEL_7CBB:
 	call +
 	ld hl, LABEL_B03_BE82
 	ld b, $0D
---:	
+--:
 	push bc
 	ld de, $C22A
 	ld bc, $0006
 	ldir
 	ld b, $08
--:	
+-:
 	ld a, $16
 	call WaitForVInt
 	djnz -
@@ -16906,17 +16899,17 @@ LABEL_7CE4:
 	ld bc, $0918
 	jr LABEL_7CF7
 
-+:	
++:
 	ld hl, LABEL_B03_BE52
 	ld bc, $1803
 
-LABEL_7CF7:	
+LABEL_7CF7:
 	push bc
 	ld a, (hl)
 	ld ($C220), a
 	ld b, $06
 	ld de, $C22A
--:	
+-:
 	ld (de), a
 	inc de
 	djnz -
@@ -16925,7 +16918,7 @@ LABEL_7CF7:
 	ld ($C227), a
 	inc hl
 	ld b, c
--:	
+-:
 	ld a, $16
 	call WaitForVInt
 	djnz -
@@ -16962,7 +16955,7 @@ LABEL_7DA3:
 .db	"WOODCANE"
 .db	"SHT. SWD"
 .db	"IRN. SWD"
-.db	"WAND", $65, $20, $20, $20
+.db	"WAND", Dialogue_Terminator65, "   "
 .db	"IRN.FANG"
 .db	"IRN. AXE"
 .db	"TIT. SWD"
@@ -16987,42 +16980,42 @@ LABEL_7DA3:
 .db	"BRNZ.SLD"
 .db	"IRN. SLD"
 .db	"CRC. SLD"
-.db	"GLOVE", $65, $20, $20
+.db	"GLOVE", Dialogue_Terminator65, "  "
 .db	"LASR.SLD"
 .db	"MIRR.SLD"
 .db	"LAC. SLD"
 .db	"LANDROVR"
 .db	"HOVRCRFT"
 .db	"ICE DIGR"
-.db	"COLA", $65, $20, $20, $20
-.db	"BURGER", $65, $20
-.db	"FLUTE", $65, $20, $20
-.db	"FLASH", $65, $20, $20
-.db	"ESCAPER", $65
-.db	"TRANSER",$65
+.db	"COLA", Dialogue_Terminator65, "   "
+.db	"BURGER", Dialogue_Terminator65, " "
+.db	"FLUTE", Dialogue_Terminator65, "  "
+.db	"FLASH", Dialogue_Terminator65, "  "
+.db	"ESCAPER", Dialogue_Terminator65
+.db	"TRANSER", Dialogue_Terminator65
 .db	"MAGC HAT"
-.db	"ALSULIN", $65
+.db	"ALSULIN", Dialogue_Terminator65
 .db	"POLYMTRL"
 .db	"DUGN KEY"
-.db	"SPHERE", $65, $20
-.db	"TORCH", $65, $20, $20
-.db	"PRISM", $65, $20, $20
-.db	"NUTS", $65, $20, $20, $20
-.db	"HAPSBY", $65, $20
+.db	"SPHERE", Dialogue_Terminator65, " "
+.db	"TORCH", Dialogue_Terminator65, "  "
+.db	"PRISM", Dialogue_Terminator65, "  "
+.db	"NUTS", Dialogue_Terminator65, "   "
+.db	"HAPSBY", Dialogue_Terminator65, " "
 .db	"ROADPASS"
 .db	"PASSPORT"
-.db	"COMPASS", $65
-.db	"CAKE", $65, $20, $20, $20
-.db	"LETTER", $65, $20
+.db	"COMPASS", Dialogue_Terminator65
+.db	"CAKE", Dialogue_Terminator65, "   "
+.db	"LETTER", Dialogue_Terminator65, " "
 .db	"LAC. POT"
 .db	"MAG.LAMP"
 .db	"AMBR EYE"
 .db	"GAS. SLD"
-.db	"CRYSTAL", $65
+.db	"CRYSTAL", Dialogue_Terminator65
 .db	"M SYSTEM"
 .db	"MRCL KEY"
-.db	"ZILLION", $65
-.db	"SECRETS", $65
+.db	"ZILLION", Dialogue_Terminator65
+.db	"SECRETS", Dialogue_Terminator65
 
 LABEL_7FAB:
 .db	$00, $D0, $D0, $50, $D0
@@ -17034,7 +17027,7 @@ LABEL_7FAB:
 .db $04, $00, $04, $04, $04, $04, $04, $00
 .db $04, $00, $04, $04, $00, $04, $00, $00
 .db $00, $04, $00, $FF, $FF, $FF, $FF, $FF
-	
+
 
 RomHeader:
 .db	"TMR SEGA"
@@ -17098,448 +17091,448 @@ DialogueBlock:
 .dw Dialogue_Index_02A2, Dialogue_Index_02A4, Dialogue_Index_02A6, Dialogue_Index_02A8, Dialogue_Index_02AA
 
 Dialogue_Index_0002:
-.db "I", Dialogue_Apostrophe, "M SUELO. I ", $BE, Dialogue_NewLine
-.db "HOW ", $CE, " FEEL,", Dialogue_NewPage
-.db "DEAR,NO ", $FD, " CAN", Dialogue_NewLine
-.db "STOP ", $E1, $FE, Dialogue_NewPage
-.db "DOING WHAT ", $E1, Dialogue_NewLine
-.db $BE, " ", $CE, " DO.", Dialogue_NewPage
+.db "I", Dialogue_Apostrophe, "M SUELO. I ", Word_Know, Dialogue_NewLine
+.db "HOW ", Word_You_Must, " FEEL,", Dialogue_NewPage
+.db "DEAR,NO ", Word_One, " CAN", Dialogue_NewLine
+.db "STOP ", Word_You, Word_From, Dialogue_NewPage
+.db "DOING WHAT ", Word_You, Dialogue_NewLine
+.db Word_Know, " ", Word_You_Must, " DO.", Dialogue_NewPage
 
 Dialogue_Index_0004:
-.db "BUT IF ", $E1, "SHOULD", Dialogue_NewLine
+.db "BUT IF ", Word_You, "SHOULD", Dialogue_NewLine
 .db "EVER BE WOUNDED", Dialogue_NewPage
 .db "IN BATTLE,COME", Dialogue_NewLine
-.db $D2, " TO ", $BF, ".", Dialogue_Terminator65
+.db Word_Here, " TO ", Word_Rest, ".", Dialogue_Terminator65
 
 Dialogue_Index_0006:
-.db $C9, $BF, Dialogue_NewLine
-.db $A9, ".", Dialogue_NewPage
-.db $E1, $EC, $E0, Dialogue_NewLine
-.db $D2, " AT ", $F6, $9F, ".", Dialogue_Terminator65
+.db Word_Please, Word_Rest, Dialogue_NewLine
+.db Word_Yourself, ".", Dialogue_NewPage
+.db Word_You, Word_Are, Word_Welcome, Dialogue_NewLine
+.db Word_Here, " AT ", Word_Any, Word_Time, ".", Dialogue_Terminator65
 
 Dialogue_Index_0008:
-.db "I", Dialogue_Apostrophe, "M NEKISE. ", $FD, Dialogue_NewLine
+.db "I", Dialogue_Apostrophe, "M NEKISE. ", Word_One, Dialogue_NewLine
 .db "HEARS LOTS OF", Dialogue_NewPage
 
 Dialogue_Index_000A:
-.db "STORIES, ", $E1, $BE, ",BUT ", $D5, " SAY ", $DC, Dialogue_NewPage
-.db "A FIGHTER ", $E7, Dialogue_NewLine
+.db "STORIES, ", Word_You, Word_Know, ",BUT ", Word_Some, " SAY ", Word_That, Dialogue_NewPage
+.db "A FIGHTER ", Word_Named, Dialogue_NewLine
 .db "ODIN LIVES IN A", Dialogue_NewPage
-.db $B9, " CALLED ", $96, ".", Dialogue_NewLine
+.db Word_Town, " CALLED ", Word_Scion, ".", Dialogue_NewLine
 
 Dialogue_Index_000C:
-.db "ALSO, I ", $E3, "A", Dialogue_NewPage
-.db $A6, " GIVEN", Dialogue_NewLine
+.db "ALSO, I ", Word_Have, "A", Dialogue_NewPage
+.db Word_Laconian_Pot, " GIVEN", Dialogue_NewLine
 
 Dialogue_Index_000E:
-.db "BY ", $B2, ". ", $DC, Dialogue_NewPage
+.db "BY ", Word_Nero, ". ", Word_That, Dialogue_NewPage
 .db "WOULD BE HELPFUL", Dialogue_NewLine
-.db "TO ", $E1, "IN ", $E2, Dialogue_NewPage
+.db "TO ", Word_You, "IN ", Word_Your, Dialogue_NewPage
 .db "TASK.", Dialogue_Terminator65
 
 Dialogue_Index_0010:
-.db "I ", $97, " I COULD", Dialogue_NewLine
-.db $CA, " ", $E1, "MORE.", Dialogue_NewPage
-.db "I PRAY FOR ", $E2, Dialogue_NewLine
+.db "I ", Word_Wish, " I COULD", Dialogue_NewLine
+.db Word_Help, " ", Word_You, "MORE.", Dialogue_NewPage
+.db "I PRAY FOR ", Word_Your, Dialogue_NewLine
 .db "SAFETY.", Dialogue_Terminator65
 
 Dialogue_Index_0012:
-.db $DE, "CAMINEET", Dialogue_NewLine
-.db $D6, Dialogue_NewPage
+.db Word_The, "CAMINEET", Dialogue_NewLine
+.db Word_Residential_Area, Dialogue_NewPage
 .db "IS UNDER", Dialogue_NewLine
 .db "MARTIAL LAW.", Dialogue_Terminator65
 
 Dialogue_Index_0014:
-.db $E1, "NEED A", Dialogue_NewLine
-.db $D8, " KEY TO", Dialogue_NewPage
+.db Word_You, "NEED A", Dialogue_NewLine
+.db Word_Dungeon, " KEY TO", Dialogue_NewPage
 .db "OPEN LOCKED DOORS.", Dialogue_Terminator65
 
 Dialogue_Index_0016:
-.db "IN ", $D5, " ", $D8, "S", Dialogue_NewLine
-.db $CB, " ", $F8, "GET", Dialogue_NewPage
-.db "FAR WITHOUT ", $D5, Dialogue_NewLine
+.db "IN ", Word_Some, " ", Word_Dungeon, "S", Dialogue_NewLine
+.db Word_You_Will, " ", Word_Not, "GET", Dialogue_NewPage
+.db "FAR WITHOUT ", Word_Some, Dialogue_NewLine
 .db "SORT OF LIGHT.", Dialogue_Terminator65
 
 Dialogue_Index_0018:
-.db $DA, " A", Dialogue_NewLine
-.db $98, " TO ", $DE, Dialogue_NewPage
+.db Word_There_Is, " A", Dialogue_NewLine
+.db Word_Spaceport, " TO ", Word_The, Dialogue_NewPage
 .db "WEST OF CAMINEET.", Dialogue_Terminator65
 
 Dialogue_Index_001A:
-.db "IF ", $E1, $F9, "TO", Dialogue_NewLine
-.db "MAKE A DEAL, ", $E1, Dialogue_NewPage
+.db "IF ", Word_You, Word_Want, "TO", Dialogue_NewLine
+.db "MAKE A DEAL, ", Word_You, Dialogue_NewPage
 .db "SHOULD HEAD FOR", Dialogue_NewLine
-.db $DE, "PORT ", $B9, ".", Dialogue_Terminator65
+.db Word_The, "PORT ", Word_Town, ".", Dialogue_Terminator65
 
 Dialogue_Index_001C:
-.db $E1, "HAD BETTER", Dialogue_NewLine
-.db $F8, "LEAVE ", $DE, Dialogue_NewPage
-.db $D6, ".", Dialogue_Terminator65
+.db Word_You, "HAD BETTER", Dialogue_NewLine
+.db Word_Not, "LEAVE ", Word_The, Dialogue_NewPage
+.db Word_Residential_Area, ".", Dialogue_Terminator65
 
 Dialogue_Index_001E:
-.db "UNLESS ", $E1, "HOPE TODIE, ", $E1, "HAD BEST", Dialogue_NewPage
-.db "STAY ", $D2, ".", Dialogue_Terminator65
+.db "UNLESS ", Word_You, "HOPE TODIE, ", Word_You, "HAD BEST", Dialogue_NewPage
+.db "STAY ", Word_Here, ".", Dialogue_Terminator65
 
 Dialogue_Index_0020:
-.db $E1, "MAY ", $F8, $A2, ".", Dialogue_Terminator65
+.db Word_You, "MAY ", Word_Not, Word_Pass, ".", Dialogue_Terminator65
 
 Dialogue_Index_0022:
-.db $E1, $88, " ", $A2, Dialogue_NewLine
-.db "WITHOUT ", $A0, ".", Dialogue_Terminator65
+.db Word_You, Word_Cannot, " ", Word_Pass, Dialogue_NewLine
+.db "WITHOUT ", Word_Roadpass, ".", Dialogue_Terminator65
 
 Dialogue_Index_0024:
-.db $E1, "MAY PROCEED.", Dialogue_Terminator65
+.db Word_You, "MAY PROCEED.", Dialogue_Terminator65
 
 Dialogue_Index_0026:
-.db $E4, "IS PAROLIT", Dialogue_NewLine
-.db $D6, ".", Dialogue_Terminator65
+.db Word_This, "IS PAROLIT", Dialogue_NewLine
+.db Word_Residential_Area, ".", Dialogue_Terminator65
 
 Dialogue_Index_0028:
-.db $DE, $C4, " IS A", Dialogue_NewLine
+.db Word_The, Word_Forest, " IS A", Dialogue_NewLine
 .db "DANGEROUS PLACE.", Dialogue_Terminator65
 
 Dialogue_Index_002A:
-.db $EA, " HAS BEEN", Dialogue_NewLine
+.db Word_Medusa, " HAS BEEN", Dialogue_NewLine
 .db "REBORN AND LIVES", Dialogue_NewPage
-.db "IN A CAVE TO ", $DE, Dialogue_NewLine
-.db "SOUTH. IF ", $E1, "SEE", Dialogue_NewPage
+.db "IN A CAVE TO ", Word_The, Dialogue_NewLine
+.db "SOUTH. IF ", Word_You, "SEE", Dialogue_NewPage
 
 Dialogue_Index_002C:
-.db "HER, ", $CB, " BE", Dialogue_NewLine
-.db $91, ".", Dialogue_Terminator65
+.db "HER, ", Word_You_Will, " BE", Dialogue_NewLine
+.db Word_Turned_To_Stone, ".", Dialogue_Terminator65
 
 Dialogue_Index_002E:
-.db "TO ", $DE, "EAST LIES", Dialogue_NewLine
-.db "A PORT ", $B9, Dialogue_NewPage
-.db "CALLED ", $96, ".", Dialogue_Terminator65
+.db "TO ", Word_The, "EAST LIES", Dialogue_NewLine
+.db "A PORT ", Word_Town, Dialogue_NewPage
+.db "CALLED ", Word_Scion, ".", Dialogue_Terminator65
 
 Dialogue_Index_0030:
-.db $FE, $DE, $98, Dialogue_NewLine
-.db $E1, "CAN GO TO", Dialogue_NewPage
-.db "PASEO ON ", $94, ".", Dialogue_Terminator65
+.db Word_From, Word_The, Word_Spaceport, Dialogue_NewLine
+.db Word_You, "CAN GO TO", Dialogue_NewPage
+.db "PASEO ON ", Word_Motavia, ".", Dialogue_Terminator65
 
 Dialogue_Index_0032:
-.db $DA, " AN", Dialogue_NewLine
+.db Word_There_Is, " AN", Dialogue_NewLine
 .db "UNDERGROUND", Dialogue_NewPage
-.db $BA, " TO ", $DE, Dialogue_NewLine
-.db $95, " ", $C4, Dialogue_NewPage
-.db $D5, $D0, " TO ", $DE, Dialogue_NewLine
+.db Word_Passage, " TO ", Word_The, Dialogue_NewLine
+.db Word_Gothic, " ", Word_Forest, Dialogue_NewPage
+.db Word_Some, Word_Where, " TO ", Word_The, Dialogue_NewLine
 .db "WEST OF PAROLIT.", Dialogue_Terminator65
 
 Dialogue_Index_0034:
 .db "ODIN SET OFF TO", Dialogue_NewLine
-.db "KILL ", $EA, ". HE", Dialogue_NewPage
+.db "KILL ", Word_Medusa, ". HE", Dialogue_NewPage
 
 Dialogue_Index_0036:
 .db "WENT WITH AN", Dialogue_NewLine
-.db "ANIMAL ", $DC, " CAN", Dialogue_NewPage
-.db "SPEAK! ", $DE, "ANIMAL", Dialogue_NewLine
+.db "ANIMAL ", Word_That, " CAN", Dialogue_NewPage
+.db "SPEAK! ", Word_The, "ANIMAL", Dialogue_NewLine
 .db "HAD A BOTTLE OF", Dialogue_NewPage
 
 Dialogue_Index_0038:
 .db "MEDICINE HANGING", Dialogue_NewLine
-.db $FE, "ITS NECK, BUT", Dialogue_NewPage
-.db "I DON", Dialogue_Apostrophe, "T ", $BE, " WHAT", Dialogue_NewLine
-.db $DC, " IS FOR.", Dialogue_Terminator65
+.db Word_From, "ITS NECK, BUT", Dialogue_NewPage
+.db "I DON", Dialogue_Apostrophe, "T ", Word_Know, " WHAT", Dialogue_NewLine
+.db Word_That, " IS FOR.", Dialogue_Terminator65
 
 Dialogue_Index_003A:
-.db "I HEAR ", $E1, $EC, Dialogue_NewLine
+.db "I HEAR ", Word_You, Word_Are, Dialogue_NewLine
 .db "GOING TO TRY", Dialogue_NewPage
-.db "TO KILL ", $D4, ".", Dialogue_NewLine
+.db "TO KILL ", Word_Lassic, ".", Dialogue_NewLine
 .db "BEST OF LUCK!", Dialogue_Terminator65
 
 Dialogue_Index_003C:
 .db "I RECENTLY FOUND ATALKING BEAST IN", Dialogue_NewPage
-.db $DE, "CAVE ", $D0, Dialogue_NewLine
-.db $EA, " LIVES.", Dialogue_NewPage
+.db Word_The, "CAVE ", Word_Where, Dialogue_NewLine
+.db Word_Medusa, " LIVES.", Dialogue_NewPage
 
 Dialogue_Index_003E:
 .db "I SOLD HIM FOR A", Dialogue_NewLine
 .db "GOOD PRICE TO A", Dialogue_NewPage
-.db "MERCHANT ", $FE, Dialogue_NewLine
+.db "MERCHANT ", Word_From, Dialogue_NewLine
 .db "PASEO!", Dialogue_Terminator65
 
 Dialogue_Index_0040:
-.db "TIMES ", $EC, "HARD.", Dialogue_NewLine
-.db $D1, " DOESN", Dialogue_Apostrophe, "T SEEM", Dialogue_NewPage
-.db "TO BE ", $F6, "WAY TO", Dialogue_NewLine
-.db "MAKE M", $FD, "Y.", Dialogue_Terminator65
+.db "TIMES ", Word_Are, "HARD.", Dialogue_NewLine
+.db Word_There, " DOESN", Dialogue_Apostrophe, "T SEEM", Dialogue_NewPage
+.db "TO BE ", Word_Any, "WAY TO", Dialogue_NewLine
+.db "MAKE M", Word_One, "Y.", Dialogue_Terminator65
 
 Dialogue_Index_0042:
 .db "A CAVE CALLED IALACAN BE FOUND ON", Dialogue_NewPage
-.db $DE, "PENINSULA TO", Dialogue_NewLine
-.db $DE, "SOUTH OF ", $96, Dialogue_Terminator65
+.db Word_The, "PENINSULA TO", Dialogue_NewLine
+.db Word_The, "SOUTH OF ", Word_Scion, Dialogue_Terminator65
 
 Dialogue_Index_0044:
-.db $E4, "IS ", $DE, "PORT", Dialogue_NewLine
-.db $B9, " ", $96, ".", Dialogue_NewPage
+.db Word_This, "IS ", Word_The, "PORT", Dialogue_NewLine
+.db Word_Town, " ", Word_Scion, ".", Dialogue_NewPage
 .db "LONG AGO, WE", Dialogue_NewLine
 .db "THRIVED ON TRADE.", Dialogue_Terminator65
 
 Dialogue_Index_0046:
-.db $E1, "NEED A COMPASSTO ", $A2, " ", $DD, Dialogue_NewPage
-.db $DE, "EPPI ", $C4, ".", Dialogue_Terminator65
+.db Word_You, "NEED A COMPASSTO ", Word_Pass, " ", Word_Through, Dialogue_NewPage
+.db Word_The, "EPPI ", Word_Forest, ".", Dialogue_Terminator65
 
 Dialogue_Index_0048:
-.db "A DOOR LOCKED WITH", $84, "CAN ONLY BE", Dialogue_NewPage
-.db "OPENED WITH ", $EF, ".", Dialogue_Terminator65
+.db "A DOOR LOCKED WITH", Word_Magic_84, "CAN ONLY BE", Dialogue_NewPage
+.db "OPENED WITH ", Word_Magic_EF, ".", Dialogue_Terminator65
 
 Dialogue_Index_004A:
-.db $DA, " A ", $AB, Dialogue_NewLine
-.db $E7, $C2, Dialogue_NewPage
-.db "TO ", $DE, "NORTH OF", Dialogue_NewLine
-.db $E4, $B9, ".", Dialogue_NewPage
-.db "BUT N", $FD, " OF US", Dialogue_NewLine
-.db "D", $EC, "APPROACH IT.", Dialogue_Terminator65
+.db Word_There_Is, " A ", Word_Hill, Dialogue_NewLine
+.db Word_Named, Word_Baya_Malay, Dialogue_NewPage
+.db "TO ", Word_The, "NORTH OF", Dialogue_NewLine
+.db Word_This, Word_Town, ".", Dialogue_NewPage
+.db "BUT N", Word_One, " OF US", Dialogue_NewLine
+.db "D", Word_Are, "APPROACH IT.", Dialogue_Terminator65
 
 Dialogue_Index_004C:
 .db "A CAVE CALLED", Dialogue_NewLine
-.db "NAULA LIES ON ", $DE, Dialogue_NewPage
+.db "NAULA LIES ON ", Word_The, Dialogue_NewPage
 .db "NORTH COAST OF", Dialogue_NewLine
-.db $C2, ".", Dialogue_Terminator65
+.db Word_Baya_Malay, ".", Dialogue_Terminator65
 
 Dialogue_Index_004E:
-.db $DE, $AA, " OF", Dialogue_NewLine
-.db $94, " MIGHT", Dialogue_NewPage
-.db "POSSIBLY ", $CA, " ", $E1, "WELL.", Dialogue_Terminator65
+.db Word_The, Word_Governor, " OF", Dialogue_NewLine
+.db Word_Motavia, " MIGHT", Dialogue_NewPage
+.db "POSSIBLY ", Word_Help, " ", Word_You, "WELL.", Dialogue_Terminator65
 
 Dialogue_Index_0050:
 .db "NOAH LIVES ON", Dialogue_NewLine
-.db $94, ".", Dialogue_Terminator65
+.db Word_Motavia, ".", Dialogue_Terminator65
 
 Dialogue_Index_0052:
-.db "DR.", $AD, " HAD A", Dialogue_NewLine
-.db $BD, " IN ", $DE, Dialogue_NewPage
-.db $95, " ", $C4, " LONGAGO, IT IS SAID.", Dialogue_Terminator65
+.db "DR.", Word_Luveno, " HAD A", Dialogue_NewLine
+.db Word_Laboratory, " IN ", Word_The, Dialogue_NewPage
+.db Word_Gothic, " ", Word_Forest, " LONGAGO, IT IS SAID.", Dialogue_Terminator65
 
 Dialogue_Index_0054:
-.db $E0, "TO EPPI.", Dialogue_Terminator65
+.db Word_Welcome, "TO EPPI.", Dialogue_Terminator65
 
 Dialogue_Index_0056:
-.db $EC, $E1, "LOOKING", Dialogue_NewLine
-.db "FOR A ", $D8, " KEY?", Dialogue_Terminator62
+.db Word_Are, Word_You, "LOOKING", Dialogue_NewLine
+.db "FOR A ", Word_Dungeon, " KEY?", Dialogue_Terminator62
 
 Dialogue_Index_0058:
 .db "I", Dialogue_Apostrophe, "VE HIDDEN A", Dialogue_NewLine
-.db $D8, " KEY IN THE", Dialogue_NewPage
+.db Word_Dungeon, " KEY IN THE", Dialogue_NewPage
 
 Dialogue_Index_005A:
-.db "WAREHOUSE IN ", $DE, Dialogue_NewLine
-.db "OUTSKIRTS OF ", $DE, Dialogue_NewPage
+.db "WAREHOUSE IN ", Word_The, Dialogue_NewLine
+.db "OUTSKIRTS OF ", Word_The, Dialogue_NewPage
 .db "CAMINEET.", Dialogue_Terminator65
 
 Dialogue_Index_005C:
-.db $C3, " WHAT", Dialogue_NewLine
-.db $DE, "HARDEST,", Dialogue_NewPage
-.db "STRONGEST MATERIALIN OUR ", $B5, " IS?", Dialogue_Terminator62
+.db Word_Do_You_Know, " WHAT", Dialogue_NewLine
+.db Word_The, "HARDEST,", Dialogue_NewPage
+.db "STRONGEST MATERIALIN OUR ", Word_World, " IS?", Dialogue_Terminator62
 
 Dialogue_Index_005E:
-.db "IT", Dialogue_Apostrophe, "S ", $BC, "!", Dialogue_NewLine
+.db "IT", Dialogue_Apostrophe, "S ", Word_Laconia, "!", Dialogue_NewLine
 .db "ARMS MADE WITH", Dialogue_NewPage
-.db $BC, " ", $EC, $DE, Dialogue_NewLine
+.db Word_Laconia, " ", Word_Are, Word_The, Dialogue_NewLine
 .db "BEST TO HAVE.", Dialogue_Terminator65
 
 Dialogue_Index_0060:
 .db "O.K. GOOD DAY.", Dialogue_Terminator65
 
 Dialogue_Index_0062:
-.db $C3, " ABOUT", Dialogue_NewLine
-.db $DE, $B8, " OF", Dialogue_NewPage
-.db $DE, $9B, " STAR", Dialogue_NewLine
-.db $9C, "?", Dialogue_Terminator62
+.db Word_Do_You_Know, " ABOUT", Dialogue_NewLine
+.db Word_The, Word_Planets, " OF", Dialogue_NewPage
+.db Word_The, Word_Algol, " STAR", Dialogue_NewLine
+.db Word_System, "?", Dialogue_Terminator62
 
 Dialogue_Index_0064:
-.db $DB, " THREE", Dialogue_NewLine
-.db $B8, "; ", $CF, Dialogue_NewPage
-.db $94, " AND", Dialogue_NewLine
-.db $93, ".", Dialogue_NewPage
+.db Word_There_Are, " THREE", Dialogue_NewLine
+.db Word_Planets, "; ", Word_Palma, Dialogue_NewPage
+.db Word_Motavia, " AND", Dialogue_NewLine
+.db Word_Dezoris, ".", Dialogue_NewPage
 
 Dialogue_Index_0066:
-.db $CF, " IS A ", $B5, Dialogue_NewLine
+.db Word_Palma, " IS A ", Word_World, Dialogue_NewLine
 .db "OF GREEN.", Dialogue_NewPage
-.db $94, " IS A ", $B5, Dialogue_NewLine
+.db Word_Motavia, " IS A ", Word_World, Dialogue_NewLine
 .db "OF SAND.", Dialogue_NewPage
-.db $93, " IS A ", $B5, Dialogue_NewLine
+.db Word_Dezoris, " IS A ", Word_World, Dialogue_NewLine
 .db "OF ICE.", Dialogue_NewPage
 
 Dialogue_Index_0068:
-.db $DE, $9B, " STAR", Dialogue_NewLine
-.db $9C, " IS", Dialogue_NewPage
-.db $90, " ", $FB, Dialogue_NewLine
-.db "A ", $E6, "CRISIS.", Dialogue_Terminator65
+.db Word_The, Word_Algol, " STAR", Dialogue_NewLine
+.db Word_System, " IS", Dialogue_NewPage
+.db Word_Currently, " ", Word_Facing, Dialogue_NewLine
+.db "A ", Word_Great, "CRISIS.", Dialogue_Terminator65
 
 Dialogue_Index_006A:
-.db $E4, "IS PALMA", Dialogue_Apostrophe, "S", Dialogue_NewLine
-.db $98, ".", Dialogue_NewPage
-.db $FE, $DE, $98, Dialogue_NewLine
-.db $E1, "CAN GO TO", Dialogue_NewPage
-.db "PASEO ON ", $94, ".", Dialogue_Terminator65
+.db Word_This, "IS PALMA", Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db Word_Spaceport, ".", Dialogue_NewPage
+.db Word_From, Word_The, Word_Spaceport, Dialogue_NewLine
+.db Word_You, "CAN GO TO", Dialogue_NewPage
+.db "PASEO ON ", Word_Motavia, ".", Dialogue_Terminator65
 
 Dialogue_Index_006C:
-.db $DE, $AA, " IS INPASEO. HE RULES", Dialogue_NewPage
-.db "ALL OF ", $94, ".", Dialogue_Terminator65
+.db Word_The, Word_Governor, " IS INPASEO. HE RULES", Dialogue_NewPage
+.db "ALL OF ", Word_Motavia, ".", Dialogue_Terminator65
 
 Dialogue_Index_006E:
 .db "LONG AGO, A", Dialogue_NewLine
-.db $E8, " WAS", Dialogue_NewPage
-.db "BUILT IN ", $DE, Dialogue_NewLine
-.db $95, " ", $BD, ".", Dialogue_Terminator65
+.db Word_Spaceship, " WAS", Dialogue_NewPage
+.db "BUILT IN ", Word_The, Dialogue_NewLine
+.db Word_Gothic, " ", Word_Laboratory, ".", Dialogue_Terminator65
 
 Dialogue_Index_0070:
-.db $C5, " ", $E2, Dialogue_NewLine
-.db $99, "?", Dialogue_Terminator62
+.db Word_Do_You_Have, " ", Word_Your, Dialogue_NewLine
+.db Word_Passport, "?", Dialogue_Terminator62
 
 Dialogue_Index_0072:
-.db $E1, "CAN FILE FOR A", Dialogue_NewLine
-.db $99, " ", $D2, ".", Dialogue_NewPage
-.db $C6, " ", $F9, "A", Dialogue_NewLine
-.db $99, "?", Dialogue_Terminator62
+.db Word_You, "CAN FILE FOR A", Dialogue_NewLine
+.db Word_Passport, " ", Word_Here, ".", Dialogue_NewPage
+.db Word_Do_You, " ", Word_Want, "A", Dialogue_NewLine
+.db Word_Passport, "?", Dialogue_Terminator62
 
 Dialogue_Index_0074:
-.db $E3, $E1, "EVER D", $FD, Dialogue_NewLine
-.db $F6, $F7, " ILLEGAL? ", Dialogue_Terminator62
+.db Word_Have, Word_You, "EVER D", Word_One, Dialogue_NewLine
+.db Word_Any, Word_Thing, " ILLEGAL? ", Dialogue_Terminator62
 
 Dialogue_Index_0076:
-.db $C6, " CURRENTLY", Dialogue_NewLine
-.db $E3, "AN ILLNESS?", Dialogue_Terminator62
+.db Word_Do_You, " CURRENTLY", Dialogue_NewLine
+.db Word_Have, "AN ILLNESS?", Dialogue_Terminator62
 
 Dialogue_Index_0078:
-.db $DE, $99, " FEE", Dialogue_NewLine
-.db "IS 100 ", Dialogue_Mesetas, ".", Dialogue_NewPage
-.db "WOULD ", $E1, "PAY IT?", Dialogue_Terminator62
+.db Word_The, Word_Passport, " FEE", Dialogue_NewLine
+.db "IS 100 ", Word_Mesetas, ".", Dialogue_NewPage
+.db "WOULD ", Word_You, "PAY IT?", Dialogue_Terminator62
 
 Dialogue_Index_007A:
-.db $E2, $99, " IS", Dialogue_NewLine
-.db "READY, ", $D2, ".", Dialogue_Terminator65
+.db Word_Your, Word_Passport, " IS", Dialogue_NewLine
+.db "READY, ", Word_Here, ".", Dialogue_Terminator65
 
 Dialogue_Index_007C:
-.db $B7, ". ", $E3, "A GOODDAY.", Dialogue_Terminator65
+.db Word_I_See, ". ", Word_Have, "A GOODDAY.", Dialogue_Terminator65
 
 Dialogue_Index_007E:
-.db $DC, Dialogue_Apostrophe, "S ", $F8, "GOOD.", Dialogue_NewLine
-.db "YOU", Dialogue_Apostrophe, "LL ", $E3, "TO", Dialogue_NewPage
+.db Word_That, Dialogue_Apostrophe, "S ", Word_Not, "GOOD.", Dialogue_NewLine
+.db "YOU", Dialogue_Apostrophe, "LL ", Word_Have, "TO", Dialogue_NewPage
 .db "COME BACK LATER.", Dialogue_Terminator65
 
 Dialogue_Index_0080:
-.db $E0, "TO ", $DE, Dialogue_NewLine
-.db "PASEO ", $98, Dialogue_NewPage
-.db "ON ", $94, ".", Dialogue_Terminator65
+.db Word_Welcome, "TO ", Word_The, Dialogue_NewLine
+.db "PASEO ", Word_Spaceport, Dialogue_NewPage
+.db "ON ", Word_Motavia, ".", Dialogue_Terminator65
 
 Dialogue_Index_0082:
-.db "IT IS SAID ", $DC, Dialogue_NewLine
-.db $A3, "S ROAM", Dialogue_NewPage
-.db "IN ", $DE, "DESERT.", Dialogue_Terminator65
+.db "IT IS SAID ", Word_That, Dialogue_NewLine
+.db Word_Ant_Lion, "S ROAM", Dialogue_NewPage
+.db "IN ", Word_The, "DESERT.", Dialogue_Terminator65
 
 Dialogue_Index_0084:
-.db $DA, " A CAKE", Dialogue_NewLine
-.db "SHOP IN ", $DE, "CAVE", Dialogue_NewPage
+.db Word_There_Is, " A CAKE", Dialogue_NewLine
+.db "SHOP IN ", Word_The, "CAVE", Dialogue_NewPage
 .db "CALLED NAULA ON", Dialogue_NewLine
-.db $CF, "!", Dialogue_Terminator65
+.db Word_Palma, "!", Dialogue_Terminator65
 
 Dialogue_Index_0086:
-.db $94, Dialogue_Apostrophe, "S ", $AA, "AND ", $D4, " ", $EC, "NOT", Dialogue_NewPage
+.db Word_Motavia, Dialogue_Apostrophe, "S ", Word_Governor, "AND ", Word_Lassic, " ", Word_Are, "NOT", Dialogue_NewPage
 .db "ON GOOD TERMS, IT", Dialogue_NewLine
 .db "IS SAID.", Dialogue_Terminator65
 
 Dialogue_Index_0088:
 .db "A GIFT IS NEEDED", Dialogue_NewLine
-.db "IF ", $E1, $97, " TO SEE", Dialogue_NewPage
-.db $DE, $AA, ".", Dialogue_Terminator65
+.db "IF ", Word_You, Word_Wish, " TO SEE", Dialogue_NewPage
+.db Word_The, Word_Governor, ".", Dialogue_Terminator65
 
 Dialogue_Index_008A:
-.db $DE, $AA, " LOVESSWEETS, I HEAR.", Dialogue_Terminator65
+.db Word_The, Word_Governor, " LOVESSWEETS, I HEAR.", Dialogue_Terminator65
 
 Dialogue_Index_008C:
-.db $DA, " A CAVE", Dialogue_NewLine
-.db "CALLED ", $A7, " IN", Dialogue_NewPage
-.db "A ", $E5, " TO ", $DE, Dialogue_NewLine
+.db Word_There_Is, " A CAVE", Dialogue_NewLine
+.db "CALLED ", Word_Maharu, " IN", Dialogue_NewPage
+.db "A ", Word_Mountain, " TO ", Word_The, Dialogue_NewLine
 .db "NORTH OF PASEO.", Dialogue_Terminator65
 
 Dialogue_Index_008E:
-.db $E4, "IS PASEO", Dialogue_NewLine
-.db $94, Dialogue_Apostrophe, "S CAPITAL.", Dialogue_Terminator65
+.db Word_This, "IS PASEO", Dialogue_NewLine
+.db Word_Motavia, Dialogue_Apostrophe, "S CAPITAL.", Dialogue_Terminator65
 
 Dialogue_Index_0090:
-.db "IT", Dialogue_Apostrophe, "S ", $F8, "POSSIBLE", Dialogue_NewLine
-.db "TO ", $A2, " ", $DD, Dialogue_NewPage
-.db $A3, " ON FOOT.", Dialogue_Terminator65
+.db "IT", Dialogue_Apostrophe, "S ", Word_Not, "POSSIBLE", Dialogue_NewLine
+.db "TO ", Word_Pass, " ", Word_Through, Dialogue_NewPage
+.db Word_Ant_Lion, " ON FOOT.", Dialogue_Terminator65
 
 Dialogue_Index_0092:
-.db "I ", $E3, "AN RARE", Dialogue_NewLine
-.db "ANIMAL ", $D2, ". WOULD", Dialogue_NewPage
-.db $E1, "PAY 1 BILLION", Dialogue_NewLine
-.db Dialogue_Mesetas, " FOR IT?", Dialogue_Terminator62
+.db "I ", Word_Have, "AN RARE", Dialogue_NewLine
+.db "ANIMAL ", Word_Here, ". WOULD", Dialogue_NewPage
+.db Word_You, "PAY 1 BILLION", Dialogue_NewLine
+.db Word_Mesetas, " FOR IT?", Dialogue_Terminator62
 
 Dialogue_Index_0094:
-.db $E1, $EC, "A LIAR!", Dialogue_Terminator65
+.db Word_You, Word_Are, "A LIAR!", Dialogue_Terminator65
 
 Dialogue_Index_0096:
-.db $B7, " ", $E1, $E3, "A", Dialogue_NewLine
-.db $AC, " POT.", Dialogue_NewPage
+.db Word_I_See, " ", Word_You, Word_Have, "A", Dialogue_NewLine
+.db Word_Strange, " POT.", Dialogue_NewPage
 
 Dialogue_Index_0098:
-.db "SHALL I TRADE ", $DE, Dialogue_NewLine
+.db "SHALL I TRADE ", Word_The, Dialogue_NewLine
 .db "ANIMAL FOR IT?", Dialogue_Terminator62
 
 Dialogue_Index_009A:
-.db "ALL RIGHT, ", $D1, Dialogue_NewLine
-.db $E1, "GO WITH HIM.", Dialogue_Terminator65
+.db "ALL RIGHT, ", Word_There, Dialogue_NewLine
+.db Word_You, "GO WITH HIM.", Dialogue_Terminator65
 
 Dialogue_Index_009C:
-.db $C5, " A", Dialogue_NewLine
-.db $DF, " TO GIVE TO", Dialogue_NewPage
-.db $DE, $AA, "?", Dialogue_Terminator62
+.db Word_Do_You_Have, " A", Dialogue_NewLine
+.db Word_Present, " TO GIVE TO", Dialogue_NewPage
+.db Word_The, Word_Governor, "?", Dialogue_Terminator62
 
 Dialogue_Index_009E:
-.db "I", Dialogue_Apostrophe, "LL TAKE ", $DE, Dialogue_NewLine
+.db "I", Dialogue_Apostrophe, "LL TAKE ", Word_The, Dialogue_NewLine
 .db "SHORTCAKE NOW.", Dialogue_Terminator65
 
 Dialogue_Index_00A0:
-.db "I DON", Dialogue_Apostrophe, "T THINK ", $E1, Dialogue_NewLine
-.db $E3, "A SUITABLE", Dialogue_NewPage
-.db $DF, ".", Dialogue_Terminator65
+.db "I DON", Dialogue_Apostrophe, "T THINK ", Word_You, Dialogue_NewLine
+.db Word_Have, "A SUITABLE", Dialogue_NewPage
+.db Word_Present, ".", Dialogue_Terminator65
 
 Dialogue_Index_00A2:
-.db "GO BACK TO ", $E2, Dialogue_NewLine
+.db "GO BACK TO ", Word_Your, Dialogue_NewLine
 .db "HOME NOW.", Dialogue_Terminator65
 
 Dialogue_Index_00A4:
-.db "I", Dialogue_Apostrophe, "M ", $DE, $AA, ".", Dialogue_NewLine
-.db "I", Dialogue_Apostrophe, "M TOLD ", $DC, " ", $E1, Dialogue_NewPage
+.db "I", Dialogue_Apostrophe, "M ", Word_The, Word_Governor, ".", Dialogue_NewLine
+.db "I", Dialogue_Apostrophe, "M TOLD ", Word_That, " ", Word_You, Dialogue_NewPage
 .db "INTEND TO TRY TO", Dialogue_NewLine
-.db "KILL ", $D4, ".", Dialogue_NewPage
+.db "KILL ", Word_Lassic, ".", Dialogue_NewPage
 
 Dialogue_Index_00A6:
-.db "I ADMIRE ", $E2, Dialogue_NewLine
-.db "COURAGE. IN ", $DE, Dialogue_NewPage
-.db $A7, " CAVE LIVES", Dialogue_NewLine
-.db "AN ESPAR ", $E7, Dialogue_NewPage
+.db "I ADMIRE ", Word_Your, Dialogue_NewLine
+.db "COURAGE. IN ", Word_The, Dialogue_NewPage
+.db Word_Maharu, " CAVE LIVES", Dialogue_NewLine
+.db "AN ESPAR ", Word_Named, Dialogue_NewPage
 
 Dialogue_Index_00A8:
-.db "NOAH. ", $CC, " GIVE", Dialogue_NewLine
-.db $E1, "A LETTER OF", Dialogue_NewPage
+.db "NOAH. ", Word_I_Will, " GIVE", Dialogue_NewLine
+.db Word_You, "A LETTER OF", Dialogue_NewPage
 .db "INTRODUCTION TO", Dialogue_NewLine
-.db $DF, " TO HER.", Dialogue_NewPage
+.db Word_Present, " TO HER.", Dialogue_NewPage
 
 Dialogue_Index_00AA:
-.db "I ", $E3, "FAITH ", $DC, Dialogue_NewLine
-.db $CB, " KILL", Dialogue_NewPage
-.db $D4, " AND RETURN", Dialogue_NewLine
-.db $D2, " EVENTUALLY.", Dialogue_Terminator65
+.db "I ", Word_Have, "FAITH ", Word_That, Dialogue_NewLine
+.db Word_You_Will, " KILL", Dialogue_NewPage
+.db Word_Lassic, " AND RETURN", Dialogue_NewLine
+.db Word_Here, " EVENTUALLY.", Dialogue_Terminator65
 
 Dialogue_Index_00AC:
-.db "IF ", $DE, $AA, Dialogue_NewLine
+.db "IF ", Word_The, Word_Governor, Dialogue_NewLine
 .db "ORDERS NOAH TO DO", Dialogue_NewPage
-.db $D5, $F7, ",HE WILL", Dialogue_NewLine
+.db Word_Some, Word_Thing, ",HE WILL", Dialogue_NewLine
 .db "LIKELY OBEY.", Dialogue_Terminator65
 
 Dialogue_Index_00AE:
-.db "WHO ", $EC, "YOU? I", Dialogue_Apostrophe, "M", Dialogue_NewLine
+.db "WHO ", Word_Are, "YOU? I", Dialogue_Apostrophe, "M", Dialogue_NewLine
 .db "BUSY WITH MY", Dialogue_NewPage
 
 Dialogue_Index_00B0:
 .db "TRAINING NOW! DO", Dialogue_NewLine
-.db $F8, "BE A NUISANCE!", Dialogue_Terminator65
+.db Word_Not, "BE A NUISANCE!", Dialogue_Terminator65
 
 Dialogue_Index_00B2:
 .db "HELLO!", Dialogue_Terminator65
@@ -17548,47 +17541,47 @@ Dialogue_Index_00B4:
 .db "ZZZ...ZZZ...", Dialogue_Terminator65
 
 Dialogue_Index_00B6:
-.db $C9, $BF, " ", $E2, Dialogue_NewLine
-.db "WEARY B", $FD, "S.", Dialogue_Terminator65
+.db Word_Please, Word_Rest, " ", Word_Your, Dialogue_NewLine
+.db "WEARY B", Word_One, "S.", Dialogue_Terminator65
 
 Dialogue_Index_00B8:
 .db "I AM PRAYING FOR", Dialogue_NewLine
-.db $E2, "SAFETY.", Dialogue_Terminator65
+.db Word_Your, "SAFETY.", Dialogue_Terminator65
 
 Dialogue_Index_00BA:
-.db "COULD YA SP", $EC, "ME", Dialogue_NewLine
+.db "COULD YA SP", Word_Are, "ME", Dialogue_NewLine
 .db "A CUP OF COLA?", Dialogue_Terminator62
 
 Dialogue_Index_00BC:
-.db $B3, "! ", $E4, "WAS", Dialogue_NewLine
-.db "ONCE ", $DE, "LAB. OF", Dialogue_NewPage
+.db Word_Thanks, "! ", Word_This, "WAS", Dialogue_NewLine
+.db "ONCE ", Word_The, "LAB. OF", Dialogue_NewPage
 
 Dialogue_Index_00BE:
-.db "DR.", $AD, ". HE WENTBONKERS, THOUGH", Dialogue_NewPage
+.db "DR.", Word_Luveno, ". HE WENTBONKERS, THOUGH", Dialogue_NewPage
 
 Dialogue_Index_00C0:
-.db "AND BE INPRIS", $FD, "D", Dialogue_NewLine
-.db "IN TRIADA TO ", $DE, Dialogue_NewPage
-.db "SOUTH OF ", $D2, ".", Dialogue_Terminator65
+.db "AND BE INPRIS", Word_One, "D", Dialogue_NewLine
+.db "IN TRIADA TO ", Word_The, Dialogue_NewPage
+.db "SOUTH OF ", Word_Here, ".", Dialogue_Terminator65
 
 Dialogue_Index_00C2:
 .db "I GOT NOTHIN", Dialogue_Apostrophe, " TO", Dialogue_NewLine
 .db "SAY T", Dialogue_Apostrophe, "YA!GET LOST!", Dialogue_Terminator65
 
 Dialogue_Index_00C4:
-.db "DON", Dialogue_Apostrophe, "T GO NEAR ", $DE, Dialogue_NewLine
-.db $9D, " AT ", $DE, "FAR", Dialogue_NewPage
+.db "DON", Dialogue_Apostrophe, "T GO NEAR ", Word_The, Dialogue_NewLine
+.db Word_Tower, " AT ", Word_The, "FAR", Dialogue_NewPage
 
 Dialogue_Index_00C6:
-.db "END OF ", $DE, "NARROW", Dialogue_NewLine
+.db "END OF ", Word_The, "NARROW", Dialogue_NewLine
 .db "ROAD WHICH GOES", Dialogue_NewPage
-.db $FE, $DE, $95, Dialogue_NewLine
-.db $C4, " ", $DD, " THE", Dialogue_NewPage
+.db Word_From, Word_The, Word_Gothic, Dialogue_NewLine
+.db Word_Forest, " ", Word_Through, " THE", Dialogue_NewPage
 
 Dialogue_Index_00C8:
-.db $E5, "S. A ", $EF, "BEAST LIVES ", $D1, ".", Dialogue_NewPage
+.db Word_Mountain, "S. A ", Word_Magic_EF, "BEAST LIVES ", Word_There, ".", Dialogue_NewPage
 .db "LOOK AT IT AND YA", Dialogue_NewLine
-.db "TURN TO ST", $FD, ".", Dialogue_Terminator65
+.db "TURN TO ST", Word_One, ".", Dialogue_Terminator65
 
 Dialogue_Index_00CA:
 .db "AH, IT", Dialogue_Apostrophe, "S GETTING", Dialogue_NewLine
@@ -17597,35 +17590,35 @@ Dialogue_Index_00CA:
 Dialogue_Index_00CC:
 .db "ASSISTANT. HE", Dialogue_Apostrophe, "S", Dialogue_NewLine
 .db "LIKELY HIDING", Dialogue_NewPage
-.db "IN ", $DE, "UNDERGROUND", $BA, ".", Dialogue_Terminator65
+.db "IN ", Word_The, "UNDERGROUND", Word_Passage, ".", Dialogue_Terminator65
 
 Dialogue_Index_00CE:
-.db $EB, Dialogue_Terminator65
+.db Word_Dont_Be_A_Fool, Dialogue_Terminator65
 
 Dialogue_Index_00D0:
-.db $E1, "DON", Dialogue_Apostrophe, "T ", $E3, Dialogue_NewLine
+.db Word_You, "DON", Dialogue_Apostrophe, "T ", Word_Have, Dialogue_NewLine
 .db "ENOUGH. COME BACK", Dialogue_NewPage
-.db "AGAIN WHEN ", $E1, Dialogue_NewLine
-.db $E3, "ENOUGH FUNDS.", Dialogue_Terminator65
+.db "AGAIN WHEN ", Word_You, Dialogue_NewLine
+.db Word_Have, "ENOUGH FUNDS.", Dialogue_Terminator65
 
 Dialogue_Index_00D2:
-.db "SUCCESS! I ", $DF, "A SUPERB ", $E8, Dialogue_NewPage
-.db $DE, $AD, ".", Dialogue_Terminator65
+.db "SUCCESS! I ", Word_Present, "A SUPERB ", Word_Spaceship, Dialogue_NewPage
+.db Word_The, Word_Luveno, ".", Dialogue_Terminator65
 
 Dialogue_Index_00D4:
-.db "IF ", $E1, "DON", Dialogue_Apostrophe, "T OBEY", Dialogue_NewLine
-.db "ME, I ", $88, " ", $CA, ".", Dialogue_Terminator65
+.db "IF ", Word_You, "DON", Dialogue_Apostrophe, "T OBEY", Dialogue_NewLine
+.db "ME, I ", Word_Cannot, " ", Word_Help, ".", Dialogue_Terminator65
 
 Dialogue_Index_00D6:
-.db "BUT ", $E1, $88, " FLY", Dialogue_NewLine
-.db "A ", $E8, ".", Dialogue_Terminator65
+.db "BUT ", Word_You, Word_Cannot, " FLY", Dialogue_NewLine
+.db "A ", Word_Spaceship, ".", Dialogue_Terminator65
 
 Dialogue_Index_00D8:
-.db "HOW IS ", $DE, $AD, "?USE IT WELL.", Dialogue_Terminator65
+.db "HOW IS ", Word_The, Word_Luveno, "?USE IT WELL.", Dialogue_Terminator65
 
 Dialogue_Index_00DA:
-.db $DC, Dialogue_Apostrophe, "S TOO BAD.", Dialogue_NewLine
-.db "AND ", $E1, $E3, "COME", Dialogue_NewPage
+.db Word_That, Dialogue_Apostrophe, "S TOO BAD.", Dialogue_NewLine
+.db "AND ", Word_You, Word_Have, "COME", Dialogue_NewPage
 .db "SO FAR, TOO.", Dialogue_Terminator65
 
 Dialogue_Index_00DC:
@@ -17633,124 +17626,124 @@ Dialogue_Index_00DC:
 .db "BOTHER ME.", Dialogue_Terminator65
 
 Dialogue_Index_00DE:
-.db "I", Dialogue_Apostrophe, "M ", $AD, ". IF", Dialogue_NewLine
+.db "I", Dialogue_Apostrophe, "M ", Word_Luveno, ". IF", Dialogue_NewLine
 .db "YOU", Dialogue_Apostrophe, "VE COME FOR", Dialogue_NewPage
-.db $CA, ", ", $E1, "HAD BESTFORGET IT. LEAVE!", Dialogue_Terminator65
+.db Word_Help, ", ", Word_You, "HAD BESTFORGET IT. LEAVE!", Dialogue_Terminator65
 
 Dialogue_Index_00E0:
-.db $E1, $F9, "ME TO", Dialogue_NewLine
-.db "BUILD A ", $E8, Dialogue_NewPage
-.db "FOR ", $E1, "? ", $F8, "A", Dialogue_NewLine
+.db Word_You, Word_Want, "ME TO", Dialogue_NewLine
+.db "BUILD A ", Word_Spaceship, Dialogue_NewPage
+.db "FOR ", Word_You, "? ", Word_Not, "A", Dialogue_NewLine
 .db "CHANCE! I CAN", Dialogue_Apostrophe, "T", Dialogue_NewPage
 .db "ACCEPT SUCH", Dialogue_NewLine
 .db "RESPONSIBILITY.", Dialogue_Terminator65
 
 Dialogue_Index_00E2:
-.db $E1, $EC, "CERTAINLY", Dialogue_NewLine
+.db Word_You, Word_Are, "CERTAINLY", Dialogue_NewLine
 .db "PERSISITENT. WELL,", Dialogue_NewPage
-.db "IF ", $CB, " DO AS", Dialogue_NewLine
-.db "I SAY, ", $CC, " ", $CA, Dialogue_NewPage
+.db "IF ", Word_You_Will, " DO AS", Dialogue_NewLine
+.db "I SAY, ", Word_I_Will, " ", Word_Help, Dialogue_NewPage
 .db "YOU. IS IT A DEAL?", Dialogue_Terminator62
 
 Dialogue_Index_00E4:
-.db "O.K. ", $CC, " GO TO", Dialogue_NewLine
-.db $95, " ", $9E, Dialogue_NewPage
+.db "O.K. ", Word_I_Will, " GO TO", Dialogue_NewLine
+.db Word_Gothic, " ", Word_Village, Dialogue_NewPage
 .db "NEARBY TO MAKE", Dialogue_NewLine
 .db "PREPARATIONS. COME", Dialogue_NewPage
-.db "THEN. DO ", $F8, "WASTEWORRY ON ME.", Dialogue_Terminator65
+.db "THEN. DO ", Word_Not, "WASTEWORRY ON ME.", Dialogue_Terminator65
 
 Dialogue_Index_00E6:
-.db $C5, " ", $E2, Dialogue_NewLine
-.db $A0, "?", Dialogue_Terminator62
+.db Word_Do_You_Have, " ", Word_Your, Dialogue_NewLine
+.db Word_Roadpass, "?", Dialogue_Terminator62
 
 Dialogue_Index_00E8:
-.db $E1, $EC, "A FOOL!", Dialogue_NewLine
-.db $CB, " DIE!", Dialogue_Terminator65
+.db Word_You, Word_Are, "A FOOL!", Dialogue_NewLine
+.db Word_You_Will, " DIE!", Dialogue_Terminator65
 
 Dialogue_Index_00EA:
 .db "SPIDER MONSTERS", Dialogue_NewLine
-.db $EC, "ACTUALLY", Dialogue_NewPage
+.db Word_Are, "ACTUALLY", Dialogue_NewPage
 .db "VERY INTELLIGENT.", Dialogue_Terminator65
 
 Dialogue_Index_00EC:
-.db $C3, " ", $DE, Dialogue_NewLine
-.db "ROBOT ", $8A, "?", Dialogue_Terminator62
+.db Word_Do_You_Know, " ", Word_The, Dialogue_NewLine
+.db "ROBOT ", Word_Hapsby, "?", Dialogue_Terminator62
 
 Dialogue_Index_00EE:
-.db "ON ", $DE, "FAR SIDE OF", $DE, $E5, "S LIES", Dialogue_NewPage
+.db "ON ", Word_The, "FAR SIDE OF", Word_The, Word_Mountain, "S LIES", Dialogue_NewPage
 .db "A POOL OF MOLTEN", Dialogue_NewLine
 .db "LAVA CREATED BY A", Dialogue_NewPage
 .db "VOLCANIC ERUPTION.", Dialogue_Terminator65
 
 Dialogue_Index_00F0:
-.db $DE, $9D, " DEEP IN", Dialogue_NewLine
-.db $DE, $95, Dialogue_NewPage
-.db $E5, "S IS KNOWNAS ", $EA, Dialogue_Apostrophe, "S ", $9D, ".", Dialogue_Terminator65
+.db Word_The, Word_Tower, " DEEP IN", Dialogue_NewLine
+.db Word_The, Word_Gothic, Dialogue_NewPage
+.db Word_Mountain, "S IS KNOWNAS ", Word_Medusa, Dialogue_Apostrophe, "S ", Word_Tower, ".", Dialogue_Terminator65
 
 Dialogue_Index_00F2:
 .db "I HAVEN", Dialogue_Apostrophe, "T SEEN", Dialogue_NewLine
-.db $F6, $FD, " FOR A LONG", Dialogue_NewPage
-.db $9F, ". ", $CD, Dialogue_NewLine
+.db Word_Any, Word_One, " FOR A LONG", Dialogue_NewPage
+.db Word_Time, ". ", Word_Will_You, Dialogue_NewLine
 .db "TALK WITH ME?", Dialogue_Terminator62
 
 Dialogue_Index_00F4:
-.db "POLYMETERAL ", $C7, Dialogue_NewLine
+.db "POLYMETERAL ", Word_Will, Dialogue_NewLine
 .db "DISSOLVE ALL", Dialogue_NewPage
 .db "MATERIALS EXCEPT", Dialogue_NewLine
-.db "FOR ", $BC, ".", Dialogue_Terminator65
+.db "FOR ", Word_Laconia, ".", Dialogue_Terminator65
 
 Dialogue_Index_00F6:
-.db "WHAT? DR.", $AD, Dialogue_NewLine
+.db "WHAT? DR.", Word_Luveno, Dialogue_NewLine
 .db "HAS RETURNED?", Dialogue_NewPage
-.db "HE ", $C7, " BUILD", Dialogue_NewLine
-.db "ANOTHER ", $E8, "?", Dialogue_NewPage
-.db "I ", $C7, " BE ", $D1, Dialogue_NewLine
+.db "HE ", Word_Will, " BUILD", Dialogue_NewLine
+.db "ANOTHER ", Word_Spaceship, "?", Dialogue_NewPage
+.db "I ", Word_Will, " BE ", Word_There, Dialogue_NewLine
 .db "RIGHT AWAY.", Dialogue_Terminator65
 
 Dialogue_Index_00F8:
-.db "NO MAN ", $DC, " GOES", Dialogue_NewLine
-.db "INTO ", $DE, "ROOM IN", Dialogue_NewPage
-.db $DE, "FAR CORNER HASEVER COME OUT", Dialogue_NewPage
+.db "NO MAN ", Word_That, " GOES", Dialogue_NewLine
+.db "INTO ", Word_The, "ROOM IN", Dialogue_NewPage
+.db Word_The, "FAR CORNER HASEVER COME OUT", Dialogue_NewPage
 .db "ALIVE! AHA-HA-HA!", Dialogue_Terminator65
 
 Dialogue_Index_00FA:
 .db "IT SEEMS TO BE A", Dialogue_NewLine
 .db "MAN WHO HAS BEEN", Dialogue_NewPage
-.db $91, "!", Dialogue_NewLine
+.db Word_Turned_To_Stone, "!", Dialogue_NewLine
 .db "I WONDER IF HE CAN", Dialogue_NewPage
 .db "BE RETURNED TO HISORIGINAL FORM?", Dialogue_Terminator65
 
 Dialogue_Index_00FC:
-.db $CB, " SOON FIND", Dialogue_NewLine
-.db "OUT ", $DE, "TRUTH!", Dialogue_Terminator65
+.db Word_You_Will, " SOON FIND", Dialogue_NewLine
+.db "OUT ", Word_The, "TRUTH!", Dialogue_Terminator65
 
 Dialogue_Index_00FE:
 .db "HALT! GO BACK!", Dialogue_NewLine
-.db $E2, "LAST CHANCE!", Dialogue_Terminator65
+.db Word_Your, "LAST CHANCE!", Dialogue_Terminator65
 
 Dialogue_Index_0100:
 .db "HOW BRAVE! BUT BE", Dialogue_NewLine
-.db $ED, " OF TRAPS!", Dialogue_Terminator65
+.db Word_Careful, " OF TRAPS!", Dialogue_Terminator65
 
 Dialogue_Index_0102:
-.db $A8, " IS MY", Dialogue_NewLine
+.db Word_Bortevo, " IS MY", Dialogue_NewLine
 .db "TURF. DON", Dialogue_Apostrophe, "T YA", Dialogue_NewPage
-.db "MESS ", Dialogue_Apostrophe, "ROUND ", $D2, ",", Dialogue_NewLine
+.db "MESS ", Dialogue_Apostrophe, "ROUND ", Word_Here, ",", Dialogue_NewLine
 .db "NOW GIT!", Dialogue_Terminator65
 
 Dialogue_Index_0104:
-.db $CE, " FIND A", Dialogue_NewLine
-.db "ROBOT ", $E7, Dialogue_NewPage
-.db $8A, ". HE CAN FLYA ", $E8, ".", Dialogue_Terminator65
+.db Word_You_Must, " FIND A", Dialogue_NewLine
+.db "ROBOT ", Word_Named, Dialogue_NewPage
+.db Word_Hapsby, ". HE CAN FLYA ", Word_Spaceship, ".", Dialogue_Terminator65
 
 Dialogue_Index_0106:
-.db "IN ", $E4, "PILE OF", Dialogue_NewLine
-.db "JUNK, ", $D5, $D0, ",", Dialogue_NewPage
+.db "IN ", Word_This, "PILE OF", Dialogue_NewLine
+.db "JUNK, ", Word_Some, Word_Where, ",", Dialogue_NewPage
 
 Dialogue_Index_0108:
-.db $DA, " S", Dialogue_Apostrophe, "PPOSED", Dialogue_NewLine
+.db Word_There_Is, " S", Dialogue_Apostrophe, "PPOSED", Dialogue_NewLine
 .db "T", Dialogue_Apostrophe, "BE A USABLE", Dialogue_NewPage
-.db "ROBOT,BUT ", $E1, $BE, Dialogue_NewLine
+.db "ROBOT,BUT ", Word_You, Word_Know, Dialogue_NewLine
 .db "HOW RUMORS BE.", Dialogue_Terminator65
 
 Dialogue_Index_010A:
@@ -17758,79 +17751,79 @@ Dialogue_Index_010A:
 .db "SALE IN ABION.", Dialogue_Terminator65
 
 Dialogue_Index_010C:
-.db $E4, $B9, " IS", Dialogue_NewLine
+.db Word_This, Word_Town, " IS", Dialogue_NewLine
 .db "CALLED LOAR.", Dialogue_NewPage
-.db "WE ", $E3, "BEEN IN", Dialogue_NewLine
-.db "DECLINE ", $B3, " TO", Dialogue_NewPage
-.db $DE, "WORK OF", Dialogue_NewLine
-.db $D4, ".", Dialogue_Terminator65
+.db "WE ", Word_Have, "BEEN IN", Dialogue_NewLine
+.db "DECLINE ", Word_Thanks, " TO", Dialogue_NewPage
+.db Word_The, "WORK OF", Dialogue_NewLine
+.db Word_Lassic, ".", Dialogue_Terminator65
 
 Dialogue_Index_010E:
-.db $E3, $E1, "HEARD OF", Dialogue_NewLine
-.db "A GEM CALLED \"", $DE, Dialogue_NewPage
+.db Word_Have, Word_You, "HEARD OF", Dialogue_NewLine
+.db "A GEM CALLED \"", Word_The, Dialogue_NewPage
 .db "AMBER EYE\"?", Dialogue_NewLine
 
 Dialogue_Index_0110:
-.db $D5, " SAY ", $DE, "CASBA", Dialogue_NewPage
-.db "DRAGON HAS ", $FD, ".", Dialogue_Terminator65
+.db Word_Some, " SAY ", Word_The, "CASBA", Dialogue_NewPage
+.db "DRAGON HAS ", Word_One, ".", Dialogue_Terminator65
 
 Dialogue_Index_0112:
-.db $DA, " A ", $9E, "CALLED ABION ON", Dialogue_NewPage
-.db $DE, "WESTERN EDGE", Dialogue_NewLine
-.db "ON ", $E4, "ISLAND.", Dialogue_Terminator65
+.db Word_There_Is, " A ", Word_Village, "CALLED ABION ON", Dialogue_NewPage
+.db Word_The, "WESTERN EDGE", Dialogue_NewLine
+.db "ON ", Word_This, "ISLAND.", Dialogue_Terminator65
 
 Dialogue_Index_0114:
-.db $C3, " ABOUT", Dialogue_NewLine
-.db $D7, " TREES?", Dialogue_Terminator62
+.db Word_Do_You_Know, " ABOUT", Dialogue_NewLine
+.db Word_Laerma, " TREES?", Dialogue_Terminator62
 
 Dialogue_Index_0116:
-.db "THEY GROW ON ", $DE, Dialogue_NewLine
+.db "THEY GROW ON ", Word_The, Dialogue_NewLine
 .db "ALTIPLANO PLATEAU", Dialogue_NewPage
-.db "ON ", $DE, $9A, Dialogue_NewLine
-.db $93, ".", Dialogue_Terminator65
+.db "ON ", Word_The, Word_Planet, Dialogue_NewLine
+.db Word_Dezoris, ".", Dialogue_Terminator65
 
 Dialogue_Index_0118:
-.db $E1, $EC, "GOING TO", Dialogue_NewLine
-.db "TRY TO KILL ", $D4, Dialogue_NewPage
-.db "I HEAR. ", $DC, Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db Word_You, Word_Are, "GOING TO", Dialogue_NewLine
+.db "TRY TO KILL ", Word_Lassic, Dialogue_NewPage
+.db "I HEAR. ", Word_That, Dialogue_Apostrophe, "S", Dialogue_NewLine
 .db "GREAT!", Dialogue_NewPage
 
 Dialogue_Index_011A:
-.db "I ", $E3, "HEARD ", $DC, Dialogue_NewLine
+.db "I ", Word_Have, "HEARD ", Word_That, Dialogue_NewLine
 .db "A CERTAIN", Dialogue_NewPage
-.db "CRYSTAL ", $C7, " BLOCK", Dialogue_NewLine
-.db "EVIL ", $EF, ".", Dialogue_Terminator65
+.db "CRYSTAL ", Word_Will, " BLOCK", Dialogue_NewLine
+.db "EVIL ", Word_Magic_EF, ".", Dialogue_Terminator65
 
 Dialogue_Index_011C:
-.db $E0, "TO ABION.", Dialogue_Terminator65
+.db Word_Welcome, "TO ABION.", Dialogue_Terminator65
 
 Dialogue_Index_011E:
-.db $CA, "! ", $D4, " HAS", Dialogue_NewLine
-.db "COME TO ", $E4, $B9, "!", Dialogue_Terminator65
+.db Word_Help, "! ", Word_Lassic, " HAS", Dialogue_NewLine
+.db "COME TO ", Word_This, Word_Town, "!", Dialogue_Terminator65
 
 Dialogue_Index_0120:
-.db "A ", $AC, " MAN CAMETO ", $E4, $B9, ". HE", Dialogue_NewPage
+.db "A ", Word_Strange, " MAN CAMETO ", Word_This, Word_Town, ". HE", Dialogue_NewPage
 .db "SEEMS TO BE", Dialogue_NewLine
 .db "PERFORMING ANIMAL", Dialogue_NewPage
 
 Dialogue_Index_0122:
 .db "EXPERIMENTS. HE", Dialogue_NewLine
 .db "BROUGHT A LARGE", Dialogue_NewPage
-.db "POT OR ", $D5, $F7, ".", Dialogue_Terminator65
+.db "POT OR ", Word_Some, Word_Thing, ".", Dialogue_Terminator65
 
 Dialogue_Index_0124:
 .db "IT", Dialogue_Apostrophe, "S A ROBOT MADE", Dialogue_NewLine
-.db "OF ", $BC, ". BUT", Dialogue_NewPage
+.db "OF ", Word_Laconia, ". BUT", Dialogue_NewPage
 .db "IT HAS BEEN", Dialogue_NewLine
-.db "ABAND", $FD, "D", Dialogue_NewPage
-.db $D5, $D0, " AS", Dialogue_NewLine
+.db "ABAND", Word_One, "D", Dialogue_NewPage
+.db Word_Some, Word_Where, " AS", Dialogue_NewLine
 .db "BEING USELESS.", Dialogue_Terminator65
 
 Dialogue_Index_0126:
 .db "I", Dialogue_Apostrophe, "D LIKE TO TRAVELIN OUTER SPACE.", Dialogue_Terminator65
 
 Dialogue_Index_0128:
-.db $D5, " CATS, IF THEYEAT A CERTAIN TYPE", Dialogue_NewPage
+.db Word_Some, " CATS, IF THEYEAT A CERTAIN TYPE", Dialogue_NewPage
 .db "OF NUT,THEY BECOMEHUGE AND CAN FLY.", Dialogue_NewPage
 
 Dialogue_Index_012A:
@@ -17838,374 +17831,374 @@ Dialogue_Index_012A:
 .db "WIERD.", Dialogue_Terminator65
 
 Dialogue_Index_012C:
-.db "I", Dialogue_Apostrophe, "M ", $8A, ".", Dialogue_NewLine
-.db $B3, " FOR FINDING", Dialogue_NewPage
-.db "ME. I CAN FLY ", $DE, Dialogue_NewLine
-.db $AD, " FOR YOU.", Dialogue_Terminator65
+.db "I", Dialogue_Apostrophe, "M ", Word_Hapsby, ".", Dialogue_NewLine
+.db Word_Thanks, " FOR FINDING", Dialogue_NewPage
+.db "ME. I CAN FLY ", Word_The, Dialogue_NewLine
+.db Word_Luveno, " FOR YOU.", Dialogue_Terminator65
 
 Dialogue_Index_012E:
-.db $E4, $B9, " IS", Dialogue_NewLine
+.db Word_This, Word_Town, " IS", Dialogue_NewLine
 .db "CALLED UZO.", Dialogue_Terminator65
 
 Dialogue_Index_0130:
-.db "IF ", $E1, "USE A", Dialogue_NewLine
+.db "IF ", Word_You, "USE A", Dialogue_NewLine
 .db "VEHICLE CALLED THE", Dialogue_NewPage
-.db "LAND ROVER, ", $DE, Dialogue_NewLine
-.db $A3, " ", $C7, " NOT", Dialogue_NewPage
+.db "LAND ROVER, ", Word_The, Dialogue_NewLine
+.db Word_Ant_Lion, " ", Word_Will, " NOT", Dialogue_NewPage
 .db "BE ABLE TO HARM", Dialogue_NewLine
 .db "YOU.", Dialogue_Terminator65
 
 Dialogue_Index_0132:
-.db $DA, " A ", $B9, Dialogue_NewLine
+.db Word_There_Is, " A ", Word_Town, Dialogue_NewLine
 .db "CALLED CASBA TO", Dialogue_NewPage
-.db $DE, "SOUTH OF ", $D2, ".", Dialogue_Terminator65
+.db Word_The, "SOUTH OF ", Word_Here, ".", Dialogue_Terminator65
 
 Dialogue_Index_0134:
-.db $DB, " DRAGONS", Dialogue_NewLine
-.db "LIVING IN ", $DE, Dialogue_NewPage
+.db Word_There_Are, " DRAGONS", Dialogue_NewLine
+.db "LIVING IN ", Word_The, Dialogue_NewPage
 .db "CASBA CAVE. THESE", Dialogue_NewLine
-.db "DRAGONS ", $E3, "GEMS", Dialogue_NewPage
+.db "DRAGONS ", Word_Have, "GEMS", Dialogue_NewPage
 .db "IN THEIR HEADS!", Dialogue_Terminator65
 
 Dialogue_Index_0136:
-.db $E3, $E1, "HEARD", Dialogue_NewLine
+.db Word_Have, Word_You, "HEARD", Dialogue_NewLine
 .db "ABOUT MANTLES MADE", Dialogue_NewPage
 .db "OF FRAD FIBERS?", Dialogue_NewLine
 
 Dialogue_Index_0138:
-.db "THEY ", $EC, "LIGHT,", Dialogue_NewPage
-.db "BUT PROVIDE ", $E6, Dialogue_NewLine
+.db "THEY ", Word_Are, "LIGHT,", Dialogue_NewPage
+.db "BUT PROVIDE ", Word_Great, Dialogue_NewLine
 .db "PROTECTION.", Dialogue_Terminator65
 
 Dialogue_Index_013A:
-.db $E3, $E1, "HEARD", Dialogue_NewLine
-.db "ABOUT ", $DE, Dialogue_NewPage
-.db $A4, "?", Dialogue_Terminator62
+.db Word_Have, Word_You, "HEARD", Dialogue_NewLine
+.db "ABOUT ", Word_The, Dialogue_NewPage
+.db Word_Soothing_Flute, "?", Dialogue_Terminator62
 
 Dialogue_Index_013C:
 .db "OH, NEVER MIND.", Dialogue_Terminator65
 
 Dialogue_Index_013E:
-.db "IT", Dialogue_Apostrophe, "S A ", $A5, ", BUTI BURIED ", $FD, " AT", Dialogue_NewPage
-.db $DE, "OUTSKIRTS OF", Dialogue_NewLine
-.db $DE, $B9, " OF ", $95, Dialogue_NewPage
+.db "IT", Dialogue_Apostrophe, "S A ", Word_Secret, ", BUTI BURIED ", Word_One, " AT", Dialogue_NewPage
+.db Word_The, "OUTSKIRTS OF", Dialogue_NewLine
+.db Word_The, Word_Town, " OF ", Word_Gothic, Dialogue_NewPage
 
 Dialogue_Index_0140:
-.db "ON ", $CF, ". DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
-.db "TELL ", $F6, $FD, ".", Dialogue_Terminator65
+.db "ON ", Word_Palma, ". DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
+.db "TELL ", Word_Any, Word_One, ".", Dialogue_Terminator65
 
 Dialogue_Index_0142:
-.db "I DON", Dialogue_Apostrophe, "T ", $BE, " WHO", Dialogue_NewLine
-.db "TOLD ", $E1, $DC, ".", Dialogue_NewPage
-.db $E1, "HAD BEST", Dialogue_NewLine
+.db "I DON", Dialogue_Apostrophe, "T ", Word_Know, " WHO", Dialogue_NewLine
+.db "TOLD ", Word_You, Word_That, ".", Dialogue_NewPage
+.db Word_You, "HAD BEST", Dialogue_NewLine
 .db "FORGET IT.", Dialogue_Terminator65
 
 Dialogue_Index_0144:
-.db "I TELL ", $E1, "NO ", $FD, Dialogue_NewLine
+.db "I TELL ", Word_You, "NO ", Word_One, Dialogue_NewLine
 .db "CAN DO.GO ON BACK", Dialogue_NewPage
-.db "TO WHEREVER ", $E1, Dialogue_NewLine
+.db "TO WHEREVER ", Word_You, Dialogue_NewLine
 .db "CAME FROM.", Dialogue_Terminator65
 
 Dialogue_Index_0146:
 .db "ALL RIGHT, ALL", Dialogue_NewLine
 .db "RIGHT. I GIVE UP.", Dialogue_NewPage
 .db "BUT DON", Dialogue_Apostrophe, "T TELL", Dialogue_NewLine
-.db $F6, $FD, " ", $D0, " ", $E1, Dialogue_NewPage
+.db Word_Any, Word_One, " ", Word_Where, " ", Word_You, Dialogue_NewPage
 .db "GOT THIS, O.K.?", Dialogue_Terminator65
 
 Dialogue_Index_0148:
-.db "I", Dialogue_Apostrophe, "M ", $DE, $E6, Dialogue_NewLine
-.db "DAMOR, ", $BB, "!", Dialogue_NewPage
+.db "I", Dialogue_Apostrophe, "M ", Word_The, Word_Great, Dialogue_NewLine
+.db "DAMOR, ", Word_Soothsayer, "!", Dialogue_NewPage
 
 Dialogue_Index_014A:
-.db $C6, " BELIEVE IN", Dialogue_NewLine
+.db Word_Do_You, " BELIEVE IN", Dialogue_NewLine
 .db "MY PROPHECIES?", Dialogue_Terminator62
 
 Dialogue_Index_014C:
 .db "I", Dialogue_Apostrophe, "VE GOT A FRIEND", Dialogue_NewLine
-.db "IN ", $A8, ". HE", Dialogue_Apostrophe, "S", Dialogue_NewPage
+.db "IN ", Word_Bortevo, ". HE", Dialogue_Apostrophe, "S", Dialogue_NewPage
 .db "PROBABLY HAVING A", Dialogue_NewLine
-.db "HARD ", $9F, " BECAUSE", Dialogue_NewPage
-.db "OF ", $DE, "LAVA. WHY", Dialogue_NewLine
-.db $F8, "VISIT HIM?", Dialogue_Terminator65
+.db "HARD ", Word_Time, " BECAUSE", Dialogue_NewPage
+.db "OF ", Word_The, "LAVA. WHY", Dialogue_NewLine
+.db Word_Not, "VISIT HIM?", Dialogue_Terminator65
 
 Dialogue_Index_014E:
 .db "GOOD!", Dialogue_Terminator65
 
 Dialogue_Index_0150:
 .db "YOU", Dialogue_Apostrophe, "RE SEARCHING", Dialogue_NewLine
-.db "FOR ", $D5, $F7, "?", Dialogue_Terminator62
+.db "FOR ", Word_Some, Word_Thing, "?", Dialogue_Terminator62
 
 Dialogue_Index_0152:
 .db "LEAVE MY SIGHT,", Dialogue_NewLine
 .db "UNBELIEVER!", Dialogue_Terminator65
 
 Dialogue_Index_0154:
-.db $E1, $EC, "SEARCHING", Dialogue_NewLine
+.db Word_You, Word_Are, "SEARCHING", Dialogue_NewLine
 .db "FOR ALEX OSSALE?", Dialogue_Terminator62
 
 Dialogue_Index_0156:
-.db "EVERY", $F7, " I", Dialogue_Apostrophe, "VE", Dialogue_NewLine
+.db "EVERY", Word_Thing, " I", Dialogue_Apostrophe, "VE", Dialogue_NewLine
 .db "SAID IS CORRECT?", Dialogue_Terminator62
 
 Dialogue_Index_0158:
 .db "THEN, COME AGAIN,", Dialogue_NewLine
-.db $F6, $9F, ".", Dialogue_Terminator65
+.db Word_Any, Word_Time, ".", Dialogue_Terminator65
 
 Dialogue_Index_015A:
-.db $C6, " CONTRADICT", Dialogue_NewLine
-.db $DE, $E6, "DAMOR?!?", Dialogue_Terminator62
+.db Word_Do_You, " CONTRADICT", Dialogue_NewLine
+.db Word_The, Word_Great, "DAMOR?!?", Dialogue_Terminator62
 
 Dialogue_Index_015C:
 .db "OF COURSE NOT!YOU", Dialogue_NewLine
-.db $EC, "A PROMISING", Dialogue_NewPage
-.db "YOUNG LASS! ", $CC
+.db Word_Are, "A PROMISING", Dialogue_NewPage
+.db "YOUNG LASS! ", Word_I_Will
 
 Dialogue_Index_015E:
-.db "GIVE ", $E1, "A ", $EF, Dialogue_NewPage
+.db "GIVE ", Word_You, "A ", Word_Magic_EF, Dialogue_NewPage
 .db "CRYSTAL FOR A", Dialogue_NewLine
 .db "REWARD.", Dialogue_Terminator65
 
 Dialogue_Index_0160:
-.db $C6, " COME IN", Dialogue_NewLine
+.db Word_Do_You, " COME IN", Dialogue_NewLine
 .db "FULL KNOWLEDGE OF", Dialogue_NewPage
-.db $DE, $9D, " OF ", $C0, Dialogue_NewLine
-.db $C1, "?", Dialogue_Terminator62
+.db Word_The, Word_Tower, " OF ", Word_Baya, Dialogue_NewLine
+.db Word_Malay, "?", Dialogue_Terminator62
 
 Dialogue_Index_0162:
-.db $CB, " SURELY", Dialogue_NewLine
-.db "INCUR ", $DE, "WRATH", Dialogue_NewPage
-.db "OF ", $DE, "HEAVENS!", Dialogue_Terminator65
+.db Word_You_Will, " SURELY", Dialogue_NewLine
+.db "INCUR ", Word_The, "WRATH", Dialogue_NewPage
+.db "OF ", Word_The, "HEAVENS!", Dialogue_Terminator65
 
 Dialogue_Index_0164:
 .db "GO BACK BEFORE IT", Dialogue_NewLine
 .db "IS TOO LATE.", Dialogue_Terminator65
 
 Dialogue_Index_0166:
-.db $E4, $B9, " IS", Dialogue_NewLine
+.db Word_This, Word_Town, " IS", Dialogue_NewLine
 .db "CALLED CASBA.", Dialogue_Terminator65
 
 Dialogue_Index_0168:
 .db "FIERCE DRAGONS", Dialogue_NewLine
-.db "LIVE IN ", $DE, "CAVE", Dialogue_NewPage
-.db "NEAR ", $D2, ",AND I", Dialogue_Apostrophe, "M", Dialogue_NewLine
+.db "LIVE IN ", Word_The, "CAVE", Dialogue_NewPage
+.db "NEAR ", Word_Here, ",AND I", Dialogue_Apostrophe, "M", Dialogue_NewLine
 .db "SCARED OF THEM.", Dialogue_Terminator65
 
 Dialogue_Index_016A:
 .db "DON", Dialogue_Apostrophe, "T BELIEVE YOUR", Dialogue_NewLine
-.db "OWN EYES IN ", $DE, Dialogue_NewPage
-.db "DEPTH OF ", $DE, Dialogue_NewLine
-.db $D8, "S.", Dialogue_Terminator65
+.db "OWN EYES IN ", Word_The, Dialogue_NewPage
+.db "DEPTH OF ", Word_The, Dialogue_NewLine
+.db Word_Dungeon, "S.", Dialogue_Terminator65
 
 Dialogue_Index_016C:
-.db $DB, " LEGENDS", Dialogue_NewLine
-.db "OF A MYSTIC ", $B6, Dialogue_NewPage
-.db "IN A ", $9E, Dialogue_NewLine
+.db Word_There_Are, " LEGENDS", Dialogue_NewLine
+.db "OF A MYSTIC ", Word_Shield, Dialogue_NewPage
+.db "IN A ", Word_Village, Dialogue_NewLine
 .db "SURROUNDED IN MIST", Dialogue_NewPage
 
 Dialogue_Index_016E:
-.db "IT IS ", $DE, $B6, Dialogue_NewLine
+.db "IT IS ", Word_The, Word_Shield, Dialogue_NewLine
 .db "PERSEUS USED IN", Dialogue_NewPage
 .db "DAYS TO CONQUER", Dialogue_NewLine
-.db $84, "BEASTS.", Dialogue_Terminator65
+.db Word_Magic_84, "BEASTS.", Dialogue_Terminator65
 
 Dialogue_Index_0170:
-.db $DA, " POISON", Dialogue_NewLine
-.db "GAS ABOVE ", $DE, "SEA", Dialogue_NewPage
-.db "TO ", $DE, "WEST. NO", Dialogue_NewLine
-.db $FD, " CAN GO NEAR", Dialogue_NewPage
-.db $D1, " WITHOUT ", $D5, "PROTECTION.", Dialogue_Terminator65
+.db Word_There_Is, " POISON", Dialogue_NewLine
+.db "GAS ABOVE ", Word_The, "SEA", Dialogue_NewPage
+.db "TO ", Word_The, "WEST. NO", Dialogue_NewLine
+.db Word_One, " CAN GO NEAR", Dialogue_NewPage
+.db Word_There, " WITHOUT ", Word_Some, "PROTECTION.", Dialogue_Terminator65
 
 Dialogue_Index_0172:
-.db $E3, $E1, "HEARD OF", Dialogue_NewLine
+.db Word_Have, Word_You, "HEARD OF", Dialogue_NewLine
 .db "VEHICLE CALLED", Dialogue_NewPage
-.db $DE, "HOVERCRAFT?", Dialogue_Terminator62
+.db Word_The, "HOVERCRAFT?", Dialogue_Terminator62
 
 Dialogue_Index_0174:
 .db "I BOUGHT IT IN", Dialogue_NewLine
-.db $96, " ON ", $CF, Dialogue_NewPage
+.db Word_Scion, " ON ", Word_Palma, Dialogue_NewPage
 .db "BUT IT SEEMED", Dialogue_NewLine
 .db "BROKEN SO I", Dialogue_NewPage
-.db "ABAND", $FD, "D IT IN", Dialogue_NewLine
+.db "ABAND", Word_One, "D IT IN", Dialogue_NewLine
 
 Dialogue_Index_0176:
-.db $A8, ". IT", Dialogue_NewPage
+.db Word_Bortevo, ". IT", Dialogue_NewPage
 .db "PROBABLY CAN STILLBE USED, THOUGH.", Dialogue_Terminator65
 
 Dialogue_Index_0178:
-.db $E1, "FOUND ", $DE, Dialogue_NewLine
-.db "HOVERCRAFT.", $8A, Dialogue_NewPage
+.db Word_You, "FOUND ", Word_The, Dialogue_NewLine
+.db "HOVERCRAFT.", Word_Hapsby, Dialogue_NewPage
 .db "HAS RESTORED IT TO", Dialogue_NewLine
 
 Dialogue_Index_017A:
 .db "WORKING ORDER.", Dialogue_Terminator65
 
 Dialogue_Index_017C:
-.db "IT", Dialogue_Apostrophe, "S A GOOD ", $F7, Dialogue_NewLine
-.db "TO HAVE. IT ", $F3, "S", Dialogue_NewPage
+.db "IT", Dialogue_Apostrophe, "S A GOOD ", Word_Thing, Dialogue_NewLine
+.db "TO HAVE. IT ", Word_Move, "S", Dialogue_NewPage
 .db "ACROSS WATER.", Dialogue_Terminator65
 
 Dialogue_Index_017E:
-.db $E0, "TO DRASGOW-- A SMALL ", $B9, Dialogue_NewPage
-.db "ON ", $DE, "OCEAN.", Dialogue_Terminator65
+.db Word_Welcome, "TO DRASGOW-- A SMALL ", Word_Town, Dialogue_NewPage
+.db "ON ", Word_The, "OCEAN.", Dialogue_Terminator65
 
 Dialogue_Index_0180:
-.db $E1, $EC, "DARING TO", Dialogue_NewLine
-.db $E3, "FOUND ", $E2, Dialogue_NewPage
-.db "WAY ", $D2, " EVEN", Dialogue_NewLine
+.db Word_You, Word_Are, "DARING TO", Dialogue_NewLine
+.db Word_Have, "FOUND ", Word_Your, Dialogue_NewPage
+.db "WAY ", Word_Here, " EVEN", Dialogue_NewLine
 
 Dialogue_Index_0182:
-.db "THOUGH ", $DE, "SEA", Dialogue_NewPage
-.db "LANES ", $EC, "CLOSED", Dialogue_NewLine
+.db "THOUGH ", Word_The, "SEA", Dialogue_NewPage
+.db "LANES ", Word_Are, "CLOSED", Dialogue_NewLine
 .db "TO SHIPS.", Dialogue_Terminator65
 
 Dialogue_Index_0184:
-.db $DA, " A ", $EF, Dialogue_NewLine
-.db "SWORD IN A ", $9D, Dialogue_NewPage
+.db Word_There_Is, " A ", Word_Magic_EF, Dialogue_NewLine
+.db "SWORD IN A ", Word_Tower, Dialogue_NewPage
 .db "ON A FORGOTTEN", Dialogue_NewLine
 .db "ISLAND.", Dialogue_Terminator65
 
 Dialogue_Index_0186:
 .db "LONG AGO, I SAW A", Dialogue_NewLine
 .db "GIANT ROCK FLOAT", Dialogue_NewPage
-.db $DD, " ", $DE, "SKY.", Dialogue_Terminator65
+.db Word_Through, " ", Word_The, "SKY.", Dialogue_Terminator65
 
 Dialogue_Index_0188:
-.db $DE, "TOP OF ", $DE, Dialogue_NewLine
-.db $AB, " CALLED ", $C0, Dialogue_NewPage
-.db $C1, " IS ALWAYS", Dialogue_NewLine
+.db Word_The, "TOP OF ", Word_The, Dialogue_NewLine
+.db Word_Hill, " CALLED ", Word_Baya, Dialogue_NewPage
+.db Word_Malay, " IS ALWAYS", Dialogue_NewLine
 .db "HIDDEN BY CLOUDS.", Dialogue_NewPage
 
 Dialogue_Index_018A:
-.db $D5, $F7, " ", $C8, " BE", Dialogue_NewLine
-.db "UP ", $D1, "!", Dialogue_Terminator65
+.db Word_Some, Word_Thing, " ", Word_Must, " BE", Dialogue_NewLine
+.db "UP ", Word_There, "!", Dialogue_Terminator65
 
 Dialogue_Index_018C:
-.db "I HEARD ", $DC, " THEY", Dialogue_NewLine
-.db "SELL GAS ", $B6, Dialogue_NewPage
-.db $D2, ", BUT I DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
-.db $BE, " ", $D0, " ", $DE, Dialogue_NewPage
+.db "I HEARD ", Word_That, " THEY", Dialogue_NewLine
+.db "SELL GAS ", Word_Shield, Dialogue_NewPage
+.db Word_Here, ", BUT I DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
+.db Word_Know, " ", Word_Where, " ", Word_The, Dialogue_NewPage
 .db "SHOP IS!", Dialogue_NewLine
 
 Dialogue_Index_018E:
 .db "WHAT A MESS!", Dialogue_Terminator65
 
 Dialogue_Index_0190:
-.db $E0, "TO OUR", Dialogue_NewLine
+.db Word_Welcome, "TO OUR", Dialogue_NewLine
 .db "STORE. WHAT CAN I", Dialogue_NewPage
-.db $CA, " ", $E1, "WITH?", Dialogue_NewPage
+.db Word_Help, " ", Word_You, "WITH?", Dialogue_NewPage
 
 Dialogue_Index_0192:
-.db "AHH, I WAS PULLING", $E2, "LEG! WHAT", Dialogue_Apostrophe, "S", Dialogue_NewPage
+.db "AHH, I WAS PULLING", Word_Your, "LEG! WHAT", Dialogue_Apostrophe, "S", Dialogue_NewPage
 .db "A MATTER, CAN", Dialogue_Apostrophe, "T", Dialogue_NewLine
-.db $E1, "TAKE A JOKE?", Dialogue_Terminator65
+.db Word_You, "TAKE A JOKE?", Dialogue_Terminator65
 
 Dialogue_Index_0194:
-.db "I BET ", $E1, $EC, Dialogue_NewLine
+.db "I BET ", Word_You, Word_Are, Dialogue_NewLine
 .db "SURPRISED TO SEE A", Dialogue_NewPage
 .db "SHOP IN A PLACE", Dialogue_NewLine
 .db "LIKE THIS!", Dialogue_NewPage
 
 Dialogue_Index_0196:
-.db "A GAS ", $B6, " IS", Dialogue_NewLine
-.db "ONLY 1000 ", Dialogue_Mesetas, "!", Dialogue_NewPage
-.db "PRETTY CHEAP, HUH?", $CD, " BUY ", $FD, "?", Dialogue_Terminator62
+.db "A GAS ", Word_Shield, " IS", Dialogue_NewLine
+.db "ONLY 1000 ", Word_Mesetas, "!", Dialogue_NewPage
+.db "PRETTY CHEAP, HUH?", Word_Will_You, " BUY ", Word_One, "?", Dialogue_Terminator62
 
 Dialogue_Index_0198:
-.db $B3, "! SEE ", $E1, Dialogue_NewLine
+.db Word_Thanks, "! SEE ", Word_You, Dialogue_NewLine
 .db "AGAIN.", Dialogue_Terminator65
 
 Dialogue_Index_019A:
-.db $E1, "DON", Dialogue_Apostrophe, "T ", $E3, Dialogue_NewLine
-.db "ENOUGH M", $FD, "Y!", Dialogue_Terminator65
+.db Word_You, "DON", Dialogue_Apostrophe, "T ", Word_Have, Dialogue_NewLine
+.db "ENOUGH M", Word_One, "Y!", Dialogue_Terminator65
 
 Dialogue_Index_019C:
-.db "SORRY, ", $DC, " WAS", Dialogue_NewLine
-.db $E2, "ONLY CHANCE.", Dialogue_Terminator65
+.db "SORRY, ", Word_That, " WAS", Dialogue_NewLine
+.db Word_Your, "ONLY CHANCE.", Dialogue_Terminator65
 
 Dialogue_Index_019E:
-.db $DE, $98, " IS", Dialogue_NewLine
+.db Word_The, Word_Spaceport, " IS", Dialogue_NewLine
 .db "CLOSED.", Dialogue_Terminator65
 
 Dialogue_Index_01A0:
-.db $8B, "CONFISCAT-", Dialogue_NewLine
-.db "ING ", $E2, $99, ".", Dialogue_Terminator65
+.db Word_We_Are, "CONFISCAT-", Dialogue_NewLine
+.db "ING ", Word_Your, Word_Passport, ".", Dialogue_Terminator65
 
 Dialogue_Index_01A2:
-.db $E0, "TO SKURE", Dialogue_NewLine
-.db "ON ", $93, ".", Dialogue_NewPage
+.db Word_Welcome, "TO SKURE", Dialogue_NewLine
+.db "ON ", Word_Dezoris, ".", Dialogue_NewPage
 .db "IT", Dialogue_Apostrophe, "S FREEZING", Dialogue_NewLine
 .db "OUTSIDE, ISN", Dialogue_Apostrophe, "T IT?", Dialogue_Terminator65
 
 Dialogue_Index_01A4:
 .db "MOST EMIGRANTS", Dialogue_NewLine
-.db $FE, $CF, Dialogue_NewPage
-.db "SETTLE ", $D2, ".", Dialogue_Terminator65
+.db Word_From, Word_Palma, Dialogue_NewPage
+.db "SETTLE ", Word_Here, ".", Dialogue_Terminator65
 
 Dialogue_Index_01A6:
-.db "I DON", Dialogue_Apostrophe, "T ", $BE, " A LOTABOUT ", $E4, $9A, ",", Dialogue_NewPage
+.db "I DON", Dialogue_Apostrophe, "T ", Word_Know, " A LOTABOUT ", Word_This, Word_Planet, ",", Dialogue_NewPage
 
 Dialogue_Index_01A8:
 .db "BUT WORD HAS IT", Dialogue_NewLine
-.db $DC, " ", $DA, " A", Dialogue_NewPage
-.db $B9, " OF NATIVE", Dialogue_NewLine
-.db $F4, "S IN ", $DE, Dialogue_NewPage
-.db "FAR REACHES OF THE", $E5, "S.", Dialogue_Terminator65
+.db Word_That, " ", Word_There_Is, " A", Dialogue_NewPage
+.db Word_Town, " OF NATIVE", Dialogue_NewLine
+.db Word_Dezorian, "S IN ", Word_The, Dialogue_NewPage
+.db "FAR REACHES OF THE", Word_Mountain, "S.", Dialogue_Terminator65
 
 Dialogue_Index_01AA:
-.db "IF ", $E1, "REALLY HOPETO KILL ", $D4, ",", Dialogue_NewPage
+.db "IF ", Word_You, "REALLY HOPETO KILL ", Word_Lassic, ",", Dialogue_NewPage
 
 Dialogue_Index_01AC:
-.db $E1, "HAD BEST FIND", Dialogue_NewLine
+.db Word_You, "HAD BEST FIND", Dialogue_NewLine
 .db "A SWORD, AXE,", Dialogue_NewPage
-.db $B6, ", ARMOR", Dialogue_NewLine
-.db "MADE OF ", $BC, ".", Dialogue_NewPage
+.db Word_Shield, ", ARMOR", Dialogue_NewLine
+.db "MADE OF ", Word_Laconia, ".", Dialogue_NewPage
 
 Dialogue_Index_01AE:
-.db "SUCH WEAPONS ", $EC, Dialogue_NewLine
+.db "SUCH WEAPONS ", Word_Are, Dialogue_NewLine
 .db "STRONGEST.", Dialogue_NewPage
 
 Dialogue_Index_01B0:
-.db "I PRAY FOR ", $E2, Dialogue_NewLine
+.db "I PRAY FOR ", Word_Your, Dialogue_NewLine
 .db "SAFETY.", Dialogue_Terminator65
 
 Dialogue_Index_01B2:
 .db "ARMS MADE OF", Dialogue_NewLine
-.db $BC, " CONCEAL", Dialogue_NewPage
-.db "HOLY POWER. ", $D4
+.db Word_Laconia, " CONCEAL", Dialogue_NewPage
+.db "HOLY POWER. ", Word_Lassic
 
 Dialogue_Index_01B4:
-.db "FEARS ", $E4, "POWER", Dialogue_NewPage
+.db "FEARS ", Word_This, "POWER", Dialogue_NewPage
 .db "AND HAS BEEN", Dialogue_NewLine
 .db "RUNNING AND HIDING", Dialogue_NewPage
 .db "IN DIFFERENT", Dialogue_NewLine
 
 Dialogue_Index_01B6:
-.db "PLACES IN ", $DE, Dialogue_NewPage
-.db $B8, " OF ", $DE, Dialogue_NewLine
-.db $9B, " ", $9C, ".", Dialogue_Terminator65
+.db "PLACES IN ", Word_The, Dialogue_NewPage
+.db Word_Planets, " OF ", Word_The, Dialogue_NewLine
+.db Word_Algol, " ", Word_System, ".", Dialogue_Terminator65
 
 Dialogue_Index_01B8:
-.db $93, " IS A", Dialogue_NewLine
-.db $B5, " OF ICE.", Dialogue_Terminator65
+.db Word_Dezoris, " IS A", Dialogue_NewLine
+.db Word_World, " OF ICE.", Dialogue_Terminator65
 
 Dialogue_Index_01BA:
-.db $DB, " PLACES", Dialogue_NewLine
-.db "IN ", $DE, $E5, "S", Dialogue_NewPage
+.db Word_There_Are, " PLACES", Dialogue_NewLine
+.db "IN ", Word_The, Word_Mountain, "S", Dialogue_NewPage
 .db "WHERE THE ICE IS", Dialogue_NewLine
 .db "SOFT AND", Dialogue_NewPage
 .db "IMPASSABLE TO", Dialogue_NewLine
 .db "THOSE ON FOOT.", Dialogue_Terminator65
 
 Dialogue_Index_01BC:
-.db $DE, "ALTIPLANO", Dialogue_NewLine
-.db "PLATEAU IS AT ", $DE, Dialogue_NewPage
-.db "TOP OF ", $DE, "ICE", Dialogue_NewLine
-.db $E5, ".", Dialogue_Terminator65
+.db Word_The, "ALTIPLANO", Dialogue_NewLine
+.db "PLATEAU IS AT ", Word_The, Dialogue_NewPage
+.db "TOP OF ", Word_The, "ICE", Dialogue_NewLine
+.db Word_Mountain, ".", Dialogue_Terminator65
 
 Dialogue_Index_01BE:
 .db "AN ECLIPSE OCCURS", Dialogue_NewLine
-.db "ON ", $E4, $9A, Dialogue_NewPage
+.db "ON ", Word_This, Word_Planet, Dialogue_NewPage
 .db "ONCE EVERY HUNDREDYEARS. A TORCH", Dialogue_NewPage
 
 Dialogue_Index_01C0:
@@ -18215,47 +18208,47 @@ Dialogue_Index_01C0:
 
 Dialogue_Index_01C2:
 .db "AND IS REGARDED", Dialogue_NewPage
-.db "AS HOLY BY ", $DE, Dialogue_NewLine
-.db $F4, "S.", Dialogue_Terminator65
+.db "AS HOLY BY ", Word_The, Dialogue_NewLine
+.db Word_Dezorian, "S.", Dialogue_Terminator65
 
 Dialogue_Index_01C4:
-.db $DE, "DEAD GUARON", Dialogue_NewLine
-.db "MORGUE ", $E3, "BEEN", Dialogue_NewPage
+.db Word_The, "DEAD GUARON", Dialogue_NewLine
+.db "MORGUE ", Word_Have, "BEEN", Dialogue_NewPage
 .db "CALLED BACK TO", Dialogue_NewLine
 
 Dialogue_Index_01C6:
 .db "LIFE! WHAT FEAR!", Dialogue_Terminator65
 
 Dialogue_Index_01C8:
-.db $DE, "NEIBORING", Dialogue_NewLine
-.db $9E, " ", $EC, "ALL", Dialogue_NewPage
+.db Word_The, "NEIBORING", Dialogue_NewLine
+.db Word_Village, " ", Word_Are, "ALL", Dialogue_NewPage
 .db "LIARS! DON", Dialogue_Apostrophe, "T", Dialogue_NewLine
 .db "LISTEN TO THEM!", Dialogue_Terminator65
 
 Dialogue_Index_01CA:
-.db "ZE CORONA ", $9D, Dialogue_NewLine
+.db "ZE CORONA ", Word_Tower, Dialogue_NewLine
 .db "STANDS ON ZE", Dialogue_NewPage
 .db "FAR SIDE OF ZE", Dialogue_NewLine
-.db $E5, " TO ZE", Dialogue_NewPage
+.db Word_Mountain, " TO ZE", Dialogue_NewPage
 .db "NORTH OF ZIS", Dialogue_NewLine
-.db $9E, ".", Dialogue_Terminator65
+.db Word_Village, ".", Dialogue_Terminator65
 
 Dialogue_Index_01CC:
 .db "TO ZE WEST OF ZE", Dialogue_NewLine
-.db "CORONA ", $9D, " IS", Dialogue_NewPage
-.db "ZE ", $93, " CAVE.", Dialogue_NewLine
+.db "CORONA ", Word_Tower, " IS", Dialogue_NewPage
+.db "ZE ", Word_Dezoris, " CAVE.", Dialogue_NewLine
 
 Dialogue_Index_01CE:
-.db "OUR FRIENDS ", $EC, "IN", Dialogue_NewPage
+.db "OUR FRIENDS ", Word_Are, "IN", Dialogue_NewPage
 .db "ZERE. GIVE ZEM", Dialogue_NewLine
 .db "OUR BEST, O.K.?", Dialogue_Terminator65
 
 Dialogue_Index_01D0:
-.db $D7, " TREES GROW", Dialogue_NewLine
-.db "ZE ", $D7, " BERRIES.", Dialogue_NewPage
+.db Word_Laerma, " TREES GROW", Dialogue_NewLine
+.db "ZE ", Word_Laerma, " BERRIES.", Dialogue_NewPage
 
 Dialogue_Index_01D2:
-.db "ZOSE BERRIES ", $EC, Dialogue_NewLine
+.db "ZOSE BERRIES ", Word_Are, Dialogue_NewLine
 .db "OUR MOST IMPORTANT", Dialogue_NewPage
 .db "FOOD, BUT IT", Dialogue_NewLine
 .db "SHRIVELS UP AFTER", Dialogue_NewPage
@@ -18263,675 +18256,675 @@ Dialogue_Index_01D2:
 
 Dialogue_Index_01D4:
 .db "UNLESS IT IS PUT", Dialogue_NewPage
-.db "IN ", $A6, ".", Dialogue_Terminator65
+.db "IN ", Word_Laconian_Pot, ".", Dialogue_Terminator65
 
 Dialogue_Index_01D6:
-.db $C3, " WHAT", Dialogue_NewLine
+.db Word_Do_You_Know, " WHAT", Dialogue_NewLine
 .db "AN AEROPRISM IS?", Dialogue_Terminator62
 
 Dialogue_Index_01D8:
-.db "IT LETS ", $E1, "SEE", Dialogue_NewLine
-.db "ANOTHER ", $B5, ".", Dialogue_Terminator65
+.db "IT LETS ", Word_You, "SEE", Dialogue_NewLine
+.db "ANOTHER ", Word_World, ".", Dialogue_Terminator65
 
 Dialogue_Index_01DA:
 .db "I", Dialogue_Apostrophe, "D LIKE TO SEE", Dialogue_NewLine
-.db $FD, " ", $D5, $9F, ".", Dialogue_Terminator65
+.db Word_One, " ", Word_Some, Word_Time, ".", Dialogue_Terminator65
 
 Dialogue_Index_01DC:
-.db "WE OF ZIS ", $B9, Dialogue_NewLine
-.db "HATE ", $E9, ".", Dialogue_Terminator65
+.db "WE OF ZIS ", Word_Town, Dialogue_NewLine
+.db "HATE ", Word_Palmans, ".", Dialogue_Terminator65
 
 Dialogue_Index_01DE:
-.db $DA, " A SPRING", Dialogue_NewLine
-.db "OF LIFE IN ", $DE, Dialogue_NewPage
-.db "CORONA ", $9D, ",", Dialogue_NewLine
-.db $DA, ", YES.", Dialogue_Terminator65
+.db Word_There_Is, " A SPRING", Dialogue_NewLine
+.db "OF LIFE IN ", Word_The, Dialogue_NewPage
+.db "CORONA ", Word_Tower, ",", Dialogue_NewLine
+.db Word_There_Is, ", YES.", Dialogue_Terminator65
 
 Dialogue_Index_01E0:
-.db $E1, "CAN WARP ", $FE, Dialogue_NewLine
-.db $DE, "10TH LEVEL OF", Dialogue_NewPage
-.db $DE, $D8, " UNDER", Dialogue_NewLine
-.db $93, ",YES.", Dialogue_Terminator65
+.db Word_You, "CAN WARP ", Word_From, Dialogue_NewLine
+.db Word_The, "10TH LEVEL OF", Dialogue_NewPage
+.db Word_The, Word_Dungeon, " UNDER", Dialogue_NewLine
+.db Word_Dezoris, ",YES.", Dialogue_Terminator65
 
 Dialogue_Index_01E2:
-.db $D7, " BERRIES ARE", Dialogue_NewLine
-.db "BLUE ", $D7, " NUTS", Dialogue_NewLine
+.db Word_Laerma, " BERRIES ARE", Dialogue_NewLine
+.db "BLUE ", Word_Laerma, " NUTS", Dialogue_NewLine
 .db "USED IN DYES,YES,", Dialogue_NewPage
-.db "THEY ", $EC, ", ", $D3, ".", Dialogue_Terminator65
+.db "THEY ", Word_Are, ", ", Word_Indeed, ".", Dialogue_Terminator65
 
 Dialogue_Index_01E4:
-.db "IF ", $E1, "USE A", Dialogue_NewLine
+.db "IF ", Word_You, "USE A", Dialogue_NewLine
 .db "CRYSTAL IN FRONT", Dialogue_NewPage
-.db "OF A ", $D7, " TREE,", Dialogue_NewLine
-.db "IT ", $C7, " BECOME,", Dialogue_NewPage
-.db "YES, A ", $D7, " NUT,YES, ", $D3, ".", Dialogue_Terminator65
+.db "OF A ", Word_Laerma, " TREE,", Dialogue_NewLine
+.db "IT ", Word_Will, " BECOME,", Dialogue_NewPage
+.db "YES, A ", Word_Laerma, " NUT,YES, ", Word_Indeed, ".", Dialogue_Terminator65
 
 Dialogue_Index_01E6:
-.db $E4, $B9, " WELCOMESALL ", $E9, ",YES,", Dialogue_NewPage
-.db $D3, ", WE DO.", Dialogue_Terminator65
+.db Word_This, Word_Town, " WELCOMESALL ", Word_Palmans, ",YES,", Dialogue_NewPage
+.db Word_Indeed, ", WE DO.", Dialogue_Terminator65
 
 Dialogue_Index_01E8:
-.db $E4, $B9, " IS", Dialogue_NewLine
+.db Word_This, Word_Town, " IS", Dialogue_NewLine
 .db "CALLED SOPIA.", Dialogue_NewPage
-.db $E1, $EC, "BRAVE TO", Dialogue_NewLine
-.db "PENETRATE ", $DE, "GAS.", Dialogue_Terminator65
+.db Word_You, Word_Are, "BRAVE TO", Dialogue_NewLine
+.db "PENETRATE ", Word_The, "GAS.", Dialogue_Terminator65
 
 Dialogue_Index_01EA:
-.db "I", Dialogue_Apostrophe, "M ", $DE, "HEAD OF", Dialogue_NewLine
-.db $E4, $9E, ".", Dialogue_NewPage
+.db "I", Dialogue_Apostrophe, "M ", Word_The, "HEAD OF", Dialogue_NewLine
+.db Word_This, Word_Village, ".", Dialogue_NewPage
 
 Dialogue_Index_01EC:
-.db "BECAUSE OF ", $DE, Dialogue_NewLine
+.db "BECAUSE OF ", Word_The, Dialogue_NewLine
 .db "CLOUD OF GAS,", Dialogue_NewPage
-.db $8B, "CUT OFF", Dialogue_NewLine
-.db $FE, "OTHER TOWNS,", Dialogue_NewPage
-.db $8B, "THEREFORE", Dialogue_NewLine
+.db Word_We_Are, "CUT OFF", Dialogue_NewLine
+.db Word_From, "OTHER TOWNS,", Dialogue_NewPage
+.db Word_We_Are, "THEREFORE", Dialogue_NewLine
 .db "VERY POOR.", Dialogue_NewPage
 
 Dialogue_Index_01EE:
-.db $CD, " DONATE", Dialogue_NewLine
-.db "400 ", Dialogue_Mesetas, "?", Dialogue_Terminator62
+.db Word_Will_You, " DONATE", Dialogue_NewLine
+.db "400 ", Word_Mesetas, "?", Dialogue_Terminator62
 
 Dialogue_Index_01F0:
-.db $B7, ". WE ", $C8, " GO", Dialogue_NewLine
+.db Word_I_See, ". WE ", Word_Must, " GO", Dialogue_NewLine
 .db "ON SUFFERING...", Dialogue_Terminator65
 
 Dialogue_Index_01F2:
-.db $E1, $E3, "A LITTLE", Dialogue_NewLine
-.db "M", $FD, "Y,TOO, ", $B7, ".", Dialogue_Terminator65
+.db Word_You, Word_Have, "A LITTLE", Dialogue_NewLine
+.db "M", Word_One, "Y,TOO, ", Word_I_See, ".", Dialogue_Terminator65
 
 Dialogue_Index_01F4:
-.db $B3, "! ACCORDING", Dialogue_NewLine
+.db Word_Thanks, "! ACCORDING", Dialogue_NewLine
 .db "TO OUR LEGENDS,", Dialogue_NewPage
 
 Dialogue_Index_01F6:
-.db $DE, "VERY ", $B6, ",", Dialogue_NewLine
+.db Word_The, "VERY ", Word_Shield, ",", Dialogue_NewLine
 .db "PERSEUS USED TO", Dialogue_NewPage
-.db "OVERCOME ", $EA, ",ISBURIED ON ", $DE, Dialogue_NewPage
+.db "OVERCOME ", Word_Medusa, ",ISBURIED ON ", Word_The, Dialogue_NewPage
 
 Dialogue_Index_01F8:
 .db "SMALL ISLAND IN", Dialogue_NewLine
-.db $DE, "MIDDLE OF A", Dialogue_NewPage
+.db Word_The, "MIDDLE OF A", Dialogue_NewPage
 .db "LAKE.", Dialogue_Terminator65
 
 Dialogue_Index_01FA:
 .db "HI! I", Dialogue_Apostrophe, "M MIKI!", Dialogue_NewLine
-.db $C6, " LIKE", Dialogue_NewPage
-.db "SEGA ", $FA, "S?", Dialogue_Terminator62
+.db Word_Do_You, " LIKE", Dialogue_NewPage
+.db "SEGA ", Word_Game, "S?", Dialogue_Terminator62
 
 Dialogue_Index_01FC:
 .db "OF COURSE! SEGA", Dialogue_NewLine
-.db $FA, "S ", $EC, "BEST.", Dialogue_Terminator65
+.db Word_Game, "S ", Word_Are, "BEST.", Dialogue_Terminator65
 
 Dialogue_Index_01FE:
 .db "I CAN", Dialogue_Apostrophe, "T BELIEVE", Dialogue_NewLine
-.db "IT. IF ", $E1, "DON", Dialogue_Apostrophe, "T", Dialogue_NewPage
-.db "LIKE ", $DE, $FA, ",....", Dialogue_NewLine
-.db "WHY ", $E3, $E1, Dialogue_NewPage
+.db "IT. IF ", Word_You, "DON", Dialogue_Apostrophe, "T", Dialogue_NewPage
+.db "LIKE ", Word_The, Word_Game, ",....", Dialogue_NewLine
+.db "WHY ", Word_Have, Word_You, Dialogue_NewPage
 .db "PLAYED SO FAR!?!", Dialogue_Terminator65
 
 Dialogue_Index_0200:
-.db "BEFORE ", $D4, " CAMETO POWER, EVEN OUR", Dialogue_NewPage
-.db $B9, " HAD PLENTY.", Dialogue_Terminator65
+.db "BEFORE ", Word_Lassic, " CAMETO POWER, EVEN OUR", Dialogue_NewPage
+.db Word_Town, " HAD PLENTY.", Dialogue_Terminator65
 
 Dialogue_Index_0202:
-.db $DA, " A MONK", Dialogue_NewLine
-.db $E7, "TAJIM IN THE", Dialogue_NewPage
-.db $E5, "S TO ", $DE, Dialogue_NewLine
-.db "SOUTH OF ", $DE, "LAKE.", Dialogue_Terminator65
+.db Word_There_Is, " A MONK", Dialogue_NewLine
+.db Word_Named, "TAJIM IN THE", Dialogue_NewPage
+.db Word_Mountain, "S TO ", Word_The, Dialogue_NewLine
+.db "SOUTH OF ", Word_The, "LAKE.", Dialogue_Terminator65
 
 Dialogue_Index_0204:
-.db "I", Dialogue_Apostrophe, "VE HEARD ", $DC, Dialogue_NewLine
-.db $DE, $CF, " IS A", Dialogue_NewPage
-.db "BEAUTIFUL ", $9A, ".", Dialogue_NewLine
-.db "IS ", $DC, " TRUE?", Dialogue_Terminator62
+.db "I", Dialogue_Apostrophe, "VE HEARD ", Word_That, Dialogue_NewLine
+.db Word_The, Word_Palma, " IS A", Dialogue_NewPage
+.db "BEAUTIFUL ", Word_Planet, ".", Dialogue_NewLine
+.db "IS ", Word_That, " TRUE?", Dialogue_Terminator62
 
 Dialogue_Index_0206:
 .db "I", Dialogue_Apostrophe, "D LIKE TO GO", Dialogue_NewLine
-.db "VISITING ", $D5, "DAY.", Dialogue_Terminator65
+.db "VISITING ", Word_Some, "DAY.", Dialogue_Terminator65
 
 Dialogue_Index_0208:
-.db "NO? I", Dialogue_Apostrophe, "D LIKE TO GO", $D5, $D0, " ", $DE, "AIR", Dialogue_NewPage
+.db "NO? I", Dialogue_Apostrophe, "D LIKE TO GO", Word_Some, Word_Where, " ", Word_The, "AIR", Dialogue_NewPage
 .db "IS MORE CLEAN", Dialogue_NewLine
 .db "AND FRESH.", Dialogue_Terminator65
 
 Dialogue_Index_020A:
-.db $B3, "!", Dialogue_NewLine
+.db Word_Thanks, "!", Dialogue_NewLine
 .db "COME AGAIN!", Dialogue_Terminator65
 
 Dialogue_Index_020C:
 .db "TIGHTWAND!", Dialogue_Terminator65
 
 Dialogue_Index_020E:
-.db $EB, Dialogue_Terminator65
+.db Word_Dont_Be_A_Fool, Dialogue_Terminator65
 
 Dialogue_Index_0210:
 .db "..........", Dialogue_Terminator65
 
 Dialogue_Index_0212:
-.db "THEN ", $E1, $EC, $DE, Dialogue_NewLine
-.db "VERY ", $B0, " OF ", $DE, Dialogue_NewPage
-.db "ENTIRE ", $9C, ". I", Dialogue_NewLine
-.db $C7, " ASSIST ", $E1, "IN", Dialogue_NewPage
+.db "THEN ", Word_You, Word_Are, Word_The, Dialogue_NewLine
+.db "VERY ", Word_Queen, " OF ", Word_The, Dialogue_NewPage
+.db "ENTIRE ", Word_System, ". I", Dialogue_NewLine
+.db Word_Will, " ASSIST ", Word_You, "IN", Dialogue_NewPage
 .db "ALL WAYS POSSIBLE.", Dialogue_Terminator65
 
 Dialogue_Index_0214:
-.db $E1, $E3, "BEEN", Dialogue_NewLine
+.db Word_You, Word_Have, "BEEN", Dialogue_NewLine
 .db "LOCKED UP,TOO", Dialogue_NewPage
 
 Dialogue_Index_0216:
-.db $DA, " A WAY", Dialogue_NewLine
+.db Word_There_Is, " A WAY", Dialogue_NewLine
 .db "OUT, BUT I LIKE", Dialogue_NewPage
-.db "IT IN ", $D2, ",", Dialogue_NewLine
+.db "IT IN ", Word_Here, ",", Dialogue_NewLine
 .db "MYSELF.", Dialogue_Terminator65
 
 Dialogue_Index_0218:
-.db $DB, " GUARDS", Dialogue_NewLine
+.db Word_There_Are, " GUARDS", Dialogue_NewLine
 .db "UP AHEAD!", Dialogue_Terminator65
 
 Dialogue_Index_021A:
-.db "IF ", $E1, "PLAN TO GO", Dialogue_NewLine
-.db "BACK, NOW IS ", $DE, Dialogue_NewPage
-.db $9F, " TO LEAVE.", Dialogue_Terminator65
+.db "IF ", Word_You, "PLAN TO GO", Dialogue_NewLine
+.db "BACK, NOW IS ", Word_The, Dialogue_NewPage
+.db Word_Time, " TO LEAVE.", Dialogue_Terminator65
 
 Dialogue_Index_021C:
-.db $C5, " ", $E2, Dialogue_NewLine
-.db $A0, "?", Dialogue_Terminator62
+.db Word_Do_You_Have, " ", Word_Your, Dialogue_NewLine
+.db Word_Roadpass, "?", Dialogue_Terminator62
 
 Dialogue_Index_021E:
-.db $E4, "IS A FAKE!", Dialogue_NewLine
+.db Word_This, "IS A FAKE!", Dialogue_NewLine
 
 Dialogue_Index_0220:
-.db $C6, " THINK ", $E1, Dialogue_NewPage
+.db Word_Do_You, " THINK ", Word_You, Dialogue_NewPage
 .db "CAN FOOL A ROBOT?", Dialogue_NewLine
 .db "OFF TO JAIL WE GO!", Dialogue_Terminator65
 
 Dialogue_Index_0222:
-.db "GET ME OUT ", $D2, "?", Dialogue_NewLine
+.db "GET ME OUT ", Word_Here, "?", Dialogue_NewLine
 .db "BUT IT", Dialogue_Apostrophe, "S IN VAIN.", Dialogue_Terminator65
 
 Dialogue_Index_0224:
 .db "IT", Dialogue_Apostrophe, "S FOOLISH TO", Dialogue_NewLine
-.db "TRY TO GET ", $D4, "!", Dialogue_Terminator65
+.db "TRY TO GET ", Word_Lassic, "!", Dialogue_Terminator65
 
 Dialogue_Index_0226:
-.db $D4, " IS GONNA", Dialogue_NewLine
+.db Word_Lassic, " IS GONNA", Dialogue_NewLine
 .db "SACRIFICE US! AGH!", Dialogue_Terminator65
 
 Dialogue_Index_0228:
-.db $E3, $E1, "FOUND THE", Dialogue_NewLine
+.db Word_Have, Word_You, "FOUND THE", Dialogue_NewLine
 .db "ARMOR IN GUARON?", Dialogue_Terminator62
 
 Dialogue_Index_022A:
-.db "IT CAN BE FOUND AT", $DE, "FAR SIDE OF", Dialogue_NewPage
+.db "IT CAN BE FOUND AT", Word_The, "FAR SIDE OF", Dialogue_NewPage
 .db "A PIT TRAP.", Dialogue_Terminator65
 
 Dialogue_Index_022C:
-.db "WELL,AREN", Dialogue_Apostrophe, "T ", $E1, Dialogue_NewLine
-.db $D5, $F7, "?", Dialogue_Terminator65
+.db "WELL,AREN", Dialogue_Apostrophe, "T ", Word_You, Dialogue_NewLine
+.db Word_Some, Word_Thing, "?", Dialogue_Terminator65
 
 Dialogue_Index_022E:
 .db "ALL WHO FACE", Dialogue_NewLine
-.db $D4, " LOSE THEIR", Dialogue_NewPage
+.db Word_Lassic, " LOSE THEIR", Dialogue_NewPage
 .db "SOULS TO HIS", Dialogue_NewLine
-.db $EF, "!", Dialogue_Terminator65
+.db Word_Magic_EF, "!", Dialogue_Terminator65
 
 Dialogue_Index_0230:
-.db "NO? ", $DC, Dialogue_Apostrophe, "S FINE,", Dialogue_NewLine
-.db "IF ", $E1, "SO DESIRE.", Dialogue_NewPage
-.db $CB, " ALWAYS BE", $E0, $D2, ".", Dialogue_Terminator65
+.db "NO? ", Word_That, Dialogue_Apostrophe, "S FINE,", Dialogue_NewLine
+.db "IF ", Word_You, "SO DESIRE.", Dialogue_NewPage
+.db Word_You_Will, " ALWAYS BE", Word_Welcome, Word_Here, ".", Dialogue_Terminator65
 
 Dialogue_Index_0232:
-.db $DA, " A ", $9D, Dialogue_NewLine
-.db "OF ", $DE, "TOP OF", Dialogue_NewPage
-.db $C2, ".", Dialogue_NewLine
-.db $D5, $F7, " ", $A5, Dialogue_NewPage
-.db "IS HIDDEN AT ", $DE, Dialogue_NewLine
-.db "TOP OF ", $DE, $9D, "!", Dialogue_Terminator65
+.db Word_There_Is, " A ", Word_Tower, Dialogue_NewLine
+.db "OF ", Word_The, "TOP OF", Dialogue_NewPage
+.db Word_Baya_Malay, ".", Dialogue_NewLine
+.db Word_Some, Word_Thing, " ", Word_Secret, Dialogue_NewPage
+.db "IS HIDDEN AT ", Word_The, Dialogue_NewLine
+.db "TOP OF ", Word_The, Word_Tower, "!", Dialogue_Terminator65
 
 Dialogue_Index_0234:
-.db "WHAT ", $E3, $E1, "COMEFOR? ", $C6, " INTEND", Dialogue_NewPage
-.db $D5, " MISCHIEF?", Dialogue_Terminator65
+.db "WHAT ", Word_Have, Word_You, "COMEFOR? ", Word_Do_You, " INTEND", Dialogue_NewPage
+.db Word_Some, " MISCHIEF?", Dialogue_Terminator65
 
 Dialogue_Index_0236:
-.db "I ", $E3, "AN UNEASY", Dialogue_NewLine
+.db "I ", Word_Have, "AN UNEASY", Dialogue_NewLine
 .db "FEELING.", Dialogue_Terminator65
 
 Dialogue_Index_0238:
-.db "BE ", $ED, " UP", Dialogue_NewLine
-.db "AHEAD. AT ", $DE, Dialogue_NewPage
-.db "BREAK IN ", $DE, "ROAD,GO TO ", $DE, "LEFT!", Dialogue_Terminator65
+.db "BE ", Word_Careful, " UP", Dialogue_NewLine
+.db "AHEAD. AT ", Word_The, Dialogue_NewPage
+.db "BREAK IN ", Word_The, "ROAD,GO TO ", Word_The, "LEFT!", Dialogue_Terminator65
 
 Dialogue_Index_023A:
-.db $D4, " LIVES IN", Dialogue_NewLine
-.db "FEAR OF ", $DE, Dialogue_NewPage
+.db Word_Lassic, " LIVES IN", Dialogue_NewLine
+.db "FEAR OF ", Word_The, Dialogue_NewPage
 .db "CRYSTAL POSSESSED", Dialogue_NewLine
-.db "BY ", $DE, $BB, Dialogue_NewPage
+.db "BY ", Word_The, Word_Soothsayer, Dialogue_NewPage
 
 Dialogue_Index_023C:
-.db $E7, "DAMOR. ", $D1, "IS ", $D5, $F7, Dialogue_NewPage
+.db Word_Named, "DAMOR. ", Word_There, "IS ", Word_Some, Word_Thing, Dialogue_NewPage
 .db "SPECIAL ABOUT IT,", Dialogue_NewLine
 .db "WITHOUT A DOUBT.", Dialogue_Terminator65
 
 Dialogue_Index_023E:
-.db $E4, "FIRE WAS LIT", Dialogue_NewLine
-.db "DURING ", $DE, "ECLIPSE", Dialogue_NewPage
+.db Word_This, "FIRE WAS LIT", Dialogue_NewLine
+.db "DURING ", Word_The, "ECLIPSE", Dialogue_NewPage
 .db "WHICH OCCURS ONCE", Dialogue_NewLine
 .db "EVERY 100 YEARS.", Dialogue_NewPage
 
 Dialogue_Index_0240:
-.db "IF ", $E1, "GIVE ME A", Dialogue_NewLine
-.db "GEM ", $FE, "A DRAGON,", Dialogue_NewPage
-.db "I", Dialogue_Apostrophe, "LL GIVE ", $E1, $D5, "OF ", $E4, "FIRE.", Dialogue_NewPage
+.db "IF ", Word_You, "GIVE ME A", Dialogue_NewLine
+.db "GEM ", Word_From, "A DRAGON,", Dialogue_NewPage
+.db "I", Dialogue_Apostrophe, "LL GIVE ", Word_You, Word_Some, "OF ", Word_This, "FIRE.", Dialogue_NewPage
 
 Dialogue_Index_0242:
 .db "HOW ABOUT IT?", Dialogue_Terminator62
 
 Dialogue_Index_0244:
-.db $D2, ", TAKE ", $E4, Dialogue_NewLine
+.db Word_Here, ", TAKE ", Word_This, Dialogue_NewLine
 .db "ECLIPSE TORCH.", Dialogue_Terminator65
 
 Dialogue_Index_0246:
 .db "NO? THEN WHAT DID", Dialogue_NewLine
-.db $E1, "COME FOR?", Dialogue_Terminator65
+.db Word_You, "COME FOR?", Dialogue_Terminator65
 
 Dialogue_Index_0248:
-.db $E1, $E3, "NO GEM!", Dialogue_NewLine
+.db Word_You, Word_Have, "NO GEM!", Dialogue_NewLine
 .db "DO I LOOK LIKE A", Dialogue_NewPage
-.db "FOOL OR ", $D5, $F7, "?", Dialogue_Terminator65
+.db "FOOL OR ", Word_Some, Word_Thing, "?", Dialogue_Terminator65
 
 Dialogue_Index_024A:
-.db "I", Dialogue_Apostrophe, "M SORRY I ", $E3, "A", Dialogue_NewLine
+.db "I", Dialogue_Apostrophe, "M SORRY I ", Word_Have, "A", Dialogue_NewLine
 .db "SHOP IN SUCH A", Dialogue_NewPage
 .db "PLACE. SHORTCAKE", Dialogue_NewLine
-.db "FOR 1000 ", Dialogue_Mesetas, "!", Dialogue_NewPage
-.db $CD, " BUY ", $FD, "?", Dialogue_Terminator62
+.db "FOR 1000 ", Word_Mesetas, "!", Dialogue_NewPage
+.db Word_Will_You, " BUY ", Word_One, "?", Dialogue_Terminator62
 
 Dialogue_Index_024C:
-.db "AH,MY YOUNG PUPIL,NOAH. ", $E1, $EC, Dialogue_NewPage
+.db "AH,MY YOUNG PUPIL,NOAH. ", Word_You, Word_Are, Dialogue_NewPage
 .db "PREPARING TO FACE", Dialogue_NewLine
-.db $D4, "?", Dialogue_Terminator65
+.db Word_Lassic, "?", Dialogue_Terminator65
 
 Dialogue_Index_024E:
-.db "COME,", $CE, " ", $A2, Dialogue_NewLine
-.db $E2, "FINAL TEST---", Dialogue_NewPage
-.db "WE ", $C7, " DUEL!", Dialogue_Terminator65
+.db "COME,", Word_You_Must, " ", Word_Pass, Dialogue_NewLine
+.db Word_Your, "FINAL TEST---", Dialogue_NewPage
+.db "WE ", Word_Will, " DUEL!", Dialogue_Terminator65
 
 Dialogue_Index_0250:
-.db $E1, $E3, "BECOME", Dialogue_NewLine
+.db Word_You, Word_Have, "BECOME", Dialogue_NewLine
 .db "MUCH STRONGER...", Dialogue_NewPage
 
 Dialogue_Index_0252:
-.db $E1, $EC, "WELL", Dialogue_NewLine
+.db Word_You, Word_Are, "WELL", Dialogue_NewLine
 .db "PREPARED.", Dialogue_NewPage
 
 Dialogue_Index_0254:
-.db "I", Dialogue_Apostrophe, "LL GIVE ", $E1, "A", Dialogue_NewLine
+.db "I", Dialogue_Apostrophe, "LL GIVE ", Word_You, "A", Dialogue_NewLine
 .db "FRAD MANTLE AS A", Dialogue_NewPage
 .db "GIFT. IT PROTECTS", Dialogue_NewLine
-.db $E1, $FE, "DANGER!", Dialogue_Terminator65
+.db Word_You, Word_From, "DANGER!", Dialogue_Terminator65
 
 Dialogue_Index_0256:
-.db $E1, $EC, $F8, "YET", Dialogue_NewLine
-.db "READY! ", $CE, " GO", Dialogue_NewPage
+.db Word_You, Word_Are, Word_Not, "YET", Dialogue_NewLine
+.db "READY! ", Word_You_Must, " GO", Dialogue_NewPage
 .db "STILL UNDERGO MORETRAINING.", Dialogue_Terminator65
 
 Dialogue_Index_0258:
-.db "I ", $E3, "NO", $F7, " TO", Dialogue_NewLine
-.db "TEACH ", $E1, "MORE.", Dialogue_Terminator65
+.db "I ", Word_Have, "NO", Word_Thing, " TO", Dialogue_NewLine
+.db "TEACH ", Word_You, "MORE.", Dialogue_Terminator65
 
 Dialogue_Index_025A:
-.db "AND WHO ", $EC, "YOU?", Dialogue_NewLine
+.db "AND WHO ", Word_Are, "YOU?", Dialogue_NewLine
 .db "FIND MY PUPIL NOAH", Dialogue_NewPage
-.db "IN ", $DE, $A7, Dialogue_NewLine
+.db "IN ", Word_The, Word_Maharu, Dialogue_NewLine
 
 Dialogue_Index_025C:
-.db "CAVE.", $C3, Dialogue_NewPage
+.db "CAVE.", Word_Do_You_Know, Dialogue_NewPage
 .db "HIM?", Dialogue_Terminator62
 
 Dialogue_Index_025E:
-.db "I", Dialogue_Apostrophe, "VE ", $D5, $F7, Dialogue_NewLine
-.db "I ", $C8, " TELL HIM.", Dialogue_NewPage
-.db "BRING HIM ", $D2, ".", Dialogue_Terminator65
+.db "I", Dialogue_Apostrophe, "VE ", Word_Some, Word_Thing, Dialogue_NewLine
+.db "I ", Word_Must, " TELL HIM.", Dialogue_NewPage
+.db "BRING HIM ", Word_Here, ".", Dialogue_Terminator65
 
 Dialogue_Index_0260:
-.db "IN ", $DC, " CASE,", Dialogue_NewLine
-.db $DA, " NO POINT", Dialogue_NewPage
+.db "IN ", Word_That, " CASE,", Dialogue_NewLine
+.db Word_There_Is, " NO POINT", Dialogue_NewPage
 .db "IN FURTHER", Dialogue_NewLine
 .db "CONVERSATION.", Dialogue_Terminator65
 
 Dialogue_Index_0262:
-.db "I ", $E3, "WATCHED", Dialogue_NewLine
-.db "ALL ", $E2, "ACTIONS.", Dialogue_NewPage
+.db "I ", Word_Have, "WATCHED", Dialogue_NewLine
+.db "ALL ", Word_Your, "ACTIONS.", Dialogue_NewPage
 
 Dialogue_Index_0264:
-.db $82, " ME NOW, IF", Dialogue_NewLine
-.db $E1, "DARE.", Dialogue_Terminator65
+.db Word_Attack, " ME NOW, IF", Dialogue_NewLine
+.db Word_You, "DARE.", Dialogue_Terminator65
 
 Dialogue_Index_0266:
 .db "I", Dialogue_Apostrophe, "M BUT ONLY", Dialogue_NewLine
-.db $D4, Dialogue_Apostrophe, "S SHADOW!", Dialogue_NewPage
+.db Word_Lassic, Dialogue_Apostrophe, "S SHADOW!", Dialogue_NewPage
 
 Dialogue_Index_0268:
-.db "EVEN IF ", $E1, "DEFEATME, YOU", Dialogue_Apostrophe, "VE GAINED", Dialogue_NewPage
-.db "NO", $F7, " AT ALL!", Dialogue_Terminator65
+.db "EVEN IF ", Word_You, "DEFEATME, YOU", Dialogue_Apostrophe, "VE GAINED", Dialogue_NewPage
+.db "NO", Word_Thing, " AT ALL!", Dialogue_Terminator65
 
 Dialogue_Index_026A:
 .db "DON", Dialogue_Apostrophe, "T GO AGAINST", Dialogue_NewLine
-.db $D4, "!", Dialogue_Terminator65
+.db Word_Lassic, "!", Dialogue_Terminator65
 
 Dialogue_Index_026C:
 .db "AH, MY CHILDREN,", Dialogue_NewLine
-.db $E1, $E3, "D", $FD, " VERY", Dialogue_NewPage
-.db "WELL TO COME ", $E4, Dialogue_NewLine
-.db "FAR. ", $E1, $EC, "VERY", Dialogue_NewPage
-.db "LUCKY ", $D3, ". DO", Dialogue_NewLine
-.db $E1, "REALLY ", $97, " TO", Dialogue_NewPage
+.db Word_You, Word_Have, "D", Word_One, " VERY", Dialogue_NewPage
+.db "WELL TO COME ", Word_This, Dialogue_NewLine
+.db "FAR. ", Word_You, Word_Are, "VERY", Dialogue_NewPage
+.db "LUCKY ", Word_Indeed, ". DO", Dialogue_NewLine
+.db Word_You, "REALLY ", Word_Wish, " TO", Dialogue_NewPage
 .db "KILL AN OLD MAN?", Dialogue_Terminator62
 
 Dialogue_Index_026E:
 .db "ALL RIGHT! THEN", Dialogue_NewLine
-.db "WE ", $C7, " FORGET", Dialogue_NewPage
-.db $E4, "AS AN UNFOR-", Dialogue_NewLine
+.db "WE ", Word_Will, " FORGET", Dialogue_NewPage
+.db Word_This, "AS AN UNFOR-", Dialogue_NewLine
 .db "TUNATE MISTAKE.", Dialogue_Terminator65
 
 Dialogue_Index_0270:
-.db "EVEN NOW ", $E1, "TRY", Dialogue_NewLine
+.db "EVEN NOW ", Word_You, "TRY", Dialogue_NewLine
 .db "TO FOOL WITH ME?", Dialogue_NewPage
-.db $E1, "SHALL REPENT!", Dialogue_Terminator65
+.db Word_You, "SHALL REPENT!", Dialogue_Terminator65
 
 Dialogue_Index_0272:
-.db "I", Dialogue_Apostrophe, "M SORRY, I ", $C8, Dialogue_NewLine
-.db $E3, "BEEN", Dialogue_NewPage
+.db "I", Dialogue_Apostrophe, "M SORRY, I ", Word_Must, Dialogue_NewLine
+.db Word_Have, "BEEN", Dialogue_NewPage
 
 Dialogue_Index_0274:
 .db "POSSESSED BODY ANDSOUL BY EVIL.", Dialogue_NewPage
 
 Dialogue_Index_0276:
-.db $E1, "RESCUED OUR", Dialogue_NewLine
-.db $B5, " JUST IN ", $DE, Dialogue_NewPage
-.db "NICK OF ", $9F, "! IF", Dialogue_NewLine
-.db $E1, "HAD COME ", $F6, Dialogue_NewPage
+.db Word_You, "RESCUED OUR", Dialogue_NewLine
+.db Word_World, " JUST IN ", Word_The, Dialogue_NewPage
+.db "NICK OF ", Word_Time, "! IF", Dialogue_NewLine
+.db Word_You, "HAD COME ", Word_Any, Dialogue_NewPage
 
 Dialogue_Index_0278:
 .db "LATER, IT MIGHT", Dialogue_NewLine
-.db $E3, "BEEN TOO LATE", Dialogue_NewPage
-.db "WE ALL ", $B4, Dialogue_NewLine
-.db $FE, $DE, "BOTTOM", Dialogue_NewPage
+.db Word_Have, "BEEN TOO LATE", Dialogue_NewPage
+.db "WE ALL ", Word_Thank_You, Dialogue_NewLine
+.db Word_From, Word_The, "BOTTOM", Dialogue_NewPage
 .db "OF OUR HEARTS.", Dialogue_NewLine
-.db $80, ", ", $E2, $B1, Dialogue_NewPage
-.db "WAS ONCE ", $AF, " OF", Dialogue_NewLine
-.db $9B, ". ", $DE, "DARK", Dialogue_NewPage
-.db $89, " HAS BEEN", Dialogue_NewLine
-.db "DESTROYED, ", $D4, Dialogue_NewPage
-.db "KILLED... ", $C6, ",", Dialogue_NewLine
-.db $80, ",", $97, " TO", Dialogue_NewPage
-.db "ASCEND ", $E2, Dialogue_NewLine
-.db $B1, Dialogue_Apostrophe, "S THR", $FD, Dialogue_NewPage
-.db "AND BECOME ", $DE, Dialogue_NewLine
-.db $B0, " OF ", $9B, "?", Dialogue_Terminator62
+.db Word_Alis, ", ", Word_Your, Word_Father, Dialogue_NewPage
+.db "WAS ONCE ", Word_King, " OF", Dialogue_NewLine
+.db Word_Algol, ". ", Word_The, "DARK", Dialogue_NewPage
+.db Word_Castle, " HAS BEEN", Dialogue_NewLine
+.db "DESTROYED, ", Word_Lassic, Dialogue_NewPage
+.db "KILLED... ", Word_Do_You, ",", Dialogue_NewLine
+.db Word_Alis, ",", Word_Wish, " TO", Dialogue_NewPage
+.db "ASCEND ", Word_Your, Dialogue_NewLine
+.db Word_Father, Dialogue_Apostrophe, "S THR", Word_One, Dialogue_NewPage
+.db "AND BECOME ", Word_The, Dialogue_NewLine
+.db Word_Queen, " OF ", Word_Algol, "?", Dialogue_Terminator62
 
 Dialogue_Index_027A:
-.db "RAISE ", $DE, Dialogue_NewLine
+.db "RAISE ", Word_The, Dialogue_NewLine
 .db "AEROPRISM TOWARDS", Dialogue_NewPage
-.db $DE, "HEAVENS- ", $E1, Dialogue_NewLine
+.db Word_The, "HEAVENS- ", Word_You, Dialogue_NewLine
 .db "SHOULD THEN BE", Dialogue_NewPage
-.db "ABLE TO SEE ", $DE, Dialogue_NewLine
-.db "DARK ", $89, ".", Dialogue_Terminator65
+.db "ABLE TO SEE ", Word_The, Dialogue_NewLine
+.db "DARK ", Word_Castle, ".", Dialogue_Terminator65
 
 Dialogue_Index_027C:
-.db "ALRIGHT! ", $E1, "SAVEDALL OF ", $9B, "!", Dialogue_Terminator65
+.db "ALRIGHT! ", Word_You, "SAVEDALL OF ", Word_Algol, "!", Dialogue_Terminator65
 
 Dialogue_Index_027E:
-.db $8B, " ALL", Dialogue_NewLine
-.db "THANKFUL FOR ", $E2, Dialogue_NewPage
+.db Word_We_Are, " ALL", Dialogue_NewLine
+.db "THANKFUL FOR ", Word_Your, Dialogue_NewPage
 .db "BRAVE DEEDS! WE", Dialogue_NewLine
-.db "LOVE ", $E1, "!", Dialogue_Terminator65
+.db "LOVE ", Word_You, "!", Dialogue_Terminator65
 
 Dialogue_Index_0280:
 .db "REPORT QUICKLY TO", Dialogue_NewLine
-.db $DE, $AA, "!", Dialogue_Terminator65
+.db Word_The, Word_Governor, "!", Dialogue_Terminator65
 
 Dialogue_Index_0282:
-.db $E1, $88, " COME", Dialogue_NewLine
-.db $DD, " ", $D2, ".", Dialogue_NewPage
-.db $E4, "IS MY AREA.", Dialogue_Terminator65
+.db Word_You, Word_Cannot, " COME", Dialogue_NewLine
+.db Word_Through, " ", Word_Here, ".", Dialogue_NewPage
+.db Word_This, "IS MY AREA.", Dialogue_Terminator65
 
 Dialogue_Index_0284:
-.db "WELL,IF DR.", $AD, Dialogue_NewLine
-.db "SENT ", $E1, ",I GUESS", Dialogue_NewPage
-.db "I ", $E3, "TO LET ", $E1, Dialogue_NewLine
-.db $DD, ".", Dialogue_Terminator65
+.db "WELL,IF DR.", Word_Luveno, Dialogue_NewLine
+.db "SENT ", Word_You, ",I GUESS", Dialogue_NewPage
+.db "I ", Word_Have, "TO LET ", Word_You, Dialogue_NewLine
+.db Word_Through, ".", Dialogue_Terminator65
 
 Dialogue_Index_0286:
-.db "THEY SAY ", $DC, Dialogue_NewLine
-.db $DB, " ", $94, "N", Dialogue_NewPage
-.db "LIVING ON ", $94, Dialogue_NewLine
-.db "AND ", $F4, "N ON", Dialogue_NewPage
-.db $93, ". I", Dialogue_Apostrophe, "D SURE", Dialogue_NewLine
+.db "THEY SAY ", Word_That, Dialogue_NewLine
+.db Word_There_Are, " ", Word_Motavia, "N", Dialogue_NewPage
+.db "LIVING ON ", Word_Motavia, Dialogue_NewLine
+.db "AND ", Word_Dezorian, "N ON", Dialogue_NewPage
+.db Word_Dezoris, ". I", Dialogue_Apostrophe, "D SURE", Dialogue_NewLine
 .db "LIKE A CHANCE TO", Dialogue_NewPage
-.db "TALK TO ", $D5, $FD, ".", Dialogue_Terminator65
+.db "TALK TO ", Word_Some, Word_One, ".", Dialogue_Terminator65
 
 Dialogue_Index_0288:
-.db $D5, " INTELLIGENT", Dialogue_NewLine
-.db "MONSTERS ", $E3, Dialogue_NewPage
+.db Word_Some, " INTELLIGENT", Dialogue_NewLine
+.db "MONSTERS ", Word_Have, Dialogue_NewPage
 .db "THEIR OWN", Dialogue_NewLine
-.db $D9, ".", Dialogue_Terminator65
+.db Word_Language, ".", Dialogue_Terminator65
 
 Dialogue_Index_028A:
-.db "I SOLD ", $DC, Dialogue_NewLine
-.db $A6, " FOR", Dialogue_NewPage
-.db "A ", $E6, "DEAL OF", Dialogue_NewLine
-.db "M", $FD, "Y. ", $B3, ".", Dialogue_Terminator65
+.db "I SOLD ", Word_That, Dialogue_NewLine
+.db Word_Laconian_Pot, " FOR", Dialogue_NewPage
+.db "A ", Word_Great, "DEAL OF", Dialogue_NewLine
+.db "M", Word_One, "Y. ", Word_Thanks, ".", Dialogue_Terminator65
 
 Dialogue_Index_028C:
-.db "NOW ", $DC, " MY STAFF", Dialogue_NewLine
+.db "NOW ", Word_That, " MY STAFF", Dialogue_NewLine
 .db "IS ASSEMBLED", Dialogue_NewPage
-.db "I CAN BEGIN.", $D1, Dialogue_NewLine
+.db "I CAN BEGIN.", Word_There, Dialogue_NewLine
 .db "IS HOWERVER, A", Dialogue_NewPage
 
 Dialogue_Index_028E:
-.db "SLIGHT FEE OF 1200", Dialogue_Mesetas, " INVOLVED.", Dialogue_NewPage
-.db $CD, " PAY?", Dialogue_Terminator62
+.db "SLIGHT FEE OF 1200", Word_Mesetas, " INVOLVED.", Dialogue_NewPage
+.db Word_Will_You, " PAY?", Dialogue_Terminator62
 
 Dialogue_Index_0290:
-.db $B4, ". I CAN", Dialogue_NewLine
+.db Word_Thank_You, ". I CAN", Dialogue_NewLine
 .db "NOW GET TO WORK.", Dialogue_NewPage
-.db $C9, "WAIT ", $FD, Dialogue_NewLine
+.db Word_Please, "WAIT ", Word_One, Dialogue_NewLine
 .db "MOMENT.", Dialogue_Terminator65
 
 Dialogue_Index_0292:
-.db "IT ", $88, " BE", Dialogue_NewLine
-.db "HURRIED! ", $C9, Dialogue_NewPage
+.db "IT ", Word_Cannot, " BE", Dialogue_NewLine
+.db "HURRIED! ", Word_Please, Dialogue_NewPage
 .db "SHOW A BIT MORE", Dialogue_NewLine
 .db "PATIENCE!", Dialogue_Terminator65
 
 Dialogue_Index_0294:
-.db "WE CAN BOARD ", $DE, Dialogue_NewLine
-.db $AD, " AND BE ON", Dialogue_NewPage
+.db "WE CAN BOARD ", Word_The, Dialogue_NewLine
+.db Word_Luveno, " AND BE ON", Dialogue_NewPage
 .db "OUR WAY!", Dialogue_Terminator65
 
 Dialogue_Index_0296:
-.db "HEY, BRING ", $DC, Dialogue_NewLine
-.db "CAT OVER ", $D2, "!", Dialogue_Terminator62
+.db "HEY, BRING ", Word_That, Dialogue_NewLine
+.db "CAT OVER ", Word_Here, "!", Dialogue_Terminator62
 
 Dialogue_Index_0298:
-.db "OOHH,HA,HA! ", $DE, Dialogue_NewLine
-.db "CAT ", $C7, " DIE!", Dialogue_Terminator65
+.db "OOHH,HA,HA! ", Word_The, Dialogue_NewLine
+.db "CAT ", Word_Will, " DIE!", Dialogue_Terminator65
 
 Dialogue_Index_029A:
-.db "I ", $C7, " KILL ", $F6, Dialogue_NewLine
+.db "I ", Word_Will, " KILL ", Word_Any, Dialogue_NewLine
 .db "WHO INTERFERE!", Dialogue_Terminator65
 
 Dialogue_Index_029C:
-.db $E1, "SHOULD ", $BF, Dialogue_NewLine
-.db $D2, " AWHILE AFTER", Dialogue_NewPage
-.db $E2, "LONG JOURNEY.", Dialogue_Terminator65
+.db Word_You, "SHOULD ", Word_Rest, Dialogue_NewLine
+.db Word_Here, " AWHILE AFTER", Dialogue_NewPage
+.db Word_Your, "LONG JOURNEY.", Dialogue_Terminator65
 
 Dialogue_Index_029E:
-.db $DC, " WAS QUICK-OH,", Dialogue_NewLine
-.db $B7, ",", $E1, $EC, $F8, Dialogue_NewPage
-.db $DD, " WITH", Dialogue_NewLine
-.db $D4, ". ", $E1, "HAD", Dialogue_NewPage
-.db "BEST ", $BF, " AT ", $DE, Dialogue_NewLine
+.db Word_That, " WAS QUICK-OH,", Dialogue_NewLine
+.db Word_I_See, ",", Word_You, Word_Are, Word_Not, Dialogue_NewPage
+.db Word_Through, " WITH", Dialogue_NewLine
+.db Word_Lassic, ". ", Word_You, "HAD", Dialogue_NewPage
+.db "BEST ", Word_Rest, " AT ", Word_The, Dialogue_NewLine
 .db "INN.", Dialogue_Terminator65
 
 Dialogue_Index_02A0:
-.db $E1, "FELL INTO A", Dialogue_NewLine
+.db Word_You, "FELL INTO A", Dialogue_NewLine
 .db "DEEP SLEEP.", Dialogue_Terminator63
 
 Dialogue_Index_02A2:
-.db $E1, "HAD A BAD", Dialogue_NewLine
+.db Word_You, "HAD A BAD", Dialogue_NewLine
 .db "DREAM.", Dialogue_Terminator65
 
 Dialogue_Index_02A4:
-.db $D2, " IS ", $DE, "HOME", Dialogue_NewLine
-.db "OF ", $80, ".", Dialogue_Terminator65
+.db Word_Here, " IS ", Word_The, "HOME", Dialogue_NewLine
+.db "OF ", Word_Alis, ".", Dialogue_Terminator65
 
 Dialogue_Index_02A6:
-.db "IT HAS ", $D5, $F7, Dialogue_NewLine
-.db $AC, ".", Dialogue_NewPage
-.db $D0, " IS ", $DE, Dialogue_NewLine
-.db $AA, ",I WONDER?", Dialogue_Terminator65
+.db "IT HAS ", Word_Some, Word_Thing, Dialogue_NewLine
+.db Word_Strange, ".", Dialogue_NewPage
+.db Word_Where, " IS ", Word_The, Dialogue_NewLine
+.db Word_Governor, ",I WONDER?", Dialogue_Terminator65
 
 Dialogue_Index_02A8:
-.db $E1, $E3, "GOTTEN", Dialogue_NewLine
-.db $A9, " KILLED?", Dialogue_NewPage
+.db Word_You, Word_Have, "GOTTEN", Dialogue_NewLine
+.db Word_Yourself, " KILLED?", Dialogue_NewPage
 .db "COME, LET", Dialogue_Apostrophe, "S TRY", Dialogue_NewLine
-.db $FD, " MORE ", $9F, ".", Dialogue_Terminator65
+.db Word_One, " MORE ", Word_Time, ".", Dialogue_Terminator65
 
 Dialogue_Index_02AA:
-.db $D4, " HAS DIED.", Dialogue_NewLine
-.db $80, " ACCOMPLISHED", Dialogue_NewPage
-.db "HER ", $97, ". ", $B2, " IS", Dialogue_NewLine
+.db Word_Lassic, " HAS DIED.", Dialogue_NewLine
+.db Word_Alis, " ACCOMPLISHED", Dialogue_NewPage
+.db "HER ", Word_Wish, ". ", Word_Nero, " IS", Dialogue_NewLine
 .db "SATISFIED NOW IN", Dialogue_NewPage
 .db "HEAVEN. HURRY TO", Dialogue_NewLine
-.db $DE, $AA, "!", Dialogue_Terminator65
+.db Word_The, Word_Governor, "!", Dialogue_Terminator65
 
 LABEL_B49B:
 .db "SCUM! DO NOT SNIFF", Dialogue_NewLine
-.db "AROUND IN ", $D4, Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db "AROUND IN ", Word_Lassic, Dialogue_Apostrophe, "S", Dialogue_NewLine
 .db "AFFAIRS! LEARN", Dialogue_NewLine
 .db "THIS LESSON WELL!", Dialogue_NewPage
-.db $B2, "! WHAT HAPP-", Dialogue_NewLine
+.db Word_Nero, "! WHAT HAPP-", Dialogue_NewLine
 .db "ENED! DON", Dialogue_Apostrophe, "T DIE!", Dialogue_Terminator65
 
 LABEL_B4FC:
-.db $80, ",LISTEN!", Dialogue_NewLine
-.db $D4, " IS LEADING", Dialogue_NewLine
-.db "OUR ", $B5, " TO", Dialogue_NewLine
+.db Word_Alis, ",LISTEN!", Dialogue_NewLine
+.db Word_Lassic, " IS LEADING", Dialogue_NewLine
+.db "OUR ", Word_World, " TO", Dialogue_NewLine
 .db "DESTRUCTION. I", Dialogue_NewPage
 .db "TRIED TO DISCOVER", Dialogue_NewLine
 .db "HIS PLANS, BUT I", Dialogue_NewLine
-.db "C", $FF, " NOT DO MUCH", Dialogue_NewLine
+.db "C", Word_Ould, " NOT DO MUCH", Dialogue_NewLine
 .db "BY MYSELF.", Dialogue_NewPage
-.db "I ", $E3, "HEARD OF A", Dialogue_NewLine
-.db "MAN WITH ", $E6, Dialogue_NewLine
-.db "STRENGTH ", $E7, Dialogue_NewLine
+.db "I ", Word_Have, "HEARD OF A", Dialogue_NewLine
+.db "MAN WITH ", Word_Great, Dialogue_NewLine
+.db "STRENGTH ", Word_Named, Dialogue_NewLine
 .db "\"ODIN.\" MAYBE THE", Dialogue_NewPage
-.db "TWO OF ", $E1, "CAN", Dialogue_NewLine
-.db "STOP ", $D4, ".", Dialogue_NewLine
-.db $80, ",IT", Dialogue_Apostrophe, "S TOO LATE", Dialogue_NewLine
+.db "TWO OF ", Word_You, "CAN", Dialogue_NewLine
+.db "STOP ", Word_Lassic, ".", Dialogue_NewLine
+.db Word_Alis, ",IT", Dialogue_Apostrophe, "S TOO LATE", Dialogue_NewLine
 .db "FOR ME. BE STRONG.", Dialogue_Terminator65
 
 LABEL_B5D5:
-.db "I ", $C7, " MAKE SURE", Dialogue_NewLine
-.db $DC, " ", $92, Dialogue_NewLine
+.db "I ", Word_Will, " MAKE SURE", Dialogue_NewLine
+.db Word_That, " ", Word_My_Brother, Dialogue_NewLine
 .db "DIED NOT IN VAIN!", Dialogue_NewLine
 .db "WATCH OVER AND", Dialogue_NewPage
-.db "PROTECT ME, ", $B2, "!", Dialogue_Terminator65
+.db "PROTECT ME, ", Word_Nero, "!", Dialogue_Terminator65
 
 LABEL_B617:
-.db "WE ", $C7, " BE FELLOW", Dialogue_NewLine
+.db "WE ", Word_Will, " BE FELLOW", Dialogue_NewLine
 .db "TRAVELERS.", Dialogue_NewLine
-.db "I", Dialogue_Apostrophe, "M ", $80, "; WHAT", Dialogue_Apostrophe, "S", Dialogue_NewLine
-.db $E2, "NAME?", Dialogue_Terminator65
+.db "I", Dialogue_Apostrophe, "M ", Word_Alis, "; WHAT", Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db Word_Your, "NAME?", Dialogue_Terminator65
 
 LABEL_B646:
-.db "I", Dialogue_Apostrophe, "M ", $81, ".", Dialogue_Terminator65
+.db "I", Dialogue_Apostrophe, "M ", Word_Myau, ".", Dialogue_Terminator65
 
 LABEL_B64D:
-.db $81, ", ", $E3, $E1, Dialogue_NewLine
+.db Word_Myau, ", ", Word_Have, Word_You, Dialogue_NewLine
 .db "EVER HEARD OF A", Dialogue_NewLine
-.db "MAN ", $E7, "ODIN?", Dialogue_Terminator65
+.db "MAN ", Word_Named, "ODIN?", Dialogue_Terminator65
 
 LABEL_B66E:
 .db "YES, BUT HE IS", Dialogue_NewLine
-.db $91, "!", Dialogue_NewLine
+.db Word_Turned_To_Stone, "!", Dialogue_NewLine
 .db "IF HE DRINKS THIS", Dialogue_NewLine
 .db "MEDICINE, HE", Dialogue_Apostrophe, "LL BE", Dialogue_NewPage
-.db "O.K., BUT I ", $88, Dialogue_NewLine
-.db "OPEN ", $DE, "BOTTLE.", Dialogue_Terminator65
+.db "O.K., BUT I ", Word_Cannot, Dialogue_NewLine
+.db "OPEN ", Word_The, "BOTTLE.", Dialogue_Terminator65
 
 LABEL_B6C1:
 .db "WELL, THEN, WE", Dialogue_Apostrophe, "D", Dialogue_NewLine
-.db "BETTER GO ", $8F, Dialogue_NewLine
+.db "BETTER GO ", Word_Save, Dialogue_NewLine
 .db "ODIN TOGETHER,", Dialogue_NewLine
 .db "O.K.?", Dialogue_Terminator65
 
 LABEL_B6F3:
-.db $B3, " FOR SAVING", Dialogue_NewLine
+.db Word_Thanks, " FOR SAVING", Dialogue_NewLine
 .db "ME. I GUESS IF", Dialogue_NewLine
-.db $EA, " CAN STOP", Dialogue_NewLine
-.db "ME, I DON", Dialogue_Apostrophe, "T ", $E3, Dialogue_NewPage
+.db Word_Medusa, " CAN STOP", Dialogue_NewLine
+.db "ME, I DON", Dialogue_Apostrophe, "T ", Word_Have, Dialogue_NewPage
 .db "MUCH HOPE OF", Dialogue_NewLine
-.db "KILLING ", $D4, ",", Dialogue_NewLine
+.db "KILLING ", Word_Lassic, ",", Dialogue_NewLine
 .db "DO I?", Dialogue_Terminator65
 
 LABEL_B746:
-.db $92, " DIED", Dialogue_NewLine
+.db Word_My_Brother, " DIED", Dialogue_NewLine
 .db "TRYING TO KILL", Dialogue_NewLine
-.db $D4, ". BEFORE HE", Dialogue_NewLine
+.db Word_Lassic, ". BEFORE HE", Dialogue_NewLine
 .db "DIED, HE TOLD ME", Dialogue_NewPage
-.db "TO SEEK ", $E2, $CA, ".", Dialogue_Terminator65
+.db "TO SEEK ", Word_Your, Word_Help, ".", Dialogue_Terminator65
 
 LABEL_B786:
-.db "IS ", $DC, " SO? WELL,", Dialogue_NewLine
-.db "I ", $C8, " NOT LET", Dialogue_NewLine
-.db $E2, "BROTHER DIE", Dialogue_NewLine
+.db "IS ", Word_That, " SO? WELL,", Dialogue_NewLine
+.db "I ", Word_Must, " NOT LET", Dialogue_NewLine
+.db Word_Your, "BROTHER DIE", Dialogue_NewLine
 .db "UNAVENGED.", Dialogue_Terminator65
 
 LABEL_B7B9:
-.db "WHY DID ", $E1, "TRY TO", Dialogue_NewLine
-.db "KILL ", $EA, "?", Dialogue_Terminator65
+.db "WHY DID ", Word_You, "TRY TO", Dialogue_NewLine
+.db "KILL ", Word_Medusa, "?", Dialogue_Terminator65
 
 LABEL_B7D1:
-.db "BECAUSE ", $EA, " HAS", Dialogue_NewLine
+.db "BECAUSE ", Word_Medusa, " HAS", Dialogue_NewLine
 .db "A MYSTIC AXE.", Dialogue_NewLine
 .db "UNFORTUNATELY, SHE", Dialogue_NewLine
-.db "GOT AWAY ", $FE, "ME.", Dialogue_NewPage
-.db "ANYHOW, I ", $E3, Dialogue_NewLine
+.db "GOT AWAY ", Word_From, "ME.", Dialogue_NewPage
+.db "ANYHOW, I ", Word_Have, Dialogue_NewLine
 .db "STASHED A COMPASS", Dialogue_NewLine
 .db "IN ONE OF THE", Dialogue_NewLine
-.db $BA, "S OF ", $E4, Dialogue_NewPage
+.db Word_Passage, "S OF ", Word_This, Dialogue_NewPage
 .db "CAVE. LET", Dialogue_Apostrophe, "S GO AND", Dialogue_NewLine
 .db "GET IT", Dialogue_Terminator65
 
 LABEL_B85C:
 .db "I", Dialogue_Apostrophe, "VE RECEIVED A", Dialogue_NewLine
-.db "LETTER ", $FE, $DE, Dialogue_NewLine
-.db $AA, ". ", $C9, Dialogue_NewLine
+.db "LETTER ", Word_From, Word_The, Dialogue_NewLine
+.db Word_Governor, ". ", Word_Please, Dialogue_NewLine
 .db "READ IT.", Dialogue_Terminator65
 
 LABEL_B884:
 .db "LET ME SEE IT.....", Dialogue_NewLine
 .db "OUR DUTY IS CLEAR;", Dialogue_NewLine
-.db "WE ", $C8, " PROTECT", Dialogue_NewLine
-.db $DE, $B8, " OF THE", Dialogue_NewPage
-.db $9B, " ", $9C, " ", $FE, Dialogue_NewLine
+.db "WE ", Word_Must, " PROTECT", Dialogue_NewLine
+.db Word_The, Word_Planets, " OF THE", Dialogue_NewPage
+.db Word_Algol, " ", Word_System, " ", Word_From, Dialogue_NewLine
 .db "EVIL.", Dialogue_NewLine
-.db "WE ", $C8, " FIRST GO", Dialogue_NewLine
-.db "TO ", $DE, $95, Dialogue_NewPage
+.db "WE ", Word_Must, " FIRST GO", Dialogue_NewLine
+.db "TO ", Word_The, Word_Gothic, Dialogue_NewPage
 .db "FORESTS AND FIND", Dialogue_NewLine
-.db "DR.", $AD, ". WE CAN", Dialogue_NewLine
+.db "DR.", Word_Luveno, ". WE CAN", Dialogue_NewLine
 .db "USE AN UNDERGROUND", Dialogue_NewLine
-.db $BA, " ", $FE, "A", Dialogue_NewPage
+.db Word_Passage, " ", Word_From, "A", Dialogue_NewPage
 .db "MANHOLE IN THE", Dialogue_NewLine
-.db $98, ".", Dialogue_Terminator65
+.db Word_Spaceport, ".", Dialogue_Terminator65
 
 LABEL_B929:
-.db "WHEN ", $81, " EATS THE", Dialogue_NewLine
-.db "NUTS OF ", $D7, ", HE", Dialogue_NewLine
+.db "WHEN ", Word_Myau, " EATS THE", Dialogue_NewLine
+.db "NUTS OF ", Word_Laerma, ", HE", Dialogue_NewLine
 .db "BECOMES CLOTHED IN", Dialogue_NewLine
 .db "FLAME AND EMITS A", Dialogue_NewPage
 .db "BLINDING LIGHT.", Dialogue_Terminator65
@@ -18942,12 +18935,12 @@ LABEL_B97C:
 .db "TRANSFORMED INTO", Dialogue_NewPage
 .db "A BEAUTIFUL", Dialogue_NewLine
 .db "WINGED BEAST.", Dialogue_NewLine
-.db $81, " FLAPS HIS", Dialogue_NewLine
+.db Word_Myau, " FLAPS HIS", Dialogue_NewLine
 .db "WINGS PLOUDLY.", Dialogue_Terminator65
 
 LABEL_B9E8:
 .db Dialogue_NewLine
-.db "     ", $80, Dialogue_Terminator63
+.db "     ", Word_Alis, Dialogue_Terminator63
 
 LABEL_B9F0:
 .db Dialogue_NewLine
@@ -18959,184 +18952,439 @@ LABEL_B9FB:
 
 LABEL_BA06:
 .db Dialogue_NewLine
-.db "     AND ", $81, Dialogue_Terminator63
+.db "     AND ", Word_Myau, Dialogue_Terminator63
 
 LABEL_BA12:
 .db "EVEN THOUGH THE", Dialogue_NewLine
 .db "MEMORIES OF EVIL", Dialogue_NewLine
 .db "FADE AWAY, THEIR", Dialogue_NewLine
-.db "NAMES ", $C7, " BE KEPT", Dialogue_Terminator63
+.db "NAMES ", Word_Will, " BE KEPT", Dialogue_Terminator63
 
 LABEL_BA54:
-.db $5F, "IN ", $DE, "HEARTS OF", Dialogue_NewLine
-.db $DE, "PEOPLE OF ", $DE, Dialogue_NewLine
+.db $5F, "IN ", Word_The, "HEARTS OF", Dialogue_NewLine
+.db Word_The, "PEOPLE OF ", Word_The, Dialogue_NewLine
 .db "ALGOL FOREVER!!!", Dialogue_Terminator63
 
 
 ; This is a pointer table for the strings below
-; TODO: Add labels for the strings and generate automatically when building ROM
-; See DialogueBlock for example on how to do it
-.dw $BB81, $BB86, $BB8B, $BB92
-.dw $BB9C, $BBA3, $BBA8, $BBAF
-.dw $BBB8, $BBBF, $BBC6, $BBCD
-.dw $BBD5, $BBE1, $BBE7, $BBF1
-.dw $BBF6, $BC00, $BC10, $BC1B
-.dw $BC23, $BC2B, $BC32, $BC38
-.dw $BC3D, $BC47, $BC50, $BC57
-.dw $BC5D, $BC64, $BC6A, $BC72
-.dw $BC77, $BC80, $BC88, $BC8D
-.dw $BC96, $BCA5, $BCAC, $BCB9
-.dw $BCC0, $BCC8, $BCD1, $BCDA
-.dw $BCDF, $BCE7, $BCEE, $BCF6
-.dw $BCFB, $BD01, $BD08, $BD0D
-.dw $BD14, $BD1E, $BD24, $BD2B
-.dw $BD31, $BD39, $BD3E, $BD46
-.dw $BD51, $BD59, $BD64, $BD69
-.dw $BD6E, $BD73, $BD79, $BD84
-.dw $BD90, $BD97, $BDA3, $BDAA
-.dw $BDAF, $BDB4, $BDBC, $BDC1
-.dw $BDCA, $BDD1, $BDDA, $BDE3
-.dw $BDE9, $BDEF, $BDF5, $BDFA
-.dw $BE01, $BE08, $BE0D, $BE1E
-.dw $BE25, $BE2D, $BE36, $BE3F
-.dw $BE49, $BE4E, $BE56, $BE5B
-.dw $BE63, $BE6C, $BE71, $BE77
-.dw $BE7D, $BE83, $BE8C, $BE93
-.dw $BE9A, $BEA4, $BEAC, $BEB3
-.dw $BEC4, $BEC9, $BED1, $BED8
-.dw $BEDE, $BEEC, $BEF6, $BEFC
-.dw $BF01, $BF0A, $BF11, $BF15
-.dw $BF1B, $BF20, $BF26, $BF2B
-.dw $BF33, $BF3A, $BF3E, $BF44
+; When displaying dialogue, if bit 7 is set in a character the other 7 bits are used as an index into this table
+; The corresponding word is loaded and displayed
+DialogueWordBlock:
+.dw Dialogue_Word_Index_00, Dialogue_Word_Index_01, Dialogue_Word_Index_02, Dialogue_Word_Index_03,
+.dw Dialogue_Word_Index_04, Dialogue_Word_Index_05, Dialogue_Word_Index_06, Dialogue_Word_Index_07,
+.dw Dialogue_Word_Index_08, Dialogue_Word_Index_09, Dialogue_Word_Index_0A, Dialogue_Word_Index_0B,
+.dw Dialogue_Word_Index_0C, Dialogue_Word_Index_0D, Dialogue_Word_Index_0E, Dialogue_Word_Index_0F,
+.dw Dialogue_Word_Index_10, Dialogue_Word_Index_11, Dialogue_Word_Index_12, Dialogue_Word_Index_13,
+.dw Dialogue_Word_Index_14, Dialogue_Word_Index_15, Dialogue_Word_Index_16, Dialogue_Word_Index_17,
+.dw Dialogue_Word_Index_18, Dialogue_Word_Index_19, Dialogue_Word_Index_1A, Dialogue_Word_Index_1B,
+.dw Dialogue_Word_Index_1C, Dialogue_Word_Index_1D, Dialogue_Word_Index_1E, Dialogue_Word_Index_1F,
+.dw Dialogue_Word_Index_20, Dialogue_Word_Index_21, Dialogue_Word_Index_22, Dialogue_Word_Index_23,
+.dw Dialogue_Word_Index_24, Dialogue_Word_Index_25, Dialogue_Word_Index_26, Dialogue_Word_Index_27,
+.dw Dialogue_Word_Index_28, Dialogue_Word_Index_29, Dialogue_Word_Index_2A, Dialogue_Word_Index_2B,
+.dw Dialogue_Word_Index_2C, Dialogue_Word_Index_2D, Dialogue_Word_Index_2E, Dialogue_Word_Index_2F,
+.dw Dialogue_Word_Index_30, Dialogue_Word_Index_31, Dialogue_Word_Index_32, Dialogue_Word_Index_33,
+.dw Dialogue_Word_Index_34, Dialogue_Word_Index_35, Dialogue_Word_Index_36, Dialogue_Word_Index_37,
+.dw Dialogue_Word_Index_38, Dialogue_Word_Index_39, Dialogue_Word_Index_3A, Dialogue_Word_Index_3B,
+.dw Dialogue_Word_Index_3C, Dialogue_Word_Index_3D, Dialogue_Word_Index_3E, Dialogue_Word_Index_3F,
+.dw Dialogue_Word_Index_40, Dialogue_Word_Index_41, Dialogue_Word_Index_42, Dialogue_Word_Index_43,
+.dw Dialogue_Word_Index_44, Dialogue_Word_Index_45, Dialogue_Word_Index_46, Dialogue_Word_Index_47,
+.dw Dialogue_Word_Index_48, Dialogue_Word_Index_49, Dialogue_Word_Index_4A, Dialogue_Word_Index_4B,
+.dw Dialogue_Word_Index_4C, Dialogue_Word_Index_4D, Dialogue_Word_Index_4E, Dialogue_Word_Index_4F,
+.dw Dialogue_Word_Index_50, Dialogue_Word_Index_51, Dialogue_Word_Index_52, Dialogue_Word_Index_53,
+.dw Dialogue_Word_Index_54, Dialogue_Word_Index_55, Dialogue_Word_Index_56, Dialogue_Word_Index_57,
+.dw Dialogue_Word_Index_58, Dialogue_Word_Index_59, Dialogue_Word_Index_5A, Dialogue_Word_Index_5B,
+.dw Dialogue_Word_Index_5C, Dialogue_Word_Index_5D, Dialogue_Word_Index_5E, Dialogue_Word_Index_5F,
+.dw Dialogue_Word_Index_60, Dialogue_Word_Index_61, Dialogue_Word_Index_62, Dialogue_Word_Index_63,
+.dw Dialogue_Word_Index_64, Dialogue_Word_Index_65, Dialogue_Word_Index_66, Dialogue_Word_Index_67,
+.dw Dialogue_Word_Index_68, Dialogue_Word_Index_69, Dialogue_Word_Index_6A, Dialogue_Word_Index_6B,
+.dw Dialogue_Word_Index_6C, Dialogue_Word_Index_6D, Dialogue_Word_Index_6E, Dialogue_Word_Index_6F,
+.dw Dialogue_Word_Index_70, Dialogue_Word_Index_71, Dialogue_Word_Index_72, Dialogue_Word_Index_73,
+.dw Dialogue_Word_Index_74, Dialogue_Word_Index_75, Dialogue_Word_Index_76, Dialogue_Word_Index_77,
+.dw Dialogue_Word_Index_78, Dialogue_Word_Index_79, Dialogue_Word_Index_7A, Dialogue_Word_Index_7B,
+.dw Dialogue_Word_Index_7C, Dialogue_Word_Index_7D, Dialogue_Word_Index_7E, Dialogue_Word_Index_7F,
 
-
+Dialogue_Word_Index_00:
 .db "ALIS", Dialogue_Terminator65
+
+Dialogue_Word_Index_01:
 .db "MYAU", Dialogue_Terminator65
+
+Dialogue_Word_Index_02:
 .db "ATTACK", Dialogue_Terminator65
+
+Dialogue_Word_Index_03:
 .db "EFFECTIVE", Dialogue_Terminator65
+
+Dialogue_Word_Index_04:
 .db "MAGIC ", Dialogue_Terminator65
+
+Dialogue_Word_Index_05:
 .db "WALL", Dialogue_Terminator65
+
+Dialogue_Word_Index_06:
 .db "HEALED", Dialogue_Terminator65
+
+Dialogue_Word_Index_07:
 .db "DEFLECTS", Dialogue_Terminator65
+
+Dialogue_Word_Index_08:
 .db "CANNOT", Dialogue_Terminator65
+
+Dialogue_Word_Index_09:
 .db "CASTLE", Dialogue_Terminator65
+
+Dialogue_Word_Index_0A:
 .db "HAPSBY", Dialogue_Terminator65
+
+Dialogue_Word_Index_0B:
 .db "WE ARE ", Dialogue_Terminator65
+
+Dialogue_Word_Index_0C:
 .db "HEADING FOR", Dialogue_Terminator65
+
+Dialogue_Word_Index_0D:
 .db "CARRY", Dialogue_Terminator65
+
+Dialogue_Word_Index_0E:
 .db "RESURRECT", Dialogue_Terminator65
+
+Dialogue_Word_Index_0F:
 .db "SAVE", Dialogue_Terminator65
+
+Dialogue_Word_Index_10:
 .db "CURRENTLY", Dialogue_Terminator65
+
+Dialogue_Word_Index_11:
 .db "TURNED TO STONE", Dialogue_Terminator65
+
+Dialogue_Word_Index_12:
 .db "MY BROTHER", Dialogue_Terminator65
+
+Dialogue_Word_Index_13:
 .db "DEZORIS", Dialogue_Terminator65
+
+Dialogue_Word_Index_14:
 .db "MOTAVIA", Dialogue_Terminator65
+
+Dialogue_Word_Index_15:
 .db "GOTHIC", Dialogue_Terminator65
+
+Dialogue_Word_Index_16:
 .db "SCION", Dialogue_Terminator65
+
+Dialogue_Word_Index_17:
 .db "WISH", Dialogue_Terminator65
+
+Dialogue_Word_Index_18:
 .db "SPACEPORT", Dialogue_Terminator65
+
+Dialogue_Word_Index_19:
 .db "PASSPORT", Dialogue_Terminator65
+
+Dialogue_Word_Index_1A:
 .db "PLANET", Dialogue_Terminator65
+
+Dialogue_Word_Index_1B:
 .db "ALGOL", Dialogue_Terminator65
+
+Dialogue_Word_Index_1C:
 .db "SYSTEM", Dialogue_Terminator65
+
+Dialogue_Word_Index_1D:
 .db "TOWER", Dialogue_Terminator65
+
+Dialogue_Word_Index_1E:
 .db "VILLAGE", Dialogue_Terminator65
+
+Dialogue_Word_Index_1F:
 .db "TIME", Dialogue_Terminator65
+
+Dialogue_Word_Index_20:
 .db "ROADPASS", Dialogue_Terminator65
+
+Dialogue_Word_Index_21:
 .db "MESETAS", Dialogue_Terminator65
+
+Dialogue_Word_Index_22:
 .db "PASS", Dialogue_Terminator65
+
+Dialogue_Word_Index_23:
 .db "ANT LION", Dialogue_Terminator65
+
+Dialogue_Word_Index_24:
 .db "SOOTHING FLUTE", Dialogue_Terminator65
+
+Dialogue_Word_Index_25:
 .db "SECRET", Dialogue_Terminator65
+
+Dialogue_Word_Index_26:
 .db "LACONIAN POT", Dialogue_Terminator65
+
+Dialogue_Word_Index_27:
 .db "MAHARU", Dialogue_Terminator65
+
+Dialogue_Word_Index_28:
 .db "BORTEVO", Dialogue_Terminator65
+
+Dialogue_Word_Index_29:
 .db "YOURSELF", Dialogue_Terminator65
+
+Dialogue_Word_Index_2A:
 .db "GOVERNOR", Dialogue_Terminator65
+
+Dialogue_Word_Index_2B:
 .db "HILL", Dialogue_Terminator65
+
+Dialogue_Word_Index_2C:
 .db "STRANGE", Dialogue_Terminator65
+
+Dialogue_Word_Index_2D:
 .db "LUVENO", Dialogue_Terminator65
+
+Dialogue_Word_Index_2E:
 .db "HOWEVER", Dialogue_Terminator65
+
+Dialogue_Word_Index_2F:
 .db "KING", Dialogue_Terminator65
+
+Dialogue_Word_Index_30:
 .db "QUEEN", Dialogue_Terminator65
+
+Dialogue_Word_Index_31:
 .db "FATHER", Dialogue_Terminator65
+
+Dialogue_Word_Index_32:
 .db "NERO", Dialogue_Terminator65
+
+Dialogue_Word_Index_33:
 .db "THANKS", Dialogue_Terminator65
+
+Dialogue_Word_Index_34:
 .db "THANK YOU", Dialogue_Terminator65
+
+Dialogue_Word_Index_35:
 .db "WORLD", Dialogue_Terminator65
+
+Dialogue_Word_Index_36:
 .db "SHIELD", Dialogue_Terminator65
+
+Dialogue_Word_Index_37:
 .db "I SEE", Dialogue_Terminator65
+
+Dialogue_Word_Index_38:
 .db "PLANETS", Dialogue_Terminator65
+
+Dialogue_Word_Index_39:
 .db "TOWN", Dialogue_Terminator65
+
+Dialogue_Word_Index_3A:
 .db "PASSAGE", Dialogue_Terminator65
+
+Dialogue_Word_Index_3B:
 .db "SOOTHSAYER", Dialogue_Terminator65
+
+Dialogue_Word_Index_3C:
 .db "LACONIA", Dialogue_Terminator65
+
+Dialogue_Word_Index_3D:
 .db "LABORATORY", Dialogue_Terminator65
+
+Dialogue_Word_Index_3E:
 .db "KNOW", Dialogue_Terminator65
+
+Dialogue_Word_Index_3F:
 .db "REST", Dialogue_Terminator65
+
+Dialogue_Word_Index_40:
 .db "BAYA", Dialogue_Terminator65
+
+Dialogue_Word_Index_41:
 .db "MALAY", Dialogue_Terminator65
+
+Dialogue_Word_Index_42:
 .db "BAYA MALAY", Dialogue_Terminator65
+
+Dialogue_Word_Index_43:
 .db "DO YOU KNOW", Dialogue_Terminator65
+
+Dialogue_Word_Index_44:
 .db "FOREST", Dialogue_Terminator65
+
+Dialogue_Word_Index_45:
 .db "DO YOU HAVE", Dialogue_Terminator65
+
+Dialogue_Word_Index_46:
 .db "DO YOU", Dialogue_Terminator65
+
+Dialogue_Word_Index_47:
 .db "WILL", Dialogue_Terminator65
+
+Dialogue_Word_Index_48:
 .db "MUST", Dialogue_Terminator65
+
+Dialogue_Word_Index_49:
 .db "PLEASE ", Dialogue_Terminator65
+
+Dialogue_Word_Index_4A:
 .db "HELP", Dialogue_Terminator65
+
+Dialogue_Word_Index_4B:
 .db "YOU WILL", Dialogue_Terminator65
+
+Dialogue_Word_Index_4C:
 .db "I WILL", Dialogue_Terminator65
+
+Dialogue_Word_Index_4D:
 .db "WILL YOU", Dialogue_Terminator65
+
+Dialogue_Word_Index_4E:
 .db "YOU MUST", Dialogue_Terminator65
+
+Dialogue_Word_Index_4F:
 .db "PALMA", Dialogue_Terminator65
+
+Dialogue_Word_Index_50:
 .db "WHERE", Dialogue_Terminator65
+
+Dialogue_Word_Index_51:
 .db "THERE", Dialogue_Terminator65
+
+Dialogue_Word_Index_52:
 .db "HERE", Dialogue_Terminator65
+
+Dialogue_Word_Index_53:
 .db "INDEED", Dialogue_Terminator65
+
+Dialogue_Word_Index_54:
 .db "LASSIC", Dialogue_Terminator65
+
+Dialogue_Word_Index_55:
 .db "SOME", Dialogue_Terminator65
+
+Dialogue_Word_Index_56:
 .db "RESIDENTIAL AREA", Dialogue_Terminator65
+
+Dialogue_Word_Index_57:
 .db "LAERMA", Dialogue_Terminator65
+
+Dialogue_Word_Index_58:
 .db "DUNGEON", Dialogue_Terminator65
+
+Dialogue_Word_Index_59:
 .db "LANGUAGE", Dialogue_Terminator65
+
+Dialogue_Word_Index_5A:
 .db "THERE IS", Dialogue_Terminator65
+
+Dialogue_Word_Index_5B:
 .db "THERE ARE", Dialogue_Terminator65
+
+Dialogue_Word_Index_5C:
 .db "THAT", Dialogue_Terminator65
+
+Dialogue_Word_Index_5D:
 .db "THROUGH", Dialogue_Terminator65
+
+Dialogue_Word_Index_5E:
 .db "THE ", Dialogue_Terminator65
+
+Dialogue_Word_Index_5F:
 .db "PRESENT", Dialogue_Terminator65
+
+Dialogue_Word_Index_60:
 .db "WELCOME ", Dialogue_Terminator65
+
+Dialogue_Word_Index_61:
 .db "YOU ", Dialogue_Terminator65
+
+Dialogue_Word_Index_62:
 .db "YOUR ", Dialogue_Terminator65
+
+Dialogue_Word_Index_63:
 .db "HAVE ", Dialogue_Terminator65
+
+Dialogue_Word_Index_64:
 .db "THIS ", Dialogue_Terminator65
+
+Dialogue_Word_Index_65:
 .db "MOUNTAIN", Dialogue_Terminator65
+
+Dialogue_Word_Index_66:
 .db "GREAT ", Dialogue_Terminator65
+
+Dialogue_Word_Index_67:
 .db "NAMED ", Dialogue_Terminator65
+
+Dialogue_Word_Index_68:
 .db "SPACESHIP", Dialogue_Terminator65
+
+Dialogue_Word_Index_69:
 .db "PALMANS", Dialogue_Terminator65
+
+Dialogue_Word_Index_6A:
 .db "MEDUSA", Dialogue_Terminator65
+
+Dialogue_Word_Index_6B:
 .db "DON", Dialogue_Apostrophe, "T BE A FOOL!", Dialogue_Terminator65
+
+Dialogue_Word_Index_6C:
 .db "ARE ", Dialogue_Terminator65
+
+Dialogue_Word_Index_6D:
 .db "CAREFUL", Dialogue_Terminator65
+
+Dialogue_Word_Index_6E:
 .db "DELETE", Dialogue_Terminator65
+
+Dialogue_Word_Index_6F:
 .db "MAGIC", Dialogue_Terminator65
+
+Dialogue_Word_Index_70:
 .db "SABRUS CABRUS", Dialogue_Terminator65
+
+Dialogue_Word_Index_71:
 .db "TREASURE ", Dialogue_Terminator65
+
+Dialogue_Word_Index_72:
 .db "CHEST", Dialogue_Terminator65
+
+Dialogue_Word_Index_73:
 .db "MOVE", Dialogue_Terminator65
+
+Dialogue_Word_Index_74:
 .db "DEZORIAN", Dialogue_Terminator65
+
+Dialogue_Word_Index_75:
 .db "EMBARK", Dialogue_Terminator65
+
+Dialogue_Word_Index_76:
 .db "ANY", Dialogue_Terminator65
+
+Dialogue_Word_Index_77:
 .db "THING", Dialogue_Terminator65
+
+Dialogue_Word_Index_78:
 .db "NOT ", Dialogue_Terminator65
+
+Dialogue_Word_Index_79:
 .db "WANT ", Dialogue_Terminator65
+
+Dialogue_Word_Index_7A:
 .db "GAME", Dialogue_Terminator65
+
+Dialogue_Word_Index_7B:
 .db "FACING ", Dialogue_Terminator65
+
+Dialogue_Word_Index_7C:
 .db "SELECT", Dialogue_Terminator65
+
+Dialogue_Word_Index_7D:
 .db "ONE", Dialogue_Terminator65
+
+Dialogue_Word_Index_7E:
 .db "FROM ", Dialogue_Terminator65
+
+Dialogue_Word_Index_7F:
 .db "OULD", Dialogue_Terminator65
 
 

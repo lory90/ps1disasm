@@ -223,7 +223,7 @@ Enemy_None:
 .db	$00, $00, $00, $00, $00, $00, $00, $00
 
 Enemy_Sworm:
-.db	"SWORM", $65, "  "
+.db	"SWORM", Dialogue_Terminator65, "  "
 .db	$2A, $25, $05, $0A, $08, $04, $0C, $2F
 .db	:Bank11
 .dw	LABEL_B11_9CDA
@@ -327,7 +327,7 @@ Enemy_GiantFly:
 .db $20, $00, $0F, $07, $00, $3C, $66
 
 Enemy_Crawler:
-.db	"CRAWLER", $65
+.db	"CRAWLER", Dialogue_Terminator65
 .db	$02, $06, $0A, $0E, $01, $03, $2F, $00
 .db	:Bank10
 .dw LABEL_B10_AA8C
@@ -375,7 +375,7 @@ Enemy_BigClub:
 .db $28, $00, $0F, $09, $00, $30, $CC
 
 Enemy_Fishman:
-.db	"FISHMAN", $65
+.db	"FISHMAN", Dialogue_Terminator65
 .db	$05, $39, $0A, $13, $33, $0F, $3F, $00
 .db	:Bank26
 .dw LABEL_B26_A7B8
