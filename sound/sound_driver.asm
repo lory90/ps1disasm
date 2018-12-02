@@ -954,7 +954,7 @@ LABEL_B12_85ED:
 	dec (ix+8)
 	ret
 
-+:	
++:
 	res 5, (ix+0)
 	ld a, (ix+1)
 	ld a, (ix+8)
@@ -965,19 +965,19 @@ LABEL_B12_85ED:
 	ret
 
 
-LABEL_B12_8618:	
+LABEL_B12_8618:
 	ld a, (de)
 	cp $01
 	jr nz, +
 	set 3, (ix+0)
 	ret
 
-+:	
++:
 	res 3, (ix+0)
 	ret
 
 
-LABEL_B12_8627:	
+LABEL_B12_8627:
 	ld hl, $C12E
 	res 2, (hl)
 	xor a
@@ -1000,7 +1000,7 @@ LABEL_B12_8627:
 	call LABEL_B12_8812
 	ld hl, $C08E
 	res 2, (hl)
-+:	
++:
 	ld hl, $C18E
 	res 2, (hl)
 	ld hl, $C1CE
@@ -1019,7 +1019,7 @@ LABEL_B12_8627:
 	call LABEL_B12_8812
 	ld hl, $C0AE
 	res 2, (hl)
-+:	
++:
 	ld hl, $C1AE
 	res 2, (hl)
 	pop hl
@@ -1027,7 +1027,7 @@ LABEL_B12_8627:
 	ret
 
 
-LABEL_B12_8687:	
+LABEL_B12_8687:
 	ld a, (de)
 	ld c, a
 	inc de
@@ -1049,7 +1049,7 @@ LABEL_B12_8687:
 	ret
 
 
-LABEL_B12_86A2:	
+LABEL_B12_86A2:
 	push ix
 	pop hl
 	ld c, (ix+9)
@@ -1063,7 +1063,7 @@ LABEL_B12_86A2:
 	ret
 
 
-LABEL_B12_86B5:	
+LABEL_B12_86B5:
 	ld a, (de)
 	inc de
 	add a, $18
@@ -1077,7 +1077,7 @@ LABEL_B12_86B5:
 	jr nz, +
 	ld a, (de)
 	ld (hl), a
-+:	
++:
 	inc de
 	dec (hl)
 	jp nz, LABEL_B12_85E7
@@ -1089,7 +1089,7 @@ LABEL_B12_86CD:
 	pop hl
 	ret
 
-LABEL_B12_86D0:	
+LABEL_B12_86D0:
 	inc (ix+11)
 	ld a, (ix+10)
 	sub (ix+11)
@@ -1108,10 +1108,10 @@ LABEL_B12_86D0:
 	out (Port_PSG), a
 	ret
 
-+:	
++:
 	ld e, (ix+3)
 	ld d, (ix+4)
--:	
+-:
 	ld a, (de)
 	inc de
 	cp $E0
@@ -1133,15 +1133,15 @@ LABEL_B12_871F:
 	dec de
 	jp LABEL_B12_84CF
 
-+:	
++:
 	ld hl, +	; Overriding return address
 	jp LABEL_B12_851C
 
-+:	
++:
 	inc de
 	jp -
 
-++:	
+++:
 	bit 3, a
 	jr nz, +
 	bit 5, a
@@ -1157,39 +1157,39 @@ LABEL_B12_871F:
 	out (Port_PSG), a
 	ret
 
-+:	
++:
 	ex af, af'
 	ld a, $02
 	ld b, $04
 	jr ++++
 
-++:	
+++:
 	ld c, $04
 	bit 0, a
 	jr nz, +
 	ld c, $03
-+:	
++:
 	ex af, af'
 	ld a, c
 	ld b, $05
 	jr ++++
 
-+++:	
++++:
 	ex af, af'
 	ld a, $01
 	ld b, $06
-++++:	
+++++:
 	ld (ix+7), a
 	ex af, af'
 	bit 2, a
 	jr z, +
 	dec b
 	dec b
-+:	
++:
 	ld (ix+8), b
 	ret
 
-LABEL_B12_8772:	
+LABEL_B12_8772:
 	inc (ix+11)
 	ld a, (ix+10)
 	sub (ix+11)
@@ -1210,20 +1210,20 @@ LABEL_B12_8772:
 	dec (ix+15)
 	jr ++
 
-+:	
++:
 	add a, (ix+14)
 	jr nc, ++
 	inc (ix+15)
-++:	
+++:
 	ld (ix+14), a
-+++:	
++++:
 	bit 2, (ix+0)
 	ret nz
 	ld a, (ix+19)
 	cp $1F
 	ret z
 	jr nz, +
-+:	
++:
 	ld a, (ix+19)
 	cp $FF
 	jp z, +
@@ -1236,7 +1236,7 @@ LABEL_B12_8772:
 	or (ix+1)
 	add a, $10
 	out (Port_PSG), a
-+:	
++:
 	ld a, ($C00C)
 	or a
 	jp m, +
@@ -1247,10 +1247,10 @@ LABEL_B12_8772:
 	jp p, ++
 	ret
 
-+:	
++:
 	ld a, (ix+6)
 	dec a
-++:	
+++:
 	ld l, (ix+14)
 	ld h, (ix+15)
 	jp m, +
@@ -1258,14 +1258,14 @@ LABEL_B12_8772:
 	ld hl, LABEL_B12_A916
 	call LABEL_B12_842F
 	call LABEL_B12_843C
-+:	
++:
 	bit 6, (ix+0)
 	ret nz
 	ld a, (ix+1)
 	cp $E0
 	jr nz, LABEL_B12_8812
 	ld a, $C0
-LABEL_B12_8812:	
+LABEL_B12_8812:
 	ld c, a
 	ld a, l
 	and $0F
@@ -1281,9 +1281,9 @@ LABEL_B12_8812:
 	out (Port_PSG), a
 	ret
 
--:	
+-:
 	ld (ix+12), a
-LABEL_B12_8827:	
+LABEL_B12_8827:
 	push hl
 	ld c, (ix+12)
 	ld b, $00
@@ -1304,7 +1304,7 @@ LABEL_B12_8827:
 	ld a, (bc)
 	jr -
 
-+:	
++:
 	pop hl
 	ld a, $1F
 	ld (ix+19), a
@@ -1312,16 +1312,16 @@ LABEL_B12_8827:
 	out (Port_PSG), a
 	ret
 
-++:	
+++:
 	xor a
 	jr -
 
-+++:	
++++:
 	ld (ix+19), $FF
 	pop hl
 	ret
 
-++++:	
+++++:
 	inc (ix+12)
 	add a, (ix+8)
 	bit 4, a
@@ -1329,7 +1329,7 @@ LABEL_B12_8827:
 	ld a, $0F
 	ret
 
-LABEL_B12_8867:	
+LABEL_B12_8867:
 	ld a, (ix+8)
 	and $0F
 	or (ix+1)
@@ -2888,8 +2888,9 @@ LABEL_B12_A969:
 ; Dialogue from here on
 ; Control characters:
 ; $40 apostrophe
-; $5B player/combatant name?
+; $5B current character name
 ; $5C enemy name
+; $5D current item name
 ; $60 newline
 ; $61 newpage
 ; $62 terminator
@@ -2898,136 +2899,136 @@ LABEL_B12_A969:
 
 LABEL_B12_B108:
 .db Dialogue_EnemyName, " DODGES", Dialogue_NewLine
-.db $5B, Dialogue_Apostrophe, "S ", $82, ".", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, Dialogue_Apostrophe, "S ", Word_Attack, ".", Dialogue_Terminator63
 
 LABEL_B12_B118:
-.db $5B, " DODGES", Dialogue_NewLine
-.db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", $82, ".", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, " DODGES", Dialogue_NewLine
+.db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", Word_Attack, ".", Dialogue_Terminator63
 
 LABEL_B12_B128:
-.db $5B, " SPEAKS.", Dialogue_Terminator62
+.db Dialogue_CurrentCharacter, " SPEAKS.", Dialogue_Terminator62
 
 LABEL_B12_B132:
 .db Dialogue_EnemyName, " ANSWERS.", Dialogue_Terminator63
 
 LABEL_B12_B13D:
-.db $5B, " AND ", Dialogue_EnemyName, Dialogue_NewLine
-.db $88, " UNDERSTAND", Dialogue_NewPage
+.db Dialogue_CurrentCharacter, " AND ", Dialogue_EnemyName, Dialogue_NewLine
+.db Word_Cannot, " UNDERSTAND", Dialogue_NewPage
 .db "EACH OTHER.", Dialogue_Terminator63
 
 LABEL_B12_B15E:
 .db	Dialogue_EnemyName, " BLOCKS", Dialogue_NewLine
-.db $F6, " RETREAT.", Dialogue_Terminator63
+.db Word_Any, " RETREAT.", Dialogue_Terminator63
 
 LABEL_B12_B172:
-.db $5B, Dialogue_Apostrophe, "S ", $84, "IS", Dialogue_NewLine
-.db $F8, $83, ".", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, Dialogue_Apostrophe, "S ", Word_Magic_84, "IS", Dialogue_NewLine
+.db Word_Not, Word_Effective, ".", Dialogue_Terminator63
 
 ;LABEL_B12_????
-.db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", $EF, Dialogue_NewLine
-.db "IS ", $F8, $83, ".", Dialogue_Terminator63
+.db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", Word_Magic_EF, Dialogue_NewLine
+.db "IS ", Word_Not, Word_Effective, ".", Dialogue_Terminator63
 
 LABEL_B12_B18B:
-.db	"AN INVISIBLE ", $EF, $85, " ARISES.", Dialogue_Terminator63
+.db	"AN INVISIBLE ", Word_Magic_EF, Word_Wall, " ARISES.", Dialogue_Terminator63
 
 LABEL_B12_B1A3:
-.db $DE, $84, $85, Dialogue_NewLine
-.db $87, " ", $DE, Dialogue_NewPage
-.db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", $82, ".", Dialogue_Terminator63
+.db Word_The, Word_Magic_84, Word_Wall, Dialogue_NewLine
+.db Word_Deflects, " ", Word_The, Dialogue_NewPage
+.db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", Word_Attack, ".", Dialogue_Terminator63
 
 LABEL_B12_B1B2:
-.db $DE, $84, $85, Dialogue_NewLine
-.db $87, " ", $DE, Dialogue_NewPage
-.db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", $EF, ".", Dialogue_Terminator63
+.db Word_The, Word_Magic_84, Word_Wall, Dialogue_NewLine
+.db Word_Deflects, " ", Word_The, Dialogue_NewPage
+.db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", Word_Magic_EF, ".", Dialogue_Terminator63
 
 LABEL_B12_B1C1:
-.db $DE, $84, $85, Dialogue_NewLine
+.db Word_The, Word_Magic_84, Word_Wall, Dialogue_NewLine
 .db "DISAPPEAR.", Dialogue_Terminator63
 
 LABEL_B12_B1D0:
-.db $5B, " IS ", $86, ".", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, " IS ", Word_Healed, ".", Dialogue_Terminator63
 
 LABEL_B12_B1D8:
 .db Dialogue_EnemyName, " IS", Dialogue_NewLine
-.db $86, ".", Dialogue_Terminator63
+.db Word_Healed, ".", Dialogue_Terminator63
 
 LABEL_B12_B1E0:
 .db Dialogue_EnemyName, " IS TIED", Dialogue_NewLine
 .db "UP.", Dialogue_Terminator63
 
 LABEL_B12_B1EE:
-.db	$5B, " IS TIED UP.", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, " IS TIED UP.", Dialogue_Terminator63
 
 LABEL_B12_B1FC:
-.db	$5B, " ", $88, " "
-.db $F3, ".", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, " ", Word_Cannot, " "
+.db Word_Move, ".", Dialogue_Terminator63
 
 LABEL_B12_B203:
-.db	Dialogue_EnemyName, " ", $88, Dialogue_NewLine
-.db $F3, ".", Dialogue_Terminator63
+.db Dialogue_EnemyName, " ", Word_Cannot, Dialogue_NewLine
+.db Word_Move, ".", Dialogue_Terminator63
 
 LABEL_B12_B20A:
-.db	$5B, " RE", $F3, "S ", $DE, Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " RE", Word_Move, "S ", Word_The, Dialogue_NewLine
 .db "BINDINGS.", Dialogue_Terminator63
 
 LABEL_B12_B21D:
-.db	Dialogue_EnemyName, " RE", $F3, $53, Dialogue_NewLine
-.db $DE, "BINDINGS.", Dialogue_Terminator63
+.db Dialogue_EnemyName, " RE", Word_Move, $53, Dialogue_NewLine
+.db Word_The, "BINDINGS.", Dialogue_Terminator63
 
 LABEL_B12_B22F:
-.db	$5B, " IS BURSTING", Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " IS BURSTING", Dialogue_NewLine
 .db "WITH STRENGTH.", Dialogue_Terminator63
 
 LABEL_B12_B24C:
-.db	Dialogue_EnemyName, " RECOILS", Dialogue_NewLine
+.db Dialogue_EnemyName, " RECOILS", Dialogue_NewLine
 .db "IN FEAR.", Dialogue_Terminator63
 
 LABEL_B12_B25F:
-.db	$80, " AND HER", Dialogue_NewLine
-.db "COMP", $F6, " ESCAPE", Dialogue_NewPage
+.db Word_Alis, " AND HER", Dialogue_NewLine
+.db "COMP", Word_Any, " ESCAPE", Dialogue_NewPage
 .db "QUICKLY.", Dialogue_Terminator63
 
 LABEL_B12_B27F:
-.db $D1, " WAS NO TRAP.", Dialogue_Terminator65
+.db Word_There, " WAS NO TRAP.", Dialogue_Terminator65
 
 LABEL_B12_B28E:
-.db $5B, " SPOTTED AND", Dialogue_NewLine
-.db "DISARMED ", $DE, "TRAP.", Dialogue_Terminator65
+.db Dialogue_CurrentCharacter, " SPOTTED AND", Dialogue_NewLine
+.db "DISARMED ", Word_The, "TRAP.", Dialogue_Terminator65
 
 LABEL_B12_B2AC:
-.db $5B, " USES", Dialogue_NewLine
-.db $5D, ".", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, " USES", Dialogue_NewLine
+.db Dialogue_CurrentItem, ".", Dialogue_Terminator63
 
 LABEL_B12_B2B6:
-.db $5B, " EQUIPS", Dialogue_NewLine
-.db $5D, ".", Dialogue_Terminator62
+.db Dialogue_CurrentCharacter, " EQUIPS", Dialogue_NewLine
+.db Dialogue_CurrentItem, ".", Dialogue_Terminator62
 
 LABEL_B12_B2C2:
-.db $5B, " DROPS", Dialogue_NewLine
-.db $5D, ".", Dialogue_Terminator65
+.db Dialogue_CurrentCharacter, " DROPS", Dialogue_NewLine
+.db Dialogue_CurrentItem, ".", Dialogue_Terminator65
 
 LABEL_B12_B2CD:
 .db "BUT IT HAS NO", Dialogue_NewLine
 .db "EFFECT.", Dialogue_Terminator63
 
 LABEL_B12_B2E3:
-.db "USING ", $5D, Dialogue_NewLine
-.db $C7, " DO NO GOOD", Dialogue_NewPage
-.db $D2, ".", Dialogue_Terminator65
+.db "USING ", Dialogue_CurrentItem, Dialogue_NewLine
+.db Word_Will, " DO NO GOOD", Dialogue_NewPage
+.db Word_Here, ".", Dialogue_Terminator65
 
 LABEL_B12_B2FB:
-.db $88, " DIS", $F5, Dialogue_NewLine
-.db $D2, "!", Dialogue_Terminator65
+.db Word_Cannot, " DIS", Word_Embark, Dialogue_NewLine
+.db Word_Here, "!", Dialogue_Terminator65
 
 LABEL_B12_B305:
-.db $F5, "ED.", Dialogue_Terminator63
+.db Word_Embark, "ED.", Dialogue_Terminator63
 
 LABEL_B12_B30A:
-.db "DIS", $F5, "ED.", Dialogue_Terminator63
+.db "DIS", Word_Embark, "ED.", Dialogue_Terminator63
 
 LABEL_B12_B312:
-.db "NO", $F7, " HAPPENS,", Dialogue_NewLine
-.db $AE, ".", Dialogue_Terminator63
+.db "NO", Word_Thing, " HAPPENS,", Dialogue_NewLine
+.db Word_However, ".", Dialogue_Terminator63
 
 LABEL_B12_B322:
 .db Dialogue_EnemyName, " HEARS THE", Dialogue_NewLine
@@ -3039,174 +3040,174 @@ LABEL_B12_B322:
 .db "LOOK VACANT.", Dialogue_Terminator63
 
 LABEL_B12_B35C:
-.db $88, " DO ", $DC, Dialogue_NewLine
-.db $D2, ".", Dialogue_Terminator63
+.db Word_Cannot, " DO ", Word_That, Dialogue_NewLine
+.db Word_Here, ".", Dialogue_Terminator63
 
 LABEL_B12_B366:
-.db $5B, " TAKES OUT", Dialogue_NewLine
-.db $5D, ".", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, " TAKES OUT", Dialogue_NewLine
+.db Dialogue_CurrentItem, ".", Dialogue_Terminator63
 
 LABEL_B12_B375:
-.db	"IT DOESN", Dialogue_Apostrophe, "T SEEM TOBE BROKEN.", Dialogue_Terminator65
+.db "IT DOESN", Dialogue_Apostrophe, "T SEEM TOBE BROKEN.", Dialogue_Terminator65
 
 LABEL_B12_B392:
-.db $88, " GO FORWARD,IT", Dialogue_Apostrophe, "S PITCH BLACK.", Dialogue_Terminator65
+.db Word_Cannot, " GO FORWARD,IT", Dialogue_Apostrophe, "S PITCH BLACK.", Dialogue_Terminator65
 
 LABEL_B12_B3B1:
-.db $DE, "BOTTLECAP", Dialogue_NewLine
-.db "OPENS AND ", $DE, Dialogue_NewPage
+.db Word_The, "BOTTLECAP", Dialogue_NewLine
+.db "OPENS AND ", Word_The, Dialogue_NewPage
 .db "CONTENTS QUIETLY", Dialogue_NewLine
 .db "LEAK OUT.", Dialogue_Terminator63
 
 LABEL_B12_B3E3:
-.db "BUT ", $81, " ", $88, Dialogue_NewLine
-.db "OPEN ", $DE, "BOTTLE.", Dialogue_Terminator65
+.db "BUT ", Word_Myau, " ", Word_Cannot, Dialogue_NewLine
+.db "OPEN ", Word_The, "BOTTLE.", Dialogue_Terminator65
 
 LABEL_B12_B3F9:
 .db "IT STINKS!", Dialogue_Terminator65
 
 LABEL_B12_B404:
-.db $5B, " HAS A TERRI-", Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " HAS A TERRI-", Dialogue_NewLine
 .db "BLE PREMONITION.", Dialogue_Terminator65
 
 LABEL_B12_B424:
-.db $5B, " FEELS", Dialogue_NewLine
-.db "NO", $F7, ".", Dialogue_Terminator65
+.db Dialogue_CurrentCharacter, " FEELS", Dialogue_NewLine
+.db "NO", Word_Thing, ".", Dialogue_Terminator65
 
 LABEL_B12_B431:
-.db Dialogue_EnemyName, " SEES ", $DE, Dialogue_NewLine
+.db Dialogue_EnemyName, " SEES ", Word_The, Dialogue_NewLine
 .db "RED FLAME AND", Dialogue_NewPage
 .db "BECOMES AFRAID.", Dialogue_Terminator63
 
 LABEL_B12_B458:
-.db $5B, " RAISES", Dialogue_NewLine
-.db $5D, " TOWARDS", Dialogue_NewPage
-.db $DE, "SKY.", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, " RAISES", Dialogue_NewLine
+.db Dialogue_CurrentItem, " TOWARDS", Dialogue_NewPage
+.db Word_The, "SKY.", Dialogue_Terminator63
 
 LABEL_B12_B471:
-.db $5B, " TAKES ", $DE, "NUT", Dialogue_NewLine
-.db "OF ", $D7, " AND PUTS", Dialogue_NewPage
-.db "IT IN ", $DE, $BC, "NPOT.", Dialogue_Terminator65
+.db Dialogue_CurrentCharacter, " TAKES ", Word_The, "NUT", Dialogue_NewLine
+.db "OF ", Word_Laerma, " AND PUTS", Dialogue_NewPage
+.db "IT IN ", Word_The, Word_Laconia, "NPOT.", Dialogue_Terminator65
 
 LABEL_B12_B49A:
-.db $5B, " TAKES ", $DE, "NUT", Dialogue_NewLine
-.db "OF ", $D7, ", BUT IT", Dialogue_NewPage
+.db Dialogue_CurrentCharacter, " TAKES ", Word_The, "NUT", Dialogue_NewLine
+.db "OF ", Word_Laerma, ", BUT IT", Dialogue_NewPage
 .db "SHRIVELS UP AFTER", Dialogue_NewLine
 .db "A FEW MOMENTS.", Dialogue_Terminator65
 
 LABEL_B12_B4D5:
 .db "A VISION OF A", Dialogue_NewLine
-.db "CELESTIAL ", $89, Dialogue_NewPage
-.db "APPEAR IN ", $DE, Dialogue_NewLine
+.db "CELESTIAL ", Word_Castle, Dialogue_NewPage
+.db "APPEAR IN ", Word_The, Dialogue_NewLine
 .db "SKY.", Dialogue_Terminator65
 
 LABEL_B12_B500:
 .db "MYAU ISN", Dialogue_Apostrophe, "T HUNGRY,", Dialogue_NewLine
-.db "SO SHE PUTS ", $DE, Dialogue_NewPage
+.db "SO SHE PUTS ", Word_The, Dialogue_NewPage
 .db "FOOD BACK.", Dialogue_Terminator65
 
 LABEL_B12_B52C:
-.db $8A, " SHAKES HIS", Dialogue_NewLine
+.db Word_Hapsby, " SHAKES HIS", Dialogue_NewLine
 .db "HEAD \"NO\".", Dialogue_Terminator65
 
 LABEL_B12_B544:
-.db $8A, " IS", Dialogue_NewLine
+.db Word_Hapsby, " IS", Dialogue_NewLine
 .db "HARDHEADED.", Dialogue_Terminator65
 
 LABEL_B12_B555:
-.db $DA, " NO NEED", Dialogue_NewLine
-.db "TO USE ", $DC, ".", Dialogue_Terminator65
+.db Word_There_Is, " NO NEED", Dialogue_NewLine
+.db "TO USE ", Word_That, ".", Dialogue_Terminator65
 
 LABEL_B12_B569:
-.db $D1, " DOESN", Dialogue_Apostrophe, "T SEEMTO BE ", $F6, $F7, Dialogue_NewPage
+.db Word_There, " DOESN", Dialogue_Apostrophe, "T SEEMTO BE ", Word_Any, Word_Thing, Dialogue_NewPage
 .db "SPECIAL ABOUT IT.", Dialogue_Terminator65
 
 LABEL_B12_B592:
-.db $E1, "FOUND", Dialogue_NewLine
-.db $5D, ".", Dialogue_Terminator65
+.db Word_You, "FOUND", Dialogue_NewLine
+.db Dialogue_CurrentItem, ".", Dialogue_Terminator65
 
 LABEL_B12_B59C:
-.db $5B, " FEELS VERY", Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " FEELS VERY", Dialogue_NewLine
 .db "LIGHT.", Dialogue_Terminator63
 
 LABEL_B12_B5B0:
-.db $5B, " IS", Dialogue_NewLine
-.db $8E, "ED.", Dialogue_Terminator65
+.db Dialogue_CurrentCharacter, " IS", Dialogue_NewLine
+.db Word_Resurrect, "ED.", Dialogue_Terminator65
 
 LABEL_B12_B5BA:
-.db "ODIN ", $88, " USE", Dialogue_NewLine
-.db $EF, ".", Dialogue_Terminator63
+.db "ODIN ", Word_Cannot, " USE", Dialogue_NewLine
+.db Word_Magic_EF, ".", Dialogue_Terminator63
 
 LABEL_B12_B5C8:
-.db $5B, " HAS ", $F8, Dialogue_NewLine
-.db "LEARNED ", $EF, " YET", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, " HAS ", Word_Not, Dialogue_NewLine
+.db "LEARNED ", Word_Magic_EF, " YET", Dialogue_Terminator63
 
 LABEL_B12_B5DE:
-.db $5B, " ", $88, " EQUIP", Dialogue_NewLine
-.db $DC, " ITEM.", Dialogue_Terminator65
+.db Dialogue_CurrentCharacter, " ", Word_Cannot, " EQUIP", Dialogue_NewLine
+.db Word_That, " ITEM.", Dialogue_Terminator65
 
 LABEL_B12_B5F0:
-.db $E1, "NEED ", $F8, "EQUIP", $DC, " ITEM.", Dialogue_Terminator65
+.db Word_You, "NEED ", Word_Not, "EQUIP", Word_That, " ITEM.", Dialogue_Terminator65
 
 LABEL_B12_B604:
-.db $E1, "GAINED ", $5E, Dialogue_NewLine
+.db Word_You, "GAINED ", $5E, Dialogue_NewLine
 .db "EXPERIENCE POINTS.", Dialogue_Terminator65
 
 LABEL_B12_B621:
-.db $5B, " ADVANCED", Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " ADVANCED", Dialogue_NewLine
 .db "A LEVEL.", Dialogue_Terminator65
 
 LABEL_B12_B635:
-.db $5B, " LEARNED", Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " LEARNED", Dialogue_NewLine
 .db "A SPELL.", Dialogue_Terminator65
 
 LABEL_B12_B648:
-.db $DB, " ", $5E, Dialogue_NewLine
-.db Dialogue_Mesetas, " INSIDE.", Dialogue_Terminator65
+.db Word_There_Are, " ", $5E, Dialogue_NewLine
+.db Word_Mesetas, " INSIDE.", Dialogue_Terminator65
 
 LABEL_B12_B656:
-.db $C6, " ", $F9, "TO", Dialogue_NewLine
+.db Word_Do_You, " ", Word_Want, "TO", Dialogue_NewLine
 .db "OPEN IT?", Dialogue_Terminator62
 
 LABEL_B12_B665:
 .db "IT", Dialogue_Apostrophe, "S EMPTY.", Dialogue_Terminator65
 
 LABEL_B12_B671:
-.db $E1, $88, " ", $8D, Dialogue_NewLine
-.db $F6, "MORE.", Dialogue_NewPage
-.db $C6, " ", $F9, "TO", Dialogue_NewLine
-.db "DROP ", $D5, $F7, "?", Dialogue_Terminator62
+.db Word_You, Word_Cannot, " ", Word_Carry, Dialogue_NewLine
+.db Word_Any, "MORE.", Dialogue_NewPage
+.db Word_Do_You, " ", Word_Want, "TO", Dialogue_NewLine
+.db "DROP ", Word_Some, Word_Thing, "?", Dialogue_Terminator62
 
 LABEL_B12_B68C:
-.db "WHAT ", $C6, " ", $F9, Dialogue_NewLine
+.db "WHAT ", Word_Do_You, " ", Word_Want, Dialogue_NewLine
 .db "TO DROP?", Dialogue_Terminator62
 
 LABEL_B12_B69E:
-.db $5D, " IS ", Dialogue_NewLine
+.db Dialogue_CurrentItem, " IS ", Dialogue_NewLine
 .db "DROPPED,", Dialogue_Terminator65
 
 LABEL_B12_B6AD:
-.db "AND ", $5D, " IS", Dialogue_NewLine
+.db "AND ", Dialogue_CurrentItem, " IS", Dialogue_NewLine
 .db "PICKED UP.", Dialogue_Terminator65
 
 LABEL_B12_B6C1:
-.db $5D, " IS ", $F8, Dialogue_NewLine
+.db Dialogue_CurrentItem, " IS ", Word_Not, Dialogue_NewLine
 .db "NEEDED?", Dialogue_Terminator62
 
 LABEL_B12_B6D0:
-.db $5D, " IS", Dialogue_NewLine
-.db "ABAND", $FD, "D.", Dialogue_Terminator65
+.db Dialogue_CurrentItem, " IS", Dialogue_NewLine
+.db "ABAND", Word_One, "D.", Dialogue_Terminator65
 
 LABEL_B12_B6DE:
-.db $5D, " SH", $FF, "N", Dialogue_Apostrophe, "T", Dialogue_NewLine
+.db Dialogue_CurrentItem, " SH", Word_Ould, "N", Dialogue_Apostrophe, "T", Dialogue_NewLine
 .db "BE THROWN AWAY.", Dialogue_Terminator65
 
 LABEL_B12_B6F7:
-.db $F8, "ENOUGH ", $EF, Dialogue_NewLine
+.db Word_Not, "ENOUGH ", Word_Magic_EF, Dialogue_NewLine
 .db "POINTS.", Dialogue_Terminator63
 
 LABEL_B12_B709:
-.db $5B, " IS STILL", Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " IS STILL", Dialogue_NewLine
 .db "ALIVE.", Dialogue_Terminator63
 
 LABEL_B12_B71B:
@@ -3214,174 +3215,174 @@ LABEL_B12_B71B:
 .db "IS KILLED.", Dialogue_Terminator65
 
 LABEL_B12_B728:
-.db $5B, " DIED.", Dialogue_Terminator63
+.db Dialogue_CurrentCharacter, " DIED.", Dialogue_Terminator63
 
 LABEL_B12_B730:
-.db $5B, " IS ALREADY", Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " IS ALREADY", Dialogue_NewLine
 .db "DEAD.", Dialogue_Terminator63
 
 LABEL_B12_B743:
-.db $81, " ATE ", $DE, "NUT", Dialogue_NewLine
-.db "OF ", $D7, ".", Dialogue_Terminator65
+.db Word_Myau, " ATE ", Word_The, "NUT", Dialogue_NewLine
+.db "OF ", Word_Laerma, ".", Dialogue_Terminator65
 
 LABEL_B12_B754:
-.db $D0, " ", $EC, "WE", Dialogue_NewLine
+.db Word_Where, " ", Word_Are, "WE", Dialogue_NewLine
 .db "GOING?", Dialogue_Terminator62
 
 LABEL_B12_B761:
-.db $8B, $8C, "SKURE ON ", $93, "?", Dialogue_Terminator62
+.db Word_We_Are, Word_Heading_For, "SKURE ON ", Word_Dezoris, "?", Dialogue_Terminator62
 
 LABEL_B12_B76F:
-.db $8B, $8C, "UZO ON ", $94, "?", Dialogue_Terminator62
+.db Word_We_Are, Word_Heading_For, "UZO ON ", Word_Motavia, "?", Dialogue_Terminator62
 
 LABEL_B12_B77B:
-.db $8B, $8C, $95, " ON ", $CF, "?", Dialogue_Terminator62
+.db Word_We_Are, Word_Heading_For, Word_Gothic, " ON ", Word_Palma, "?", Dialogue_Terminator62
 
 LABEL_B12_B785:
-.db $8B, "AT SKURE.", Dialogue_Terminator62
+.db Word_We_Are, "AT SKURE.", Dialogue_Terminator62
 
 LABEL_B12_B790:
-.db $8B, "AT UZO.", Dialogue_Terminator62
+.db Word_We_Are, "AT UZO.", Dialogue_Terminator62
 
 LABEL_B12_B799:
-.db $8B, "AT ", $95, ".", Dialogue_Terminator62
+.db Word_We_Are, "AT ", Word_Gothic, ".", Dialogue_Terminator62
 
 ;LABEL_B12_B???
 .db "LET", Dialogue_Apostrophe, "S GO!", Dialogue_Terminator63
 
 LABEL_B12_B7AA:
-.db $DE, "PATH IN ", $DE, Dialogue_NewLine
+.db Word_The, "PATH IN ", Word_The, Dialogue_NewLine
 .db "WOODS IS UNCLEAR.", Dialogue_Terminator65
 
 LABEL_B12_B7C7:
-.db $E4, "IS AN ARMORY.", $C6, " ", $F9, "TO BUY", Dialogue_NewPage
-.db $D5, $F7, "?", Dialogue_Terminator62
+.db Word_This, "IS AN ARMORY.", Word_Do_You, " ", Word_Want, "TO BUY", Dialogue_NewPage
+.db Word_Some, Word_Thing, "?", Dialogue_Terminator62
 
 LABEL_B12_B7E3:
 .db "WELL, COME AGAIN.", Dialogue_Terminator65
 
 LABEL_B12_B7F5:
-.db "WHICH ", $C6, " ", $F9, Dialogue_NewLine
+.db "WHICH ", Word_Do_You, " ", Word_Want, Dialogue_NewLine
 .db "TO BUY?", Dialogue_Terminator62
 
 LABEL_B12_B807:
-.db $B4, ".", Dialogue_NewLine
-.db $F6, $F7, " ELSE?", Dialogue_Terminator62
+.db Word_Thank_You, ".", Dialogue_NewLine
+.db Word_Any, Word_Thing, " ELSE?", Dialogue_Terminator62
 
 LABEL_B12_B813:
-.db $E1, $88, " ", $8D, Dialogue_NewLine
-.db $F6, " MORE.", Dialogue_NewPage
-.db $B4, " AND", Dialogue_NewLine
+.db Word_You, Word_Cannot, " ", Word_Carry, Dialogue_NewLine
+.db Word_Any, " MORE.", Dialogue_NewPage
+.db Word_Thank_You, " AND", Dialogue_NewLine
 .db "COME AGAIN.", Dialogue_Terminator65
 
 LABEL_B12_B832:
-.db $E4, "IS A", Dialogue_NewLine
+.db Word_This, "IS A", Dialogue_NewLine
 .db "FIRST FOOD SHOP.", Dialogue_NewPage
-.db "W", $FF, " ", $E1, "LIKE TO", Dialogue_NewLine
-.db "BUY ", $D5, $F7, "?", Dialogue_Terminator62
+.db "W", Word_Ould, " ", Word_You, "LIKE TO", Dialogue_NewLine
+.db "BUY ", Word_Some, Word_Thing, "?", Dialogue_Terminator62
 
 LABEL_B12_B85D:
-.db $E4, "IS A", Dialogue_NewLine
+.db Word_This, "IS A", Dialogue_NewLine
 .db "SECOND-HAND SHOP.", Dialogue_NewPage
-.db "CAN I ", $CA, " YOU?", Dialogue_Terminator62
+.db "CAN I ", Word_Help, " YOU?", Dialogue_Terminator62
 
 LABEL_B12_B882:
-.db "WHAT W", $FF, " ", $E1, Dialogue_NewLine
+.db "WHAT W", Word_Ould, " ", Word_You, Dialogue_NewLine
 .db "LIKE TO SELL?", Dialogue_Terminator62
 
 LABEL_B12_B89A:
-.db $5D, "? LET ME", Dialogue_NewLine
+.db Dialogue_CurrentItem, "? LET ME", Dialogue_NewLine
 .db "SEE.....", Dialogue_NewPage
 .db "HOW ABOUT ", $5E, Dialogue_NewLine
-.db Dialogue_Mesetas, "?", Dialogue_Terminator62
+.db Word_Mesetas, "?", Dialogue_Terminator62
 
 LABEL_B12_B8BC:
-.db $B4, ".", Dialogue_NewLine
-.db $F6, $F7, " ELSE?", Dialogue_Terminator62
+.db Word_Thank_You, ".", Dialogue_NewLine
+.db Word_Any, Word_Thing, " ELSE?", Dialogue_Terminator62
 
 LABEL_B12_B8C8:
-.db $E4, "IS A HOSPITAL", $C6, " NEED ", $CA, "?", Dialogue_Terminator62
+.db Word_This, "IS A HOSPITAL", Word_Do_You, " NEED ", Word_Help, "?", Dialogue_Terminator62
 
 LABEL_B12_B8E0:
-.db $DE, "FEE FOR", Dialogue_NewLine
+.db Word_The, "FEE FOR", Dialogue_NewLine
 .db "HEALING IS ", $5E, Dialogue_NewPage
-.db Dialogue_Mesetas, ". IS ", $DC, Dialogue_NewLine
+.db Word_Mesetas, ". IS ", Word_That, Dialogue_NewLine
 .db "ACCEPTABLE?", Dialogue_Terminator62
 
 LABEL_B12_B90A:
-.db "DOES ", $F6, $FD, " ELSE", Dialogue_NewLine
-.db "NEED TO BE ", $86, "?", Dialogue_Terminator62
+.db "DOES ", Word_Any, Word_One, " ELSE", Dialogue_NewLine
+.db "NEED TO BE ", Word_Healed, "?", Dialogue_Terminator62
 
 LABEL_B12_B925:
 .db "WHO NEEDS TO BE", Dialogue_NewLine
-.db $86, "?", Dialogue_Terminator62
+.db Word_Healed, "?", Dialogue_Terminator62
 
 LABEL_B12_B938:
-.db $B4, " FOR", Dialogue_NewLine
+.db Word_Thank_You, " FOR", Dialogue_NewLine
 .db "WAITING.TAKE CARE.", Dialogue_Terminator65
 
 LABEL_B12_B951:
-.db "I", Dialogue_Apostrophe, "M SORRY I C", $FF, Dialogue_NewLine
-.db $F8, $CA, ".", Dialogue_NewPage
+.db "I", Dialogue_Apostrophe, "M SORRY I C", Word_Ould, Dialogue_NewLine
+.db Word_Not, Word_Help, ".", Dialogue_NewPage
 
 LABEL_B12_B964:
-.db $C9, "BE ", $ED, ".", Dialogue_Terminator65
+.db Word_Please, "BE ", Word_Careful, ".", Dialogue_Terminator65
 
 LABEL_B12_B96B:
-.db $5B, " IS ", $F8, "NEED", Dialogue_NewLine
-.db "TO BE ", $86, ".", Dialogue_Terminator65
+.db Dialogue_CurrentCharacter, " IS ", Word_Not, "NEED", Dialogue_NewLine
+.db "TO BE ", Word_Healed, ".", Dialogue_Terminator65
 
 LABEL_B12_B97F:
-.db $E4, "IS A CHURCH.", Dialogue_NewLine
-.db $C6, " ", $97, " TO", Dialogue_NewPage
-.db $8E, " ", $D5, $FD, "?", Dialogue_Terminator62
+.db Word_This, "IS A CHURCH.", Dialogue_NewLine
+.db Word_Do_You, " ", Word_Wish, " TO", Dialogue_NewPage
+.db Word_Resurrect, " ", Word_Some, Word_One, "?", Dialogue_Terminator62
 
 ;LABEL_B12_B???
 .db "I SHALL PRAY FOR", Dialogue_NewLine
 .db "YOU.", Dialogue_Terminator65
 
 LABEL_B12_B9B0:
-.db $CC, " NOW CAST", Dialogue_NewLine
+.db Word_I_Will, " NOW CAST", Dialogue_NewLine
 .db "A SPELL.", Dialogue_Terminator63
 
 LABEL_B12_B9C4:
-.db $F0, Dialogue_NewLine
+.db Word_Sabrus_Cabrus, Dialogue_NewLine
 .db "SEBRUS BASS!", Dialogue_Terminator63
 
 LABEL_B12_B9D3:
 .db "WHO IS TO BE", Dialogue_NewLine
-.db $8E, "ED?", Dialogue_Terminator62
+.db Word_Resurrect, "ED?", Dialogue_Terminator62
 
 LABEL_B12_B9E5:
-.db $F6, $FD, " ELSE?", Dialogue_Terminator62
+.db Word_Any, Word_One, " ELSE?", Dialogue_Terminator62
 
 LABEL_B12_B9EE:
-.db $DC, " REQUIRES", Dialogue_NewLine
-.db $5E, " ", Dialogue_Mesetas, ". O.K.?", Dialogue_Terminator62
+.db Word_That, " REQUIRES", Dialogue_NewLine
+.db $5E, " ", Word_Mesetas, ". O.K.?", Dialogue_Terminator62
 
 LABEL_B12_BA04:
 .db "TO ADVANCE TO", Dialogue_NewLine
-.db $DE, "NEXT LEVEL,", Dialogue_Terminator65
+.db Word_The, "NEXT LEVEL,", Dialogue_Terminator65
 
 LABEL_B12_BA1F:
-.db $5B, " NEEDS ", $5E, Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " NEEDS ", $5E, Dialogue_NewLine
 .db "EXPERIENCE POINTS.", Dialogue_Terminator65
 
 LABEL_B12_BA3C:
-.db "MAY ", $DE, "GODS", Dialogue_NewLine
+.db "MAY ", Word_The, "GODS", Dialogue_NewLine
 .db "WATCH OVER YOU!", Dialogue_Terminator65
 
 LABEL_B12_BA56:
-.db $5B, " IS ALIVE.", Dialogue_Terminator62
+.db Dialogue_CurrentCharacter, " IS ALIVE.", Dialogue_Terminator62
 
 LABEL_B12_BA62:
-.db $C7, " ", $8F, " ", $DE, $FA, "IN PROGRESS.", Dialogue_NewPage
-.db $C9, $FC, Dialogue_NewLine
+.db Word_Will, " ", Word_Save, " ", Word_The, Word_Game, "IN PROGRESS.", Dialogue_NewPage
+.db Word_Please, Word_Select, Dialogue_NewLine
 .db "A NUMBER.", Dialogue_Terminator62
 
 LABEL_B12_BA82:
-.db $E1, $FC, "ED ", $5E, Dialogue_NewLine
-.db "IS ", $DC, " O.K.", Dialogue_Terminator62
+.db Word_You, Word_Select, "ED ", $5E, Dialogue_NewLine
+.db "IS ", Word_That, " O.K.", Dialogue_Terminator62
 
 LABEL_B12_BA93:
 .db "WELL, SAVING ", $5E, ".", Dialogue_Terminator63
@@ -3390,89 +3391,89 @@ LABEL_B12_BAA3:
 .db "COMPLETED.", Dialogue_Terminator65
 
 LABEL_B12_BAAE:
-.db "WE ", $F9, "TO BE", Dialogue_NewLine
+.db "WE ", Word_Want, "TO BE", Dialogue_NewLine
 .db "FRIENDS WITH", Dialogue_NewPage
-.db "PEOPLE ", $FE, $CF, ".", Dialogue_Terminator65
+.db "PEOPLE ", Word_From, Word_Palma, ".", Dialogue_Terminator65
 
 LABEL_B12_BAD0:
-.db "I ", $F9, "TO EAT A", Dialogue_NewLine
-.db "NUT OF ", $D7, ".", Dialogue_Terminator65
+.db "I ", Word_Want, "TO EAT A", Dialogue_NewLine
+.db "NUT OF ", Word_Laerma, ".", Dialogue_Terminator65
 
 LABEL_B12_BAE6:
-.db "DO ", $F8, "OFFEND", Dialogue_NewLine
-.db $D4, ".", Dialogue_Terminator65
+.db "DO ", Word_Not, "OFFEND", Dialogue_NewLine
+.db Word_Lassic, ".", Dialogue_Terminator65
 
 LABEL_B12_BAF4:
-.db $E1, "UNDERSTAND OUR", $D9, "?", Dialogue_Terminator65
+.db Word_You, "UNDERSTAND OUR", Word_Language, "?", Dialogue_Terminator65
 
 LABEL_B12_BB06:
 .db "HELLO!", Dialogue_Terminator65
 
 LABEL_B12_BB0D:
-.db "BE ", $ED, " OF PITSIN ", $DE, $D8, ".", Dialogue_Terminator65
+.db "BE ", Word_Careful, " OF PITSIN ", Word_The, Word_Dungeon, ".", Dialogue_Terminator65
 
 LABEL_B12_BB20:
-.db "M", $F6, " OF ", $DE, Dialogue_NewLine
-.db $F1, $F2, "S IN", Dialogue_NewPage
-.db $DE, $D8, " ", $EC, Dialogue_NewLine
+.db "M", Word_Any, " OF ", Word_The, Dialogue_NewLine
+.db Word_Treasure, Word_Chest, "S IN", Dialogue_NewPage
+.db Word_The, Word_Dungeon, " ", Word_Are, Dialogue_NewLine
 .db "TRAPPED.", Dialogue_Terminator65
 
 LABEL_B12_BB3D:
-.db $E1, "THIEF!", Dialogue_Terminator65
+.db Word_You, "THIEF!", Dialogue_Terminator65
 
 LABEL_B12_BB45:
-.db $8B, "OUTCASTS.", Dialogue_NewLine
+.db Word_We_Are, "OUTCASTS.", Dialogue_NewLine
 .db "FORGIVE US.", Dialogue_Terminator65
 
 LABEL_B12_BB5C:
-.db $DE, "SOUND OF ", $DE, Dialogue_NewLine
-.db $A4, " IS", Dialogue_NewPage
-.db "A JOY TO BOTH ", $DE, Dialogue_NewLine
-.db "EAR AND ", $DE, "HEART.", Dialogue_Terminator65
+.db Word_The, "SOUND OF ", Word_The, Dialogue_NewLine
+.db Word_Soothing_Flute, " IS", Dialogue_NewPage
+.db "A JOY TO BOTH ", Word_The, Dialogue_NewLine
+.db "EAR AND ", Word_The, "HEART.", Dialogue_Terminator65
 
 LABEL_B12_BB8D:
-.db $DE, "VEHICLE ", $BE, "N", Dialogue_NewLine
+.db Word_The, "VEHICLE ", Word_Know, "N", Dialogue_NewLine
 .db "AS \"ICE DIGGER\"", Dialogue_NewPage
 .db "LIVES UP TO ITS", Dialogue_NewLine
 .db "NAME.", Dialogue_Terminator65
 
 LABEL_B12_BBBF:
-.db $D4, " LIVES ABOVE", $DE, "SKY.", Dialogue_Terminator65
+.db Word_Lassic, " LIVES ABOVE", Word_The, "SKY.", Dialogue_Terminator65
 
 LABEL_B12_BBD2:
-.db $DE, "MAD DOCTOR", Dialogue_NewLine
+.db Word_The, "MAD DOCTOR", Dialogue_NewLine
 .db "IN ABION HAS A", Dialogue_NewPage
-.db $A6, ".", Dialogue_Terminator65
+.db Word_Laconian_Pot, ".", Dialogue_Terminator65
 
 LABEL_B12_BBF0:
-.db $DB, " PLACES", Dialogue_NewLine
-.db "IN ", $DE, "SKY", Dialogue_NewPage
-.db $D0, " EVEN SPACE-", Dialogue_NewLine
-.db "SHIP ", $88, " GO.", Dialogue_Terminator65
+.db Word_There_Are, " PLACES", Dialogue_NewLine
+.db "IN ", Word_The, "SKY", Dialogue_NewPage
+.db Word_Where, " EVEN SPACE-", Dialogue_NewLine
+.db "SHIP ", Word_Cannot, " GO.", Dialogue_Terminator65
 
 LABEL_B12_BC1A:
-.db "A NUT OF ", $D7, Dialogue_NewLine
+.db "A NUT OF ", Word_Laerma, Dialogue_NewLine
 .db "NEEDS SPECIAL", Dialogue_NewPage
 .db "LIGHT TO GLOW.", Dialogue_Terminator65
 
 LABEL_B12_BC42:
-.db $DB, " ", $A5, Dialogue_NewLine
+.db Word_There_Are, " ", Word_Secret, Dialogue_NewLine
 .db "DOORS IN THE", Dialogue_NewPage
-.db $D8, " MAZE.", Dialogue_Terminator65
+.db Word_Dungeon, " MAZE.", Dialogue_Terminator65
 
 LABEL_B12_BC5B:
-.db $DE, "MIRACLE KEY", Dialogue_NewLine
+.db Word_The, "MIRACLE KEY", Dialogue_NewLine
 .db "CAN OPEN DOORS", Dialogue_NewPage
-.db "WHICH ", $EC, "SHUT", Dialogue_NewLine
-.db "BY ", $EF, ".", Dialogue_Terminator65
+.db "WHICH ", Word_Are, "SHUT", Dialogue_NewLine
+.db "BY ", Word_Magic_EF, ".", Dialogue_Terminator65
 
 LABEL_B12_BC89:
-.db $D5, " ", $F4, "S", Dialogue_NewLine
+.db Word_Some, " ", Word_Dezorian, "S", Dialogue_NewLine
 .db "LIKE TO TELL LIES,", Dialogue_NewPage
-.db "SO BE ", $ED, ".", Dialogue_Terminator65
+.db "SO BE ", Word_Careful, ".", Dialogue_Terminator65
 
 LABEL_B12_BCAA:
-.db $E1, $EC, "BRAVE TO", Dialogue_NewLine
+.db Word_You, Word_Are, "BRAVE TO", Dialogue_NewLine
 .db "APPROACH ME!", Dialogue_Terminator65
 
 LABEL_B12_BCC2:
@@ -3481,132 +3482,132 @@ LABEL_B12_BCC2:
 
 LABEL_B12_BCE1:
 .db Dialogue_EnemyName, " HAD A", Dialogue_NewLine
-.db $F1, $F2, ".", Dialogue_Terminator62
+.db Word_Treasure, Word_Chest, ".", Dialogue_Terminator62
 
 LABEL_B12_BCED:
-.db $8B, $90, Dialogue_NewLine
-.db $FB, "EAST.", Dialogue_Terminator65
+.db Word_We_Are, Word_Currently, Dialogue_NewLine
+.db Word_Facing, "EAST.", Dialogue_Terminator65
 
 LABEL_B12_BCF7:
-.db $8B, $90, Dialogue_NewLine
-.db $FB, "WEST.", Dialogue_Terminator65
+.db Word_We_Are, Word_Currently, Dialogue_NewLine
+.db Word_Facing, "WEST.", Dialogue_Terminator65
 
 LABEL_B12_BD01:
-.db $8B, $90, Dialogue_NewLine
-.db $FB, "NORTH.", Dialogue_Terminator65
+.db Word_We_Are, Word_Currently, Dialogue_NewLine
+.db Word_Facing, "NORTH.", Dialogue_Terminator65
 
 LABEL_B12_BD0C:
-.db $8B, $90, Dialogue_NewLine
-.db $FB, "SOUTH.", Dialogue_Terminator65
+.db Word_We_Are, Word_Currently, Dialogue_NewLine
+.db Word_Facing, "SOUTH.", Dialogue_Terminator65
 
 LABEL_B12_BD17:
-.db $E1, $EC, "ALL DEAD.", Dialogue_Terminator65
+.db Word_You, Word_Are, "ALL DEAD.", Dialogue_Terminator65
 
 LABEL_B12_BD23:
-.db $80, Dialogue_Apostrophe, "S HOPE ", $88, "OVERCOME ", $DE, "POWER", Dialogue_NewPage
-.db "OF ", $D4, ".", Dialogue_NewLine
-.db $DE, "ADVENTURE IS", Dialogue_NewPage
+.db Word_Alis, Dialogue_Apostrophe, "S HOPE ", Word_Cannot, "OVERCOME ", Word_The, "POWER", Dialogue_NewPage
+.db "OF ", Word_Lassic, ".", Dialogue_NewLine
+.db Word_The, "ADVENTURE IS", Dialogue_NewPage
 .db "OVER.", Dialogue_Terminator65
 
 LABEL_B12_BD57:
-.db $E1, "DON", Dialogue_Apostrophe, "T ", $E3, Dialogue_NewLine
-.db "ENOUGH M", $FD, "Y.", Dialogue_NewPage
+.db Word_You, "DON", Dialogue_Apostrophe, "T ", Word_Have, Dialogue_NewLine
+.db "ENOUGH M", Word_One, "Y.", Dialogue_NewPage
 .db "COME AGAIN LATER.", Dialogue_Terminator65
 
 LABEL_B12_BD7E:
-.db $DC, " ", $C7, " COME IN", Dialogue_NewLine
+.db Word_That, " ", Word_Will, " COME IN", Dialogue_NewLine
 .db "HANDY LATER.", Dialogue_Terminator65
 
 LABEL_B12_BD97:
-.db $DA, " A", Dialogue_NewLine
-.db $F1, $F2, ".", Dialogue_Terminator62
+.db Word_There_Is, " A", Dialogue_NewLine
+.db Word_Treasure, Word_Chest, ".", Dialogue_Terminator62
 
 LABEL_B12_BD9F:
-.db $F0, Dialogue_NewLine
+.db Word_Sabrus_Cabrus, Dialogue_NewLine
 .db "SEB..B...HACK,HACK", Dialogue_NewPage
 .db "SORRY, I SEEM TO", Dialogue_NewLine
-.db $E3, "FAILED.", Dialogue_Terminator65
+.db Word_Have, "FAILED.", Dialogue_Terminator65
 
 LABEL_B12_BDCE:
-.db "BOUND FOR ", $94, ".GETTING ON?", Dialogue_Terminator62
+.db "BOUND FOR ", Word_Motavia, ".GETTING ON?", Dialogue_Terminator62
 
 LABEL_B12_BDE6:
-.db "BOUND FOR ", $CF, ".", Dialogue_NewLine
+.db "BOUND FOR ", Word_Palma, ".", Dialogue_NewLine
 .db "GETTING ON?", Dialogue_Terminator62
 
 LABEL_B12_BDFF:
-.db $5B, " IS STRONG", Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " IS STRONG", Dialogue_NewLine
 .db "ENOUGH ALREADY.", Dialogue_Terminator65
 
 LABEL_B12_BE1B:
-.db "CONTINUE A ", $FA, ".", Dialogue_NewLine
-.db $FC, " A NUMBER.", Dialogue_Terminator62
+.db "CONTINUE A ", Word_Game, ".", Dialogue_NewLine
+.db Word_Select, " A NUMBER.", Dialogue_Terminator62
 
 LABEL_B12_BE35:
-.db "CONTINUING ", $FA, " ", $5E, ".", Dialogue_Terminator63
+.db "CONTINUING ", Word_Game, " ", $5E, ".", Dialogue_Terminator63
 
 LABEL_B12_BE45:
-.db "CONTINUE ", $FA, "- YES", $EE, "   ", $FA, "- NO", Dialogue_Terminator62
+.db "CONTINUE ", Word_Game, "- YES", Word_Delete, "   ", Word_Game, "- NO", Dialogue_Terminator62
 
 LABEL_B12_BE5E:
-.db $C7, " ", $EE, " A", Dialogue_NewLine
-.db $8F, "D ", $FA, " O.K.?", Dialogue_Terminator62
+.db Word_Will, " ", Word_Delete, " A", Dialogue_NewLine
+.db Word_Save, "D ", Word_Game, " O.K.?", Dialogue_Terminator62
 
 LABEL_B12_BE6F:
-.db $EE, " A ", $FA, ".", Dialogue_NewLine
-.db $FC, " A NUMBER.", Dialogue_Terminator62
+.db Word_Delete, " A ", Word_Game, ".", Dialogue_NewLine
+.db Word_Select, " A NUMBER.", Dialogue_Terminator62
 
 LABEL_B12_BE82:
-.db $FA, " ", $5E, " HAS BEEN", Dialogue_NewLine
-.db $EE, "D.", Dialogue_Terminator65
+.db Word_Game, " ", $5E, " HAS BEEN", Dialogue_NewLine
+.db Word_Delete, "D.", Dialogue_Terminator65
 
 LABEL_B12_BE93:
-.db $5B, " HAS BEEN", Dialogue_NewLine
-.db $91, ".", Dialogue_Terminator65
+.db Dialogue_CurrentCharacter, " HAS BEEN", Dialogue_NewLine
+.db Word_Turned_To_Stone, ".", Dialogue_Terminator65
 
 LABEL_B12_BEA1:
-.db $5D, " IS USED", Dialogue_NewLine
-.db "BY ", $D5, $FD, " NOW.", Dialogue_Terminator65
+.db Dialogue_CurrentItem, " IS USED", Dialogue_NewLine
+.db "BY ", Word_Some, Word_One, " NOW.", Dialogue_Terminator65
 
 LABEL_B12_BEB6:
-.db $DE, "SKY GRADUALLY", Dialogue_NewLine
+.db Word_The, "SKY GRADUALLY", Dialogue_NewLine
 .db "CLEARS AND", Dialogue_Terminator64
 
 LABEL_B12_BED0:
-.db $DE, "PEACE IS", Dialogue_NewLine
-.db "RETURNED TO ", $DE, Dialogue_Terminator64
+.db Word_The, "PEACE IS", Dialogue_NewLine
+.db "RETURNED TO ", Word_The, Dialogue_Terminator64
 
 LABEL_B12_BEE8:
-.db $9B, " ", $9C, ".", Dialogue_NewLine
+.db Word_Algol, " ", Word_System, ".", Dialogue_NewLine
 .db "A GENTLE BREEZE", Dialogue_Terminator64
 
 LABEL_B12_BEFD:
 .db "CARESSES", Dialogue_NewLine
-.db $C2, ".", Dialogue_Terminator64
+.db Word_Baya_Malay, ".", Dialogue_Terminator64
 
 LABEL_B12_BF09:
-.db "BUT DOES ", $DE, Dialogue_NewLine
-.db "BREEZE ", $BE, "S OF", Dialogue_Terminator64
+.db "BUT DOES ", Word_The, Dialogue_NewLine
+.db "BREEZE ", Word_Know, "S OF", Dialogue_Terminator64
 
 LABEL_B12_BF21:
-.db $DE, "HARDSHIPS ", $DC, "THEY ENDURED?", Dialogue_Terminator64
+.db Word_The, "HARDSHIPS ", Word_That, "THEY ENDURED?", Dialogue_Terminator64
 
 LABEL_B12_BF3B:
-.db $80, " AND HER", Dialogue_NewLine
-.db "COMP", $F6, " ON ", $81, ",", Dialogue_NewPage
-.db $EC, "TOSSED INTO", Dialogue_NewLine
-.db $DE, "SKY.", Dialogue_Terminator65
+.db Word_Alis, " AND HER", Dialogue_NewLine
+.db "COMP", Word_Any, " ON ", Word_Myau, ",", Dialogue_NewPage
+.db Word_Are, "TOSSED INTO", Dialogue_NewLine
+.db Word_The, "SKY.", Dialogue_Terminator65
 
 LABEL_B12_BF64:
-.db $80, " HEARS ", $B2, Dialogue_Apostrophe, "S", Dialogue_NewLine
-.db "VOICE IN ", $DE, "DEPTH", Dialogue_NewPage
+.db Word_Alis, " HEARS ", Word_Nero, Dialogue_Apostrophe, "S", Dialogue_NewLine
+.db "VOICE IN ", Word_The, "DEPTH", Dialogue_NewPage
 .db "OF HER SOUL;", Dialogue_NewLine
 .db "\"YOU", Dialogue_Apostrophe, "LL BE REBORN", Dialogue_NewPage
 .db "TO FIGHT FOR", Dialogue_NewLine
 .db "PEACE AGAIN.\"", Dialogue_NewPage
-.db $80, " IS", Dialogue_NewLine
-.db $8E, "ED.", Dialogue_Terminator65
+.db Word_Alis, " IS", Dialogue_NewLine
+.db Word_Resurrect, "ED.", Dialogue_Terminator65
 
 LABEL_B12_BFC4:
-.db $DE, "SOUND IS", Dialogue_NewLine
+.db Word_The, "SOUND IS", Dialogue_NewLine
 .db "HEARTWARMING.", Dialogue_Terminator65
