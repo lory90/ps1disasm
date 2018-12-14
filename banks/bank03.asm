@@ -214,6 +214,23 @@ LABEL_B03_85A0:
 .db $05, $05, $00, $00, $00, $00, $00, $02
 .db $02, $02, $02, $02, $02, $02, $02
 
+
+; -----------------------------------------------------------------
+; Enemy Data
+;
+; Bytes 1-8 = Name; if shorter than 8 bytes, needs to be terminated with Dialogue_Terminator65
+; Byte 17 = Bank where graphics are located
+; Bytes 18-19 = Graphics pointer
+; Byte 21 = Party number
+; Byte 22 = HP
+; Byte 23 = Attack
+; Byte 24 = Defense
+; Byte 25 = Item drop
+; Bytes 26-27 = Meseta
+; Byte 28 = Trap chance
+; Bytes 29-30 = EXP
+; Byte 32 = Run chance
+; -----------------------------------------------------------------
 B03_EnemyData:
 
 Enemy_None:
@@ -227,8 +244,17 @@ Enemy_Sworm:
 .db	$2A, $25, $05, $0A, $08, $04, $0C, $2F
 .db	:Bank11
 .dw	LABEL_B11_9CDA
-.db	$12, $08, $08, $0D, $09
-.db	$00, $03, $00, $0C, $02, $00, $38, $FF
+.db	$12
+.db	$08	; Party number
+.db	$08	; HP
+.db	$0D	; Attack
+.db	$09	; Defense
+.db	$00	; Item Drop
+.dw	3	; Meseta
+.db	$0C	; Trap chance
+.dw	2	; EXP
+.db	$38
+.db	$FF	; Run chance
 
 Enemy_GrSlime:
 .db	"GR.SLIME"
@@ -488,7 +514,7 @@ Enemy_Shelfish:
 .db	$09, $03, $3E, $4D, $34, $00
 .db $2E, $00, $14, $10, $00, $30, $E5
 
-Enemy_Executor:
+Enemy_Executer:
 .db	"EXECUTER"
 .db	$01
 .db $04, $08, $0C, $0F, $00, $00, $00
