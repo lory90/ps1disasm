@@ -4884,11 +4884,11 @@ LABEL_231A:
 	jp LABEL_3464
 
 LABEL_2333:
-	ld d, ItemID_SilverFang
+	ld d, $0A
 	jr +
 
 LABEL_2337:
-	ld d, ItemID_Escaper
+	ld d, $28
 +:
 	ld a, ($C29D)
 	or a
