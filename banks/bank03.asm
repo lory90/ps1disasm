@@ -2785,7 +2785,7 @@ B03_ShopData:
 .db	ItemID_Nothing
 .dw	0
 
-; $A
+; $A - Palma Spaceport Food Shop
 .db	$01
 .db	ItemID_Cola
 .dw	10
@@ -2875,7 +2875,7 @@ B03_ShopData:
 .db	ItemID_Polymaterial
 .dw	1600
 
-; $14
+; $14 - Uzo Food Shop
 .db	$01
 .db	ItemID_Cola
 .dw	10
@@ -2929,7 +2929,7 @@ B03_ShopData:
 .db	ItemID_Sphere
 .dw	30
 
-; $1A
+; $1A - Skure Food Shop
 .db $01
 .db	ItemID_Cola
 .dw	10
