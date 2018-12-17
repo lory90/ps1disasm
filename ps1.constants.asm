@@ -88,6 +88,8 @@
 .define	ItemID_Crystal $3C
 .define	ItemID_MSystem $3D
 .define	ItemID_MiracleKey $3E
+.define	ItemID_Zillion $3F
+.define	ItemID_Secrets $40
 
 .define	InventoryMaxNum 24
 .define	Maximum_Level 30

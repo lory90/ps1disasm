@@ -3263,7 +3263,7 @@ UpdateCharStats:
 	ld	(iy+max_hp), a
 	ld	l, (iy+weapon)
 	ld	h, $00
-	ld	de, LABEL_183A
+	ld	de, ItemEquipBoosts
 	add	hl, de
 	ld	a, (hl)
 	add	a, (ix+1)
@@ -3287,13 +3287,74 @@ UpdateCharStats:
 	ret
 
 
-LABEL_183A:
-.db	$00, $03, $04, $0C, $0A, $0A, $0A
-.db $15, $1F, $12, $1E, $1E, $2E, $32, $3C, $50, $05, $05, $0F, $14, $1E, $1E, $3C
-.db $50, $28, $03, $08, $0F, $17, $28, $1E, $28, $32, $00, $00, $00, $00, $00, $00
-.db $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00, $00
-.db $00, $00, $00, $00, $00, $00, $00, $00, $00
 
+; =================================================================
+ItemEquipBoosts:
+.db	$00	; 0
+.db	$03	; 1
+.db	$04	; 2
+.db	$0C	; 3
+.db	$0A	; 4
+.db	$0A	; 5
+.db	$0A	; 6
+.db $15	; 7
+.db	$1F	; 8
+.db	$12	; 9
+.db	$1E	; $A
+.db	$1E	; $B
+.db	$2E	; $C
+.db	$32	; $D
+.db	$3C	; $E
+.db	$50	; $F
+.db	$05	; $10
+.db	$05	; $11
+.db	$0F	; $12
+.db	$14	; $13
+.db	$1E	; $14
+.db	$1E	; $15
+.db	$3C	; $16
+.db $50	; $17
+.db	$28	; $18
+.db	$03	; $19
+.db	$08	; $1A
+.db	$0F	; $1B
+.db	$17	; $1C
+.db	$28	; $1D
+.db	$1E	; $1E
+.db	$28	; $1F
+.db	$32	; $20
+.db	$00	; $21
+.db	$00	; $22
+.db	$00	; $23
+.db	$00	; $24
+.db	$00	; $25
+.db	$00	; $26
+.db $00	; $27
+.db	$00	; $28
+.db	$00	; $29
+.db	$00	; $2A
+.db	$00	; $2B
+.db	$00	; $2C
+.db	$00	; $2D
+.db	$00	; $2E
+.db	$00	; $2F
+.db	$00	; $30
+.db	$00	; $31
+.db	$00	; $32
+.db	$00	; $33
+.db	$00	; $34
+.db	$00	; $35
+.db	$00	; $36
+.db $00	; $37
+.db	$00	; $38
+.db	$00	; $39
+.db	$00	; $3A
+.db	$00	; $3B
+.db	$00	; $3C
+.db	$00	; $3D
+.db	$00	; $3E
+.db	$00	; $3F
+; =================================================================
 
 LABEL_187A:
 	ld	a, ($C267)
@@ -4722,83 +4783,86 @@ LABEL_21F5:
 	jp LABEL_2F3C
 
 
+; =================================================================
 ItemActionJmpTbl:
 .dw	ItemAction_Use
 .dw	ItemAction_Equip
 .dw	ItemAction_Drop
-
+; =================================================================
 
 ItemAction_Use:
 	ld a, (CurrentItem)
 	ld hl, ItemUseJmpTbl
 	jp GetPtrAndJump
 
-
+; =================================================================
 ItemUseJmpTbl:
-.dw	ItemUse_NoEffect	; 0
-.dw	ItemUse_NoEffect	; 1
-.dw	ItemUse_NoEffect	; 2
-.dw	ItemUse_NoEffect	; 3
-.dw	ItemUse_Wand	; 4
-.dw	ItemUse_NoEffect	; 5
-.dw	ItemUse_NoEffect	; 6
-.dw	ItemUse_NoEffect	; 7
-.dw	ItemUse_NoEffect	; 8
-.dw	ItemUse_NoEffect	; 9
-.dw	ItemUse_NoEffect	; $A
-.dw	ItemUse_NoEffect	; $B
-.dw	ItemUse_NoEffect	; $C
-.dw	ItemUse_NoEffect	; $D
-.dw	ItemUse_NoEffect	; $E
-.dw	ItemUse_NoEffect	; $F
-.dw	ItemUse_NoEffect	; $10
-.dw	ItemUse_NoEffect	; $11
-.dw	ItemUse_NoEffect	; $12
-.dw	ItemUse_NoEffect	; $13
-.dw	ItemUse_NoEffect	; $14
-.dw	ItemUse_NoEffect	; $15
-.dw	ItemUse_NoEffect	; $16
-.dw	ItemUse_NoEffect	; $17
-.dw	ItemUse_NoEffect	; $18
-.dw	ItemUse_NoEffect	; $19
-.dw	ItemUse_NoEffect	; $1A
-.dw	ItemUse_NoEffect	; $1B
-.dw	ItemUse_NoEffect	; $1C
-.dw	ItemUse_NoEffect	; $1D
-.dw	ItemUse_NoEffect	; $1E
-.dw	ItemUse_NoEffect	; $1F
-.dw	ItemUse_NoEffect	; $20
-.dw	ItemUse_LandRover	; $21
-.dw	ItemUse_Hovercraft	; $22
-.dw	ItemUse_IceDigger	; $23
-.dw	ItemUse_Cola	; $24
-.dw	ItemUse_Burger	; $25
-.dw	ItemUse_Flute	; $26
-.dw	ItemUse_Flash	; $27
-.dw	ItemUse_Escaper	; $28
-.dw	ItemUse_Transfer	; $29
-.dw	ItemUse_MagicHat	; $2A
-.dw	ItemUse_Alsulin	; $2B
+.dw	ItemUse_NoEffect		; 0
+.dw	ItemUse_NoEffect		; 1
+.dw	ItemUse_NoEffect		; 2
+.dw	ItemUse_NoEffect		; 3
+.dw	ItemUse_Wand			; 4
+.dw	ItemUse_NoEffect		; 5
+.dw	ItemUse_NoEffect		; 6
+.dw	ItemUse_NoEffect		; 7
+.dw	ItemUse_NoEffect		; 8
+.dw	ItemUse_NoEffect		; 9
+.dw	ItemUse_NoEffect		; $A
+.dw	ItemUse_NoEffect		; $B
+.dw	ItemUse_NoEffect		; $C
+.dw	ItemUse_NoEffect		; $D
+.dw	ItemUse_NoEffect		; $E
+.dw	ItemUse_NoEffect		; $F
+.dw	ItemUse_NoEffect		; $10
+.dw	ItemUse_NoEffect		; $11
+.dw	ItemUse_NoEffect		; $12
+.dw	ItemUse_NoEffect		; $13
+.dw	ItemUse_NoEffect		; $14
+.dw	ItemUse_NoEffect		; $15
+.dw	ItemUse_NoEffect		; $16
+.dw	ItemUse_NoEffect		; $17
+.dw	ItemUse_NoEffect		; $18
+.dw	ItemUse_NoEffect		; $19
+.dw	ItemUse_NoEffect		; $1A
+.dw	ItemUse_NoEffect		; $1B
+.dw	ItemUse_NoEffect		; $1C
+.dw	ItemUse_NoEffect		; $1D
+.dw	ItemUse_NoEffect		; $1E
+.dw	ItemUse_NoEffect		; $1F
+.dw	ItemUse_NoEffect		; $20
+.dw	ItemUse_LandRover		; $21
+.dw	ItemUse_Hovercraft		; $22
+.dw	ItemUse_IceDigger		; $23
+.dw	ItemUse_Cola			; $24
+.dw	ItemUse_Burger			; $25
+.dw	ItemUse_Flute			; $26
+.dw	ItemUse_Flash			; $27
+.dw	ItemUse_Escaper			; $28
+.dw	ItemUse_Transfer		; $29
+.dw	ItemUse_MagicHat		; $2A
+.dw	ItemUse_Alsulin			; $2B
 .dw	ItemUse_Polymaterial	; $2C
-.dw	ItemUse_DungeonKey	; $2D
-.dw	ItemUse_Sphere	; $2E
+.dw	ItemUse_DungeonKey		; $2D
+.dw	ItemUse_Sphere			; $2E
 .dw	ItemUse_EclipseTorch	; $2F
-.dw	ItemUse_AeroPrism	; $30
-.dw	ItemUse_Nuts	; $31
-.dw	ItemUse_Hapsby	; $32
-.dw	ItemUse_NoUse	; $33
-.dw	ItemUse_NoUse	; $34
-.dw	ItemUse_Compass	; $35
-.dw	ItemUse_NoUse	; $36
-.dw	ItemUse_NoUse	; $37
-.dw	ItemUse_NoUse	; $38
-.dw	ItemUse_NoUse	; $39
-.dw	ItemUse_NoUse	; $3A
-.dw	ItemUse_NoUse	; $3B
-.dw	ItemUse_NoUse	; $3C
-.dw	ItemUse_NoUse	; $3D
-.dw	ItemUse_MiracleKey	; $3E
-.dw	ItemUse_NoUse	; $3F
+.dw	ItemUse_AeroPrism		; $30
+.dw	ItemUse_Nuts			; $31
+.dw	ItemUse_Hapsby			; $32
+.dw	ItemUse_NoUse			; $33
+.dw	ItemUse_NoUse			; $34
+.dw	ItemUse_Compass			; $35
+.dw	ItemUse_NoUse			; $36
+.dw	ItemUse_NoUse			; $37
+.dw	ItemUse_NoUse			; $38
+.dw	ItemUse_NoUse			; $39
+.dw	ItemUse_NoUse			; $3A
+.dw	ItemUse_NoUse			; $3B
+.dw	ItemUse_NoUse			; $3C
+.dw	ItemUse_NoUse			; $3D
+.dw	ItemUse_MiracleKey		; $3E
+.dw	ItemUse_NoUse			; $3F
+; =================================================================
+
 
 ItemUse_NoEffect:
 	ld hl, LABEL_B12_B2AC
@@ -6962,7 +7026,7 @@ LABEL_3274:
 	add  hl, hl
 	add  hl, hl
 	push	bc
-	ld   bc, LABEL_7DA3
+	ld   bc, ItemNames
 	add  hl, bc
 	pop  bc
 	ld   a, $08
@@ -7457,7 +7521,7 @@ LABEL_356B:
 	add  hl, hl
 	add  hl, hl
 	add  hl, hl
-	ld   de, LABEL_7DA3
+	ld   de, ItemNames
 	add  hl, de
 	push	af
 	pop  af
@@ -7973,7 +8037,7 @@ LABEL_38D9:
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	ld de, LABEL_7DA3
+	ld de, ItemNames
 	add hl, de
 	push af
 	pop af
@@ -16950,7 +17014,9 @@ LABEL_7D18:
 .db $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
 .db $C0, $C0, $C0
 
-LABEL_7DA3:
+
+; =================================================================
+ItemNames:
 .db	"        "
 .db	"WOODCANE"
 .db	"SHT. SWD"
@@ -17016,16 +17082,17 @@ LABEL_7DA3:
 .db	"MRCL KEY"
 .db	"ZILLION", Dialogue_Terminator65
 .db	"SECRETS", Dialogue_Terminator65
+; =================================================================
 
 
-; -----------------------------------------------------------------
+; =================================================================
 ; bits 0-1 = 0 = Weapon; 1 = Armor; 2 = Shield
 ; bit 2 = If set, item cannot be thrown away
 ; bit 4 = If set, Alis can equip item
 ; bit 5 = If set, Myau can equip item
 ; bit 6 = If set, Odin can equip item
 ; bit 7 = If set, Noah can equip item
-; -----------------------------------------------------------------
+; =================================================================
 ItemData:
 .db	$00	; 0
 .db	$D0	; 1
@@ -17091,19 +17158,20 @@ ItemData:
 .db $00	; $3D
 .db	$04	; $3E
 .db	$00	; $3F
-; -----------------------------------------------------------------
+; =================================================================
 
 
-; -----------------------------------------------------------------
+; =================================================================
 ; Filler
 .db	$FF
 .db	$FF
 .db	$FF
 .db	$FF
 .db	$FF
-; -----------------------------------------------------------------
+; =================================================================
 
 
+; =================================================================
 RomHeader:
 .db	"TMR SEGA"
 .db	$FF, $FF	; Reserved
@@ -17111,7 +17179,7 @@ RomHeader:
 .dw	$9500		; Product Code
 .db	$03			; Version
 .db	$40			; Region Code (SMS Export)
-
+; =================================================================
 
 .BANK 2 SLOT 2
 .ORG $0000
