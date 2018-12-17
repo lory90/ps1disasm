@@ -2685,43 +2685,278 @@ LABEL_B03_B61C:
 .db $91, $19, $53, $05, $91, $19, $57, $05
 .db $91, $19, $57, $05, $91, $19, $58, $05
 .db $91, $19, $59, $09, $86, $19, $01, $0A
-.db $91, $19, $01, $02, $91, $00, $00, $00
-.db $00, $00, $00, $00, $00, $00, $00, $02
-.db $19, $1E, $00, $1B, $08, $02, $1C, $78
-.db $05, $02, $27, $14, $00, $28, $0A, $00
-.db $29, $30, $00, $01, $24, $0A, $00, $25
-.db $28, $00, $00, $00, $00, $02, $03, $4B
-.db $00, $07, $40, $01, $08, $60, $04, $02
-.db $27, $14, $00, $28, $0A, $00, $39, $78
-.db $05, $01, $24, $0A, $00, $25, $28, $00
-.db $00, $00, $00, $02, $10, $1C, $00, $12
-.db $22, $01, $15, $E8, $03, $02, $27, $14
-.db $00, $29, $30, $00, $40, $C8, $00, $00
-.db $00, $00, $00, $00, $00, $00, $00, $00
-.db $00, $01, $24, $0A, $00, $25, $28, $00
-.db $00, $00, $00, $02, $27, $14, $00, $28
-.db $0A, $00, $34, $64, $00, $02, $02, $1E
-.db $00, $14, $76, $02, $16, $98, $3A, $00
-.db $00, $00, $00, $00, $00, $00, $00, $00
-.db $00, $02, $06, $40, $00, $09, $90, $01
-.db $1A, $36, $01, $02, $27, $14, $00, $29
-.db $30, $00, $39, $78, $05, $02, $11, $4E
-.db $00, $0B, $04, $06, $0A, $54, $06, $02
-.db $01, $19, $00, $13, $54, $00, $1E, $C0
-.db $12, $02, $27, $14, $00, $2A, $14, $00
-.db $39, $78, $05, $02, $24, $0A, $00, $25
-.db $28, $00, $2C, $40, $06, $01, $24, $0A
-.db $00, $25, $28, $00, $00, $00, $00, $02
-.db $0B, $04, $06, $0C, $A4, $0B, $1C, $78
-.db $05, $02, $27, $14, $00, $29, $30, $00
-.db $2E, $1E, $00, $00, $21, $50, $14, $00
-.db $00, $00, $00, $00, $00, $02, $04, $B0
-.db $04, $0D, $18, $10, $1D, $E4, $0C, $02
-.db $27, $14, $00, $2A, $14, $00, $2E, $1E
-.db $00, $01, $24, $0A, $00, $25, $28, $00
-.db $00, $00, $00, $00, $23, $E0, $2E, $00
-.db $00, $00, $00, $00, $00, $02, $27, $14
-.db $00, $28, $0A, $00, $29, $30, $00
+.db $91, $19, $01, $02, $91
+
+
+; =================================================================
+; 10 bytes per shop. The first byte is the number of items; 
+; then there are 3 bytes per item; the first byte is the item ID; the
+; other 2 are the Meseta cost
+; =================================================================
+B03_ShopData:
+
+; 0 - Unused
+.db	0
+.db	ItemID_Nothing
+.dw	0
+.db	ItemID_Nothing
+.dw	0
+.db	ItemID_Nothing
+.dw	0
+
+; 1 - Camineet Armory
+.db	$02
+.db ItemID_LeatherShield
+.dw	30
+.db	ItemID_IronShield
+.dw	520
+.db	ItemID_CeramicShield
+.dw	1400
+
+; 2 - Camineet Second Hand Shop
+.db	$02
+.db	ItemID_Flash
+.dw	20
+.db	ItemID_Escaper
+.dw	10
+.db ItemID_Transfer
+.dw	48
+
+; 3 - Camineet Food Shop
+.db	$01
+.db	ItemID_Cola
+.dw	10
+.db	ItemID_Burger
+.dw 40
+.db	ItemID_Nothing
+.dw	0
+
+; 4 - Parolit Armory
+.db	$02
+.db	ItemID_IronSword
+.dw	75
+.db ItemID_TitaniumSword
+.dw	320
+.db	ItemID_CeramicSword
+.dw	1120
+
+; 5 - Parolit Second Hand Shop
+.db	$02
+.db ItemID_Flash
+.dw	20
+.db	ItemID_Escaper
+.dw	10
+.db	ItemID_MagicLamp
+.dw	1400
+
+; 6 - Parolit Food Shop
+.db $01
+.db	ItemID_Cola
+.dw	10
+.db	ItemID_Burger
+.dw	40
+.db ItemID_Nothing
+.dw	0
+
+; 7 - Scion Armor
+.db	$02
+.db	ItemID_LeatherArmor
+.dw	28
+.db	ItemID_LightSuit
+.dw 290
+.db	ItemID_ZirconiaArmor
+.dw	1000
+
+; 8 - Scion Second Hand Shop
+.db	$02
+.db	ItemID_Flash
+.dw	20
+.db ItemID_Transfer
+.dw	48
+.db	ItemID_Secrets
+.dw	200
+
+; 9 - Unused
+.db	0
+.db	ItemID_Nothing
+.dw	0
+.db	ItemID_Nothing
+.dw	0
+.db	ItemID_Nothing
+.dw	0
+
+; $A
+.db	$01
+.db	ItemID_Cola
+.dw	10
+.db	ItemID_Burger
+.dw	40
+.db ItemID_Nothing
+.dw	0
+
+; $B - Paseo Second Hand Shop
+.db	$02
+.db	ItemID_Flash
+.dw	20
+.db	ItemID_Escaper
+.dw 10
+.db	ItemID_Passport
+.dw	100
+
+; $C - Paseo Armory
+.db	$02
+.db	ItemID_ShortSword
+.dw	30
+.db ItemID_ThickFur
+.dw	630
+.db	ItemID_DiamondArmor
+.dw	15000
+
+; $D - Unused
+.db	0
+.db	ItemID_Nothing
+.dw	0
+.db	ItemID_Nothing
+.dw	0
+.db	ItemID_Nothing
+.dw	0
+
+; $E - Eppi Armory
+.db	$02
+.db	ItemID_IronAxe
+.dw	64
+.db	ItemID_NeedleGun
+.dw	400
+.db ItemID_BronzeShield
+.dw	310
+
+; $F - Gothic Second Hand Shop
+.db	$02
+.db	ItemID_Flash
+.dw	20
+.db	ItemID_Transfer
+.dw 48
+.db	ItemID_MagicLamp
+.dw	1400
+
+; $10 - Loar Armory
+.db	$02
+.db	ItemID_WhiteMantle
+.dw	78
+.db ItemID_HeatGun
+.dw	1540
+.db	ItemID_SilverFang
+.dw	1620
+
+; $11 - Abion Armory
+.db	$02
+.db ItemID_WoodCane
+.dw	25
+.db	ItemID_IronArmor
+.dw	84
+.db	ItemID_LaserShield
+.dw	4800
+
+; $12 - Abion Second Hand Shop
+.db	$02
+.db	ItemID_Flash
+.dw	20
+.db	ItemID_MagicHat
+.dw	20
+.db ItemID_MagicLamp
+.dw	1400
+
+; $13 - Abion Food Shop
+.db	$02
+.db	ItemID_Cola
+.dw	10
+.db	ItemID_Burger
+.dw 40
+.db	ItemID_Polymaterial
+.dw	1600
+
+; $14
+.db	$01
+.db	ItemID_Cola
+.dw	10
+.db ItemID_Burger
+.dw	40
+.db	ItemID_Nothing
+.dw	0
+
+; $15 - Uzo Armory
+.db	$02
+.db ItemID_HeatGun
+.dw	1540
+.db	ItemID_LightSaber
+.dw	2980
+.db	ItemID_CeramicShield
+.dw	1400
+
+; $16 - Casba Second Hand Shop
+.db	$02
+.db	ItemID_Flash
+.dw	20
+.db	ItemID_Transfer
+.dw	48
+.db ItemID_Sphere
+.dw	30
+
+; $17 - Casba Vehicle Shop
+.db	$00
+.db	ItemID_Landrover
+.dw	5200
+.db	ItemID_Nothing
+.dw 0
+.db	ItemID_Nothing
+.dw	0
+
+; $18 - Skure Armory
+.db	$02
+.db	ItemID_Wand
+.dw	1200
+.db	ItemID_LaserGun
+.dw	4120
+.db	ItemID_Gloves
+.dw	3300
+
+; $19 - Skure Second Hand Shop
+.db	$02
+.db ItemID_Flash
+.dw	20
+.db	ItemID_MagicHat
+.dw	20
+.db	ItemID_Sphere
+.dw	30
+
+; $1A
+.db $01
+.db	ItemID_Cola
+.dw	10
+.db	ItemID_Burger
+.dw	40
+.db ItemID_Nothing
+.dw	0
+
+; $1B - Twintown Vehicle Shop
+.db	$00
+.db	ItemID_IceDigger
+.dw	12000
+.db	ItemID_Nothing
+.dw 0
+.db	ItemID_Nothing
+.dw	0
+
+; $1C - Twintown Second Hand Shop
+.db	$02
+.db	ItemID_Flash
+.dw	20
+.db ItemID_Escaper
+.dw	10
+.db	ItemID_Transfer
+.dw	48
+; =================================================================
+
 
 LABEL_B03_B82F:
 .db	$00

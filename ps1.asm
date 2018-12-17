@@ -8031,7 +8031,7 @@ LABEL_38D9:
 	ld bc, $0120
 	call LABEL_3A57
 	ld hl, $FFFF
-	ld (hl), $03
+	ld (hl), :Bank03
 	ld a, ($C2DB)
 	and $1F
 	ld l, a
@@ -8042,7 +8042,7 @@ LABEL_38D9:
 	add hl, hl
 	add hl, hl
 	add hl, bc
-	ld bc, $B70D
+	ld bc, B03_ShopData
 	add hl, bc
 	ld a, (hl)
 	ld (Option_total_num), a
@@ -8071,7 +8071,7 @@ LABEL_38D9:
 	ld (Cursor_pos), hl
 	call CheckOptionSelect
 	ld hl, $FFFF
-	ld (hl), $03
+	ld (hl), :Bank03
 	pop hl
 	ld b, a
 	add a, a
