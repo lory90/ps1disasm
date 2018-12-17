@@ -94,6 +94,27 @@
 .define	InventoryMaxNum 24
 .define	Maximum_Level 30
 
+; Magic
+.define MagicID_Nothing 0
+.define MagicID_Heal 1
+.define MagicID_Cure 2
+.define MagicID_Wall 3
+.define MagicID_Prot 4
+.define MagicID_Fire 5
+.define MagicID_Thun 6
+.define MagicID_Wind 7
+.define MagicID_Rope 8
+.define MagicID_Bye 9
+.define MagicID_Help $A
+.define MagicID_Terr $B
+.define MagicID_Trap $C
+.define MagicID_Exit $D
+.define MagicID_Open $E
+.define MagicID_Rise $F
+.define MagicID_Chat $10
+.define MagicID_Tele $11
+.define MagicID_Fly $12
+
 ; Buttons
 .define	ButtonUp 0
 .define	ButtonDown 1

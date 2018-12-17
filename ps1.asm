@@ -3619,7 +3619,7 @@ LABEL_19F2:
 	add	a, l
 	ld	l, a
 	ld	h, $00
-	ld	de, LABEL_1A57
+	ld	de, BattleMagicList
 	add	hl, de
 	ld	a, (hl)
 	and	$1F
@@ -3645,9 +3645,30 @@ LABEL_1A4B:
 	jp	LABEL_34C9
 
 
-LABEL_1A57:
-.db	$01, $09
-.db $10, $05, $08, $02, $0B, $03, $0A, $00, $05, $11, $07, $04, $06
+; =================================================================
+BattleMagicList:
+
+; Alis
+.db	MagicID_Heal
+.db	MagicID_Bye
+.db MagicID_Chat
+.db	MagicID_Fire
+.db	MagicID_Rope
+
+; Myau
+.db	MagicID_Cure
+.db	MagicID_Terr
+.db	MagicID_Wall
+.db	MagicID_Help
+.db	MagicID_Nothing
+
+; Noah
+.db	MagicID_Fire
+.db	MagicID_Tele
+.db	MagicID_Wind
+.db	MagicID_Prot
+.db	MagicID_Thun
+; =================================================================
 
 
 LABEL_1A66:
@@ -3825,7 +3846,7 @@ LABEL_1B73:
 
 
 LABEL_1B87:
-	ld	hl, LABEL_1DDC
+	ld	hl, MPCostData
 	add	a, l
 	ld	l, a
 	adc	a, h
@@ -3980,14 +4001,14 @@ LABEL_1C7C:
 .db	$2C, $15, $28, $61
 
 
-; ===========================================
+; =================================================================
 PlayerMenu_OptionTbl:
 .dw	PlayerMenu_Stats
 .dw	PlayerMenu_Magic
 .dw	PlayerMenu_Item
 .dw	PlayerMenu_Search
 .dw	PlayerMenu_Save
-; ===========================================
+; =================================================================
 
 
 PlayerMenu_Stats:
@@ -4136,7 +4157,7 @@ PlayerMenu_Magic:
 	add	a, h
 	ld	l, a
 	ld	h, $00
-	ld	de, LABEL_1DEF
+	ld	de, MapMagicList
 	add	hl, de
 	ld	a, (hl)
 	and	$1F
@@ -4173,14 +4194,54 @@ LABEL_1DD1:
 	jr	LABEL_1DB7
 
 
-LABEL_1DDC:
-.db	$00, $02, $06, $06, $0A, $04, $10, $0C, $04, $02, $0A, $02, $02, $04, $04
-.db $0C, $02, $04, $08
+; =================================================================
+MPCostData:
+.db	$00	; 0
+.db	$02	; 1
+.db	$06	; 2
+.db	$06	; 3
+.db	$0A	; 4
+.db	$04	; 5
+.db	$10	; 6
+.db	$0C	; 7
+.db	$04	; 8
+.db	$02	; 9
+.db	$0A	; $A
+.db	$02	; $B
+.db	$02	; $C
+.db	$04	; $D
+.db	$04	; $E
+.db $0C	; $F
+.db	$02	; $10
+.db	$04	; $11
+.db	$08	; $12
+; =================================================================
 
-LABEL_1DEF:
-.db	$01, $12, $00, $00, $00, $02, $0C, $0D, $00, $00, $02, $0D
-.db $11, $0E, $0F
 
+; =================================================================
+MapMagicList:
+
+; Alis
+.db	MagicID_Heal
+.db	MagicID_Fly
+.db	MagicID_Nothing
+.db	MagicID_Nothing
+.db	MagicID_Nothing
+
+; Myau
+.db	MagicID_Cure
+.db	MagicID_Trap
+.db	MagicID_Exit
+.db	MagicID_Nothing
+.db	MagicID_Nothing
+
+; Noah
+.db	MagicID_Cure
+.db	MagicID_Exit
+.db MagicID_Tele
+.db	MagicID_Open
+.db	MagicID_Rise
+; =================================================================
 
 
 LABEL_1DFE:
