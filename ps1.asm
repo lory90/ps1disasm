@@ -2443,7 +2443,7 @@ LABEL_11F1:
 	call	Inventory_FindFreeSlot
 	jr nz, LABEL_1212
 	ld	($C29B), hl
-	call	LABEL_2201
+	call	ItemAction_Use
 
 LABEL_120B:
 	call	LABEL_3105
@@ -4713,7 +4713,7 @@ PlayerMenu_Item:
 	call CheckOptionSelect
 	bit Button_1, c
 	jp nz, +
-	ld hl, LABEL_21FB
+	ld hl, ItemActionJmpTbl
 	call GetPtrAndJump
 +:
 	call LABEL_376B
@@ -4722,92 +4722,92 @@ LABEL_21F5:
 	jp LABEL_2F3C
 
 
-LABEL_21FB:
-.dw	LABEL_2201
-.dw	LABEL_26C8
-.dw	LABEL_2752
+ItemActionJmpTbl:
+.dw	ItemAction_Use
+.dw	ItemAction_Equip
+.dw	ItemAction_Drop
 
 
-LABEL_2201:
+ItemAction_Use:
 	ld a, (CurrentItem)
-	ld hl, LABEL_220A
+	ld hl, ItemUseJmpTbl
 	jp GetPtrAndJump
 
 
-LABEL_220A:
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_2299
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_228A
-.dw	LABEL_22AF
-.dw	LABEL_22E5
-.dw	LABEL_231A
-.dw	LABEL_2333
-.dw	LABEL_2337
-.dw	LABEL_2369
-.dw	LABEL_239D
-.dw	LABEL_23E2
-.dw	LABEL_23EC
-.dw	LABEL_2416
-.dw	LABEL_242F
-.dw	LABEL_2491
-.dw	LABEL_24E9
-.dw	LABEL_2524
-.dw	LABEL_2537
-.dw	LABEL_2589
-.dw	LABEL_25C3
-.dw	LABEL_2613
-.dw	LABEL_26B0
-.dw	LABEL_26B0
-.dw	LABEL_2631
-.dw	LABEL_26B0
-.dw	LABEL_26B0
-.dw	LABEL_26B0
-.dw	LABEL_26B0
-.dw	LABEL_26B0
-.dw	LABEL_26B0
-.dw	LABEL_26B0
-.dw	LABEL_26B0
-.dw	LABEL_267C
-.dw	LABEL_26B0
+ItemUseJmpTbl:
+.dw	ItemUse_NoEffect	; 0
+.dw	ItemUse_NoEffect	; 1
+.dw	ItemUse_NoEffect	; 2
+.dw	ItemUse_NoEffect	; 3
+.dw	ItemUse_Wand	; 4
+.dw	ItemUse_NoEffect	; 5
+.dw	ItemUse_NoEffect	; 6
+.dw	ItemUse_NoEffect	; 7
+.dw	ItemUse_NoEffect	; 8
+.dw	ItemUse_NoEffect	; 9
+.dw	ItemUse_NoEffect	; $A
+.dw	ItemUse_NoEffect	; $B
+.dw	ItemUse_NoEffect	; $C
+.dw	ItemUse_NoEffect	; $D
+.dw	ItemUse_NoEffect	; $E
+.dw	ItemUse_NoEffect	; $F
+.dw	ItemUse_NoEffect	; $10
+.dw	ItemUse_NoEffect	; $11
+.dw	ItemUse_NoEffect	; $12
+.dw	ItemUse_NoEffect	; $13
+.dw	ItemUse_NoEffect	; $14
+.dw	ItemUse_NoEffect	; $15
+.dw	ItemUse_NoEffect	; $16
+.dw	ItemUse_NoEffect	; $17
+.dw	ItemUse_NoEffect	; $18
+.dw	ItemUse_NoEffect	; $19
+.dw	ItemUse_NoEffect	; $1A
+.dw	ItemUse_NoEffect	; $1B
+.dw	ItemUse_NoEffect	; $1C
+.dw	ItemUse_NoEffect	; $1D
+.dw	ItemUse_NoEffect	; $1E
+.dw	ItemUse_NoEffect	; $1F
+.dw	ItemUse_NoEffect	; $20
+.dw	ItemUse_LandRover	; $21
+.dw	ItemUse_Hovercraft	; $22
+.dw	ItemUse_IceDigger	; $23
+.dw	ItemUse_Cola	; $24
+.dw	ItemUse_Burger	; $25
+.dw	ItemUse_Flute	; $26
+.dw	ItemUse_Flash	; $27
+.dw	ItemUse_Escaper	; $28
+.dw	ItemUse_Transfer	; $29
+.dw	ItemUse_MagicHat	; $2A
+.dw	ItemUse_Alsulin	; $2B
+.dw	ItemUse_Polymaterial	; $2C
+.dw	ItemUse_DungeonKey	; $2D
+.dw	ItemUse_Sphere	; $2E
+.dw	ItemUse_EclipseTorch	; $2F
+.dw	ItemUse_AeroPrism	; $30
+.dw	ItemUse_Nuts	; $31
+.dw	ItemUse_Hapsby	; $32
+.dw	ItemUse_NoUse	; $33
+.dw	ItemUse_NoUse	; $34
+.dw	ItemUse_Compass	; $35
+.dw	ItemUse_NoUse	; $36
+.dw	ItemUse_NoUse	; $37
+.dw	ItemUse_NoUse	; $38
+.dw	ItemUse_NoUse	; $39
+.dw	ItemUse_NoUse	; $3A
+.dw	ItemUse_NoUse	; $3B
+.dw	ItemUse_NoUse	; $3C
+.dw	ItemUse_NoUse	; $3D
+.dw	ItemUse_MiracleKey	; $3E
+.dw	ItemUse_NoUse	; $3F
 
-LABEL_228A:
+ItemUse_NoEffect:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld hl, LABEL_B12_B2CD
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_2299:
+ItemUse_Wand:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld a, ($C29D)
@@ -4817,7 +4817,7 @@ LABEL_2299:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_22AF:
+ItemUse_LandRover:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld e, $04
@@ -4846,7 +4846,7 @@ LABEL_22B7:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_22E5:
+ItemUse_Hovercraft:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld a, ($C308)
@@ -4872,7 +4872,7 @@ LABEL_22E5:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_231A:
+ItemUse_IceDigger:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld a, ($C308)
@@ -4883,11 +4883,11 @@ LABEL_231A:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_2333:
+ItemUse_Cola:
 	ld d, $0A
 	jr +
 
-LABEL_2337:
+ItemUse_Burger:
 	ld d, $28
 +:
 	ld a, ($C29D)
@@ -4915,7 +4915,7 @@ LABEL_2337:
 	ret nz
 	jp LABEL_36BB
 
-LABEL_2369:
+ItemUse_Flute:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld a, $C2
@@ -4940,7 +4940,7 @@ LABEL_2369:
 	jp LABEL_3464
 
 
-LABEL_239D:
+ItemUse_Flash:
 	ld a, ($C29D)
 	or a
 	jr z, +
@@ -4974,13 +4974,13 @@ LABEL_239D:
 	ld ($C2D8), a
 	ret
 
-LABEL_23E2:
+ItemUse_Escaper:
 	ld a, ($C29D)
 	or a
 	call nz, Inventory_RemoveItem
-	jp LABEL_2299
+	jp ItemUse_Wand
 
-LABEL_23EC:
+ItemUse_Transfer:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld a, ($C29D)
@@ -5001,7 +5001,7 @@ LABEL_23EC:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_2416:
+ItemUse_MagicHat:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
@@ -5012,7 +5012,7 @@ LABEL_2416:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_242F:
+ItemUse_Alsulin:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
 	ld a, ($C29D)
@@ -5056,7 +5056,7 @@ LABEL_242F:
 	ld ($C2D8), a
 	ret
 
-LABEL_2491:
+ItemUse_Polymaterial:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
 	ld a, ($C29D)
@@ -5102,7 +5102,7 @@ LABEL_24BE:
 	call LABEL_5546
 	jp LABEL_3464
 
-LABEL_24E9:
+ItemUse_DungeonKey:
 	ld a, (Interaction_Type)
 	or a
 	jr z, +
@@ -5134,7 +5134,7 @@ LABEL_24EF:
 	jp LABEL_3464
 
 
-LABEL_2524:
+ItemUse_Sphere:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
@@ -5143,7 +5143,7 @@ LABEL_2524:
 	jp nz, LABEL_1B36
 	jp LABEL_2102
 
-LABEL_2537:
+ItemUse_EclipseTorch:
 	ld hl, LABEL_B12_B458
 	call ShowDialogue_B12
 	ld a, ($C29D)
@@ -5183,7 +5183,7 @@ LABEL_2537:
 	ret z
 	jp Inventory_AddItem
 
-LABEL_2589:
+ItemUse_AeroPrism:
 	ld hl, LABEL_B12_B458
 	call ShowDialogue_B12
 	ld a, ($C29D)
@@ -5212,7 +5212,7 @@ LABEL_2589:
 	ld ($C2D8), a
 	jp LABEL_3464
 
-LABEL_25C3:
+ItemUse_Nuts:
 	ld a, (Myau_stats)
 	or a
 	jr z, LABEL_25D7
@@ -5256,7 +5256,7 @@ LABEL_25D7:
 	jr nz, LABEL_25D7
 	jr -
 
-LABEL_2613:
+ItemUse_Hapsby:
 	ld a, ($C29D)
 	or a
 	jr z, +
@@ -5271,7 +5271,7 @@ LABEL_2613:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_2631:
+ItemUse_Compass:
 	ld a, (Interaction_Type)
 	or a
 	jr z, ++
@@ -5308,7 +5308,7 @@ LABEL_2631:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_267C:
+ItemUse_MiracleKey:
 	ld a, (Interaction_Type)
 	or a
 	jp nz, LABEL_24EF
@@ -5335,7 +5335,7 @@ LABEL_267C:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_26B0:
+ItemUse_NoUse:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld a, ($C29D)
@@ -5347,11 +5347,11 @@ LABEL_26B0:
 	call ShowDialogue_B12
 	jp LABEL_3464
 
-LABEL_26C8:
+ItemAction_Equip:
 	ld hl, $FFFF
-	ld (hl), $02
+	ld (hl), :Bank02
 	ld a, (CurrentItem)
-	ld hl, LABEL_7FAB
+	ld hl, ItemData
 	add a, l
 	ld l, a
 	adc a, h
@@ -5430,11 +5430,11 @@ LABEL_2741:
 	call LABEL_3464
 	jr LABEL_2741
 
-LABEL_2752:
+ItemAction_Drop:
 	ld hl, $FFFF
 	ld (hl), $02
 	ld a, (CurrentItem)
-	ld hl, LABEL_7FAB
+	ld hl, ItemData
 	add a, l
 	ld l, a
 	adc a, h
@@ -5519,7 +5519,7 @@ LABEL_27D8:
 	ld hl, $FFFF
 	ld (hl), $02
 	ld a, (CurrentItem)
-	ld hl, LABEL_7FAB
+	ld hl, ItemData
 	add a, l
 	ld l, a
 	adc a, h
@@ -17017,16 +17017,91 @@ LABEL_7DA3:
 .db	"ZILLION", Dialogue_Terminator65
 .db	"SECRETS", Dialogue_Terminator65
 
-LABEL_7FAB:
-.db	$00, $D0, $D0, $50, $D0
-.db $20, $40, $50, $50, $40, $20, $40, $50
-.db $40, $50, $40, $51, $81, $51, $41, $21
-.db $51, $51, $41, $81, $52, $42, $52, $52
-.db $22, $D2, $46, $52, $04, $04, $04, $00
-.db $00, $00, $00, $00, $00, $00, $04, $00
-.db $04, $00, $04, $04, $04, $04, $04, $00
-.db $04, $00, $04, $04, $00, $04, $00, $00
-.db $00, $04, $00, $FF, $FF, $FF, $FF, $FF
+
+; -----------------------------------------------------------------
+; bits 0-1 = 0 = Weapon; 1 = Armor; 2 = Shield
+; bit 2 = If set, item cannot be thrown away
+; bit 4 = If set, Alis can equip item
+; bit 5 = If set, Myau can equip item
+; bit 6 = If set, Odin can equip item
+; bit 7 = If set, Noah can equip item
+; -----------------------------------------------------------------
+ItemData:
+.db	$00	; 0
+.db	$D0	; 1
+.db	$D0	; 2
+.db	$50	; 3
+.db	$D0	; 4
+.db $20	; 5
+.db	$40	; 6
+.db	$50	; 7
+.db	$50	; 8
+.db	$40	; 9
+.db	$20	; $A
+.db	$40	; $B
+.db	$50	; $C
+.db $40	; $D
+.db	$50	; $E
+.db	$40	; $F
+.db	$51	; $10
+.db	$81	; $11
+.db	$51	; $12
+.db	$41	; $13
+.db	$21	; $14
+.db $51	; $15
+.db	$51	; $16
+.db	$41	; $17
+.db	$81	; $18
+.db	$52	; $19
+.db	$42	; $1A
+.db	$52	; $1B
+.db	$52	; $1C
+.db $22	; $1D
+.db	$D2	; $1E
+.db	$46	; $1F
+.db	$52	; $20
+.db	$04	; $21
+.db	$04	; $22
+.db	$04	; $23
+.db	$00	; $24
+.db $00	; $25
+.db	$00	; $26
+.db	$00	; $27
+.db	$00	; $28
+.db	$00	; $29
+.db	$00	; $2A
+.db	$04	; $2B
+.db	$00	; $2C
+.db $04	; $2D
+.db	$00	; $2E
+.db	$04	; $2F
+.db	$04	; $30
+.db	$04	; $31
+.db	$04	; $32
+.db	$04	; $33
+.db	$00	; $34
+.db $04	; $35
+.db	$00	; $36
+.db	$04	; $37
+.db	$04	; $38
+.db	$00	; $39
+.db	$04	; $3A
+.db	$00	; $3B
+.db	$00	; $3C
+.db $00	; $3D
+.db	$04	; $3E
+.db	$00	; $3F
+; -----------------------------------------------------------------
+
+
+; -----------------------------------------------------------------
+; Filler
+.db	$FF
+.db	$FF
+.db	$FF
+.db	$FF
+.db	$FF
+; -----------------------------------------------------------------
 
 
 RomHeader:
