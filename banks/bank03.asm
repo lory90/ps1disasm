@@ -3511,7 +3511,7 @@ B03_ShopData:
 .db ItemID_Transfer
 .dw	48
 
-; 3 - Camineet Food Shop
+; 3 - Camineet First Food Shop
 .db	$01
 .db	ItemID_Cola
 .dw	10
@@ -3538,7 +3538,7 @@ B03_ShopData:
 .db	ItemID_MagicLamp
 .dw	1400
 
-; 6 - Parolit Food Shop
+; 6 - Parolit First Food Shop
 .db $01
 .db	ItemID_Cola
 .dw	10
@@ -3574,7 +3574,7 @@ B03_ShopData:
 .db	ItemID_Nothing
 .dw	0
 
-; $A - Palma Spaceport Food Shop
+; $A - Palma Spaceport First Food Shop
 .db	$01
 .db	ItemID_Cola
 .dw	10
@@ -3655,7 +3655,7 @@ B03_ShopData:
 .db ItemID_MagicLamp
 .dw	1400
 
-; $13 - Abion Food Shop
+; $13 - Abion First Food Shop
 .db	$02
 .db	ItemID_Cola
 .dw	10
@@ -3664,7 +3664,7 @@ B03_ShopData:
 .db	ItemID_Polymaterial
 .dw	1600
 
-; $14 - Uzo Food Shop
+; $14 - Uzo First Food Shop
 .db	$01
 .db	ItemID_Cola
 .dw	10
@@ -3718,7 +3718,7 @@ B03_ShopData:
 .db	ItemID_Sphere
 .dw	30
 
-; $1A - Skure Food Shop
+; $1A - Skure First Food Shop
 .db $01
 .db	ItemID_Cola
 .dw	10
