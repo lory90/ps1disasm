@@ -11401,7 +11401,7 @@ LABEL_53BF:
 	jr ++
 
 +:
-	ld a, $36
+	ld a, ItemID_Cake
 	call Inventory_FindFreeSlot
 	jr nz, +
 	push bc
@@ -11430,7 +11430,7 @@ LABEL_5401:
 	jp ShowDialogue_B2
 
 +:
-	ld a, $3A
+	ld a, ItemID_AmberEye
 	call Inventory_FindFreeSlot
 	jr nz, +
 	call Inventory_RemoveItem2
@@ -12904,7 +12904,7 @@ LABEL_5F63:
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	ld de, LABEL_B03_8470
+	ld de, B03_MapEncounterPools
 	add hl, de
 	add hl, bc
 	ld a, (hl)
@@ -12919,7 +12919,7 @@ LABEL_5FD8:
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	ld de, LABEL_B03_8178
+	ld de, B03_DungeonEncounterPools-8
 	add hl, de
 	call UpdateRNGSeed
 	and $07
@@ -13779,7 +13779,7 @@ LABEL_65EE:
 	ld   b, a
 	ld   hl, $FFFF
 	ld   (hl), :Bank03
-	ld   hl, LABEL_B03_AF5C
+	ld   hl, B03_ObjectData
 	ld   de, $0006
 LABEL_660A:
 	ld   a, (hl)
@@ -14118,7 +14118,7 @@ LABEL_684A:
 	ld b, a
 	ld hl, $FFFF
 	ld (hl), :Bank03
-	ld hl, LABEL_B03_AF5C
+	ld hl, B03_ObjectData
 	ld de, $0006
 -:
 	ld a, (hl)
@@ -14289,7 +14289,7 @@ LABEL_6963:
 	ld   b, a
 	ld   hl, $FFFF
 	ld   (hl), :Bank03
-	ld   hl, LABEL_B03_AF5C
+	ld   hl, B03_ObjectData
 	ld   de, $0006
 LABEL_697A:
 	ld   a, (hl)

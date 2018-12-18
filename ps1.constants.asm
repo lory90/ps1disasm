@@ -115,6 +115,83 @@
 .define MagicID_Tele $11
 .define MagicID_Fly $12
 
+; Enemies
+.define EnemyID_Nothing 0
+.define EnemyID_Sworm 1
+.define EnemyID_GrSlime 2
+.define EnemyID_WingEye 3
+.define EnemyID_ManEater 4
+.define EnemyID_Scorpion 5
+.define EnemyID_GScorpi 6
+.define EnemyID_BlSlime 7
+.define EnemyID_NFarmer 8
+.define EnemyID_OwlBear 9
+.define EnemyID_DeadTree $A
+.define EnemyID_Scorpius $B
+.define EnemyID_EFarmer $C
+.define EnemyID_GiantFly $D
+.define EnemyID_Crawler $E
+.define EnemyID_Barbrian $F
+.define EnemyID_GoldLens $10
+.define EnemyID_RdSlime $11
+.define EnemyID_WereBat $12
+.define EnemyID_BigClub $13
+.define EnemyID_Fishman $14
+.define EnemyID_EvilDead $15
+.define EnemyID_Tarantul $16
+.define EnemyID_Manticor $17
+.define EnemyID_Skeleton $18
+.define EnemyID_AntLion $19
+.define EnemyID_Marman $1A
+.define EnemyID_Dezorian $1B
+.define EnemyID_Leech $1C
+.define EnemyID_Vampire $1D
+.define EnemyID_Elephant $1E
+.define EnemyID_Ghoul $1F
+.define EnemyID_Shelfish $20
+.define EnemyID_Executer $21
+.define EnemyID_Wight $22
+.define EnemyID_SkullEn $23
+.define EnemyID_Ammonite $24
+.define EnemyID_Sphinx $25
+.define EnemyID_Serpent $26
+.define EnemyID_Sandworm $27
+.define EnemyID_Lich $28
+.define EnemyID_Octopus $29
+.define EnemyID_Stalker $2A
+.define EnemyID_EvilHead $2B
+.define EnemyID_Zombie $2C
+.define EnemyID_Batalion $2D
+.define EnemyID_RobotCop $2E
+.define EnemyID_Sorcerer $2F
+.define EnemyID_Nessie $30
+.define EnemyID_Tarzimal $31
+.define EnemyID_Golem $32
+.define EnemyID_AndroCop $33
+.define EnemyID_Tentacle $34
+.define EnemyID_Giant $35
+.define EnemyID_Wyvern $36
+.define EnemyID_Reaper $37
+.define EnemyID_Magician $38
+.define EnemyID_Horseman $39
+.define EnemyID_Frostman $3A
+.define EnemyID_Amundsen $3B
+.define EnemyID_RdDragn $3C
+.define EnemyID_GrDragn $3D
+.define EnemyID_Shadow $3E
+.define EnemyID_Mammoth $3F
+.define EnemyID_Centaur $40
+.define EnemyID_Marauder $41
+.define EnemyID_Titan $42
+.define EnemyID_Medusa $43
+.define EnemyID_WtDragn $44
+.define EnemyID_BlDragn $45
+.define EnemyID_GdDragn $46
+.define EnemyID_DrMad $47
+.define EnemyID_Lassic $48
+.define EnemyID_DarkFalz $49
+.define EnemyID_Saccubus $4A
+
 ; Buttons
 .define	ButtonUp 0
 .define	ButtonDown 1
@@ -310,6 +387,9 @@
 .define	Inventory_curr_num $C4E2
 
 .define	Party_curr_num $C4F0	; starts from 0
+
+.define Dialogue_flags $C500	; table holding flags for dialogues; if value is $FF, dialogue is not loaded
+.define Event_flags $C600	; used for chests and scripted encounters in dungeons
 
 .define	System_stack $CB00
 .define	Dungeon_layout $CB00	; $100 bytes; 1 byte per tile;

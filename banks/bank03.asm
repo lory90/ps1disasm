@@ -46,9 +46,9 @@ LABEL_B03_8000:
 .db $10, $03, $10, $03, $10, $00, $10, $00
 .db $10, $0D, $10, $0D, $10, $04, $10, $03
 .db $10, $0F, $10, $02, $10, $02, $10, $01
-
-LABEL_B03_8178:
 .db $10, $0D, $10, $0D, $10, $0F, $10, $0F
+
+B03_DungeonEncounterPools:
 .db $01, $01, $01, $01, $01, $05, $05, $05
 .db $01, $01, $04, $04, $05, $05, $05, $05
 .db $01, $01, $01, $04, $04, $04, $04, $15
@@ -144,7 +144,7 @@ LABEL_B03_8178:
 .db $25, $25, $25, $30, $30, $30, $33, $33
 .db $09, $09, $12, $12, $41, $41, $41, $41
 
-LABEL_B03_8470:
+B03_MapEncounterPools:
 .db $01, $02, $02, $03, $04, $05, $05, $06
 .db $07, $07, $08, $09, $0A, $0A, $06, $0B
 .db $01, $02, $02, $03, $04, $05, $05, $06
@@ -309,7 +309,7 @@ Enemy_NFarmer:
 .db $20, $30, $34, $38, $01, $06, $0A, $0F
 .db	:Bank19
 .dw LABEL_B19_8DBE
-.db	$19, $05, $26, $25, $25, $24
+.db	$19, $05, $26, $25, $25, ItemID_Cola
 .db $08, $00, $00, $05, $00, $F0, $B2
 
 Enemy_OwlBear:
@@ -365,7 +365,7 @@ Enemy_Barbrian:
 .db $20, $30, $34, $38, $04, $08, $0C, $0F
 .db	:Bank19
 .dw LABEL_B19_8DBE
-.db	$1A, $08, $36, $23, $32, $24
+.db	$1A, $08, $36, $23, $32, ItemID_Cola
 .db $59, $00, $14, $0A, $00, $F0, $4C
 
 Enemy_GoldLens:
@@ -484,7 +484,7 @@ Enemy_Vampire:
 .db $06, $0A, $2F, $2A, $25, $00, $2A
 .db	:Bank10
 .dw LABEL_B10_8000
-.db	$24, $02, $43, $44, $2E, $27
+.db	$24, $02, $43, $44, $2E, ItemID_Flash
 .db $47, $00, $0C, $0F, $00, $38, $CC
 
 Enemy_Elephant:
@@ -556,7 +556,7 @@ Enemy_Sphinx:
 .db $03, $07, $0B, $0A, $0F, $2F, $20
 .db	:Bank26
 .dw LABEL_B26_9748
-.db	$14, $04, $4E, $50, $41, $27
+.db	$14, $04, $4E, $50, $41, ItemID_Flash
 .db $3A, $00, $0C, $15, $00, $58, $CC
 
 Enemy_Serpent:
@@ -736,7 +736,7 @@ Enemy_Horseman:
 .db $30, $34, $38, $3C, $10, $0C, $2F
 .db	:Bank26
 .dw LABEL_B26_8000
-.db	$1D, $02, $82, $7E, $59, $27
+.db	$1D, $02, $82, $7E, $59, ItemID_Flash
 .db $94, $00, $00, $1E, $00, $44, $59
 
 Enemy_Frostman:
@@ -826,7 +826,7 @@ Enemy_Medusa:
 .db $12, $37, $2B, $32, $02, $22, $10
 .db	:Bank10
 .dw LABEL_B10_A044
-.db	$20, $01, $C8, $A6, $67, $27
+.db	$20, $01, $C8, $A6, $67, ItemID_Flash
 .db $C2, $00, $00, $32, $00, $26, $99
 
 Enemy_WtDragn:
@@ -2230,7 +2230,11 @@ LABEL_B03_A922:
 .db $19, $0B, $1A, $08, $13, $38, $52, $08
 .db $04, $1B, $6C, $47, $46, $08, $06, $67
 .db $1E, $37, $67, $08, $0D, $60, $51, $65
-.db $76, $08, $0C, $1B, $19, $06, $72, $0A
+.db $76, $08, $0C, $1B, $19
+
+
+
+.db	$06, $72, $0A
 .db $00, $15, $01, $10, $78, $0A, $00, $5A
 .db $00, $2B, $16, $0A, $16, $21, $02, $39
 .db $19, $0A, $16, $DE, $00, $53, $4C, $0A
@@ -2426,171 +2430,956 @@ LABEL_B03_A922:
 .db $25, $0C, $10, $A7, $00, $17, $29, $0C
 .db $10, $7B, $32, $FF
 
-LABEL_B03_AF5C:
-.db	$00, $36, $00, $C6
-.db $00, $35, $00, $00, $E8, $01, $C6, $01
-.db $14, $00, $00, $53, $C0, $C6, $02, $47
-.db $00, $00, $E3, $0A, $C5, $03, $A3, $3A
-.db $00, $7C, $02, $C6, $01, $0A, $00, $01
-.db $17, $03, $C6, $00, $00, $FC, $01, $5D
-.db $C1, $C6, $02, $18, $00, $01, $B2, $0C
-.db $C5, $03, $82, $00, $01, $E9, $0B, $C5
-.db $03, $88, $00, $02, $17, $04, $C6, $00
-.db $2D, $00, $02, $67, $05, $C6, $01, $32
-.db $00, $02, $3A, $06, $C6, $01, $1E, $00
-.db $02, $63, $07, $C6, $01, $14, $00, $03
-.db $9C, $08, $C6, $00, $00, $FC, $03, $9E
-.db $09, $C6, $00, $25, $00, $03, $E1, $0A
-.db $C6, $01, $0A, $00, $03, $E8, $0B, $C6
-.db $00, $25, $00, $03, $E1, $0C, $C6, $01
-.db $64, $00, $03, $56, $0D, $C6, $00, $28
-.db $00, $03, $58, $0E, $C6, $00, $27, $00
-.db $04, $13, $0F, $C6, $01, $14, $00, $04
-.db $E5, $10, $C6, $00, $24, $00, $04, $13
-.db $11, $C6, $01, $64, $00, $04, $1D, $12
-.db $C6, $00, $00, $FC, $05, $5B, $13, $C6
-.db $01, $0A, $00, $05, $A1, $14, $C6, $01
-.db $05, $00, $05, $A3, $15, $C6, $00, $00
-.db $FF, $05, $DD, $16, $C6, $00, $25, $00
-.db $05, $5B, $17, $C6, $01, $64, $00, $05
-.db $A1, $18, $C6, $01, $32, $00, $06, $55
-.db $19, $C6, $01, $23, $00, $06, $93, $1A
-.db $C6, $00, $00, $FC, $06, $55, $1B, $C6
-.db $01, $64, $00, $06, $29, $1C, $C6, $01
-.db $0A, $00, $07, $65, $1D, $C6, $00, $25
-.db $00, $07, $AC, $1E, $C6, $01, $64, $00
-.db $07, $AC, $1F, $C6, $01, $F4, $01, $07
-.db $89, $20, $C6, $00, $00, $FF, $08, $29
-.db $C2, $C6, $02, $23, $00, $08, $65, $C3
-.db $C6, $02, $0D, $00, $08, $C3, $21, $C6
-.db $00, $25, $00, $08, $C5, $22, $C6, $01
-.db $32, $00, $08, $EE, $23, $C6, $00, $00
-.db $FF, $09, $64, $24, $C6, $00, $24, $00
-.db $09, $EE, $25, $C6, $00, $25, $00, $09
-.db $91, $26, $C6, $00, $39, $00, $0A, $48
-.db $C4, $C6, $02, $0B, $00, $0A, $61, $27
-.db $C6, $00, $00, $FF, $0A, $67, $C5, $C6
-.db $02, $43, $0F, $0A, $EE, $28, $C6, $00
-.db $24, $00, $0A, $17, $29, $C6, $01, $F4
-.db $01, $0A, $E3, $2A, $C6, $01, $F4, $01
-.db $0A, $A9, $2B, $C6, $00, $28, $00, $0A
-.db $AB, $2C, $C6, $00, $00, $FC, $0B, $71
-.db $2D, $C6, $00, $02, $00, $0B, $ED, $2E
-.db $C6, $00, $0C, $00, $0B, $1C, $2F, $C6
-.db $00, $25, $00, $0B, $63, $30, $C6, $00
-.db $03, $00, $0C, $11, $31, $C6, $00, $3E
-.db $FC, $0C, $2B, $32, $C6, $01, $14, $00
-.db $0C, $39, $C6, $C6, $02, $12, $00, $0C
-.db $85, $C7, $C6, $02, $2A, $00, $0C, $A9
-.db $C8, $C6, $02, $2A, $00, $0C, $A5, $33
-.db $C6, $00, $25, $00, $0D, $68, $34, $C6
-.db $01, $64, $00, $0D, $EB, $35, $C6, $00
-.db $06, $00, $0D, $EE, $36, $C6, $00, $00
-.db $FC, $0D, $68, $37, $C6, $01, $64, $00
-.db $0D, $E8, $38, $C6, $00, $00, $FF, $0E
-.db $11, $39, $C6, $00, $25, $00, $0E, $41
-.db $3A, $C6, $00, $00, $FF, $0E, $AC, $3B
-.db $C6, $00, $25, $00, $0E, $E9, $3C, $C6
-.db $00, $00, $FC, $0F, $EE, $3D, $C6, $00
-.db $25, $00, $10, $1E, $3E, $C6, $00, $24
-.db $00, $10, $8B, $3F, $C6, $00, $00, $FC
-.db $10, $61, $40, $C6, $00, $27, $00, $10
-.db $9C, $41, $C6, $00, $27, $00, $10, $C7
-.db $C9, $C6, $02, $18, $05, $10, $D1, $42
-.db $C6, $00, $25, $00, $11, $26, $43, $C6
-.db $01, $0A, $00, $11, $5E, $44, $C6, $01
-.db $32, $00, $11, $71, $45, $C6, $01, $14
-.db $00, $11, $7D, $46, $C6, $01, $14, $00
-.db $11, $26, $47, $C6, $01, $14, $00, $12
-.db $19, $48, $C6, $00, $00, $FC, $12, $1E
-.db $49, $C6, $00, $24, $00, $12, $CC, $4A
-.db $C6, $00, $27, $00, $12, $77, $4B, $C6
-.db $00, $02, $00, $12, $92, $4C, $C6, $01
-.db $14, $00, $12, $94, $4D, $C6, $00, $00
-.db $FF, $13, $1E, $4E, $C6, $00, $24, $00
-.db $13, $33, $4F, $C6, $01, $14, $00, $13
-.db $A5, $50, $C6, $00, $00, $00, $13, $EC
-.db $51, $C6, $00, $00, $7F, $13, $EC, $52
-.db $C6, $01, $14, $00, $14, $41, $0D, $C5
-.db $03, $93, $00, $15, $55, $0E, $C5, $03
-.db $91, $0F, $15, $A1, $0F, $C5, $03, $90
-.db $29, $15, $C8, $18, $C5, $03, $16, $00
-.db $16, $3E, $53, $C6, $01, $64, $00, $16
-.db $5E, $54, $C6, $00, $00, $FC, $16, $81
-.db $55, $C6, $00, $27, $00, $16, $C8, $56
-.db $C6, $00, $28, $00, $17, $AA, $57, $C6
-.db $01, $14, $00, $17, $AA, $58, $C6, $01
-.db $C8, $00, $18, $16, $59, $C6, $00, $00
-.db $FF, $18, $1C, $CA, $C6, $02, $11, $00
-.db $19, $1A, $5A, $C6, $00, $25, $00, $19
-.db $B9, $5B, $C6, $00, $00, $FF, $19, $35
-.db $5C, $C6, $01, $64, $00, $19, $C3, $5D
-.db $C6, $01, $01, $00, $19, $74, $5E, $C6
-.db $00, $25, $00, $19, $A3, $5F, $C6, $00
-.db $00, $FC, $1A, $1E, $60, $C6, $00, $00
-.db $FC, $1A, $33, $61, $C6, $01, $14, $00
-.db $1A, $51, $62, $C6, $00, $25, $00, $1A
-.db $CB, $63, $C6, $00, $00, $00, $1B, $5A
-.db $CB, $C6, $02, $3C, $0E, $1B, $E1, $64
-.db $C6, $00, $25, $00, $1C, $1E, $CC, $C6
-.db $02, $3C, $00, $1C, $31, $65, $C6, $01
-.db $D0, $07, $1D, $1B, $66, $C6, $00, $27
-.db $00, $1D, $21, $67, $C6, $00, $25, $00
-.db $1D, $41, $68, $C6, $00, $25, $FC, $1D
-.db $8C, $69, $C6, $00, $27, $00, $1D, $CA
-.db $6A, $C6, $01, $32, $00, $1D, $B1, $CD
-.db $C6, $02, $08, $00, $1E, $1E, $6B, $C6
-.db $00, $24, $00, $1E, $11, $6C, $C6, $01
-.db $14, $00, $21, $94, $11, $C5, $03, $9B
-.db $00, $22, $11, $6D, $C6, $01, $F4, $01
-.db $22, $24, $12, $C5, $03, $9D, $00, $22
-.db $6E, $6E, $C6, $00, $00, $FC, $22, $91
-.db $6F, $C6, $00, $00, $FF, $22, $EA, $70
-.db $C6, $00, $07, $00, $22, $EE, $71, $C6
-.db $00, $00, $FF, $22, $E3, $72, $C6, $01
-.db $F4, $01, $23, $79, $73, $C6, $00, $27
-.db $00, $23, $91, $74, $C6, $00, $00, $FC
-.db $23, $C1, $75, $C6, $00, $25, $00, $24
-.db $47, $76, $C6, $01, $B8, $0B, $24, $11
-.db $77, $C6, $00, $11, $00, $24, $1E, $78
-.db $C6, $00, $01, $00, $24, $EE, $79, $C6
-.db $00, $24, $00, $25, $1D, $CE, $C6, $02
-.db $45, $3A, $25, $86, $7A, $C6, $01, $64
-.db $00, $25, $8A, $7B, $C6, $00, $00, $FC
-.db $25, $3E, $7C, $C6, $01, $64, $00, $26
-.db $7B, $7D, $C6, $01, $88, $13, $27, $9E
-.db $CF, $C6, $02, $3C, $0C, $27, $71, $7E
-.db $C6, $01, $F4, $01, $28, $D1, $7F, $C6
-.db $01, $F4, $01, $29, $67, $D0, $C6, $02
-.db $2C, $00, $29, $79, $D1, $C6, $02, $2C
-.db $00, $29, $99, $80, $C6, $00, $25, $00
-.db $29, $A4, $D2, $C6, $02, $22, $00, $29
-.db $D5, $D3, $C6, $02, $2C, $00, $2A, $53
-.db $D4, $C6, $02, $2C, $00, $2A, $73, $D5
-.db $C6, $02, $2C, $00, $2A, $B1, $D6, $C6
-.db $02, $2C, $00, $2A, $DB, $13, $C5, $03
-.db $A4, $00, $2A, $99, $81, $C6, $00, $17
-.db $7F, $2B, $79, $82, $C6, $00, $28, $00
-.db $2C, $45, $83, $C6, $00, $00, $FC, $2C
-.db $ED, $84, $C6, $00, $25, $00, $2C, $4B
-.db $85, $C6, $01, $F4, $01, $2D, $18, $86
-.db $C6, $01, $14, $00, $2D, $83, $87, $C6
-.db $00, $24, $00, $2D, $AD, $88, $C6, $00
-.db $27, $00, $2D, $E3, $89, $C6, $01, $14
-.db $00, $2D, $A3, $8A, $C6, $00, $00, $FF
-.db $2F, $11, $8B, $C6, $00, $20, $7F, $2F
-.db $2B, $8C, $C6, $00, $00, $FF, $2F, $73
-.db $8D, $C6, $00, $00, $FC, $2F, $D6, $8E
-.db $C6, $01, $64, $00, $32, $3B, $8F, $C6
-.db $00, $00, $FC, $33, $19, $90, $C6, $00
-.db $00, $FF, $33, $D9, $D7, $C6, $02, $0B
-.db $00, $34, $16, $91, $C6, $01, $32, $00
-.db $34, $1E, $92, $C6, $00, $2A, $00, $34
-.db $EE, $93, $C6, $00, $1C, $00, $34, $C3
-.db $14, $C5, $03, $A6, $00, $35, $C2, $17
-.db $C5, $03, $9E, $00, $3A, $79, $D8, $C6
-.db $02, $42, $30, $3A, $82, $94, $C6, $00
-.db $2A, $00, $FF
+
+; =================================================================
+; Objects found in dungeons. These include chests and scripted encounters
+;
+; 7 bytes per entry:
+; byte 1 = Dungeon ID
+; byte 2 = Coordinates (YX)
+; bytes 3-4 = Flag address in RAM; if value in that address is $FF, the current object will be ignored
+; byte 5 = Object type; 0 = Item; 1 = Meseta; 2 = Battle; 3 = Dialogue
+; bytes 6-7 = Content which depends on type (byte 5)
+;				if type = Item, it holds the item ID; if byte 7 is > 0, the chest contains a trap
+;				if type = Meseta, it holds the Meseta value (word)
+;				if type = Battle, byte 6 is the enemy ID, byte 7 is the item dropped
+;				if type = Dialogue, byte 6 is the dialogue ID
+; =================================================================
+B03_ObjectData:
+
+.db	$00, $36
+.dw	Event_flags+0
+.db $00
+.db	ItemID_Compass, $00
+
+.db	$00, $E8
+.dw	Event_flags+1
+.db	$01
+.dw 20
+
+.db	$00, $53
+.dw	Event_flags+$C0
+.db	$02
+.db	EnemyID_DrMad, $00
+
+.db $00, $E3
+.dw	Dialogue_flags+$A
+.db	$03
+.db	$A3, $3A
+
+.db $00, $7C
+.dw	Event_flags+2
+.db	$01
+.dw	10
+
+.db	$01, $17
+.dw	Event_flags+3
+.db	$00
+.db	$00, $FC
+
+.db	$01, $5D
+.dw Event_flags+$C1
+.db	$02
+.db	EnemyID_Skeleton, $00
+
+.db	$01, $B2
+.dw	Dialogue_flags+$0C
+.db	$03
+.db	$82, $00
+
+.db	$01, $E9
+.dw	Dialogue_flags+$0B
+.db $03
+.db	$88, $00
+
+.db	$02, $17
+.dw	Event_flags+4
+.db	$00
+.db ItemID_DungeonKey, $00
+
+.db	$02, $67
+.dw	Event_flags+5
+.db	$01
+.dw	50
+
+.db $02, $3A
+.dw	Event_flags+6
+.db	$01
+.dw	30
+
+.db $02, $63
+.dw	Event_flags+7
+.db	$01
+.dw	20
+
+.db	$03, $9C
+.dw	Event_flags+8
+.db	$00
+.db	$00, $FC
+
+.db	$03, $9E
+.dw Event_flags+9
+.db	$00
+.db	ItemID_Burger, $00
+
+.db	$03, $E1
+.dw	Event_flags+$0A
+.db	$01
+.dw	10
+
+.db	$03, $E8
+.dw	Event_flags+$0B
+.db $00
+.db	ItemID_Burger, $00
+
+.db	$03, $E1
+.dw	Event_flags+$0C
+.db	$01
+.dw 100
+
+.db	$03, $56
+.dw	Event_flags+$0D
+.db	$00
+.db	ItemID_Escaper, $00
+
+.db	$03, $58
+.dw	Event_flags+$0E
+.db	$00
+.db	ItemID_Flash, $00
+
+.db $04, $13
+.dw	Event_flags+$0F
+.db	$01
+.dw	20
+
+.db	$04, $E5
+.dw	Event_flags+$10
+.db	$00
+.db	ItemID_Cola, $00
+
+.db	$04, $13
+.dw Event_flags+$11
+.db	$01
+.dw	100
+
+.db	$04, $1D
+.dw	Event_flags+$12
+.db $00
+.db	$00, $FC
+
+.db	$05, $5B
+.dw	Event_flags+$13
+.db $01
+.dw	10
+
+.db	$05, $A1
+.dw	Event_flags+$14
+.db	$01
+.dw 5
+
+.db	$05, $A3
+.dw	Event_flags+$15
+.db	$00
+.db	$00, $FF
+
+.db	$05, $DD
+.dw	Event_flags+$16
+.db	$00
+.db	ItemID_Burger, $00
+
+.db $05, $5B
+.dw	Event_flags+$17
+.db	$01
+.dw	100
+
+.db	$05, $A1
+.dw	Event_flags+$18
+.db	$01
+.dw	50
+
+.db	$06, $55
+.dw Event_flags+$19
+.db	$01
+.dw	35
+
+.db	$06, $93
+.dw	Event_flags+$1A
+.db $00
+.db	$00, $FC
+
+.db	$06, $55
+.dw	Event_flags+$1B
+.db $01
+.dw	100
+
+.db	$06, $29
+.dw	Event_flags+$1C
+.db	$01
+.dw 10
+
+.db	$07, $65
+.dw	Event_flags+$1D
+.db	$00
+.db	ItemID_Burger, $00
+
+.db	$07, $AC
+.dw	Event_flags+$1E
+.db	$01
+.dw	100
+
+.db $07, $AC
+.dw	Event_flags+$1F
+.db	$01
+.dw	500
+
+.db	$07, $89
+.dw	Event_flags+$20
+.db	$00
+.db	$00, $FF
+
+.db	$08, $29
+.dw Event_flags+$C2
+.db	$02
+.db	EnemyID_SkullEn, $00
+
+.db	$08, $65
+.dw	Event_flags+$C3
+.db $02
+.db	EnemyID_GiantFly, $00
+
+.db	$08, $C3
+.dw	Event_flags+$21
+.db $00
+.db	ItemID_Burger, $00
+
+.db	$08, $C5
+.dw	Event_flags+$22
+.db	$01
+.dw 50
+
+.db	$08, $EE
+.dw	Event_flags+$23
+.db	$00
+.db	$00, $FF
+
+.db	$09, $64
+.dw	Event_flags+$24
+.db	$00
+.db	ItemID_Cola, $00
+
+.db $09, $EE
+.dw	Event_flags+$25
+.db	$00
+.db	ItemID_Burger, $00
+
+.db	$09, $91
+.dw	Event_flags+$26
+.db	$00
+.db	ItemID_MagicLamp, $00
+
+.db	$0A, $48
+.dw Event_flags+$C4
+.db	$02
+.db	EnemyID_Scorpius, $00
+
+.db	$0A, $61
+.dw	Event_flags+$27
+.db $00
+.db	$00, $FF
+
+.db	$0A, $67
+.dw	Event_flags+$C5
+.db $02
+.db	EnemyID_Medusa, ItemID_LaconiaAxe
+
+.db	$0A, $EE
+.dw	Event_flags+$28
+.db	$00
+.db ItemID_Cola, $00
+
+.db	$0A, $17
+.dw	Event_flags+$29
+.db	$01
+.dw	500
+
+.db $0A, $E3
+.dw	Event_flags+$2A
+.db	$01
+.dw	500
+
+.db $0A, $A9
+.dw	Event_flags+$2B
+.db	$00
+.db	ItemID_Escaper, $00
+
+.db	$0A, $AB
+.dw	Event_flags+$2C
+.db	$00
+.db	$00, $FC
+
+.db	$0B, $71
+.dw Event_flags+$2D
+.db	$00
+.db	ItemID_ShortSword, $00
+
+.db	$0B, $ED
+.dw	Event_flags+$2E
+.db $00
+.db	ItemID_LightSaber, $00
+
+.db	$0B, $1C
+.dw	Event_flags+$2F
+.db $00
+.db	ItemID_Burger, $00
+
+.db	$0B, $63
+.dw	Event_flags+$30
+.db	$00
+.db ItemID_IronSword, $00
+
+.db	$0C, $11
+.dw	Event_flags+$31
+.db	$00
+.db	ItemID_MiracleKey, $FC
+
+.db	$0C, $2B
+.dw	Event_flags+$32
+.db	$01
+.dw	20
+
+.db $0C, $39
+.dw	Event_flags+$C6
+.db	$02
+.db	EnemyID_WereBat, $00
+
+.db	$0C, $85
+.dw	Event_flags+$C7
+.db	$02
+.db	EnemyID_Stalker, $00
+
+.db	$0C, $A9
+.dw Event_flags+$C8
+.db	$02
+.db	EnemyID_Stalker, $00
+
+.db	$0C, $A5
+.dw	Event_flags+$33
+.db $00
+.db	ItemID_Burger, $00
+
+.db	$0D, $68
+.dw	Event_flags+$34
+.db $01
+.dw	100
+
+.db	$0D, $EB
+.dw	Event_flags+$35
+.db	$00
+.db ItemID_IronAxe, $00
+
+.db	$0D, $EE
+.dw	Event_flags+$36
+.db	$00
+.db	$00, $FC
+
+.db	$0D, $68
+.dw	Event_flags+$37
+.db	$01
+.dw	100
+
+.db $0D, $E8
+.dw	Event_flags+$38
+.db	$00
+.db	$00, $FF
+
+.db	$0E, $11
+.dw	Event_flags+$39
+.db	$00
+.db ItemID_Burger, $00
+
+.db	$0E, $41
+.dw Event_flags+$3A
+.db	$00
+.db	$00, $FF
+
+.db	$0E, $AC
+.dw	Event_flags+$3B
+.db $00
+.db	ItemID_Burger, $00
+
+.db	$0E, $E9
+.dw	Event_flags+$3C
+.db $00
+.db	$00, $FC
+
+.db	$0F, $EE
+.dw	Event_flags+$3D
+.db	$00
+.db ItemID_Burger, $00
+
+.db	$10, $1E
+.dw	Event_flags+$3E
+.db	$00
+.db	ItemID_Cola, $00
+
+.db	$10, $8B
+.dw	Event_flags+$3F
+.db	$00
+.db	$00, $FC
+
+.db $10, $61
+.dw	Event_flags+$40
+.db	$00
+.db	ItemID_Flash, $00
+
+.db	$10, $9C
+.dw	Event_flags+$41
+.db	$00
+.db	ItemID_Flash, $00
+
+.db	$10, $C7
+.dw Event_flags+$C9
+.db	$02
+.db	EnemyID_Skeleton, ItemID_IronFang
+
+.db	$10, $D1
+.dw	Event_flags+$42
+.db	$00
+.db	ItemID_Burger, $00
+
+.db	$11, $26
+.dw	Event_flags+$43
+.db $01
+.dw	10
+
+.db	$11, $5E
+.dw	Event_flags+$44
+.db	$01
+.dw 50
+
+.db	$11, $71
+.dw	Event_flags+$45
+.db	$01
+.dw	20
+
+.db $11, $7D
+.dw	Event_flags+$46
+.db	$01
+.dw	20
+
+.db $11, $26
+.dw	Event_flags+$47
+.db	$01
+.dw	20
+
+.db	$12, $19
+.dw	Event_flags+$48
+.db	$00
+.db	$00, $FC
+
+.db	$12, $1E
+.dw Event_flags+$49
+.db	$00
+.db	ItemID_Cola, $00
+
+.db	$12, $CC
+.dw	Event_flags+$4A
+.db $00
+.db	ItemID_Flash, $00
+
+.db	$12, $77
+.dw	Event_flags+$4B
+.db $00
+.db	ItemID_ShortSword, $00
+
+.db	$12, $92
+.dw	Event_flags+$4C
+.db	$01
+.dw 20
+
+.db	$12, $94
+.dw	Event_flags+$4D
+.db	$00
+.db	$00, $FF
+
+.db	$13, $1E
+.dw	Event_flags+$4E
+.db	$00
+.db	ItemID_Cola, $00
+
+.db $13, $33
+.dw	Event_flags+$4F
+.db	$01
+.dw	20
+
+.db	$13, $A5
+.dw	Event_flags+$50
+.db	$00
+.db	$00, $00
+
+.db	$13, $EC
+.dw Event_flags+$51
+.db	$00
+.db	$00, $7F
+
+.db	$13, $EC
+.dw	Event_flags+$52
+.db $01
+.dw	20
+
+.db	$14, $41
+.dw	Dialogue_flags+$0D
+.db $03
+.db	$93, $00
+
+.db	$15, $55
+.dw	Dialogue_flags+$0E
+.db	$03
+.db $91, $0F
+
+.db	$15, $A1
+.dw	Dialogue_flags+$0F
+.db	$03
+.db	$90, $29
+
+.db	$15, $C8
+.dw	Dialogue_flags+$18
+.db	$03
+.db	$16, $00
+
+.db $16, $3E
+.dw	Event_flags+$53
+.db	$01
+.dw	100
+
+.db	$16, $5E
+.dw	Event_flags+$54
+.db	$00
+.db	$00, $FC
+
+.db	$16, $81
+.dw Event_flags+$55
+.db	$00
+.db	ItemID_Flash, $00
+
+.db	$16, $C8
+.dw	Event_flags+$56
+.db $00
+.db	ItemID_Escaper, $00
+
+.db	$17, $AA
+.dw	Event_flags+$57
+.db $01
+.dw	20
+
+.db	$17, $AA
+.dw	Event_flags+$58
+.db	$01
+.dw 200
+
+.db	$18, $16
+.dw	Event_flags+$59
+.db	$00
+.db	$00, $FF
+
+.db	$18, $1C
+.dw	Event_flags+$CA
+.db	$02
+.db	EnemyID_RdSlime, $00
+
+.db $19, $1A
+.dw	Event_flags+$5A
+.db	$00
+.db	$25, $00
+
+.db	$19, $B9
+.dw	Event_flags+$5B
+.db	$00
+.db	$00, $FF
+
+.db	$19, $35
+.dw Event_flags+$5C
+.db	$01
+.dw	100
+
+.db	$19, $C3
+.dw	Event_flags+$5D
+.db $01
+.dw	1
+
+.db	$19, $74
+.dw	Event_flags+$5E
+.db $00
+.db	ItemID_Burger, $00
+
+.db	$19, $A3
+.dw	Event_flags+$5F
+.db	$00
+.db $00, $FC
+
+.db	$1A, $1E
+.dw	Event_flags+$60
+.db	$00
+.db	$00, $FC
+
+.db	$1A, $33
+.dw	Event_flags+$61
+.db	$01
+.dw	20
+
+.db $1A, $51
+.dw	Event_flags+$62
+.db	$00
+.db	ItemID_Burger, $00
+
+.db	$1A, $CB
+.dw	Event_flags+$63
+.db	$00
+.db	$00, $00
+
+.db	$1B, $5A
+.dw Event_flags+$CB
+.db	$02
+.db	EnemyID_RdDragn, ItemID_LaconiaSword
+
+.db	$1B, $E1
+.dw	Event_flags+$64
+.db $00
+.db	ItemID_Burger, $00
+
+.db	$1C, $1E
+.dw	Event_flags+$CC
+.db $02
+.db	EnemyID_RdDragn, $00
+
+.db	$1C, $31
+.dw	Event_flags+$65
+.db	$01
+.dw 2000
+
+.db	$1D, $1B
+.dw	Event_flags+$66
+.db	$00
+.db	ItemID_Flash, $00
+
+.db	$1D, $21
+.dw	Event_flags+$67
+.db	$00
+.db	ItemID_Burger, $00
+
+.db $1D, $41
+.dw	Event_flags+$68
+.db	$00
+.db	ItemID_Burger, $FC
+
+.db	$1D, $8C
+.dw	Event_flags+$69
+.db	$00
+.db	ItemID_Flash, $00
+
+.db	$1D, $CA
+.dw Event_flags+$6A
+.db	$01
+.dw	50
+
+.db	$1D, $B1
+.dw	Event_flags+$CD
+.db $02
+.db	EnemyID_NFarmer, $00
+
+.db	$1E, $1E
+.dw	Event_flags+$6B
+.db $00
+.db	ItemID_Cola, $00
+
+.db	$1E, $11
+.dw	Event_flags+$6C
+.db	$01
+.dw 20
+
+.db	$21, $94
+.dw	Dialogue_flags+$11
+.db	$03
+.db	$9B, $00
+
+.db	$22, $11
+.dw	Event_flags+$6D
+.db	$01
+.dw	500
+
+.db $22, $24
+.dw	Dialogue_flags+$12
+.db	$03
+.db	$9D, $00
+
+.db	$22, $6E
+.dw	Event_flags+$6E
+.db	$00
+.db	$00, $FC
+
+.db	$22, $91
+.dw Event_flags+$6F
+.db	$00
+.db	$00, $FF
+
+.db	$22, $EA
+.dw	Event_flags+$70
+.db $00
+.db	ItemID_TitaniumSword, $00
+
+.db	$22, $EE
+.dw	Event_flags+$71
+.db $00
+.db	$00, $FF
+
+.db	$22, $E3
+.dw	Event_flags+$72
+.db	$01
+.dw 500
+
+.db	$23, $79
+.dw	Event_flags+$73
+.db	$00
+.db	ItemID_Flash, $00
+
+.db	$23, $91
+.dw	Event_flags+$74
+.db	$00
+.db	$00, $FC
+
+.db $23, $C1
+.dw	Event_flags+$75
+.db	$00
+.db	ItemID_Burger, $00
+
+.db	$24, $47
+.dw	Event_flags+$76
+.db	$01
+.dw	3000
+
+.db	$24, $11
+.dw Event_flags+$77
+.db	$00
+.db	ItemID_WhiteMantle, $00
+
+.db	$24, $1E
+.dw	Event_flags+$78
+.db	$00
+.db	ItemID_WoodCane, $00
+
+.db	$24, $EE
+.dw	Event_flags+$79
+.db $00
+.db	ItemID_Cola, $00
+
+.db	$25, $1D
+.dw	Event_flags+$CE
+.db	$02
+.db EnemyID_BlDragn, ItemID_AmberEye
+
+.db	$25, $86
+.dw	Event_flags+$7A
+.db	$01
+.dw	100
+
+.db $25, $8A
+.dw	Event_flags+$7B
+.db	$00
+.db	$00, $FC
+
+.db $25, $3E
+.dw	Event_flags+$7C
+.db	$01
+.dw	100
+
+.db	$26, $7B
+.dw	Event_flags+$7D
+.db	$01
+.dw	5000
+
+.db	$27, $9E
+.dw Event_flags+$CF
+.db	$02
+.db	EnemyID_RdDragn, ItemID_LightSaber
+
+.db	$27, $71
+.dw	Event_flags+$7E
+.db $01
+.dw	500
+
+.db	$28, $D1
+.dw	Event_flags+$7F
+.db $01
+.dw	500
+
+.db	$29, $67
+.dw	Event_flags+$D0
+.db	$02
+.db EnemyID_Zombie, $00
+
+.db	$29, $79
+.dw	Event_flags+$D1
+.db	$02
+.db	EnemyID_Zombie, $00
+
+.db	$29, $99
+.dw	Event_flags+$80
+.db	$00
+.db	ItemID_Burger, $00
+
+.db $29, $A4
+.dw	Event_flags+$D2
+.db	$02
+.db	EnemyID_Wight, $00
+
+.db	$29, $D5
+.dw	Event_flags+$D3
+.db	$02
+.db	EnemyID_Zombie, $00
+
+.db	$2A, $53
+.dw Event_flags+$D4
+.db	$02
+.db	EnemyID_Zombie, $00
+
+.db	$2A, $73
+.dw	Event_flags+$D5
+.db $02
+.db	EnemyID_Zombie, $00
+
+.db	$2A, $B1
+.dw	Event_flags+$D6
+.db $02
+.db	EnemyID_Zombie, $00
+
+.db	$2A, $DB
+.dw	Dialogue_flags+$13
+.db	$03
+.db $A4, $00
+
+.db	$2A, $99
+.dw	Event_flags+$81
+.db	$00
+.db	ItemID_LaconiaArmor, $7F
+
+.db	$2B, $79
+.dw	Event_flags+$82
+.db	$00
+.db	ItemID_Escaper, $00
+
+.db $2C, $45
+.dw	Event_flags+$83
+.db	$00
+.db	$00, $FC
+
+.db	$2C, $ED
+.dw	Event_flags+$84
+.db	$00
+.db	ItemID_Burger, $00
+
+.db	$2C, $4B
+.dw Event_flags+$85
+.db	$01
+.dw	500
+
+.db	$2D, $18
+.dw	Event_flags+$86
+.db $01
+.dw	20
+
+.db	$2D, $83
+.dw	Event_flags+$87
+.db $00
+.db	$24, $00
+
+.db	$2D, $AD
+.dw	Event_flags+$88
+.db	$00
+.db ItemID_Flash, $00
+
+.db	$2D, $E3
+.dw	Event_flags+$89
+.db	$01
+.dw	20
+
+.db $2D, $A3
+.dw	Event_flags+$8A
+.db	$00
+.db	$00, $FF
+
+.db $2F, $11
+.dw	Event_flags+$8B
+.db	$00
+.db	ItemID_LaconiaShield, $7F
+
+.db	$2F, $2B
+.dw	Event_flags+$8C
+.db	$00
+.db	$00, $FF
+
+.db	$2F, $73
+.dw Event_flags+$8D
+.db	$00
+.db	$00, $FC
+
+.db	$2F, $D6
+.dw	Event_flags+$8E
+.db $01
+.dw	100
+
+.db	$32, $3B
+.dw	Event_flags+$8F
+.db $00
+.db	$00, $FC
+
+.db	$33, $19
+.dw	Event_flags+$90
+.db	$00
+.db $00, $FF
+
+.db	$33, $D9
+.dw	Event_flags+$D7
+.db	$02
+.db	EnemyID_Scorpius, $00
+
+.db	$34, $16
+.dw	Event_flags+$91
+.db	$01
+.dw	50
+
+.db $34, $1E
+.dw	Event_flags+$92
+.db	$00
+.db	ItemID_MagicHat, $00
+
+.db	$34, $EE
+.dw	Event_flags+$93
+.db	$00
+.db	ItemID_CeramicShield, $00
+
+.db	$34, $C3
+.dw Dialogue_flags+$14
+.db	$03
+.db	$A6, $00
+
+.db	$35, $C2
+.dw	Dialogue_flags+$17
+.db $03
+.db	$9E, $00
+
+.db	$3A, $79
+.dw	Event_flags+$D8
+.db $02
+.db	EnemyID_Titan, ItemID_AeroPrism
+
+.db	$3A, $82
+.dw	Event_flags+$94
+.db	$00
+.db	ItemID_MagicHat, $00
+
+.db	$FF
+; =================================================================
+
 
 LABEL_B03_B473:
 .db	$00, $EE, $05, $27, $12
