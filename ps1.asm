@@ -1,5 +1,16 @@
+;  =========================================================================
+; |           Phantasy Star Disassembly for Sega Master System              |
+;  =========================================================================
+;
 ; Source code created by SMS Examine V1.2a
 ; Size: 524288 bytes
+;
+; 	Credits
+;
+; - Veo for researching and documenting the ROM locations and data on stuff like items, enemies, dungeons, etc.
+;
+; - Isotarge for contributions on relabeling, documenting code, RAM constants.
+
 
 .MEMORYMAP
 SLOTSIZE $4000
