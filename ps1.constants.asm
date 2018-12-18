@@ -283,6 +283,8 @@
 .define	Ctrl_1_held $C204
 .define	Ctrl_1_pressed $C205
 
+.define RNG_seed $C20C
+
 .define	Cursor_pos $C269
 .define	Option_total_num $C26E	; number of options available for an interactive menu (e.g. player menu)
 

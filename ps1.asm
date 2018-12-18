@@ -1022,9 +1022,9 @@ LABEL_4FE:
 ; -----------------------------------------------------------------
 
 
-LABEL_5B1:
+UpdateRNGSeed:
 	push	hl
-	ld   hl, ($C20C)
+	ld   hl, (RNG_seed)
 	ld   a, h
 	rrca
 	rrca
@@ -1043,7 +1043,7 @@ LABEL_5B1:
 LABEL_5C8:
 	ld   a, r
 	xor  l
-	ld   ($C20C), hl
+	ld   (RNG_seed), hl
 	pop  hl
 	ret
 
@@ -2064,7 +2064,7 @@ GameMode_Dungeon:
 	ld	($C2D2), a
 	ld	a, ($C2E3)
 	ld	b, a
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	cp	b
 	ret	nc
 	ld	b, $01
@@ -2351,7 +2351,7 @@ LABEL_1148:
 	jr	z, LABEL_1188
 	ld	a, ($C267)
 	ld	(CurrentCharacter), a
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$01
 	inc	a
 	ld	b, a
@@ -2396,7 +2396,7 @@ LABEL_1188:
 	call	LABEL_18A9
 
 LABEL_11B5:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$07
 	add	a, $04
 	call	LABEL_187D
@@ -2484,7 +2484,7 @@ LABEL_121D:
 	jp	LABEL_3464
 
 LABEL_1251:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$1F
 	cp	(iy+5)
 	jr	z, +
@@ -2516,7 +2516,7 @@ LABEL_1279:
 	rrca
 	and	$3F
 	ld	e, a
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	ld	h, a
 	call	LABEL_429
 	ld	a, e
@@ -2532,7 +2532,7 @@ LABEL_128C:
 	ld	a, (iy+$D)
 	or	a
 	jr	z, LABEL_12B9
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$01
 	inc	a
 	ld	b, a
@@ -2571,7 +2571,7 @@ LABEL_12D4:
 	ld	a, ($C2E8)
 	and	$10
 	jr	z, LABEL_12FA
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$03
 	ld	c, a
 	ld	a, ($C2EF)
@@ -2603,7 +2603,7 @@ LABEL_1305:
 	call	nz, LABEL_12D4
 
 LABEL_130C:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$03
 	call	LABEL_187D
 	jp	z, LABEL_130C
@@ -2670,7 +2670,7 @@ LABEL_1379:
 	ret
 
 LABEL_1386:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$03
 	jp	nz, LABEL_1305
 	ld	a, ($C2EF)
@@ -2683,7 +2683,7 @@ LABEL_1386:
 	call	ShowDialogue_B12
 	jp	LABEL_3464
 __
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and $03
 	call	LABEL_187D
 	jr	z, _b
@@ -2705,7 +2705,7 @@ LABEL_13CC:
 	ld	a, (iy+1)
 	cp	$1E
 	jr	c, +
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$07
 	jp	nz, LABEL_1305
 +
@@ -2728,7 +2728,7 @@ LABEL_13CC:
 	jp	LABEL_3464
 
 LABEL_13FF:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$0F
 	jp	nz, LABEL_1305
 	ld	a, (iy+0)
@@ -2742,7 +2742,7 @@ LABEL_13FF:
 	jp	LABEL_3464
 
 LABEL_1421:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$03
 	jp	nz, LABEL_1305
 	call	LABEL_142C
@@ -2762,14 +2762,14 @@ LABEL_142C:
 	djnz	-
 	ret
 LABEL_1443
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$03
 	call	LABEL_187D
 	jp	z, LABEL_1443
 	ld	(CurrentCharacter), a
 	ld	($C2EE), a
 	call	LABEL_2F93
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$03
 	add	a, $F6
 	ld	b, a
@@ -2803,7 +2803,7 @@ LABEL_1443
 	jp	LABEL_30B7
 
 LABEL_149D:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$03
 	jp	nz, LABEL_1305
 	ld	c, $D8
@@ -2866,7 +2866,7 @@ LABEL_1505:
 	ld	a, ($C2EF)
 	and	$80
 	ret	nz
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$0F
 	add	a, c
 	jp	LABEL_15C2
@@ -2884,7 +2884,7 @@ LABEL_151A:
 	call	nz, LABEL_12D4
 
 LABEL_152F:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$03
 	call	LABEL_187D
 	jp	z, LABEL_152F
@@ -2961,7 +2961,7 @@ LABEL_15AD:
 	ret
 
 LABEL_15B2:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$1F
 	cp	(ix+5)
 	jr	z, +
@@ -3440,7 +3440,7 @@ LABEL_18F2:
 	ld	b, $0C
 
 -
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$0F
 	cp	$0C
 	jr	nc, -
@@ -3508,7 +3508,7 @@ LABEL_1964:
 	call	ShowDialogue_B12
 
 -
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$0F
 	cp	$09
 	jr	nc, -
@@ -3545,7 +3545,7 @@ BattleMenu_Run:
 	call	LABEL_30E1
 	ld	a, ($C2E7)
 	ld	b, a
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	cp	b
 	jr	nc, LABEL_19C5
 	ld	a, (Interaction_Type)
@@ -3811,7 +3811,7 @@ LABEL_1B42:
 	call	ShowDialogue_B12
 
 -
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$0F
 	cp	$0A
 	jr	nc, -
@@ -4378,7 +4378,7 @@ LABEL_1EB2:
 	call	LABEL_18A9
 
 LABEL_1EC6:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$07
 	add	a, $04
 	call	LABEL_187D
@@ -4387,7 +4387,7 @@ LABEL_1EC6:
 	pop	ix
 	pop	de
 	push	de
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$03
 	add	a, d
 	call	LABEL_125E
@@ -4421,7 +4421,7 @@ LABEL_1EF0:
 	ld	a, d
 	cp	$D8
 	jr	nz, +
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$0F
 	add	a, d
 +
@@ -4465,7 +4465,7 @@ LABEL_1F36:
 	cp	b
 	ld	c, $03
 	jr	nc, +
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and	$03
 	jr	z, LABEL_1F71
 	ld	c, a
@@ -4560,7 +4560,7 @@ LABEL_1FDF:
 	ld	a, (Alis_stats+attack)
 	cp	b
 	jr	c, LABEL_200C
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	cp	$B2
 	jr	nc, LABEL_200C
 	ld	b, $08
@@ -5846,7 +5846,7 @@ LABEL_2950:
 	ret
 
 +:
-	call LABEL_5B1
+	call UpdateRNGSeed
 	and $03
 ++:
 	call LABEL_187D
@@ -12440,7 +12440,7 @@ LABEL_5C63:
 	ld (iy+4), $60
 	ld (iy+1), $3A
 	ld (iy+14), $07
-	call LABEL_5B1
+	call UpdateRNGSeed
 	ld b, a
 	ld c, $3D
 	ld a, ($C2E0)
@@ -12881,7 +12881,7 @@ LABEL_5F63:
 	srl b
 	srl b
 +:
-	call LABEL_5B1
+	call UpdateRNGSeed
 	cp b
 	jp nc, LABEL_5FF9
 	inc hl
@@ -12921,7 +12921,7 @@ LABEL_5FD8:
 	add hl, hl
 	ld de, LABEL_B03_8178
 	add hl, de
-	call LABEL_5B1
+	call UpdateRNGSeed
 	and $07
 	ld e, a
 	ld d, $00
@@ -13003,7 +13003,7 @@ LABEL_5FFE:
 	jr   nc, LABEL_6075
 	ld   b, a
 LABEL_6075:
-	call	LABEL_5B1
+	call	UpdateRNGSeed
 	and  $07
 	cp   b
 	jp   nc, LABEL_6075
@@ -14164,7 +14164,7 @@ LABEL_688C:
 	ld b, $0D
 	call LABEL_6BCA
 	jr nz, +
-	call LABEL_5B1
+	call UpdateRNGSeed
 	rrca
 	jr nc, ++
 +:
