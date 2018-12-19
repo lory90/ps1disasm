@@ -5568,7 +5568,7 @@ LABEL_2741:
 
 ItemAction_Drop:
 	ld hl, $FFFF
-	ld (hl), $02
+	ld (hl), :Bank02
 	ld a, (CurrentItem)
 	ld hl, ItemData
 	add a, l
@@ -5653,7 +5653,7 @@ LABEL_27D8:
 	bit 4, c
 	jr nz, ++
 	ld hl, $FFFF
-	ld (hl), $02
+	ld (hl), :Bank02
 	ld a, (CurrentItem)
 	ld hl, ItemData
 	add a, l
@@ -6130,7 +6130,7 @@ LABEL_2B46:
 
 +:
 	ld hl, $FFFF
-	ld (hl), $03
+	ld (hl), :Bank03
 	ld l, a
 	ld h, $00
 	add hl, hl
@@ -6283,7 +6283,7 @@ LABEL_2CB1:
 	pop af
 	jp nz, LABEL_2CEA
 	ld hl, $FFFF
-	ld (hl), $03
+	ld (hl), :Bank03
 	ld a, (CurrentItem)
 	and $3F
 	add a, a
@@ -7281,7 +7281,7 @@ LABEL_337B:
 
 
 LABEL_337D:
-	ld a, $02
+	ld a, :Bank02
 	ld ($FFFF), a
 	ld de, $7C0C
 	ld bc, $0000
@@ -8643,16 +8643,16 @@ LABEL_3D96:
 
 
 LABEL_3DA6:
-.db $10, $00, $80, $20, $80, $0F, $00, $80
-.db	$10, $16, $8F, $36, $8F, $0F, $33, $83
-.db $10, $72, $9C, $82, $9C, $0F, $E9, $86
-.db	$10, $72, $9C, $82, $9C, $0F, $A0, $89
-.db $10, $F6, $B3, $06, $B4, $0F, $80, $8C
-.db	$10, $10, $80, $20, $80, $0F, $46, $8E
-.db $10, $00, $80, $20, $80, $0F, $16, $91
-.db	$11, $40, $86, $50, $86, $0F, $7B, $94
-.db $11, $C4, $97, $D4, $97, $0F, $0A, $97
-.db	$11, $B1, $A4, $C1, $A4, $0F, $2C, $9A
+.db :Bank16, $00, $80, $20, $80, $0F, $00, $80
+.db	:Bank16, $16, $8F, $36, $8F, $0F, $33, $83
+.db :Bank16, $72, $9C, $82, $9C, $0F, $E9, $86
+.db	:Bank16, $72, $9C, $82, $9C, $0F, $A0, $89
+.db :Bank16, $F6, $B3, $06, $B4, $0F, $80, $8C
+.db	:Bank16, $10, $80, $20, $80, $0F, $46, $8E
+.db :Bank16, $00, $80, $20, $80, $0F, $16, $91
+.db	:Bank17, $40, $86, $50, $86, $0F, $7B, $94
+.db :Bank17, $C4, $97, $D4, $97, $0F, $0A, $97
+.db	:Bank17, $B1, $A4, $C1, $A4, $0F, $2C, $9A
 
 LABEL_3DF6:
 .db $11, $58, $AF, $68, $AF, $0F, $11, $9C
@@ -9726,9 +9726,15 @@ LABEL_46D1:
 
 
 LABEL_471E:
-.db	$1F, $00, $80, $90, $A8, $1E, $00, $80, $70, $AA, $1E, $62, $8F, $50, $AC, $1E
-.db	$2B, $9C, $30, $AE, $1F, $DB, $8A, $10, $B0, $1D, $2A, $B6, $F0, $B1, $12, $88
-.db	$B3, $D0, $B3, $1E, $4E, $AA, $B0, $B5, $1E, $0C, $B3, $90, $B7
+.db	:Bank31, $00, $80, $90, $A8
+.db	:Bank30, $00, $80, $70, $AA
+.db	:Bank30, $62, $8F, $50, $AC
+.db	:Bank30, $2B, $9C, $30, $AE
+.db	:Bank31, $DB, $8A, $10, $B0
+.db	:Bank29, $2A, $B6, $F0, $B1
+.db	:Bank18, $88, $B3, $D0, $B3
+.db	:Bank30, $4E, $AA, $B0, $B5
+.db	:Bank30, $0C, $B3, $90, $B7
 
 
 LABEL_474B:
@@ -14495,7 +14501,7 @@ LABEL_6AFC:
 	ld   b, a
 	add  a, a
 	add  a, b
-	ld   hl, LABEL_7060-1
+	ld   hl, LABEL_705F
 	add  a, l
 	ld   l, a
 	adc  a, h
@@ -14550,7 +14556,7 @@ LABEL_6B45:
 	add  a, e
 	ld   e, a
 	ld   d, $00
-	ld   hl, LABEL_7062
+	ld   hl, LABEL_705F+3
 	add  hl, de
 	push	bc
 	ld   a, (hl)
@@ -15138,42 +15144,85 @@ LABEL_6E8B:
 .db $1A, $D2, $06, $0C, $D8, $A1, $5C, $D2
 .db $05, $08, $E0, $AA, $06, $04, $18, $D2
 .db $20, $A6, $50, $A6, $24, $D2, $38, $A6
-.db $68, $A6, $07
+.db $68, $A6
 
-LABEL_7060:
-.db	$00, $80
-
-LABEL_7062:
-.db	$04, $0F, $8B
-.db $07, $4B, $8A, $04, $D4, $8E, $07, $1E
-.db $95, $04, $A4, $92, $07, $6B, $9F, $04
-
-.db $73, $96, $07, $13, $AA, $04, $34, $9A
-.db $08, $00, $80, $04, $02, $9E, $08, $ED
-.db $89, $04, $06, $89, $08, $23, $A4, $04
-.db $D3, $A1, $09, $D1, $83, $04, $35, $A5
-.db $07, $22, $B4, $04, $80, $A8, $05, $AF
-.db $B1, $04, $A6, $AB, $07, $22, $B4, $04
-.db $5B, $AF, $09, $D1, $83, $04, $3D, $B3
-.db $08, $23, $A4, $04, $6C, $B7, $08, $ED
-.db $89, $04, $06, $89, $08, $3F, $96, $1C
-.db $C0, $A6, $08, $06, $9D, $1C, $35, $A9
-.db $05, $27, $AA, $1C, $D0, $AB, $09, $00
-.db $80, $1C, $C9, $AE, $05, $27, $AA, $1C
-.db $0C, $B2, $08, $06, $9D, $1C, $C2, $B5
-.db $08, $3F, $96, $1C, $5A, $B9, $08, $ED
-.db $89, $04, $06, $89, $09, $4A, $8F, $05
-.db $00, $80, $09, $BD, $9A, $05, $67, $83
-.db $09, $0D, $A6, $05, $95, $86, $08, $75
-.db $AF, $05, $7A, $89, $04, $00, $80, $05
-.db $62, $8C, $05, $30, $B8, $05, $18, $8F
-.db $08, $26, $B9, $05, $8F, $91, $08, $ED
-.db $89, $04, $06, $89, $08, $26, $B9, $05
-.db $C6, $93, $05, $30, $B8, $05, $2E, $97
-.db $04, $00, $80, $05, $AD, $9A, $08, $75
-.db $AF, $05, $7E, $9E, $09, $0D, $A6, $05
-.db $48, $A2, $09, $BD, $9A, $05, $12, $A6
-.db $09, $4A, $8F, $04, $BE, $BB
+LABEL_705F:
+.db	:Bank07, $00, $80
+.db	:Bank04, $0F, $8B
+.db :Bank07, $4B, $8A
+.db :Bank04, $D4, $8E
+.db :Bank07, $1E, $95
+.db :Bank04, $A4, $92
+.db :Bank07, $6B, $9F
+.db :Bank04, $73, $96
+.db :Bank07, $13, $AA
+.db :Bank04, $34, $9A
+.db :Bank08, $00, $80
+.db :Bank04, $02, $9E
+.db :Bank08, $ED, $89
+.db :Bank04, $06, $89
+.db :Bank08, $23, $A4
+.db :Bank04, $D3, $A1
+.db :Bank09, $D1, $83
+.db :Bank04, $35, $A5
+.db :Bank07, $22, $B4
+.db :Bank04, $80, $A8
+.db :Bank05, $AF, $B1
+.db :Bank04, $A6, $AB
+.db :Bank07, $22, $B4
+.db :Bank04, $5B, $AF
+.db :Bank09, $D1, $83
+.db :Bank04, $3D, $B3
+.db :Bank08, $23, $A4
+.db :Bank04, $6C, $B7
+.db :Bank08, $ED, $89
+.db :Bank04, $06, $89
+.db :Bank08, $3F, $96
+.db :Bank28, $C0, $A6
+.db :Bank08, $06, $9D
+.db :Bank28, $35, $A9
+.db :Bank05, $27, $AA
+.db :Bank28, $D0, $AB
+.db :Bank09, $00, $80
+.db :Bank28, $C9, $AE
+.db :Bank05, $27, $AA
+.db :Bank28, $0C, $B2
+.db :Bank08, $06, $9D
+.db :Bank28, $C2, $B5
+.db :Bank08, $3F, $96
+.db :Bank28, $5A, $B9
+.db :Bank08, $ED, $89
+.db :Bank04, $06, $89
+.db :Bank09, $4A, $8F
+.db :Bank05, $00, $80
+.db :Bank09, $BD, $9A
+.db :Bank05, $67, $83
+.db :Bank09, $0D, $A6
+.db :Bank05, $95, $86
+.db :Bank08, $75, $AF,
+.db :Bank05, $7A, $89
+.db :Bank04, $00, $80
+.db :Bank05, $62, $8C
+.db :Bank05, $30, $B8
+.db :Bank05, $18, $8F
+.db :Bank08, $26, $B9
+.db :Bank05, $8F, $91
+.db :Bank08, $ED, $89,
+.db :Bank04, $06, $89
+.db :Bank08, $26, $B9
+.db :Bank05, $C6, $93
+.db :Bank05, $30, $B8
+.db :Bank05, $2E, $97
+.db :Bank04, $00, $80
+.db :Bank05, $AD, $9A
+.db :Bank08, $75, $AF
+.db :Bank05, $7E, $9E
+.db :Bank09, $0D, $A6
+.db :Bank05, $48, $A2
+.db :Bank09, $BD, $9A
+.db :Bank05, $12, $A6
+.db :Bank09, $4A, $8F
+.db :Bank04, $BE, $BB
 
 LABEL_7143:
 	push bc

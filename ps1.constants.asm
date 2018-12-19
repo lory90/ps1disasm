@@ -225,7 +225,6 @@
 .define DungeonID_NaulaCave1F $13
 .define DungeonID_BayaMalayPrison $14
 .define DungeonID_DrasgowWarehouse $15
-.define DungeonID_BayaMalayPrison $15
 .define DungeonID_DrMadLab $15
 .define DungeonID_BortevoPass $16
 .define DungeonID_IslandTower1F $17
