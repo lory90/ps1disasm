@@ -14208,7 +14208,7 @@ LABEL_68BC:
 	ld   b, a
 	ld   hl, $FFFF
 	ld   (hl), :Bank03
-	ld   hl, LABEL_B03_B473
+	ld   hl, B03_DungeonTransitionData
 	ld   de, $0004
 LABEL_68D4:
 	ld   a, (hl)
