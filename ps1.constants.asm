@@ -213,6 +213,7 @@
 .define Dialogue_CurrentCharacter $5B
 .define Dialogue_EnemyName $5C
 .define Dialogue_CurrentItem $5D
+.define Dialogue_NumberFromC2C5 $5E
 .define Dialogue_NewLine $60
 .define Dialogue_NewPage $61
 .define Dialogue_Terminator62 $62
@@ -369,6 +370,7 @@
 
 .define	CurrentCharacter $C2C2 ; Used for battle dialogue etc
 .define	CurrentItem $C2C4 ; Used in dialogue, Inventory_AddItem etc
+.define	CurrentDialogueNumber $C2C5 ; unsigned 2 bytes, little endian, used in dialogue, control character $5E
 .define	CurrentBattle_EnemyName $C2C8 ; 8 bytes
 .define	CurrentBattle_EXPReward $C2D0 ; unsigned 2 bytes, little endian
 

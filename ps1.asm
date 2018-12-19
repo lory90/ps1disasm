@@ -1153,7 +1153,7 @@ LABEL_678:
 	call	LABEL_3464
 	ld	a, $08
 	ld	($FFFC), a
-	ld	a, ($C2C5)
+	ld	a, (CurrentDialogueNumber)
 	ld	h, a
 	ld	l, 0
 	add	hl, hl
@@ -1195,7 +1195,7 @@ LABEL_6C5:
 	call	ShowDialogue_B12
 	ld	a, $08
 	ld	($FFFC), a
-	ld	a, ($C2C5)
+	ld	a, (CurrentDialogueNumber)
 	ld	h, $82
 	ld	l, a
 	ld	(hl), 0
@@ -1232,7 +1232,7 @@ LABEL_730:
 LABEL_73A:
 	ld	a, $08
 	ld	($FFFC), a
-	ld	a, ($C2C5)
+	ld	a, (CurrentDialogueNumber)
 	ld	l, a
 	ld	h, $82
 	ld	a, (hl)
@@ -3162,7 +3162,7 @@ UnlockCharacter:
 
 AwardEXP:
 	ld	hl, (CurrentBattle_EXPReward)
-	ld	($C2C5), hl
+	ld	(CurrentDialogueNumber), hl
 	ld	a, l
 	or	h
 	ret	z
@@ -4075,7 +4075,7 @@ PlayerMenu_Save:
 	ld	hl, LABEL_B12_BA93
 	call	ShowDialogue_B12
 	push	bc
-	ld	a, ($C2C5)
+	ld	a, (CurrentDialogueNumber)
 	ld	h, a
 	ld	l, $00
 	add	hl, hl
@@ -5826,7 +5826,7 @@ LABEL_28EE:
 
 +:
 	ld hl, ($C2DD)
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	call LABEL_297A
 	ld a, h
 	or l
@@ -5937,7 +5937,7 @@ LABEL_2999:
 	add a, b
 	ld l, a
 	ld h, $00
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, LABEL_B12_B8E0
 	call ShowDialogue_B12
 	call LABEL_39E9
@@ -5946,7 +5946,7 @@ LABEL_2999:
 	call nz, LABEL_3A12
 	pop af
 	jr nz, LABEL_2A48
-	ld de, ($C2C5)
+	ld de, (CurrentDialogueNumber)
 	ld hl, (Current_money)
 	or a
 	sbc hl, de
@@ -6041,7 +6041,7 @@ LABEL_2A98:
 	add hl, hl
 	add hl, hl
 	add hl, de
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, LABEL_B12_B9EE
 	call ShowDialogue_B12
 	call LABEL_39E9
@@ -6052,7 +6052,7 @@ LABEL_2A98:
 	jr nz, LABEL_2B15
 	ld hl, LABEL_B12_B9B0
 	call ShowDialogue_B12
-	ld de, ($C2C5)
+	ld de, (CurrentDialogueNumber)
 	ld hl, (Current_money)
 	or a
 	sbc hl, de
@@ -6145,7 +6145,7 @@ LABEL_2B46:
 	ld h, (ix+5)
 	or a
 	sbc hl, de
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, LABEL_B12_BA1F
 	jp ShowDialogue_B12
 
@@ -6297,7 +6297,7 @@ LABEL_2CB1:
 	inc hl
 	ld h, (hl)
 	ld l, a
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	or h
 	jr nz, +
 	ld hl, LABEL_B12_BD7E
@@ -6318,7 +6318,7 @@ LABEL_2CEA:
 
 +:
 	call Inventory_RemoveItem
-	ld hl, ($C2C5)
+	ld hl, (CurrentDialogueNumber)
 	call LABEL_297A
 	ld hl, LABEL_B12_B8BC
 	call ShowDialogue_B12
@@ -7108,12 +7108,12 @@ LABEL_3274:
 	jp   LABEL_31FA
 
 LABEL_3292:
-	cp   $5E
+	cp   Dialogue_NumberFromC2C5
 	jr   nz, LABEL_32F5
 	push	hl
 	push	bc
 	push	de
-	ld   hl, ($C2C5)
+	ld   hl, (CurrentDialogueNumber)
 	ld   de, $2710
 	xor  a
 	ld   c, a
@@ -8194,7 +8194,7 @@ LABEL_39B1:
 	ld l, a
 	inc l
 	ld h, $00
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ret
 
 LABEL_39DD:
@@ -8750,7 +8750,7 @@ GameMode_NameInput:
 	ld de, $C778
 	ld bc, $0005
 	ldir
-	ld hl, ($C2C5)
+	ld hl, (CurrentDialogueNumber)
 	add hl, hl
 	ld de, LABEL_3F69-2
 	add hl, de
@@ -10005,7 +10005,7 @@ LABEL_4940:
 	ld hl, $0060
 	jr z, +
 	ld hl, $0003
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, $0064
 +:
 	jp ShowDialogue_B2
@@ -10237,7 +10237,7 @@ LABEL_4AD3:
 
 +:
 	ld hl, $64
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, $0078
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10397,7 +10397,7 @@ LABEL_4C0D:
 
 +:
 	ld hl, $000A
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, $0092
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10637,7 +10637,7 @@ LABEL_4DFB:
 	cp $03
 	jr nc, ++
 	ld hl, $04B0
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, $028C
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10849,7 +10849,7 @@ LABEL_4F95:
 
 LABEL_4F9B:
 	ld hl, $03E8
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, $0194
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10952,7 +10952,7 @@ LABEL_5046:
 
 LABEL_504C:
 	ld hl, $000A
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, $01E0
 	jp ShowDialogue_B2
 
@@ -10974,7 +10974,7 @@ LABEL_506A:
 
 LABEL_5070:
 	ld hl, $0190
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, $01EA
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11057,7 +11057,7 @@ LABEL_5107:
 
 LABEL_510D:
 	ld hl, $0118
-	ld ($C2C5), hl
+	ld (CurrentDialogueNumber), hl
 	ld hl, $024A
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
