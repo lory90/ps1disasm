@@ -2188,7 +2188,7 @@ LABEL_1027:
 LABEL_1036:
 	ld   a, b
 	dec  a
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jp   nz, LABEL_1043
 	djnz	LABEL_1036
 	jp   LABEL_1656
@@ -2198,7 +2198,7 @@ LABEL_1043:
 LABEL_1045:
 	ld   a, b
 	dec  a
-	call	LABEL_187D
+	call	IsCharacterAlive
 	inc  hl
 	ld   a, (hl)
 	or   a
@@ -2221,7 +2221,7 @@ LABEL_1055:
 	call	LABEL_2ED9
 
 LABEL_1074:
-	call	LABEL_187A
+	call	IsCharacterAlive_FromC267
 	jp	z, LABEL_1080
 	inc	hl
 	ld	a, (hl)
@@ -2332,7 +2332,7 @@ LABEL_1124:
 +
 	ld	($C267), a
 	jp	z, LABEL_1074
-	call	LABEL_187A
+	call	IsCharacterAlive_FromC267
 	jp	z, LABEL_1124
 	inc	hl
 	ld	a, (hl)
@@ -2347,7 +2347,7 @@ LABEL_1124:
 
 LABEL_1148:
 	ld	($C267), a
-	call	LABEL_187A
+	call	IsCharacterAlive_FromC267
 	ret	z
 	ld	a, ($C2D4)
 	or	a
@@ -2410,7 +2410,7 @@ LABEL_11B5:
 	call	UpdateRNGSeed
 	and	$07
 	add	a, $04
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jp	z, LABEL_11B5
 	push	hl
 	pop	ix
@@ -2536,7 +2536,7 @@ LABEL_1279:
 	ret
 
 LABEL_128C:
-	call	LABEL_187D
+	call	IsCharacterAlive
 	ret	z
 	push	hl
 	pop	iy
@@ -2616,7 +2616,7 @@ LABEL_1305:
 LABEL_130C:
 	call	UpdateRNGSeed
 	and	$03
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jp	z, LABEL_130C
 	ld	(CurrentCharacter), a
 	push	hl
@@ -2642,7 +2642,7 @@ LABEL_130C:
 
 LABEL_1344:
 	pop	af
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jr	nz, LABEL_1379
 	ld	hl, LABEL_B12_B728
 	call	ShowDialogue_B12
@@ -2696,7 +2696,7 @@ LABEL_1386:
 __
 	call	UpdateRNGSeed
 	and $03
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jr	z, _b
 	ld	(CurrentCharacter), a
 	ld	a, $0D
@@ -2768,14 +2768,14 @@ LABEL_142C:
 	ld	a, b
 	sub	$04
 	neg
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jr	nz, LABEL_1443
 	djnz	-
 	ret
 LABEL_1443
 	call	UpdateRNGSeed
 	and	$03
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jp	z, LABEL_1443
 	ld	(CurrentCharacter), a
 	ld	($C2EE), a
@@ -2799,7 +2799,7 @@ LABEL_1443
 	call	LABEL_3464
 +
 	ld	a, (CurrentCharacter)
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
 	call	ShowDialogue_B12
@@ -2832,7 +2832,7 @@ LABEL_14A9:
 	ld	a, b
 	sub	$04
 	neg
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jr	z, LABEL_1501
 	ld	(CurrentCharacter), a
 	ld	($C2EE), a
@@ -2851,7 +2851,7 @@ LABEL_14A9:
 	call	LABEL_3464
 +
 	ld	a, (CurrentCharacter)
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
 	call	ShowDialogue_B12
@@ -2897,7 +2897,7 @@ LABEL_151A:
 LABEL_152F:
 	call	UpdateRNGSeed
 	and	$03
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jp	z, LABEL_152F
 	ld	(CurrentCharacter), a
 	ld	($C2EE), a
@@ -3107,7 +3107,7 @@ LABEL_1688:
 	ld	($C004), a
 	ld	hl, LABEL_B12_B71B
 	call	ShowDialogue_B12
-	call	LABEL_170D
+	call	AwardEXP
 	call	UpdateCharStats
 	ld	hl, ($C2DD)
 	ld	a, ($C2DF)
@@ -3117,7 +3117,7 @@ LABEL_1688:
 	ld	hl, LABEL_B12_BCE1
 	call	ShowDialogue_B12
 	call	LABEL_16B2
-	call	LABEL_2D25
+	call	WaitForButton1Or2
 	jp	LABEL_28DB
 
 LABEL_16B2:
@@ -3160,7 +3160,7 @@ UnlockCharacter:
 	ld	(iy+curr_mp), a
 	ret
 
-LABEL_170D:
+AwardEXP:
 	ld	hl, (CurrentBattle_EXPReward)
 	ld	($C2C5), hl
 	ld	a, l
@@ -3367,10 +3367,10 @@ ItemEquipBoosts:
 .db	$00	; $3F
 ; =================================================================
 
-LABEL_187A:
+IsCharacterAlive_FromC267:
 	ld	a, ($C267)
 
-LABEL_187D:
+IsCharacterAlive:
 	push	af
 	add  a, a
 	add  a, a
@@ -3388,7 +3388,7 @@ LABEL_187D:
 
 LABEL_188E:
 	push	hl
-	call	LABEL_187D
+	call	IsCharacterAlive
 	pop  hl
 	ret  nz
 
@@ -3976,7 +3976,7 @@ LABEL_1C15:
 	cp	$06
 	jr	nc, +
 	call	LABEL_7C85
-	call	LABEL_2D25
+	call	WaitForButton1Or2
 	jp	LABEL_4414
 +
 	cp	$07
@@ -4031,7 +4031,7 @@ PlayerMenu_Stats:
 	push	af
 	call	LABEL_3707
 	call	LABEL_37CF
-	call	LABEL_2D25
+	call	WaitForButton1Or2
 	pop	af
 	ld	c, a
 	add	a, a
@@ -4051,7 +4051,7 @@ PlayerMenu_Stats:
 	dec	a
 +
 	call	LABEL_3478
-	call	LABEL_2D25
+	call	WaitForButton1Or2
 	call	LABEL_34C9
 
 LABEL_1CD6:
@@ -4330,7 +4330,7 @@ LABEL_1E5F:
 	ld	a, $C1
 	ld	($C004), a
 	ld	a, (CurrentCharacter)
-	call	LABEL_187D
+	call	IsCharacterAlive
 	push	hl
 	pop	ix
 	ld	b, (ix+6)
@@ -4379,7 +4379,7 @@ LABEL_1EB2:
 	ld	a, b
 	sub	$0C
 	neg
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jr	nz, +
 	djnz	-
 	ret
@@ -4392,7 +4392,7 @@ LABEL_1EC6:
 	call	UpdateRNGSeed
 	and	$07
 	add	a, $04
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jp	z, LABEL_1EC6
 	push	hl
 	pop	ix
@@ -4420,7 +4420,7 @@ LABEL_1EF0:
 	ld	a, b
 	sub	$0C
 	neg
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jp	z, LABEL_1F1F
 	push	hl
 	pop	ix
@@ -4488,7 +4488,7 @@ LABEL_1F36:
 	ld	a, b
 	sub	$0C
 	neg
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jr	z, +
 	add	hl, de
 	ld	a, (hl)
@@ -4554,7 +4554,7 @@ LABEL_1FC0:
 	ld	a, (CurrentCharacter)
 	call	LABEL_188E
 	ret	z
-	call	LABEL_187D
+	call	IsCharacterAlive
 	set	7, (hl)
 	ld	hl, LABEL_B12_B22F
 	call	ShowDialogue_B12
@@ -4580,7 +4580,7 @@ LABEL_1FDF:
 	ld	a, b
 	sub	$0C
 	neg
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jr	z, +
 	bit	6, (hl)
 	jr	z, LABEL_2011
@@ -4696,7 +4696,7 @@ LABEL_20BF:
 	ld	($C004), a
 	pop	af
 	ld	(CurrentCharacter), a
-	call	LABEL_187D
+	call	IsCharacterAlive
 	jr	z, +
 	ld	hl, LABEL_B12_B709
 	jr	++
@@ -4831,7 +4831,7 @@ PlayerMenu_Item:
 	ld a, b
 	sub $04
 	neg
-	call LABEL_187D
+	call IsCharacterAlive
 	jp nz, +
 	djnz -
 	jp LABEL_21F5
@@ -5549,7 +5549,7 @@ ItemAction_Equip:
 	call ShowDialogue_B12
 	ld a, (CurrentCharacter)
 	call LABEL_3707
-	call LABEL_2D25
+	call WaitForButton1Or2
 	call LABEL_374D
 	call LABEL_3464
 	pop af
@@ -5860,7 +5860,7 @@ LABEL_2950:
 	call UpdateRNGSeed
 	and $03
 ++:
-	call LABEL_187D
+	call IsCharacterAlive
 	ret z
 	inc hl
 	push hl
@@ -5887,7 +5887,7 @@ LABEL_297A:
 	ret
 
 LABEL_2989:
-	call	LABEL_2D25
+	call	WaitForButton1Or2
 	ret
 
 LABEL_298D:
@@ -5904,7 +5904,7 @@ LABEL_2999:
 	bit Button_1, c
 	jp nz, LABEL_2A52
 	ld (CurrentCharacter), a
-	call LABEL_187D
+	call IsCharacterAlive
 	jr nz, +
 	ld hl, LABEL_B12_B730
 	call ShowDialogue_B12
@@ -5995,7 +5995,7 @@ LABEL_2A6D:
 -:
 	ld a, b
 	dec a
-	call LABEL_187D
+	call IsCharacterAlive
 	jr z, +
 	ld a, $06
 	add a, l
@@ -6026,7 +6026,7 @@ LABEL_2A98:
 	call LABEL_3665
 	bit Button_1, c
 	jp nz, LABEL_2B43
-	call LABEL_187D
+	call IsCharacterAlive
 	jr nz, LABEL_2B31
 	ld (CurrentCharacter), a
 	push hl
@@ -6091,7 +6091,7 @@ LABEL_2B31:
 	ld a, (Party_curr_num)
 	or a
 	jr nz, LABEL_2B15
-	call LABEL_2D25
+	call WaitForButton1Or2
 LABEL_2B43:
 	call LABEL_36BB
 LABEL_2B46:
@@ -6336,12 +6336,12 @@ ShowYesNoPrompt:
 	or	a
 	ret
 
-LABEL_2D25:
+WaitForButton1Or2:
 	ld   a, $08
 	call	WaitForVInt
 	ld   a, (Ctrl_1_pressed)
 	and  Button_1_Mask|Button_2_Mask
-	jp   z, LABEL_2D25
+	jp   z, WaitForButton1Or2
 	ret
 
 LABEL_2D33:
@@ -7019,7 +7019,7 @@ LABEL_31FA:
 	or   a
 	jp   m, LABEL_3332
 	cp   $65
-	jp   nc, LABEL_2D25
+	jp   nc, WaitForButton1Or2
 	cp   $62
 	ret  z
 
@@ -7029,7 +7029,7 @@ LABEL_31FA:
 	jp   z, LABEL_2D47
 	cp   $61
 	jr   nz, LABEL_321B
-	call	LABEL_2D25
+	call	WaitForButton1Or2
 	jp   LABEL_3235
 
 LABEL_321B:
@@ -7317,7 +7317,7 @@ LABEL_3389:
 	pop de
 	push hl
 	cp $5F
-	call nz, LABEL_2D25
+	call nz, WaitForButton1Or2
 	ld de, $7C00
 	ld bc, $0100
 	ld hl, $0800
@@ -7329,7 +7329,7 @@ LABEL_3389:
 	jp LABEL_337D
 
 +++:
-	call LABEL_2D25
+	call WaitForButton1Or2
 	pop de
 	ret
 
@@ -7519,7 +7519,7 @@ LABEL_34D5:
 	call LABEL_3521
 	ld a, (Inventory_curr_num)
 	or a
-	jp z, LABEL_2D25
+	jp z, WaitForButton1Or2
 	dec a
 	cp $08
 	ld l, $00
@@ -9746,7 +9746,7 @@ LABEL_474B:
 
 LABEL_4765:
 	pop	hl
-	jp	LABEL_2D25
+	jp	WaitForButton1Or2
 
 LABEL_4769:
 	ld   l, a
@@ -11118,7 +11118,7 @@ LABEL_516F:
 	call Inventory_RemoveItem2
 	pop hl
 	call LABEL_3464
-	call LABEL_2D25
+	call WaitForButton1Or2
 	ld a, $01
 	ld ($C506), a
 	ld iy, Noah_stats
@@ -11583,7 +11583,7 @@ LABEL_552F:
 	jp	ShowDialogue_B12
 
 LABEL_5535:
-	call	LABEL_2D25
+	call	WaitForButton1Or2
 
 LABEL_5538:
 	call LABEL_1BE1
@@ -11604,7 +11604,7 @@ LABEL_5546:
 	ld hl, $C801
 	inc (hl)
 	call LABEL_576A
-	call LABEL_2D25
+	call WaitForButton1Or2
 	ld hl, $012C
 	call ShowDialogue_B2
 	jp Inventory_AddItem
@@ -11780,7 +11780,7 @@ LABEL_56A2:
 -:
 	ld a, b
 	dec a
-	call LABEL_187D
+	call IsCharacterAlive
 	jr nz, +
 	djnz -
 	jp LABEL_1602
@@ -16652,7 +16652,7 @@ LABEL_79E2:
 	jp LABEL_7908
 
 +:
-	call LABEL_187D
+	call IsCharacterAlive
 	jr z, ++
 	inc hl
 	ld a, (hl)
