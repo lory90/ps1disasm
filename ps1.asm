@@ -12915,7 +12915,7 @@ LABEL_5F63:
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	ld de, B03_MapEncounterPools
+	ld de, B03_MapEncounterIDList
 	add hl, de
 	add hl, bc
 	ld a, (hl)
@@ -12930,7 +12930,7 @@ LABEL_5FD8:
 	add hl, hl
 	add hl, hl
 	add hl, hl
-	ld de, B03_DungeonEncounterPools-8
+	ld de, B03_EncounterPoolData-8
 	add hl, de
 	call UpdateRNGSeed
 	and $07

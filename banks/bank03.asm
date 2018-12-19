@@ -48,103 +48,956 @@ LABEL_B03_8000:
 .db $10, $0F, $10, $02, $10, $02, $10, $01
 .db $10, $0D, $10, $0D, $10, $0F, $10, $0F
 
-B03_DungeonEncounterPools:
-.db $01, $01, $01, $01, $01, $05, $05, $05
-.db $01, $01, $04, $04, $05, $05, $05, $05
-.db $01, $01, $01, $04, $04, $04, $04, $15
-.db $01, $01, $09, $09, $09, $09, $09, $15
-.db $01, $06, $06, $06, $0A, $0A, $0A, $0A
-.db $04, $0A, $0A, $0A, $0A, $15, $15, $17
-.db $01, $01, $06, $06, $0A, $0A, $0A, $17
-.db $0D, $0D, $15, $15, $15, $1E, $1E, $30
-.db $05, $0B, $0B, $17, $17, $18, $18, $18
-.db $09, $09, $09, $10, $10, $22, $22, $35
-.db $36, $36, $40, $40, $40, $40, $40, $40
-.db $03, $03, $03, $03, $03, $03, $03, $16
-.db $16, $16, $16, $1D, $1D, $23, $23, $23
-.db $03, $03, $25, $25, $25, $25, $25, $25
-.db $16, $16, $1D, $1D, $1D, $35, $35, $35
-.db $01, $01, $01, $09, $09, $09, $09, $09
-.db $01, $01, $05, $05, $05, $05, $0A, $0A
-.db $03, $03, $03, $12, $12, $12, $12, $12
-.db $15, $15, $15, $15, $16, $16, $16, $16
-.db $09, $09, $10, $10, $16, $16, $18, $1D
-.db $09, $09, $1F, $1F, $1F, $1F, $1F, $1F
-.db $15, $15, $1F, $1F, $23, $23, $25, $25
-.db $26, $26, $26, $26, $26, $26, $26, $26
-.db $1D, $1D, $1D, $1D, $25, $25, $25, $25
-.db $03, $0A, $0A, $10, $10, $16, $18, $18
-.db $1D, $23, $26, $2D, $32, $32, $32, $32
-.db $09, $41, $41, $41, $41, $41, $41, $41
-.db $0A, $42, $42, $42, $42, $42, $42, $42
-.db $01, $01, $01, $01, $01, $01, $01, $01
-.db $14, $14, $14, $14, $14, $14, $14, $14
-.db $15, $15, $15, $15, $15, $15, $15, $15
-.db $29, $29, $29, $29, $29, $29, $29, $29
-.db $26, $26, $26, $26, $26, $26, $26, $26
-.db $24, $24, $24, $24, $24, $24, $24, $24
-.db $36, $36, $36, $36, $36, $36, $36, $36
-.db $14, $14, $14, $14, $14, $14, $14, $14
-.db $13, $13, $13, $13, $13, $13, $13, $13
-.db $20, $20, $20, $20, $20, $20, $20, $20
-.db $29, $29, $29, $29, $29, $29, $29, $29
-.db $30, $30, $30, $30, $30, $30, $30, $30
-.db $0D, $1A, $1A, $1A, $1A, $26, $26, $26
-.db $34, $34, $36, $36, $36, $36, $36, $36
-.db $13, $13, $20, $20, $22, $22, $22, $22
-.db $22, $22, $24, $24, $24, $36, $36, $36
-.db $17, $17, $22, $22, $2C, $2C, $2F, $37
-.db $19, $19, $19, $19, $19, $19, $19, $19
-.db $05, $05, $05, $05, $06, $06, $08, $0C
-.db $0E, $0E, $0E, $0E, $0E, $0E, $0F, $0F
-.db $10, $10, $1C, $1C, $1C, $1C, $1C, $1C
-.db $0C, $0C, $16, $16, $17, $17, $23, $23
-.db $20, $27, $27, $27, $27, $27, $27, $27
-.db $20, $20, $20, $20, $20, $20, $20, $20
-.db $27, $27, $2F, $2F, $2F, $2F, $30, $30
-.db $0F, $30, $32, $32, $32, $32, $32, $32
-.db $08, $08, $10, $10, $39, $39, $39, $39
-.db $05, $05, $1C, $1C, $1C, $1C, $3B, $3B
-.db $30, $30, $39, $39, $3B, $3B, $3B, $3B
-.db $07, $07, $0B, $0B, $0D, $0D, $1B, $1B
-.db $0B, $0B, $1B, $1B, $21, $21, $24, $24
-.db $1B, $1B, $1B, $1B, $1D, $1D, $25, $25
-.db $21, $21, $21, $25, $25, $28, $28, $2A
-.db $0D, $24, $24, $2A, $2A, $2A, $2D, $2D
-.db $1D, $1D, $1D, $1D, $28, $28, $28, $39
-.db $2B, $2B, $2B, $2B, $2B, $2B, $36, $36
-.db $25, $25, $25, $36, $36, $36, $38, $38
-.db $07, $07, $3F, $3F, $3F, $3F, $3F, $3F
-.db $2A, $2A, $3A, $3A, $3A, $3A, $3A, $3A
-.db $2B, $2B, $2D, $2D, $2D, $41, $41, $41
-.db $0D, $0D, $3A, $3A, $41, $41, $41, $41
-.db $1D, $1D, $1D, $1D, $28, $28, $2A, $2A
-.db $25, $25, $2D, $2D, $38, $38, $38, $38
-.db $39, $39, $39, $41, $41, $41, $41, $41
-.db $44, $44, $44, $44, $44, $44, $44, $44
-.db $02, $02, $03, $03, $0B, $0B, $0D, $0D
-.db $09, $09, $0C, $0C, $11, $11, $16, $16
-.db $07, $07, $10, $10, $12, $12, $2B, $2B
-.db $15, $15, $18, $18, $1D, $1D, $1F, $1F
-.db $17, $17, $28, $28, $2A, $2A, $2C, $2C
-.db $22, $22, $25, $25, $26, $26, $2D, $2D
-.db $0B, $0B, $0B, $0B, $0D, $0D, $0D, $1F
-.db $2C, $2C, $2C, $2C, $2C, $2C, $2C, $2C
-.db $18, $18, $1D, $1D, $3B, $3B, $3C, $3C
-.db $25, $25, $2A, $2A, $3D, $3D, $41, $41
-.db $38, $38, $3F, $3F, $40, $40, $42, $42
-.db $11, $11, $37, $37, $37, $37, $37, $37
-.db $2F, $2F, $2F, $2F, $40, $40, $42, $42
-.db $33, $33, $36, $36, $38, $38, $39, $39
-.db $33, $33, $35, $35, $3C, $3C, $3C, $3C
-.db $2A, $2A, $3A, $3A, $3F, $3F, $44, $44
-.db $44, $44, $44, $44, $44, $44, $44, $44
-.db $02, $02, $02, $02, $03, $03, $03, $03
-.db $10, $10, $10, $12, $12, $12, $15, $15
-.db $25, $25, $25, $30, $30, $30, $33, $33
-.db $09, $09, $12, $12, $41, $41, $41, $41
 
-B03_MapEncounterPools:
+; =============================================================
+B03_EncounterPoolData:
+
+; 1
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+
+; 2
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_ManEater
+.db	EnemyID_ManEater
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+
+; 3
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_ManEater
+.db	EnemyID_ManEater
+.db	EnemyID_ManEater
+.db	EnemyID_ManEater
+.db	EnemyID_EvilDead
+
+; 4
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_EvilDead
+
+; 5
+.db	EnemyID_Sworm
+.db	EnemyID_GScorpi
+.db	EnemyID_GScorpi
+.db	EnemyID_GScorpi
+.db	EnemyID_DeadTree
+.db	EnemyID_DeadTree
+.db	EnemyID_DeadTree
+.db	EnemyID_DeadTree
+
+; 6
+.db	EnemyID_ManEater
+.db	EnemyID_DeadTree
+.db	EnemyID_DeadTree
+.db	EnemyID_DeadTree
+.db	EnemyID_DeadTree
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_Manticor
+
+; 7
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_GScorpi
+.db	EnemyID_GScorpi
+.db	EnemyID_DeadTree
+.db	EnemyID_DeadTree
+.db	EnemyID_DeadTree
+.db	EnemyID_Manticor
+
+; 8
+.db	EnemyID_GiantFly
+.db	EnemyID_GiantFly
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_Elephant
+.db	EnemyID_Elephant
+.db	EnemyID_Nessie
+
+; 9
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpius
+.db	EnemyID_Scorpius
+.db	EnemyID_Manticor
+.db	EnemyID_Manticor
+.db	EnemyID_Skeleton
+.db	EnemyID_Skeleton
+.db	EnemyID_Skeleton
+
+; $A
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_GoldLens
+.db	EnemyID_GoldLens
+.db	EnemyID_Wight
+.db	EnemyID_Wight
+.db	EnemyID_Giant
+
+; $B
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Centaur
+.db	EnemyID_Centaur
+.db	EnemyID_Centaur
+.db	EnemyID_Centaur
+.db	EnemyID_Centaur
+.db	EnemyID_Centaur
+
+; $C
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_Tarantul
+
+; $D
+.db	EnemyID_Tarantul
+.db	EnemyID_Tarantul
+.db	EnemyID_Tarantul
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_SkullEn
+.db	EnemyID_SkullEn
+.db	EnemyID_SkullEn
+
+; $E
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+
+; $F
+.db	EnemyID_Tarantul
+.db	EnemyID_Tarantul
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Giant
+.db	EnemyID_Giant
+.db	EnemyID_Giant
+
+; $10
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+
+; $11
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+.db	EnemyID_DeadTree
+.db	EnemyID_DeadTree
+
+; $12
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_WereBat
+.db	EnemyID_WereBat
+.db	EnemyID_WereBat
+.db	EnemyID_WereBat
+.db	EnemyID_WereBat
+
+; $13
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_Tarantul
+.db	EnemyID_Tarantul
+.db	EnemyID_Tarantul
+.db	EnemyID_Tarantul
+
+; $14
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_GoldLens
+.db	EnemyID_GoldLens
+.db	EnemyID_Tarantul
+.db	EnemyID_Tarantul
+.db	EnemyID_Skeleton
+.db	EnemyID_Vampire
+
+; $15
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_Ghoul
+.db	EnemyID_Ghoul
+.db	EnemyID_Ghoul
+.db	EnemyID_Ghoul
+.db	EnemyID_Ghoul
+.db	EnemyID_Ghoul
+
+; $16
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_Ghoul
+.db	EnemyID_Ghoul
+.db	EnemyID_SkullEn
+.db	EnemyID_SkullEn
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+
+; $17
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+
+; $18
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+
+; $19
+.db	EnemyID_WingEye
+.db	EnemyID_DeadTree
+.db	EnemyID_DeadTree
+.db	EnemyID_GoldLens
+.db	EnemyID_GoldLens
+.db	EnemyID_Tarantul
+.db	EnemyID_Skeleton
+.db	EnemyID_Skeleton
+
+; $1A
+.db	EnemyID_Vampire
+.db	EnemyID_SkullEn
+.db	EnemyID_Serpent
+.db	EnemyID_Batalion
+.db	EnemyID_Golem
+.db	EnemyID_Golem
+.db	EnemyID_Golem
+.db	EnemyID_Golem
+
+; $1B
+.db	EnemyID_OwlBear
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+
+; $1C
+.db	EnemyID_DeadTree
+.db	EnemyID_Titan
+.db	EnemyID_Titan
+.db	EnemyID_Titan
+.db	EnemyID_Titan
+.db	EnemyID_Titan
+.db	EnemyID_Titan
+.db	EnemyID_Titan
+
+; $1D
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+.db	EnemyID_Sworm
+
+; $1E
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+
+; $1F
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+
+; $20
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+
+; $21
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+
+; $22
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+
+; $23
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+
+; $24
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+.db	EnemyID_Fishman
+
+; $25
+.db	EnemyID_BigClub
+.db	EnemyID_BigClub
+.db	EnemyID_BigClub
+.db	EnemyID_BigClub
+.db	EnemyID_BigClub
+.db	EnemyID_BigClub
+.db	EnemyID_BigClub
+.db	EnemyID_BigClub
+
+; $26
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+
+; $27
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+.db	EnemyID_Octopus
+
+; $28
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+
+; $29
+.db	EnemyID_GiantFly
+.db	EnemyID_Marman
+.db	EnemyID_Marman
+.db	EnemyID_Marman
+.db	EnemyID_Marman
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+
+; $2A
+.db	EnemyID_Tentacle
+.db	EnemyID_Tentacle
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+
+; $2B
+.db	EnemyID_BigClub
+.db	EnemyID_BigClub
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Wight
+.db	EnemyID_Wight
+.db	EnemyID_Wight
+.db	EnemyID_Wight
+
+; $2C
+.db	EnemyID_Wight
+.db	EnemyID_Wight
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+
+; $2D
+.db	EnemyID_Manticor
+.db	EnemyID_Manticor
+.db	EnemyID_Wight
+.db	EnemyID_Wight
+.db	EnemyID_Zombie
+.db	EnemyID_Zombie
+.db	EnemyID_Sorcerer
+.db	EnemyID_Reaper
+
+; $2E
+.db	EnemyID_AntLion
+.db	EnemyID_AntLion
+.db	EnemyID_AntLion
+.db	EnemyID_AntLion
+.db	EnemyID_AntLion
+.db	EnemyID_AntLion
+.db	EnemyID_AntLion
+.db	EnemyID_AntLion
+
+; $2F
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+.db	EnemyID_GScorpi
+.db	EnemyID_GScorpi
+.db	EnemyID_NFarmer
+.db	EnemyID_EFarmer
+
+; $30
+.db	EnemyID_Crawler
+.db	EnemyID_Crawler
+.db	EnemyID_Crawler
+.db	EnemyID_Crawler
+.db	EnemyID_Crawler
+.db	EnemyID_Crawler
+.db	EnemyID_Barbrian
+.db	EnemyID_Barbrian
+
+; $31
+.db	EnemyID_GoldLens
+.db	EnemyID_GoldLens
+.db	EnemyID_Leech
+.db	EnemyID_Leech
+.db	EnemyID_Leech
+.db	EnemyID_Leech
+.db	EnemyID_Leech
+.db	EnemyID_Leech
+
+; $32
+.db	EnemyID_EFarmer
+.db	EnemyID_EFarmer
+.db	EnemyID_Tarantul
+.db	EnemyID_Tarantul
+.db	EnemyID_Manticor
+.db	EnemyID_Manticor
+.db	EnemyID_SkullEn
+.db	EnemyID_SkullEn
+
+; $33
+.db	EnemyID_Shelfish
+.db	EnemyID_Sandworm
+.db	EnemyID_Sandworm
+.db	EnemyID_Sandworm
+.db	EnemyID_Sandworm
+.db	EnemyID_Sandworm
+.db	EnemyID_Sandworm
+.db	EnemyID_Sandworm
+
+; $34
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+.db	EnemyID_Shelfish
+
+; $35
+.db	EnemyID_Sandworm
+.db	EnemyID_Sandworm
+.db	EnemyID_Sorcerer
+.db	EnemyID_Sorcerer
+.db	EnemyID_Sorcerer
+.db	EnemyID_Sorcerer
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+
+; $36
+.db	EnemyID_Barbrian
+.db	EnemyID_Nessie
+.db	EnemyID_Golem
+.db	EnemyID_Golem
+.db	EnemyID_Golem
+.db	EnemyID_Golem
+.db	EnemyID_Golem
+.db	EnemyID_Golem
+
+; $37
+.db	EnemyID_NFarmer
+.db	EnemyID_NFarmer
+.db	EnemyID_GoldLens
+.db	EnemyID_GoldLens
+.db	EnemyID_Horseman
+.db	EnemyID_Horseman
+.db	EnemyID_Horseman
+.db	EnemyID_Horseman
+
+; $38
+.db	EnemyID_Scorpion
+.db	EnemyID_Scorpion
+.db	EnemyID_Leech
+.db	EnemyID_Leech
+.db	EnemyID_Leech
+.db	EnemyID_Leech
+.db	EnemyID_Amundsen
+.db	EnemyID_Amundsen
+
+; $39
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+.db	EnemyID_Horseman
+.db	EnemyID_Horseman
+.db	EnemyID_Amundsen
+.db	EnemyID_Amundsen
+.db	EnemyID_Amundsen
+.db	EnemyID_Amundsen
+
+; $3A
+.db	EnemyID_BlSlime
+.db	EnemyID_BlSlime
+.db	EnemyID_Scorpius
+.db	EnemyID_Scorpius
+.db	EnemyID_GiantFly
+.db	EnemyID_GiantFly
+.db	EnemyID_Dezorian
+.db	EnemyID_Dezorian
+
+; $3B
+.db	EnemyID_Scorpius
+.db	EnemyID_Scorpius
+.db	EnemyID_Dezorian
+.db	EnemyID_Dezorian
+.db	EnemyID_Executer
+.db	EnemyID_Executer
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+
+; $3C
+.db	EnemyID_Dezorian
+.db	EnemyID_Dezorian
+.db	EnemyID_Dezorian
+.db	EnemyID_Dezorian
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+
+; $3D
+.db	EnemyID_Executer
+.db	EnemyID_Executer
+.db	EnemyID_Executer
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Lich
+.db	EnemyID_Lich
+.db	EnemyID_Stalker
+
+; $3E
+.db	EnemyID_GiantFly
+.db	EnemyID_Ammonite
+.db	EnemyID_Ammonite
+.db	EnemyID_Stalker
+.db	EnemyID_Stalker
+.db	EnemyID_Stalker
+.db	EnemyID_Batalion
+.db	EnemyID_Batalion
+
+; $3F
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Lich
+.db	EnemyID_Lich
+.db	EnemyID_Lich
+.db	EnemyID_Horseman
+
+; $40
+.db	EnemyID_EvilHead
+.db	EnemyID_EvilHead
+.db	EnemyID_EvilHead
+.db	EnemyID_EvilHead
+.db	EnemyID_EvilHead
+.db	EnemyID_EvilHead
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+
+; $41
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Magician
+.db	EnemyID_Magician
+
+; $42
+.db	EnemyID_BlSlime
+.db	EnemyID_BlSlime
+.db	EnemyID_Mammoth
+.db	EnemyID_Mammoth
+.db	EnemyID_Mammoth
+.db	EnemyID_Mammoth
+.db	EnemyID_Mammoth
+.db	EnemyID_Mammoth
+
+; $43
+.db	EnemyID_Stalker
+.db	EnemyID_Stalker
+.db	EnemyID_Frostman
+.db	EnemyID_Frostman
+.db	EnemyID_Frostman
+.db	EnemyID_Frostman
+.db	EnemyID_Frostman
+.db	EnemyID_Frostman
+
+; $44
+.db	EnemyID_EvilHead
+.db	EnemyID_EvilHead
+.db	EnemyID_Batalion
+.db	EnemyID_Batalion
+.db	EnemyID_Batalion
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+
+; $45
+.db	EnemyID_GiantFly
+.db	EnemyID_GiantFly
+.db	EnemyID_Frostman
+.db	EnemyID_Frostman
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+
+; $46
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Lich
+.db	EnemyID_Lich
+.db	EnemyID_Stalker
+.db	EnemyID_Stalker
+
+; $47
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Batalion
+.db	EnemyID_Batalion
+.db	EnemyID_Magician
+.db	EnemyID_Magician
+.db	EnemyID_Magician
+.db	EnemyID_Magician
+
+; $48
+.db	EnemyID_Horseman
+.db	EnemyID_Horseman
+.db	EnemyID_Horseman
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+
+; $49
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+
+; $4A
+.db	EnemyID_GrSlime
+.db	EnemyID_GrSlime
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_Scorpius
+.db	EnemyID_Scorpius
+.db	EnemyID_GiantFly
+.db	EnemyID_GiantFly
+
+; $4B
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_EFarmer
+.db	EnemyID_EFarmer
+.db	EnemyID_RdSlime
+.db	EnemyID_RdSlime
+.db	EnemyID_Tarantul
+.db	EnemyID_Tarantul
+
+; $4C
+.db	EnemyID_BlSlime
+.db	EnemyID_BlSlime
+.db	EnemyID_GoldLens
+.db	EnemyID_GoldLens
+.db	EnemyID_WereBat
+.db	EnemyID_WereBat
+.db	EnemyID_EvilHead
+.db	EnemyID_EvilHead
+
+; $4D
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+.db	EnemyID_Skeleton
+.db	EnemyID_Skeleton
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Ghoul
+.db	EnemyID_Ghoul
+
+; $4E
+.db	EnemyID_Manticor
+.db	EnemyID_Manticor
+.db	EnemyID_Lich
+.db	EnemyID_Lich
+.db	EnemyID_Stalker
+.db	EnemyID_Stalker
+.db	EnemyID_Zombie
+.db	EnemyID_Zombie
+
+; $4F
+.db	EnemyID_Wight
+.db	EnemyID_Wight
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Serpent
+.db	EnemyID_Serpent
+.db	EnemyID_Batalion
+.db	EnemyID_Batalion
+
+; $50
+.db	EnemyID_Scorpius
+.db	EnemyID_Scorpius
+.db	EnemyID_Scorpius
+.db	EnemyID_Scorpius
+.db	EnemyID_GiantFly
+.db	EnemyID_GiantFly
+.db	EnemyID_GiantFly
+.db	EnemyID_Ghoul
+
+; $51
+.db	EnemyID_Zombie
+.db	EnemyID_Zombie
+.db	EnemyID_Zombie
+.db	EnemyID_Zombie
+.db	EnemyID_Zombie
+.db	EnemyID_Zombie
+.db	EnemyID_Zombie
+.db	EnemyID_Zombie
+
+; $52
+.db	EnemyID_Skeleton
+.db	EnemyID_Skeleton
+.db	EnemyID_Vampire
+.db	EnemyID_Vampire
+.db	EnemyID_Amundsen
+.db	EnemyID_Amundsen
+.db	EnemyID_RdDragn
+.db	EnemyID_RdDragn
+
+; $53
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Stalker
+.db	EnemyID_Stalker
+.db	EnemyID_GrDragn
+.db	EnemyID_GrDragn
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+
+; $54
+.db	EnemyID_Magician
+.db	EnemyID_Magician
+.db	EnemyID_Mammoth
+.db	EnemyID_Mammoth
+.db	EnemyID_Centaur
+.db	EnemyID_Centaur
+.db	EnemyID_Titan
+.db	EnemyID_Titan
+
+; $55
+.db	EnemyID_RdSlime
+.db	EnemyID_RdSlime
+.db	EnemyID_Reaper
+.db	EnemyID_Reaper
+.db	EnemyID_Reaper
+.db	EnemyID_Reaper
+.db	EnemyID_Reaper
+.db	EnemyID_Reaper
+
+; $56
+.db	EnemyID_Sorcerer
+.db	EnemyID_Sorcerer
+.db	EnemyID_Sorcerer
+.db	EnemyID_Sorcerer
+.db	EnemyID_Centaur
+.db	EnemyID_Centaur
+.db	EnemyID_Titan
+.db	EnemyID_Titan
+
+; $57
+.db	EnemyID_AndroCop
+.db	EnemyID_AndroCop
+.db	EnemyID_Wyvern
+.db	EnemyID_Wyvern
+.db	EnemyID_Magician
+.db	EnemyID_Magician
+.db	EnemyID_Horseman
+.db	EnemyID_Horseman
+
+; $58
+.db	EnemyID_AndroCop
+.db	EnemyID_AndroCop
+.db	EnemyID_Giant
+.db	EnemyID_Giant
+.db	EnemyID_RdDragn
+.db	EnemyID_RdDragn
+.db	EnemyID_RdDragn
+.db	EnemyID_RdDragn
+
+; $59
+.db	EnemyID_Stalker
+.db	EnemyID_Stalker
+.db	EnemyID_Frostman
+.db	EnemyID_Frostman
+.db	EnemyID_Mammoth
+.db	EnemyID_Mammoth
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+
+; $5A
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+.db	EnemyID_WtDragn
+
+; $5B
+.db	EnemyID_GrSlime
+.db	EnemyID_GrSlime
+.db	EnemyID_GrSlime
+.db	EnemyID_GrSlime
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+.db	EnemyID_WingEye
+
+; $5C
+.db	EnemyID_GoldLens
+.db	EnemyID_GoldLens
+.db	EnemyID_GoldLens
+.db	EnemyID_WereBat
+.db	EnemyID_WereBat
+.db	EnemyID_WereBat
+.db	EnemyID_EvilDead
+.db	EnemyID_EvilDead
+
+; $5D
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Sphinx
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+.db	EnemyID_Nessie
+.db	EnemyID_AndroCop
+.db	EnemyID_AndroCop
+
+; $5E
+.db	EnemyID_OwlBear
+.db	EnemyID_OwlBear
+.db	EnemyID_WereBat
+.db	EnemyID_WereBat
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+.db	EnemyID_Marauder
+; =============================================================
+
+
+; =============================================================
+; Encounter pool ID list when you're in the map
+; =============================================================
+B03_MapEncounterIDList:
 .db $01, $02, $02, $03, $04, $05, $05, $06
 .db $07, $07, $08, $09, $0A, $0A, $06, $0B
 .db $01, $02, $02, $03, $04, $05, $05, $06
@@ -183,6 +1036,8 @@ B03_MapEncounterPools:
 .db $32, $35, $36, $38, $37, $34, $39, $37
 .db $25, $26, $24, $24, $27, $27, $28, $28
 .db $27, $26, $28, $27, $27, $26, $27, $28
+; =============================================================
+
 
 LABEL_B03_85A0:
 .db $00, $00, $03, $03, $03, $03, $03, $04
