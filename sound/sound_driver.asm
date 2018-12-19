@@ -6,7 +6,7 @@ Snd_InitDriver:
 	ld b, $0F
 	ld hl, $C00E
 	xor a
--:	
+-:
 	ld (hl), a
 	ld de, $0018
 	add hl, de
@@ -2891,6 +2891,7 @@ LABEL_B12_A969:
 ; $5B current character name
 ; $5C enemy name
 ; $5D current item name
+; $5E reads 2 byte unsigned number from $C525 and displays it
 ; $60 newline
 ; $61 newpage
 ; $62 terminator
@@ -2972,7 +2973,7 @@ LABEL_B12_B20A:
 .db "BINDINGS.", Dialogue_Terminator63
 
 LABEL_B12_B21D:
-.db Dialogue_EnemyName, " RE", Word_Move, $53, Dialogue_NewLine
+.db Dialogue_EnemyName, " RE", Word_Move, "S", Dialogue_NewLine
 .db Word_The, "BINDINGS.", Dialogue_Terminator63
 
 LABEL_B12_B22F:
@@ -3150,7 +3151,7 @@ LABEL_B12_B5F0:
 .db Word_You, "NEED ", Word_Not, "EQUIP", Word_That, " ITEM.", Dialogue_Terminator65
 
 LABEL_B12_B604:
-.db Word_You, "GAINED ", $5E, Dialogue_NewLine
+.db Word_You, "GAINED ", Dialogue_NumberFromC2C5, Dialogue_NewLine
 .db "EXPERIENCE POINTS.", Dialogue_Terminator65
 
 LABEL_B12_B621:
@@ -3162,7 +3163,7 @@ LABEL_B12_B635:
 .db "A SPELL.", Dialogue_Terminator65
 
 LABEL_B12_B648:
-.db Word_There_Are, " ", $5E, Dialogue_NewLine
+.db Word_There_Are, " ", Dialogue_NumberFromC2C5, Dialogue_NewLine
 .db Word_Mesetas, " INSIDE.", Dialogue_Terminator65
 
 LABEL_B12_B656:
@@ -3293,7 +3294,7 @@ LABEL_B12_B882:
 LABEL_B12_B89A:
 .db Dialogue_CurrentItem, "? LET ME", Dialogue_NewLine
 .db "SEE.....", Dialogue_NewPage
-.db "HOW ABOUT ", $5E, Dialogue_NewLine
+.db "HOW ABOUT ", Dialogue_NumberFromC2C5, Dialogue_NewLine
 .db Word_Mesetas, "?", Dialogue_Terminator62
 
 LABEL_B12_B8BC:
@@ -3305,7 +3306,7 @@ LABEL_B12_B8C8:
 
 LABEL_B12_B8E0:
 .db Word_The, "FEE FOR", Dialogue_NewLine
-.db "HEALING IS ", $5E, Dialogue_NewPage
+.db "HEALING IS ", Dialogue_NumberFromC2C5, Dialogue_NewPage
 .db Word_Mesetas, ". IS ", Word_That, Dialogue_NewLine
 .db "ACCEPTABLE?", Dialogue_Terminator62
 
@@ -3358,14 +3359,14 @@ LABEL_B12_B9E5:
 
 LABEL_B12_B9EE:
 .db Word_That, " REQUIRES", Dialogue_NewLine
-.db $5E, " ", Word_Mesetas, ". O.K.?", Dialogue_Terminator62
+.db Dialogue_NumberFromC2C5, " ", Word_Mesetas, ". O.K.?", Dialogue_Terminator62
 
 LABEL_B12_BA04:
 .db "TO ADVANCE TO", Dialogue_NewLine
 .db Word_The, "NEXT LEVEL,", Dialogue_Terminator65
 
 LABEL_B12_BA1F:
-.db Dialogue_CurrentCharacter, " NEEDS ", $5E, Dialogue_NewLine
+.db Dialogue_CurrentCharacter, " NEEDS ", Dialogue_NumberFromC2C5, Dialogue_NewLine
 .db "EXPERIENCE POINTS.", Dialogue_Terminator65
 
 LABEL_B12_BA3C:
@@ -3381,11 +3382,11 @@ LABEL_B12_BA62:
 .db "A NUMBER.", Dialogue_Terminator62
 
 LABEL_B12_BA82:
-.db Word_You, Word_Select, "ED ", $5E, Dialogue_NewLine
+.db Word_You, Word_Select, "ED ", Dialogue_NumberFromC2C5, Dialogue_NewLine
 .db "IS ", Word_That, " O.K.", Dialogue_Terminator62
 
 LABEL_B12_BA93:
-.db "WELL, SAVING ", $5E, ".", Dialogue_Terminator63
+.db "WELL, SAVING ", Dialogue_NumberFromC2C5, ".", Dialogue_Terminator63
 
 LABEL_B12_BAA3:
 .db "COMPLETED.", Dialogue_Terminator65
@@ -3544,7 +3545,7 @@ LABEL_B12_BE1B:
 .db Word_Select, " A NUMBER.", Dialogue_Terminator62
 
 LABEL_B12_BE35:
-.db "CONTINUING ", Word_Game, " ", $5E, ".", Dialogue_Terminator63
+.db "CONTINUING ", Word_Game, " ", Dialogue_NumberFromC2C5, ".", Dialogue_Terminator63
 
 LABEL_B12_BE45:
 .db "CONTINUE ", Word_Game, "- YES", Word_Delete, "   ", Word_Game, "- NO", Dialogue_Terminator62
@@ -3558,7 +3559,7 @@ LABEL_B12_BE6F:
 .db Word_Select, " A NUMBER.", Dialogue_Terminator62
 
 LABEL_B12_BE82:
-.db Word_Game, " ", $5E, " HAS BEEN", Dialogue_NewLine
+.db Word_Game, " ", Dialogue_NumberFromC2C5, " HAS BEEN", Dialogue_NewLine
 .db Word_Delete, "D.", Dialogue_Terminator65
 
 LABEL_B12_BE93:
