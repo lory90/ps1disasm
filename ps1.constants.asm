@@ -192,6 +192,89 @@
 .define EnemyID_DarkFalz $49
 .define EnemyID_Saccubus $4A
 
+; Dungeons - Some dungeon IDs are shared
+.define DungeonID_MedusaCave 0
+.define DungeonID_GothicTunnel 0
+.define DungeonID_BayaMalayPass 0
+.define DungeonID_TriadaPrison 1
+.define DungeonID_CamineetWarehouse 2
+.define DungeonID_AbionWarehouse 2
+.define DungeonID_MedusaTowerB1F 3
+.define DungeonID_MedusaTower1F 4
+.define DungeonID_MedusaTower2F 5
+.define DungeonID_MedusaTower3F 6
+.define DungeonID_MedusaTower4F 7
+.define DungeonID_MedusaTower5F 8
+.define DungeonID_BayaMalayTowerB3F 8
+.define DungeonID_MedusaTower6F 9
+.define DungeonID_BayaMalayTowerB2F 9
+.define DungeonID_MedusaTower7F $A
+.define DungeonID_ayaMalayTowerB1F $A
+.define DungeonID_BayaMalayTower1F $B
+.define DungeonID_BayaMalayTower2F $C
+.define DungeonID_BayaMalayTower3F $D
+.define DungeonID_BayaMalayTower4F $E
+.define DungeonID_BayaMalayTower5F $F
+.define DungeonID_IalaCaveB3F $10
+.define DungeonID_NaulaCaveB3F $10
+.define DungeonID_IalaCaveB2F $11
+.define DungeonID_NaulaCaveB2F $11
+.define DungeonID_IalaCaveB1F $12
+.define DungeonID_NaulaCaveB1F $12
+.define DungeonID_IalaCave1F $13
+.define DungeonID_NaulaCave1F $13
+.define DungeonID_BayaMalayPrison $14
+.define DungeonID_DrasgowWarehouse $15
+.define DungeonID_BayaMalayPrison $15
+.define DungeonID_DrMadLab $15
+.define DungeonID_BortevoPass $16
+.define DungeonID_IslandTower1F $17
+.define DungeonID_IslandTower2F $18
+.define DungeonID_IslandTower3F $19
+.define DungeonID_IslandTower4F $1A
+.define DungeonID_IslandTower5F $1B
+.define DungeonID_MaharuCaveB2F $1C
+.define DungeonID_MaharuCaveB1F $1D
+.define DungeonID_MaharuCave1F $1E
+.define DungeonID_GovernorPalaceB3F $1F
+.define DungeonID_GovernorPalaceB2F $20
+.define DungeonID_GovernorPalaceB1F $21
+.define DungeonID_PathToGovernor $21
+.define DungeonID_TarzimalCaveB2F $22
+.define DungeonID_TarzimalCaveB1F $23
+.define DungeonID_TarzimalCave1F $24
+.define DungeonID_CasbaCaveB2F $25
+.define DungeonID_CasbaCaveB1F $26
+.define DungeonID_CasbaCave1F $27
+.define DungeonID_SkureTunnel $28
+.define DungeonID_TwintownTunnel $28
+.define DungeonID_FortGuaronB1F $29
+.define DungeonID_FortGuaron1F $2A
+.define DungeonID_CoronaTower1F $2B
+.define DungeonID_CoronaTower2F $2C
+.define DungeonID_CoronaTower3F $2D
+.define DungeonID_CoronaTower4F $2E
+.define DungeonID_DezolisPath1 $2F
+.define DungeonID_DezolisPath5B1F $2F
+.define DungeonID_LacShieldCaveB5F $2F
+.define DungeonID_DezolisPath2 $30
+.define DungeonID_DezolisPath51F $30
+.define DungeonID_LacShieldCaveB4F $30
+.define DungeonID_DezolisPath4 $31
+.define DungeonID_LacShieldCaveB3F $31
+.define DungeonID_DezolisPath3 $32
+.define DungeonID_LacShieldCaveB2F $32
+.define DungeonID_LacShieldCaveB1F $33
+.define DungeonID_LacShieldCave1F $34
+.define DungeonID_AirCastleB4F $35
+.define DungeonID_AirCastleB3F $36
+.define DungeonID_AirCastleB2F $37
+.define DungeonID_AirCastleB1F $38
+.define DungeonID_AirCastle1F $39
+.define DungeonID_AeroPrismCave $3A
+.define DungeonID_CreditsDungeonB1F $3B
+.define DungeonID_CreditsDungeon1F $3C
+
 ; Buttons
 .define	ButtonUp 0
 .define	ButtonDown 1
@@ -403,7 +486,7 @@
 								;	5 = Dungeon key door
 								;	6 = Magically locked door
 								;	7 = Fake wall
-								;	8 = Special object (can be either trap or treasure chest)
+								;	8 = Object (Check out B03_ObjectData)
 								;	$A = Exit up
 								;	$B = Exit down
 								;	$C = Exit door
