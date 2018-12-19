@@ -1674,7 +1674,7 @@ GameMode_Map:
 	jr	z, +
 	xor	a
 	ld	($C2D2), a
-	call	LABEL_5F63
+	call	Map_RunRandomBattles
 	or	a
 	jr	z, +
 	ld	a, $FF
@@ -2084,7 +2084,7 @@ GameMode_Dungeon:
 	xor	a
 	ld	($C2D2), a
 	ld	a, ($C2E4)
-	call	LABEL_5FD8
+	call	Dungeon_GetEncounter
 	or	a
 	ret	z
 	call	LABEL_5FFE
@@ -12854,7 +12854,7 @@ LABEL_5F11:
 	ld hl, LABEL_B18_BF20
 	jr LABEL_5F11
 
-LABEL_5F63:
+Map_RunRandomBattles:
 	ld hl, $FFFF
 	ld (hl), :Bank03
 	ld a, ($C308)
@@ -12926,7 +12926,7 @@ LABEL_5F63:
 	add hl, bc
 	ld a, (hl)
 
-LABEL_5FD8:
+Dungeon_GetEncounter:
 	or a
 	ret z
 	ld hl, $FFFF

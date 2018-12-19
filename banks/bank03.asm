@@ -4238,13 +4238,15 @@ B03_ObjectData:
 
 ; =================================================================
 ; Dungeon transition data
+; 
+; This table determines where you're sent inside a dungeon
 ;
 ; 5 bytes per entry
 ; 	byte 1 = Dungeon ID
 ; 	byte 2 = Coordinates (YX)
-; 	byte 3 = Target Map
-; 	byte 4 = Y position
-; 	byte 5 = X position
+; 	byte 3 = Target Map; $FF means it's a room with an NPC
+; 	byte 4 = Y position; if byte 3 = $FF, it holds the dialogue ID
+; 	byte 5 = X position; if byte 3 = $FF, it holds the sprite index
 ; =================================================================
 B03_DungeonTransitionData:
 .db	$00, $EE, $05, $27, $12
