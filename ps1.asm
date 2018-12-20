@@ -1467,7 +1467,7 @@ __
 	add	a, l
 	ld	l, a
 	ld	h, 0
-	ld	de, $ABC
+	ld	de, LABEL_ABF-3
 	add	hl, de
 	xor	a
 	ld	($C265), a
