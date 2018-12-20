@@ -36,15 +36,15 @@ Bank00:
 
 _START:
 	di
-	im   1
-	ld   sp, System_stack
-	jr   MainSetup
+	im	1
+	ld	sp, System_stack
+	jr	MainSetup
 
 _RST_08H:
-	ld   a, e
-	out  (Port_VDPAddress), a
-	ld   a, d
-	out  (Port_VDPAddress), a
+	ld	a, e
+	out	(Port_VDPAddress), a
+	ld	a, d
+	out	(Port_VDPAddress), a
 	ret
 
 .db $FF
@@ -68,8 +68,8 @@ _RST_30H:
 _RST_38H:
 _IRQ_HANDLER:
 	push	af
-	in   a, (Port_VDPStatus)
-	jp   VInt
+	in	a, (Port_VDPStatus)
+	jp	VInt
 
 
 LABEL_3E:
@@ -88,11 +88,11 @@ LABEL_45:
 	ret
 
 WaitForVInt:
-	ld   ($C208), a
+	ld	($C208), a
 -
-	ld   a, ($C208)
-	or   a
-	jr   nz, -
+	ld	a, ($C208)
+	or	a
+	jr	nz, -
 	ret
 
 
@@ -102,40 +102,40 @@ WaitForVInt:
 ; We get here after the pause button is pressed
 _NMI_HANDLER:
 	push	af
-	ld   a, (Game_mode)
-	cp   $05 ; GameMode_Ship
-	jr   z, LABEL_7A
-	cp   $09 ; GameMode_Map
-	jr   z, LABEL_7A
-	cp   $0B ; GameMode_Dungeon
-	jr   z, LABEL_7A
-	cp   $0D ; GameMode_Interaction
-	jr   nz, LABEL_81
+	ld	a, (Game_mode)
+	cp	$05 ; GameMode_Ship
+	jr	z, LABEL_7A
+	cp	$09 ; GameMode_Map
+	jr	z, LABEL_7A
+	cp	$0B ; GameMode_Dungeon
+	jr	z, LABEL_7A
+	cp	$0D ; GameMode_Interaction
+	jr	nz, LABEL_81
 LABEL_7A:
-	ld   a, (Game_is_paused)
+	ld	a, (Game_is_paused)
 	cpl
-	ld   (Game_is_paused), a
+	ld	(Game_is_paused), a
 LABEL_81:
-	pop  af
+	pop	af
 	retn
 
 MainSetup:
 	di
-	ld   sp, System_stack
-	ld   hl, $FFFC
-	ld   (hl), $80	; Enable ROM write
-	inc  hl
-	ld   (hl), $00	; Page 0 - ROM bank 0
-	inc  hl
-	ld   (hl), $01	; Page 1 - ROM bank 1
-	inc  hl
-	ld   (hl), $02	; Page 2 - ROM bank 2
+	ld	sp, System_stack
+	ld	hl, $FFFC
+	ld	(hl), $80	; Enable ROM write
+	inc	hl
+	ld	(hl), $00	; Page 0 - ROM bank 0
+	inc	hl
+	ld	(hl), $01	; Page 1 - ROM bank 1
+	inc	hl
+	ld	(hl), $02	; Page 2 - ROM bank 2
 
 ; Clear work RAM
-	ld   hl, $C000
-	ld   de, $C001
-	ld   bc, $1FFF
-	ld   (hl), l	; clear byte in $C000
+	ld	hl, $C000
+	ld	de, $C001
+	ld	bc, $1FFF
+	ld	(hl), l	; clear byte in $C000
 	ldir			; then do the rest (until bc = 0)
 
 	call	CallSndInit
@@ -145,12 +145,12 @@ MainSetup:
 	ei
 
 MainGameLoop:
-	ld   hl, Game_mode
-	ld   a, (hl)
-	and  $1F
-	ld   hl, GameModeTbl
+	ld	hl, Game_mode
+	ld	a, (hl)
+	and	$1F
+	ld	hl, GameModeTbl
 	call	GetPtrAndJump
-	jp   MainGameLoop
+	jp	MainGameLoop
 
 
 GameModeTbl:
@@ -177,17 +177,17 @@ GameModeTbl:
 
 
 GetPtrAndJump:
-	add  a, a
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	jp   (hl)
+	add	a, a
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	jp	(hl)
 
 
 PauseLoop:
@@ -204,61 +204,61 @@ VInt:
 	push	hl
 	push	ix
 	push	iy
-	ld   a, ($FFFC)
+	ld	a, ($FFFC)
 	push	af
-	ld   a, ($FFFF)
+	ld	a, ($FFFF)
 	push	af
-	ld   a, $80
-	ld   ($FFFC), a
-	in   a, (Port_IOPort2)
-	and  $10
-	ld   hl, $C20B
-	ld   c, (hl)
-	ld   (hl), a
-	xor  c
-	and  c
-	jp   nz, MainSetup
-	ld   a, ($C20A)
-	or   a
-	jp   nz, LABEL_12A
-	ld   b, $00
+	ld	a, $80
+	ld	($FFFC), a
+	in	a, (Port_IOPort2)
+	and	$10
+	ld	hl, $C20B
+	ld	c, (hl)
+	ld	(hl), a
+	xor	c
+	and	c
+	jp	nz, MainSetup
+	ld	a, ($C20A)
+	or	a
+	jp	nz, LABEL_12A
+	ld	b, $00
 LABEL_126:
 	djnz	LABEL_126
 LABEL_128:
 	djnz	LABEL_128
 LABEL_12A:
-	ld   a, (Game_is_paused)
-	or   a
-	jp   nz, LABEL_2DF
-	ld   a, ($C208)
-	and  $1F
-	ld   hl, LABEL_18F
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	jp   (hl)
+	ld	a, (Game_is_paused)
+	or	a
+	jp	nz, LABEL_2DF
+	ld	a, ($C208)
+	and	$1F
+	ld	hl, LABEL_18F
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	jp	(hl)
 
 
 LABEL_143:
 	xor	a
 	ld	($C208), a
 LABEL_147:
-	pop  af
-	ld   ($FFFF), a
-	pop  af
-	ld   ($FFFC), a
-	pop  iy
-	pop  ix
-	pop  hl
-	pop  de
-	pop  bc
-	pop  af
+	pop	af
+	ld	($FFFF), a
+	pop	af
+	ld	($FFFC), a
+	pop	iy
+	pop	ix
+	pop	hl
+	pop	de
+	pop	bc
+	pop	af
 	ei
 	ret
 
@@ -450,7 +450,7 @@ LABEL_2D0:
 
 LABEL_2DF:
 	call	CallSndMute
-	jp   LABEL_147
+	jp	LABEL_147
 
 
 CallSndUpdate:
@@ -459,14 +459,14 @@ CallSndUpdate:
 	jp	Snd_UpdateAll
 
 CallSndInit:
-	ld   hl, $FFFF
-	ld   (hl), :Bank12
-	jp   Snd_InitDriver
+	ld	hl, $FFFF
+	ld	(hl), :Bank12
+	jp	Snd_InitDriver
 
 CallSndMute:
-	ld   hl, $FFFF
-	ld   (hl), :Bank12
-	jp   Snd_SilencePSG
+	ld	hl, $FFFF
+	ld	(hl), :Bank12
+	jp	Snd_SilencePSG
 
 
 LABEL_2FD:
@@ -483,25 +483,25 @@ LABEL_2FD:
 	jp	FadeIn2
 
 LABEL_318:
-	ld   hl, $0000
+	ld	hl, $0000
 LABEL_31B:
-	in   a, (Port_VDPStatus)
-	or   a
-	jp   p, LABEL_31B
+	in	a, (Port_VDPStatus)
+	or	a
+	jp	p, LABEL_31B
 LABEL_321:
-	in   a, (Port_VDPStatus)
-	or   a
-	jp   p, LABEL_321
+	in	a, (Port_VDPStatus)
+	or	a
+	jp	p, LABEL_321
 LABEL_327:
-	inc  hl
-	in   a, (Port_VDPStatus)
-	or   a
-	jp   p, LABEL_327
-	xor  a
-	ld   de, $0800
+	inc	hl
+	in	a, (Port_VDPStatus)
+	or	a
+	jp	p, LABEL_327
+	xor	a
+	ld	de, $0800
 	sbc  hl, de
 	sbc  a, a
-	ld   ($C20A), a
+	ld	($C20A), a
 	ret
 
 
@@ -519,19 +519,19 @@ ReadJoypad:
 
 LABEL_346:
 	rst  $08
-	ld   a, c
-	or   a
-	jr   z, LABEL_34C
-	inc  b
+	ld	a, c
+	or	a
+	jr	z, LABEL_34C
+	inc	b
 LABEL_34C:
-	ld   a, b
-	ld   b, c
-	ld   c, Port_VDPData
+	ld	a, b
+	ld	b, c
+	ld	c, Port_VDPData
 LABEL_350:
 	outi
-	jp   nz, LABEL_350
+	jp	nz, LABEL_350
 	dec  a
-	jp   nz, LABEL_350
+	jp	nz, LABEL_350
 	ret
 
 
@@ -542,19 +542,19 @@ LABEL_35A:
 
 LABEL_363:
 	rst  $08
-	ld   a, c
-	or   a
-	jr   z, LABEL_369
-	inc  b
+	ld	a, c
+	or	a
+	jr	z, LABEL_369
+	inc	b
 LABEL_369:
-	ld   a, l
-	out  (Port_VDPData), a
+	ld	a, l
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, h
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, h
+	out	(Port_VDPData), a
 	dec  c
-	jr   nz, LABEL_369
+	jr	nz, LABEL_369
 	djnz	LABEL_369
 	ret
 
@@ -584,27 +584,27 @@ LABEL_377:
 LABEL_390:
 	push	bc
 	rst  $08
-	ld   b, c
-	ld   c, $BE
+	ld	b, c
+	ld	c, $BE
 LABEL_395:
 	outi
-	jp   nz, LABEL_395
+	jp	nz, LABEL_395
 	ex   de, hl
-	ld   bc, $40
-	add  hl, bc
+	ld	bc, $40
+	add	hl, bc
 	ex   de, hl
-	pop  bc
+	pop	bc
 	djnz	LABEL_390
 	ret
 
 LABEL_3A4:
-	ld   hl, LABEL_3B9
-	ld   bc, $14BF
+	ld	hl, LABEL_3B9
+	ld	bc, $14BF
 	otir
-	ld   a, (LABEL_3B9)
-	ld   ($C200), a
-	ld   a, (LABEL_3B9+2)
-	ld   ($C201), a
+	ld	a, (LABEL_3B9)
+	ld	($C200), a
+	ld	a, (LABEL_3B9+2)
+	ld	($C201), a
 	ret
 
 
@@ -652,45 +652,45 @@ LABEL_3DA:
 
 
 LABEL_3FA:
-	ld   b, $04
+	ld	b, $04
 LABEL_3FC:
 	push	bc
 	push	de
 	call	LABEL_407
-	pop  de
-	inc  de
-	pop  bc
+	pop	de
+	inc	de
+	pop	bc
 	djnz	LABEL_3FC
 	ret
 
 LABEL_407:
-	ld   a, (hl)
-	inc  hl
-	or   a
+	ld	a, (hl)
+	inc	hl
+	or	a
 	ret  z
 
-	ld   c, a
-	and  $7F
-	ld   b, a
-	ld   a, c
-	and  $80
+	ld	c, a
+	and	$7F
+	ld	b, a
+	ld	a, c
+	and	$80
 LABEL_412:
 	di
 	rst  $08
-	ld   a, (hl)
-	out  (Port_VDPData), a
+	ld	a, (hl)
+	out	(Port_VDPData), a
 	ei
-	jp   z, LABEL_41C
-	inc  hl
+	jp	z, LABEL_41C
+	inc	hl
 LABEL_41C:
-	inc  de
-	inc  de
-	inc  de
-	inc  de
+	inc	de
+	inc	de
+	inc	de
+	inc	de
 	djnz	LABEL_412
-	jp   nz, LABEL_407
-	inc  hl
-	jp   LABEL_407
+	jp	nz, LABEL_407
+	inc	hl
+	jp	LABEL_407
 
 
 
@@ -732,136 +732,136 @@ LABEL_429:
 
 
 LABEL_44C:
-	or   a
-	ld   hl, $0000
+	or	a
+	ld	hl, $0000
 	rl   e
 	rl   d
-	jr   nc, LABEL_45A
-	add  hl, bc
-	jr   nc, LABEL_45A
-	inc  de
+	jr	nc, LABEL_45A
+	add	hl, bc
+	jr	nc, LABEL_45A
+	inc	de
 LABEL_45A:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_465
-	add  hl, bc
-	jr   nc, LABEL_465
-	inc  de
+	jr	nc, LABEL_465
+	add	hl, bc
+	jr	nc, LABEL_465
+	inc	de
 LABEL_465:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_470
-	add  hl, bc
-	jr   nc, LABEL_470
-	inc  de
+	jr	nc, LABEL_470
+	add	hl, bc
+	jr	nc, LABEL_470
+	inc	de
 LABEL_470:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_47B
-	add  hl, bc
-	jr   nc, LABEL_47B
-	inc  de
+	jr	nc, LABEL_47B
+	add	hl, bc
+	jr	nc, LABEL_47B
+	inc	de
 LABEL_47B:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_486
-	add  hl, bc
-	jr   nc, LABEL_486
-	inc  de
+	jr	nc, LABEL_486
+	add	hl, bc
+	jr	nc, LABEL_486
+	inc	de
 LABEL_486:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_491
-	add  hl, bc
-	jr   nc, LABEL_491
-	inc  de
+	jr	nc, LABEL_491
+	add	hl, bc
+	jr	nc, LABEL_491
+	inc	de
 LABEL_491:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_49C
-	add  hl, bc
-	jr   nc, LABEL_49C
-	inc  de
+	jr	nc, LABEL_49C
+	add	hl, bc
+	jr	nc, LABEL_49C
+	inc	de
 LABEL_49C:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_4A7
-	add  hl, bc
-	jr   nc, LABEL_4A7
-	inc  de
+	jr	nc, LABEL_4A7
+	add	hl, bc
+	jr	nc, LABEL_4A7
+	inc	de
 LABEL_4A7:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_4B2
-	add  hl, bc
-	jr   nc, LABEL_4B2
-	inc  de
+	jr	nc, LABEL_4B2
+	add	hl, bc
+	jr	nc, LABEL_4B2
+	inc	de
 LABEL_4B2:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_4BD
-	add  hl, bc
-	jr   nc, LABEL_4BD
-	inc  de
+	jr	nc, LABEL_4BD
+	add	hl, bc
+	jr	nc, LABEL_4BD
+	inc	de
 LABEL_4BD:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_4C8
-	add  hl, bc
-	jr   nc, LABEL_4C8
-	inc  de
+	jr	nc, LABEL_4C8
+	add	hl, bc
+	jr	nc, LABEL_4C8
+	inc	de
 LABEL_4C8:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_4D3
-	add  hl, bc
-	jr   nc, LABEL_4D3
-	inc  de
+	jr	nc, LABEL_4D3
+	add	hl, bc
+	jr	nc, LABEL_4D3
+	inc	de
 LABEL_4D3:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_4DE
-	add  hl, bc
-	jr   nc, LABEL_4DE
-	inc  de
+	jr	nc, LABEL_4DE
+	add	hl, bc
+	jr	nc, LABEL_4DE
+	inc	de
 LABEL_4DE:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_4E9
-	add  hl, bc
-	jr   nc, LABEL_4E9
-	inc  de
+	jr	nc, LABEL_4E9
+	add	hl, bc
+	jr	nc, LABEL_4E9
+	inc	de
 LABEL_4E9:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
-	jr   nc, LABEL_4F4
-	add  hl, bc
-	jr   nc, LABEL_4F4
-	inc  de
+	jr	nc, LABEL_4F4
+	add	hl, bc
+	jr	nc, LABEL_4F4
+	inc	de
 LABEL_4F4:
-	add  hl, hl
+	add	hl, hl
 	rl   e
 	rl   d
 	ret  nc
 
-	add  hl, bc
+	add	hl, bc
 	ret  nc
 
-	inc  de
+	inc	de
 	ret
 
 
@@ -1035,27 +1035,27 @@ LABEL_4FE:
 
 UpdateRNGSeed:
 	push	hl
-	ld   hl, (RNG_seed)
-	ld   a, h
+	ld	hl, (RNG_seed)
+	ld	a, h
 	rrca
 	rrca
-	xor  h
+	xor	h
 	rrca
-	xor  l
-	rrca
-	rrca
+	xor	l
 	rrca
 	rrca
-	xor  l
+	rrca
+	rrca
+	xor	l
 	rra
-	adc  hl, hl
-	jr   nz, LABEL_5C8
-	ld   hl, $733C
+	adc	hl, hl
+	jr	nz, LABEL_5C8
+	ld	hl, $733C
 LABEL_5C8:
-	ld   a, r
-	xor  l
-	ld   (RNG_seed), hl
-	pop  hl
+	ld	a, r
+	xor	l
+	ld	(RNG_seed), hl
+	pop	hl
 	ret
 
 
@@ -1292,34 +1292,34 @@ LABEL_7BA:
 .db $2B, $2A, $25, $27, $3B, $01, $3C, $34, $2F, $3C
 
 LABEL_7DA:
-	ld   a, $08
-	ld   ($FFFC), a
-	ld   bc, $1000
+	ld	a, $08
+	ld	($FFFC), a
+	ld	bc, $1000
 LABEL_7E2:
 	push	bc
-	ld   hl, $8001
-	ld   de, LABEL_807+1
-	ld   bc, $20
+	ld	hl, $8001
+	ld	de, LABEL_807+1
+	ld	bc, $20
 LABEL_7EC:
-	ld   a, (de)
-	inc  de
+	ld	a, (de)
+	inc	de
 	cpi
-	jr   nz, LABEL_803
-	jp   pe, LABEL_7EC
-	pop  bc
+	jr	nz, LABEL_803
+	jp	pe, LABEL_7EC
+	pop	bc
 LABEL_7F6:
 	djnz	LABEL_7E2
-	ld   a, c
-	cp   $08
-	jr   nc, LABEL_847
-	ld   a, $80
-	ld   ($FFFC), a
+	ld	a, c
+	cp	$08
+	jr	nc, LABEL_847
+	ld	a, $80
+	ld	($FFFC), a
 	ret
 
 LABEL_803:
-	pop  bc
-	inc  c
-	jr   LABEL_7F6
+	pop	bc
+	inc	c
+	jr	LABEL_7F6
 
 
 LABEL_807:
@@ -1329,21 +1329,21 @@ LABEL_807:
 .db	"NAKA YUJI"
 
 LABEL_847:
-	ld   hl, $8000
-	ld   de, $8001
-	ld   bc, $1FFB
-	ld   (hl), l
+	ld	hl, $8000
+	ld	de, $8001
+	ld	bc, $1FFB
+	ld	(hl), l
 	ldir
-	ld   hl, LABEL_3AC4
-	ld   de, $8100
-	ld   bc, $D8
+	ld	hl, LABEL_3AC4
+	ld	de, $8100
+	ld	bc, $D8
 	ldir
-	ld   hl, LABEL_807
-	ld   de, $8000
-	ld   bc, $40
+	ld	hl, LABEL_807
+	ld	de, $8000
+	ld	bc, $40
 	ldir
-	ld   a, $80
-	ld   ($FFFC), a
+	ld	a, $80
+	ld	($FFFC), a
 	ret
 
 
@@ -2166,61 +2166,61 @@ LABEL_FF3:
 	jp	LABEL_6AE5
 
 LABEL_100F:
-	ld   a, ($C2E6)
-	cp   $48
-	ld   c, $92
-	jr   z, LABEL_101E
-	cp   $49
-	jr   z, LABEL_1022
-	ld   c, $89
+	ld	a, ($C2E6)
+	cp	$48
+	ld	c, $92
+	jr	z, LABEL_101E
+	cp	$49
+	jr	z, LABEL_1022
+	ld	c, $89
 LABEL_101E:
-	ld   a, c
-	ld   ($C004), a
+	ld	a, c
+	ld	($C004), a
 LABEL_1022:
-	ld   hl, $C2AB
-	ld   b, $0C
+	ld	hl, $C2AB
+	ld	b, $0C
 LABEL_1027:
-	ld   a, b
+	ld	a, b
 	dec  a
-	ld   (hl), a
+	ld	(hl), a
 	dec  hl
 	djnz	LABEL_1027
-	xor  a
-	ld   ($C2EF), a
+	xor	a
+	ld	($C2EF), a
 	call	LABEL_30ED
-	ld   b, $04
+	ld	b, $04
 LABEL_1036:
-	ld   a, b
+	ld	a, b
 	dec  a
 	call	IsCharacterAlive
-	jp   nz, LABEL_1043
+	jp	nz, LABEL_1043
 	djnz	LABEL_1036
-	jp   LABEL_1656
+	jp	LABEL_1656
 
 LABEL_1043:
-	ld   b, $04
+	ld	b, $04
 LABEL_1045:
-	ld   a, b
+	ld	a, b
 	dec  a
 	call	IsCharacterAlive
-	inc  hl
-	ld   a, (hl)
-	or   a
-	jp   nz, LABEL_1055
+	inc	hl
+	ld	a, (hl)
+	or	a
+	jp	nz, LABEL_1055
 	djnz	LABEL_1045
-	jp   LABEL_1656
+	jp	LABEL_1656
 
 LABEL_1055:
-	ld   hl, $C2AC
-	ld   de, $C2AD
-	ld   bc, $000F
-	ld   (hl), $00
+	ld	hl, $C2AC
+	ld	de, $C2AD
+	ld	bc, $000F
+	ld	(hl), $00
 	ldir
-	ld   a, $FF
-	ld   ($C29D), a
-	xor  a
-	ld   ($C267), a
-	ld   ($C2D4), a
+	ld	a, $FF
+	ld	($C29D), a
+	xor	a
+	ld	($C267), a
+	ld	($C2D4), a
 	call	LABEL_30C3
 	call	LABEL_2ED9
 
@@ -3003,22 +3003,22 @@ LABEL_15C2:
 LABEL_15D9:
 	call	LABEL_319E
 LABEL_15DC:
-	ld   hl, $C800
-	ld   de, $C801
-	ld   bc, $00FF
-	ld   (hl), $00
+	ld	hl, $C800
+	ld	de, $C801
+	ld	bc, $00FF
+	ld	(hl), $00
 	ldir
 	call	LABEL_576A
-	ld   a, (Interaction_Type)
-	or   a
-	jp   nz, LABEL_15F9
+	ld	a, (Interaction_Type)
+	or	a
+	jp	nz, LABEL_15F9
 	call	LABEL_6B3A
-	jp   LABEL_15FC
+	jp	LABEL_15FC
 
 LABEL_15F9:
 	call	LABEL_3D36
 LABEL_15FC:
-	ld   a, $10
+	ld	a, $10
 	call	WaitForVInt
 	ret
 
@@ -3074,25 +3074,25 @@ LABEL_163E:
 	jp	LABEL_688C
 
 LABEL_1656:
-	ld   a, ($C2E6)
-	cp   $31
-	jr   nz, LABEL_1663
-	ld   a, $D8
-	ld   ($C004), a
+	ld	a, ($C2E6)
+	cp	$31
+	jr	nz, LABEL_1663
+	ld	a, $D8
+	ld	($C004), a
 	ret
 
 LABEL_1663:
-	cp   $46
-	jr   nz, LABEL_1671
-	ld   hl, $C230
-	ld   b, $10
+	cp	$46
+	jr	nz, LABEL_1671
+	ld	hl, $C230
+	ld	b, $10
 LABEL_166C:
-	ld   (hl), $30
-	inc  hl
+	ld	(hl), $30
+	inc	hl
 	djnz	LABEL_166C
 LABEL_1671:
-	ld   a, $AF
-	ld   ($C004), a
+	ld	a, $AF
+	ld	($C004), a
 	call	LABEL_15D9
 
 LABEL_1679:
@@ -3125,28 +3125,28 @@ LABEL_1688:
 	jp	LABEL_28DB
 
 LABEL_16B2:
-	ld   hl, $FFFF
-	ld   (hl), :Bank20
-	ld   hl, LABEL_B20_8000
-	ld   de, $C258
-	ld   bc, $0008
+	ld	hl, $FFFF
+	ld	(hl), :Bank20
+	ld	hl, LABEL_B20_8000
+	ld	de, $C258
+	ld	bc, $0008
 	ldir
-	ld   hl, $C240
-	ld   de, $C220
-	ld   bc, $0020
+	ld	hl, $C240
+	ld	de, $C220
+	ld	bc, $0020
 	ldir
-	ld   hl, LABEL_B20_8008
-	ld   de, $6000
+	ld	hl, LABEL_B20_8008
+	ld	de, $6000
 	call	LABEL_3FA
-	ld   hl, $C800
-	ld   de, $C801
-	ld   bc, $00FF
-	ld   (hl), $00
+	ld	hl, $C800
+	ld	de, $C801
+	ld	bc, $00FF
+	ld	(hl), $00
 	ldir
-	ld   a, $0D
-	ld   ($C800), a
+	ld	a, $0D
+	ld	($C800), a
 	call	LABEL_576A
-	ld   a, $16
+	ld	a, $16
 	call	WaitForVInt
 	ret
 
@@ -3376,38 +3376,38 @@ IsCharacterAlive_FromC267:
 
 IsCharacterAlive:
 	push	af
-	add  a, a
-	add  a, a
-	add  a, a
-	add  a, a
-	ld   hl, Char_stats
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
-	pop  af
+	add	a, a
+	add	a, a
+	add	a, a
+	add	a, a
+	ld	hl, Char_stats
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
+	pop	af
 	bit  0, (hl)
 	ret
 
 LABEL_188E:
 	push	hl
 	call	IsCharacterAlive
-	pop  hl
+	pop	hl
 	ret  nz
 
 	push	af
 	push	bc
 	push	de
 	push	hl
-	ld   (CurrentCharacter), a
-	ld   hl, LABEL_B12_B730
+	ld	(CurrentCharacter), a
+	ld	hl, LABEL_B12_B730
 	call	ShowDialogue_B12
 	call	LABEL_3464
-	pop  hl
-	pop  de
-	pop  bc
-	pop  af
+	pop	hl
+	pop	de
+	pop	bc
+	pop	af
 	ret
 
 
@@ -3931,9 +3931,9 @@ LABEL_1BCE:
 	ret
 
 LABEL_1BE1:
-	xor  a
-	ld   ($C29D), a
-	ld   ($C2D8), a
+	xor	a
+	ld	($C29D), a
+	ld	($C2D8), a
 	call	LABEL_36DD
 	call	LABEL_2ED9
 
@@ -4029,9 +4029,9 @@ PlayerMenu_OptionTbl:
 PlayerMenu_Stats:
 	call	LABEL_3665
 	bit  Button_1, c
-	jr   nz, LABEL_1CDC
+	jr	nz, LABEL_1CDC
 	call	LABEL_188E
-	jr   z, LABEL_1CDC
+	jr	z, LABEL_1CDC
 	push	af
 	call	LABEL_3707
 	call	LABEL_37CF
@@ -4063,7 +4063,7 @@ LABEL_1CD6:
 	call	LABEL_374D
 
 LABEL_1CDC:
-	jp   LABEL_36BB
+	jp	LABEL_36BB
 
 
 PlayerMenu_Save:
@@ -5792,7 +5792,7 @@ LABEL_28C5:
 	jp LABEL_3464
 
 LABEL_28DB:
-	ld   hl, LABEL_B12_B656
+	ld	hl, LABEL_B12_B656
 	call	ShowDialogue_B12
 	call	LABEL_37A3
 	push	af
@@ -6341,81 +6341,81 @@ ShowYesNoPrompt:
 	ret
 
 WaitForButton1Or2:
-	ld   a, $08
+	ld	a, $08
 	call	WaitForVInt
-	ld   a, (Ctrl_1_pressed)
-	and  Button_1_Mask|Button_2_Mask
-	jp   z, WaitForButton1Or2
+	ld	a, (Ctrl_1_pressed)
+	and	Button_1_Mask|Button_2_Mask
+	jp	z, WaitForButton1Or2
 	ret
 
 LABEL_2D33:
-	ld   b, $1E
-	jr   LABEL_2D39
+	ld	b, $1E
+	jr	LABEL_2D39
 
 LABEL_2D37:
 	ld	b, $B4
 
 LABEL_2D39:
-	ld   a, $08
+	ld	a, $08
 	call	WaitForVInt
-	ld   a, (Ctrl_1_pressed)
-	and  Button_1_Mask|Button_2_Mask
+	ld	a, (Ctrl_1_pressed)
+	and	Button_1_Mask|Button_2_Mask
 	ret  nz
 
 	djnz	LABEL_2D39
 	ret
 
 LABEL_2D47:
-	ld   b, $D0
+	ld	b, $D0
 LABEL_2D49:
-	ld   a, $08
+	ld	a, $08
 	call	WaitForVInt
 	djnz	LABEL_2D49
 	ret
 
 CheckOptionSelect:
-	ld   a, $FF
-	ld   ($C268), a
-	ld   hl, $0000
-	ld   ($C26B), hl
-	xor  a
-	ld   ($C26D), a
+	ld	a, $FF
+	ld	($C268), a
+	ld	hl, $0000
+	ld	($C26B), hl
+	xor	a
+	ld	($C26D), a
 OptionSelect_Loop:
-	ld   a, $08
+	ld	a, $08
 	call	WaitForVInt
-	ld   a, (Ctrl_1_pressed)
-	and  ButtonUp_Mask|ButtonDown_Mask
-	jp   z, LABEL_2D8B
-	ld   c, a
-	ld   hl, Option_total_num
-	ld   a, ($C26B)
+	ld	a, (Ctrl_1_pressed)
+	and	ButtonUp_Mask|ButtonDown_Mask
+	jp	z, LABEL_2D8B
+	ld	c, a
+	ld	hl, Option_total_num
+	ld	a, ($C26B)
 	bit  ButtonUp, c
-	jr   z, LABEL_2D7D
-	sub  $01
-	jr   nc, LABEL_2D7D
-	ld   a, (hl)
+	jr	z, LABEL_2D7D
+	sub	$01
+	jr	nc, LABEL_2D7D
+	ld	a, (hl)
 LABEL_2D7D:
 	bit  ButtonDown, c
-	jr   z, LABEL_2D88
-	inc  a
-	cp   (hl)
-	jr   c, LABEL_2D88
-	jr   z, LABEL_2D88
-	xor  a
+	jr	z, LABEL_2D88
+	inc	a
+	cp	(hl)
+	jr	c, LABEL_2D88
+	jr	z, LABEL_2D88
+	xor	a
 LABEL_2D88:
-	ld   ($C26B), a
+	ld	($C26B), a
 LABEL_2D8B:
-	ld   a, (Ctrl_1_pressed)
-	and  Button_1_Mask|Button_2_Mask
-	jp   z, OptionSelect_Loop
-	ld   c, a
-	xor  a
-	ld   ($C26D), a
-	ld   a, $08
+	ld	a, (Ctrl_1_pressed)
+	and	Button_1_Mask|Button_2_Mask
+	jp	z, OptionSelect_Loop
+	ld	c, a
+	xor	a
+	ld	($C26D), a
+	ld	a, $08
 	call	WaitForVInt
-	xor  a
-	ld   ($C268), a
-	ld   a, ($C26B)
+	xor	a
+	ld	($C268), a
+	ld	a, ($C26B)
 	ret
 
 
@@ -6707,64 +6707,64 @@ LABEL_2FD8:
 	push	de
 	push	af
 	rst  $08
-	ld   b, $10
-	jp   LABEL_2FE7
+	ld	b, $10
+	jp	LABEL_2FE7
 
 LABEL_2FE1:
 	di
 	push	de
 	push	af
 	rst  $08
-	ld   b, $08
+	ld	b, $08
 LABEL_2FE7:
-	ld   a, (hl)
-	out  (Port_VDPData), a
-	inc  hl
+	ld	a, (hl)
+	out	(Port_VDPData), a
+	inc	hl
 	djnz	LABEL_2FE7
-	pop  af
-	ld   bc, $C010
-	ld   d, $FF
+	pop	af
+	ld	bc, $C010
+	ld	d, $FF
 LABEL_2FF3:
-	sub  $64
-	inc  d
-	jr   nc, LABEL_2FF3
-	add  a, $64
-	ld   l, a
-	ld   a, d
+	sub	$64
+	inc	d
+	jr	nc, LABEL_2FF3
+	add	a, $64
+	ld	l, a
+	ld	a, d
 	call	LABEL_3645
-	ld   d, $FF
-	ld   a, l
+	ld	d, $FF
+	ld	a, l
 LABEL_3002:
-	sub  $0A
-	inc  d
-	jr   nc, LABEL_3002
-	add  a, $0A
-	ld   l, a
-	ld   a, d
+	sub	$0A
+	inc	d
+	jr	nc, LABEL_3002
+	add	a, $0A
+	ld	l, a
+	ld	a, d
 	call	LABEL_3645
-	ld   d, $FF
-	ld   a, l
+	ld	d, $FF
+	ld	a, l
 LABEL_3011:
-	sub  $01
-	inc  d
-	jr   nc, LABEL_3011
-	ld   a, d
-	ld   bc, $C110
+	sub	$01
+	inc	d
+	jr	nc, LABEL_3011
+	ld	a, d
+	ld	bc, $C110
 	call	LABEL_3645
 	push	af
-	pop  af
-	ld   a, $F3
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, $F3
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $13
-	out  (Port_VDPData), a
-	pop  de
-	ld   hl, $0040
-	add  hl, de
+	pop	af
+	ld	a, $13
+	out	(Port_VDPData), a
+	pop	de
+	ld	hl, $0040
+	add	hl, de
 	ex   de, hl
 	ei
-	ld   a, $0A
+	ld	a, $0A
 	call	WaitForVInt
 	ret
 
@@ -6773,72 +6773,72 @@ LABEL_3036:
 	push	de
 	push	bc
 	rst  $08
-	ld   b, $0C
+	ld	b, $0C
 LABEL_303C:
-	ld   a, (hl)
-	out  (Port_VDPData), a
-	inc  hl
+	ld	a, (hl)
+	out	(Port_VDPData), a
+	inc	hl
 	djnz	LABEL_303C
-	pop  hl
-	ld   bc, $C010
-	ld   de, $2710
-	xor  a
+	pop	hl
+	ld	bc, $C010
+	ld	de, $2710
+	xor	a
 	dec  a
 LABEL_304B:
 	sbc  hl, de
-	inc  a
-	jr   nc, LABEL_304B
-	add  hl, de
+	inc	a
+	jr	nc, LABEL_304B
+	add	hl, de
 	call	LABEL_3645
-	ld   de, $03E8
-	ld   a, $FF
+	ld	de, $03E8
+	ld	a, $FF
 LABEL_3059:
 	sbc  hl, de
-	inc  a
-	jr   nc, LABEL_3059
-	add  hl, de
+	inc	a
+	jr	nc, LABEL_3059
+	add	hl, de
 	call	LABEL_3645
-	ld   de, $0064
-	ld   a, $FF
+	ld	de, $0064
+	ld	a, $FF
 LABEL_3067:
 	sbc  hl, de
-	inc  a
-	jr   nc, LABEL_3067
-	add  hl, de
+	inc	a
+	jr	nc, LABEL_3067
+	add	hl, de
 	call	LABEL_3645
-	ld   d, $FF
-	ld   a, l
+	ld	d, $FF
+	ld	a, l
 LABEL_3073:
-	sub  $0A
-	inc  d
-	jr   nc, LABEL_3073
-	add  a, $0A
-	ld   l, a
-	ld   a, d
+	sub	$0A
+	inc	d
+	jr	nc, LABEL_3073
+	add	a, $0A
+	ld	l, a
+	ld	a, d
 	call	LABEL_3645
-	ld   d, $FF
-	ld   a, l
+	ld	d, $FF
+	ld	a, l
 LABEL_3082:
-	sub  $01
-	inc  d
-	jr   nc, LABEL_3082
-	ld   a, d
-	ld   bc, $C110
+	sub	$01
+	inc	d
+	jr	nc, LABEL_3082
+	ld	a, d
+	ld	bc, $C110
 	call	LABEL_3645
 	push	af
-	pop  af
-	ld   a, $F3
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, $F3
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $13
-	out  (Port_VDPData), a
-	pop  de
-	ld   hl, $0040
-	add  hl, de
+	pop	af
+	ld	a, $13
+	out	(Port_VDPData), a
+	pop	de
+	ld	hl, $0040
+	add	hl, de
 	ex   de, hl
 	ei
-	ld   a, $0A
+	ld	a, $0A
 	call	WaitForVInt
 	ret
 
@@ -6856,12 +6856,12 @@ LABEL_30B7:
 	jp LABEL_3A57
 
 LABEL_30C3:
-	ld   hl, $D8A4
-	ld   de, $7842
-	ld   bc, $0B0C
+	ld	hl, $D8A4
+	ld	de, $7842
+	ld	bc, $0B0C
 	call	LABEL_3AA6
-	ld   hl, LABEL_B27_B56B
-	jp   LABEL_3A57
+	ld	hl, LABEL_B27_B56B
+	jp	LABEL_3A57
 
 
 LABEL_30D5:
@@ -6877,51 +6877,51 @@ LABEL_30E1:
 	jp LABEL_3A57
 
 LABEL_30ED:
-	ld   hl, $D928
-	ld   de, $781C
-	ld   bc, $0414
+	ld	hl, $D928
+	ld	de, $781C
+	ld	bc, $0414
 	call	LABEL_3AA6
-	ld   hl, $D978
-	ld   de, $7830
-	ld   bc, $0A10
+	ld	hl, $D978
+	ld	de, $7830
+	ld	bc, $0A10
 	call	LABEL_3AA6
 
 LABEL_3105:
-	ld   hl, LABEL_B27_BACF
-	ld   de, $781C
-	ld   bc, $0114
+	ld	hl, LABEL_B27_BACF
+	ld	de, $781C
+	ld	bc, $0114
 	call	LABEL_3A83
-	ld   hl, CurrentBattle_EnemyName
-	ld   c, $00
+	ld	hl, CurrentBattle_EnemyName
+	ld	c, $00
 	call	LABEL_315C
-	ld   c, $01
+	ld	c, $01
 	call	LABEL_315C
-	ld   hl, LABEL_B27_BAE3
-	ld   bc, $0114
+	ld	hl, LABEL_B27_BAE3
+	ld	bc, $0114
 	call	LABEL_3A83
-	ld   a, ($C2E6)
-	cp   $49
+	ld	a, ($C2E6)
+	cp	$49
 	ret  z
 
-	ld   hl, LABEL_B27_B4AB
-	ld   de, $7830
-	ld   bc, $0110
+	ld	hl, LABEL_B27_B4AB
+	ld	de, $7830
+	ld	bc, $0110
 	call	LABEL_3A57
-	ld   ix, $C440
-	ld   a, ($C2C7)
-	ld   b, a
+	ld	ix, $C440
+	ld	a, ($C2C7)
+	ld	b, a
 LABEL_3141:
 	push	bc
-	ld   hl, LABEL_30A7
-	ld   a, (ix+1)
+	ld	hl, LABEL_30A7
+	ld	a, (ix+1)
 	call	LABEL_2FE1
-	ld   bc, $0010
-	add  ix, bc
-	pop  bc
+	ld	bc, $0010
+	add	ix, bc
+	pop	bc
 	djnz	LABEL_3141
-	ld   hl, LABEL_B27_B49B
-	ld   bc, $0110
-	jp   LABEL_3A57
+	ld	hl, LABEL_B27_B49B
+	ld	bc, $0110
+	jp	LABEL_3A57
 
 LABEL_315C:
 	di
@@ -6930,61 +6930,61 @@ LABEL_315C:
 	push	de
 	rst  $08
 	push	af
-	pop  af
-	ld   a, $F3
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, $F3
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $11
-	out  (Port_VDPData), a
-	ld   b, $08
+	pop	af
+	ld	a, $11
+	out	(Port_VDPData), a
+	ld	b, $08
 LABEL_316F:
-	ld   a, (hl)
-	sub  $20
-	add  a, a
-	add  a, c
-	ld   de, LABEL_7D17
-	add  a, e
-	ld   e, a
-	adc  a, d
-	sub  e
-	ld   d, a
-	ld   a, (de)
-	out  (Port_VDPData), a
+	ld	a, (hl)
+	sub	$20
+	add	a, a
+	add	a, c
+	ld	de, LABEL_7D17
+	add	a, e
+	ld	e, a
+	adc	a, d
+	sub	e
+	ld	d, a
+	ld	a, (de)
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $10
-	out  (Port_VDPData), a
-	inc  hl
+	pop	af
+	ld	a, $10
+	out	(Port_VDPData), a
+	inc	hl
 	djnz	LABEL_316F
 	push	af
-	pop  af
-	ld   a, $F3
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, $F3
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $13
-	out  (Port_VDPData), a
-	pop  de
-	ld   hl, $0040
-	add  hl, de
+	pop	af
+	ld	a, $13
+	out	(Port_VDPData), a
+	pop	de
+	ld	hl, $0040
+	add	hl, de
 	ex   de, hl
-	pop  hl
-	pop  bc
+	pop	hl
+	pop	bc
 	ei
 	ret
 
 LABEL_319E:
-	ld   hl, $D978
-	ld   de, $7830
-	ld   bc, $0A10
-	ld   a, ($C2E6)
-	cp   $49
+	ld	hl, $D978
+	ld	de, $7830
+	ld	bc, $0A10
+	ld	a, ($C2E6)
+	cp	$49
 	call	nz, LABEL_3A57
-	ld   hl, $D928
-	ld   de, $781C
-	ld   bc, $0414
-	jp   LABEL_3A57
+	ld	hl, $D928
+	ld	de, $781C
+	ld	bc, $0414
+	jp	LABEL_3A57
 
 
 CharacterNames:
@@ -6995,240 +6995,240 @@ CharacterNames:
 
 LABEL_31CB:
 	dec  hl
-	jp   LABEL_3235
+	jp	LABEL_3235
 
 ShowDialogue_B12:
-	ld   a, :Bank12
-	ld   ($FFFF), a
+	ld	a, :Bank12
+	ld	($FFFF), a
 
 LABEL_31D4:
-	ld   a, ($C2D3)
-	or   a
-	jp   nz, LABEL_31CB
-	ld   a, $FF
-	ld   ($C2D3), a
+	ld	a, ($C2D3)
+	or	a
+	jp	nz, LABEL_31CB
+	ld	a, $FF
+	ld	($C2D3), a
 	push	hl
-	ld   hl, $DA18
-	ld   de, $7C8C
-	ld   bc, $0628
+	ld	hl, $DA18
+	ld	de, $7C8C
+	ld	bc, $0628
 	call	LABEL_3AA6
-	ld   hl, LABEL_B27_B5EF
+	ld	hl, LABEL_B27_B5EF
 	call	LABEL_3A57
-	pop  hl
+	pop	hl
 LABEL_31F4:
-	ld   de, $7CCE
-	ld   bc, $1200
+	ld	de, $7CCE
+	ld	bc, $1200
 LABEL_31FA:
-	ld   a, (hl)
-	or   a
-	jp   m, LABEL_3332
-	cp   $65
-	jp   nc, WaitForButton1Or2
-	cp   $62
+	ld	a, (hl)
+	or	a
+	jp	m, LABEL_3332
+	cp	$65
+	jp	nc, WaitForButton1Or2
+	cp	$62
 	ret  z
 
-	cp   $63
-	jp   z, LABEL_2D33
-	cp   $64
-	jp   z, LABEL_2D47
-	cp   $61
-	jr   nz, LABEL_321B
+	cp	$63
+	jp	z, LABEL_2D33
+	cp	$64
+	jp	z, LABEL_2D47
+	cp	$61
+	jr	nz, LABEL_321B
 	call	WaitForButton1Or2
-	jp   LABEL_3235
+	jp	LABEL_3235
 
 LABEL_321B:
-	cp   $5F
-	jr   nz, LABEL_3231
+	cp	$5F
+	jr	nz, LABEL_3231
 	push	hl
-	ld   hl, LABEL_B27_B5EF
-	ld   de, $7C8C
-	ld   bc, $0628
+	ld	hl, LABEL_B27_B5EF
+	ld	de, $7C8C
+	ld	bc, $0628
 	call	LABEL_3A83
-	pop  hl
-	inc  hl
-	jp   LABEL_31F4
+	pop	hl
+	inc	hl
+	jp	LABEL_31F4
 
 LABEL_3231:
-	cp   $60
-	jr   nz, LABEL_3244
+	cp	$60
+	jr	nz, LABEL_3244
 LABEL_3235:
-	ld   a, c
-	or   a
+	ld	a, c
+	or	a
 	call	nz, LABEL_342C
-	ld   de, $7D4E
-	ld   bc, $1201
-	inc  hl
-	jp   LABEL_31FA
+	ld	de, $7D4E
+	ld	bc, $1201
+	inc	hl
+	jp	LABEL_31FA
 
 LABEL_3244:
-	cp   Dialogue_CurrentCharacter
-	jr   nz, LABEL_3262
+	cp	Dialogue_CurrentCharacter
+	jr	nz, LABEL_3262
 	push	hl
-	ld   a, (CurrentCharacter)
-	and  $03
-	add  a, a
-	add  a, a
-	ld   hl, CharacterNames
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
-	ld   a, $04
+	ld	a, (CurrentCharacter)
+	and	$03
+	add	a, a
+	add	a, a
+	ld	hl, CharacterNames
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
+	ld	a, $04
 	call	Display65TerminatedString
-	pop  hl
-	inc  hl
-	jp   LABEL_31FA
+	pop	hl
+	inc	hl
+	jp	LABEL_31FA
 
 LABEL_3262:
-	cp   Dialogue_EnemyName
-	jr   nz, LABEL_3274
+	cp	Dialogue_EnemyName
+	jr	nz, LABEL_3274
 	push	hl
-	ld   hl, CurrentBattle_EnemyName
-	ld   a, $08
+	ld	hl, CurrentBattle_EnemyName
+	ld	a, $08
 	call	Display65TerminatedString
-	pop  hl
-	inc  hl
-	jp   LABEL_31FA
+	pop	hl
+	inc	hl
+	jp	LABEL_31FA
 
 LABEL_3274:
-	cp   Dialogue_CurrentItem
-	jr   nz, LABEL_3292
+	cp	Dialogue_CurrentItem
+	jr	nz, LABEL_3292
 	push	hl
-	ld   a, (CurrentItem)
-	ld   l, a
-	ld   h, $00
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
+	ld	a, (CurrentItem)
+	ld	l, a
+	ld	h, $00
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
 	push	bc
-	ld   bc, ItemNames
-	add  hl, bc
-	pop  bc
-	ld   a, $08
+	ld	bc, ItemNames
+	add	hl, bc
+	pop	bc
+	ld	a, $08
 	call	Display65TerminatedString
-	pop  hl
-	inc  hl
-	jp   LABEL_31FA
+	pop	hl
+	inc	hl
+	jp	LABEL_31FA
 
 LABEL_3292:
-	cp   Dialogue_NumberFromC2C5
-	jr   nz, LABEL_32F5
+	cp	Dialogue_NumberFromC2C5
+	jr	nz, LABEL_32F5
 	push	hl
 	push	bc
 	push	de
-	ld   hl, (CurrentDialogueNumber)
-	ld   de, $2710
-	xor  a
-	ld   c, a
+	ld	hl, (CurrentDialogueNumber)
+	ld	de, $2710
+	xor	a
+	ld	c, a
 	dec  a
 LABEL_32A2:
 	sbc  hl, de
-	inc  a
-	jr   nc, LABEL_32A2
-	add  hl, de
-	pop  de
+	inc	a
+	jr	nc, LABEL_32A2
+	add	hl, de
+	pop	de
 	call	LABEL_32FB
 	push	de
-	ld   de, $03E8
-	ld   a, $FF
+	ld	de, $03E8
+	ld	a, $FF
 LABEL_32B2:
 	sbc  hl, de
-	inc  a
-	jr   nc, LABEL_32B2
-	add  hl, de
-	pop  de
+	inc	a
+	jr	nc, LABEL_32B2
+	add	hl, de
+	pop	de
 	call	LABEL_32FB
 	push	de
-	ld   de, $0064
-	ld   a, $FF
+	ld	de, $0064
+	ld	a, $FF
 LABEL_32C2:
 	sbc  hl, de
-	inc  a
-	jr   nc, LABEL_32C2
-	add  hl, de
-	pop  de
+	inc	a
+	jr	nc, LABEL_32C2
+	add	hl, de
+	pop	de
 	call	LABEL_32FB
 	push	de
-	ld   d, $FF
-	ld   a, l
+	ld	d, $FF
+	ld	a, l
 LABEL_32D0:
-	sub  $0A
-	inc  d
-	jr   nc, LABEL_32D0
-	add  a, $0A
-	ld   l, a
-	ld   a, d
-	pop  de
+	sub	$0A
+	inc	d
+	jr	nc, LABEL_32D0
+	add	a, $0A
+	ld	l, a
+	ld	a, d
+	pop	de
 	call	LABEL_32FB
 	push	de
-	ld   d, $FF
-	ld   a, l
+	ld	d, $FF
+	ld	a, l
 LABEL_32E1:
-	sub  $01
-	inc  d
-	jr   nc, LABEL_32E1
-	ld   a, d
-	ld   c, $01
-	pop  de
+	sub	$01
+	inc	d
+	jr	nc, LABEL_32E1
+	ld	a, d
+	ld	c, $01
+	pop	de
 	call	LABEL_32FB
-	ld   a, b
-	pop  bc
-	ld   b, a
-	pop  hl
-	inc  hl
-	jp   LABEL_31FA
+	ld	a, b
+	pop	bc
+	ld	b, a
+	pop	hl
+	inc	hl
+	jp	LABEL_31FA
 
 LABEL_32F5:
 	call	LABEL_33D6
-	jp   LABEL_31FA
+	jp	LABEL_31FA
 
 LABEL_32FB:
-	or   a
-	jp   nz, LABEL_3302
+	or	a
+	jp	nz, LABEL_3302
 	bit  0, c
 	ret  z
 
 LABEL_3302:
-	ld   c, $01
+	ld	c, $01
 	di
 	push	de
 	push	af
 	rst  $08
 	push	af
-	pop  af
-	ld   a, $C0
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, $C0
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $10
-	out  (Port_VDPData), a
-	ld   a, $40
-	add  a, e
-	ld   e, a
-	adc  a, d
-	sub  e
-	ld   d, a
+	pop	af
+	ld	a, $10
+	out	(Port_VDPData), a
+	ld	a, $40
+	add	a, e
+	ld	e, a
+	adc	a, d
+	sub	e
+	ld	d, a
 	rst  $08
-	pop  af
-	add  a, $C1
-	out  (Port_VDPData), a
+	pop	af
+	add	a, $C1
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $10
-	out  (Port_VDPData), a
-	pop  de
-	inc  de
-	inc  de
+	pop	af
+	ld	a, $10
+	out	(Port_VDPData), a
+	pop	de
+	inc	de
+	inc	de
 	ei
-	ld   a, $0A
+	ld	a, $0A
 	call	WaitForVInt
 	dec  b
 	ret
 
 LABEL_3332:
 	call	LABEL_333E
-	jp   LABEL_31FA
+	jp	LABEL_31FA
 
 LABEL_3338:
 	call LABEL_333E
@@ -7236,51 +7236,51 @@ LABEL_3338:
 
 LABEL_333E:
 	push	hl
-	and  $7F
-	add  a, a
-	ld   hl, DialogueWordBlock
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
-	ld   a, ($FFFF)
+	and	$7F
+	add	a, a
+	ld	hl, DialogueWordBlock
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
+	ld	a, ($FFFF)
 	push	af
-	ld   a, :Bank02
-	ld   ($FFFF), a
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
+	ld	a, :Bank02
+	ld	($FFFF), a
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
 LABEL_3357:
 	call	LABEL_33D6
-	ld   a, (hl)
-	cp   Dialogue_Terminator65
-	jr   nz, LABEL_3357
-	pop  af
-	ld   ($FFFF), a
-	pop  hl
-	inc  hl
-	ld   a, b
-	or   a
+	ld	a, (hl)
+	cp	Dialogue_Terminator65
+	jr	nz, LABEL_3357
+	pop	af
+	ld	($FFFF), a
+	pop	hl
+	inc	hl
+	ld	a, b
+	or	a
 	ret  nz
 
-	ld   a, (hl)
-	jp   LABEL_3419
+	ld	a, (hl)
+	jp	LABEL_3419
 
 Display65TerminatedString:
 	push	af
 	call	LABEL_33D6
-	ld   a, (hl)
-	cp   Dialogue_Terminator65
-	jr   z, LABEL_337B
-	pop  af
+	ld	a, (hl)
+	cp	Dialogue_Terminator65
+	jr	z, LABEL_337B
+	pop	af
 	dec  a
-	jp   nz, Display65TerminatedString
+	jp	nz, Display65TerminatedString
 	ret
 
 LABEL_337B:
-	pop  af
+	pop	af
 	ret
 
 
@@ -7347,65 +7347,65 @@ LABEL_33D6:
 	push	bc
 	push	de
 	rst  $08
-	ld   a, (hl)
-	sub  $20
-	add  a, a
-	ld   bc, LABEL_7D17
-	add  a, c
-	ld   c, a
-	adc  a, b
-	sub  c
-	ld   b, a
-	ld   a, (bc)
-	out  (Port_VDPData), a
+	ld	a, (hl)
+	sub	$20
+	add	a, a
+	ld	bc, LABEL_7D17
+	add	a, c
+	ld	c, a
+	adc	a, b
+	sub	c
+	ld	b, a
+	ld	a, (bc)
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $10
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, $10
+	out	(Port_VDPData), a
 	ex   de, hl
-	ld   bc, $0040
-	add  hl, bc
+	ld	bc, $0040
+	add	hl, bc
 	ex   de, hl
 	rst  $08
-	ld   a, (hl)
-	sub  $20
-	add  a, a
-	ld   bc, LABEL_7D18
-	add  a, c
-	ld   c, a
-	adc  a, b
-	sub  c
-	ld   b, a
-	ld   a, (bc)
-	out  (Port_VDPData), a
+	ld	a, (hl)
+	sub	$20
+	add	a, a
+	ld	bc, LABEL_7D18
+	add	a, c
+	ld	c, a
+	adc	a, b
+	sub	c
+	ld	b, a
+	ld	a, (bc)
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $10
-	out  (Port_VDPData), a
-	inc  hl
-	pop  de
-	inc  de
-	inc  de
-	pop  bc
+	pop	af
+	ld	a, $10
+	out	(Port_VDPData), a
+	inc	hl
+	pop	de
+	inc	de
+	inc	de
+	pop	bc
 	ei
-	ld   a, $0A
+	ld	a, $0A
 	call	WaitForVInt
 	dec  b
 	ret  nz
 
-	ld   a, (hl)
+	ld	a, (hl)
 LABEL_3419:
-	or   a
-	jp   m, LABEL_3420
-	cp   $5F
+	or	a
+	jp	m, LABEL_3420
+	cp	$5F
 	ret  nc
 
 LABEL_3420:
-	ld   a, c
-	or   a
+	ld	a, c
+	or	a
 	call	nz, LABEL_342C
-	ld   de, $7D4E
-	ld   bc, $1201
+	ld	de, $7D4E
+	ld	bc, $1201
 	ret
 
 LABEL_342C:
@@ -7414,41 +7414,41 @@ LABEL_342C:
 	push	hl
 	call	LABEL_3439
 	call	LABEL_3439
-	pop  hl
-	pop  de
-	pop  bc
+	pop	hl
+	pop	de
+	pop	bc
 	ret
 
 LABEL_3439:
-	ld   hl, $DB08
-	ld   de, $7D0E
-	ld   bc, $0324
+	ld	hl, $DB08
+	ld	de, $7D0E
+	ld	bc, $0324
 	call	LABEL_3AA6
-	ld   hl, $DB08
-	ld   de, $7CCE
-	ld   bc, $0324
+	ld	hl, $DB08
+	ld	de, $7CCE
+	ld	bc, $0324
 	call	LABEL_3A83
-	ld   hl, LABEL_B27_B619
-	ld   bc, $0124
+	ld	hl, LABEL_B27_B619
+	ld	bc, $0124
 	call	LABEL_3A83
-	ld   b, $04
+	ld	b, $04
 LABEL_345C:
-	ld   a, $0A
+	ld	a, $0A
 	call	WaitForVInt
 	djnz	LABEL_345C
 	ret
 
 LABEL_3464:
-	ld   hl, $C2D3
-	ld   a, (hl)
-	or   a
+	ld	hl, $C2D3
+	ld	a, (hl)
+	or	a
 	ret  z
 
-	ld   (hl), $00
-	ld   hl, $DA18
-	ld   de, $7C8C
-	ld   bc, $0628
-	jp   LABEL_3A57
+	ld	(hl), $00
+	ld	hl, $DA18
+	ld	de, $7C8C
+	ld	bc, $0628
+	jp	LABEL_3A57
 
 
 LABEL_3478:
@@ -7592,57 +7592,57 @@ LABEL_356B:
 	push	hl
 	push	de
 	rst  $08
-	ld   l, (hl)
-	ld   h, $00
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	ld   de, ItemNames
-	add  hl, de
+	ld	l, (hl)
+	ld	h, $00
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	ld	de, ItemNames
+	add	hl, de
 	push	af
-	pop  af
-	ld   a, $F3
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, $F3
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $11
-	out  (Port_VDPData), a
-	ld   b, $08
+	pop	af
+	ld	a, $11
+	out	(Port_VDPData), a
+	ld	b, $08
 LABEL_3588:
-	ld   a, (hl)
-	sub  $20
-	add  a, a
-	add  a, c
-	ld   de, LABEL_7D17
-	add  a, e
-	ld   e, a
-	adc  a, d
-	sub  e
-	ld   d, a
-	ld   a, (de)
-	out  (Port_VDPData), a
+	ld	a, (hl)
+	sub	$20
+	add	a, a
+	add	a, c
+	ld	de, LABEL_7D17
+	add	a, e
+	ld	e, a
+	adc	a, d
+	sub	e
+	ld	d, a
+	ld	a, (de)
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $10
-	out  (Port_VDPData), a
-	inc  hl
+	pop	af
+	ld	a, $10
+	out	(Port_VDPData), a
+	inc	hl
 	djnz	LABEL_3588
 	push	af
-	pop  af
-	ld   a, $F3
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, $F3
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $13
-	out  (Port_VDPData), a
-	pop  de
-	ld   hl, $0040
-	add  hl, de
+	pop	af
+	ld	a, $13
+	out	(Port_VDPData), a
+	pop	de
+	ld	hl, $0040
+	add	hl, de
 	ex   de, hl
-	pop  hl
-	pop  bc
+	pop	hl
+	pop	bc
 	ei
-	ld   a, $0A
+	ld	a, $0A
 	call	WaitForVInt
 	ret
 
@@ -7650,8 +7650,8 @@ LABEL_35BC:
 	di
 	push	de
 	rst  $08
-	ld   b, $0C
-	jp   LABEL_35C9
+	ld	b, $0C
+	jp	LABEL_35C9
 
 
 LABEL_35C4:
@@ -7661,78 +7661,78 @@ LABEL_35C4:
 	ld b, $08
 
 LABEL_35C9:
-	ld   hl, LABEL_3639
+	ld	hl, LABEL_3639
 LABEL_35CC:
-	ld   a, (hl)
-	out  (Port_VDPData), a
-	inc  hl
+	ld	a, (hl)
+	out	(Port_VDPData), a
+	inc	hl
 	djnz	LABEL_35CC
-	ld   hl, (Current_money)
+	ld	hl, (Current_money)
 
 LABEL_35D5:
-	ld   bc, $C010
-	ld   de, $2710
-	xor  a
+	ld	bc, $C010
+	ld	de, $2710
+	xor	a
 	cpl
 LABEL_35DD:
 	sbc  hl, de
-	inc  a
-	jr   nc, LABEL_35DD
-	add  hl, de
+	inc	a
+	jr	nc, LABEL_35DD
+	add	hl, de
 	call	LABEL_3645
-	ld   de, $03E8
-	xor  a
+	ld	de, $03E8
+	xor	a
 	cpl
 LABEL_35EB:
 	sbc  hl, de
-	inc  a
-	jr   nc, LABEL_35EB
-	add  hl, de
+	inc	a
+	jr	nc, LABEL_35EB
+	add	hl, de
 	call	LABEL_3645
-	ld   de, $0064
-	xor  a
+	ld	de, $0064
+	xor	a
 	cpl
 LABEL_35F9:
 	sbc  hl, de
-	inc  a
-	jr   nc, LABEL_35F9
-	add  hl, de
+	inc	a
+	jr	nc, LABEL_35F9
+	add	hl, de
 	call	LABEL_3645
-	ld   d, $FF
-	ld   a, l
+	ld	d, $FF
+	ld	a, l
 LABEL_3605:
-	sub  $0A
-	inc  d
-	jr   nc, LABEL_3605
-	add  a, $0A
-	ld   l, a
-	ld   a, d
+	sub	$0A
+	inc	d
+	jr	nc, LABEL_3605
+	add	a, $0A
+	ld	l, a
+	ld	a, d
 	call	LABEL_3645
-	ld   d, $FF
-	ld   a, l
+	ld	d, $FF
+	ld	a, l
 LABEL_3614:
-	sub  $01
-	inc  d
-	jr   nc, LABEL_3614
-	ld   a, d
-	ld   bc, $C110
+	sub	$01
+	inc	d
+	jr	nc, LABEL_3614
+	ld	a, d
+	ld	bc, $C110
 	call	LABEL_3645
 
 LABEL_3620:
 	push	af
-	pop  af
-	ld   a, $F3
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, $F3
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, $13
-	out  (Port_VDPData), a
-	pop  de
-	ld   hl, $0040
-	add  hl, de
+	pop	af
+	ld	a, $13
+	out	(Port_VDPData), a
+	pop	de
+	ld	hl, $0040
+	add	hl, de
 	ex   de, hl
 	ei
-	ld   a, $0A
+	ld	a, $0A
 	call	WaitForVInt
 	ret
 
@@ -7741,16 +7741,16 @@ LABEL_3639:
 .db $F3, $11, $D7, $10, $DD, $10, $DE, $10, $C0, $10, $C0, $10
 
 LABEL_3645:
-	and  $0F
-	jp   z, LABEL_364D
-	ld   bc, $C110
+	and	$0F
+	jp	z, LABEL_364D
+	ld	bc, $C110
 LABEL_364D:
-	add  a, b
-	out  (Port_VDPData), a
+	add	a, b
+	out	(Port_VDPData), a
 	push	af
-	pop  af
-	ld   a, c
-	out  (Port_VDPData), a
+	pop	af
+	ld	a, c
+	out	(Port_VDPData), a
 	ret
 
 
@@ -7765,18 +7765,18 @@ LABEL_3656:
 
 
 LABEL_3665:
-	ld   a, (Party_curr_num)
-	or   a
+	ld	a, (Party_curr_num)
+	or	a
 	ret  z	; return if there's only 1 party member
 
-	ld   hl, $DDA8
-	ld   de, $7A44
-	ld   bc, $090C
+	ld	hl, $DDA8
+	ld	de, $7A44
+	ld	bc, $090C
 	call	LABEL_3AA6
 	call	LABEL_369F
-	ld   hl, $7A84
-	ld   (Cursor_pos), hl
-	jp   CheckOptionSelect
+	ld	hl, $7A84
+	ld	(Cursor_pos), hl
+	jp	CheckOptionSelect
 
 
 LABEL_3682:
@@ -7793,30 +7793,30 @@ LABEL_3682:
 	jp CheckOptionSelect
 
 LABEL_369F:
-	ld   a, (Party_curr_num)
-	or   a
+	ld	a, (Party_curr_num)
+	or	a
 	ret  z
 
-	ld   (Option_total_num), a
-	inc  a
-	add  a, a
-	ld   b, a
-	ld   c, $0C
-	ld   hl, LABEL_B27_BB1F
+	ld	(Option_total_num), a
+	inc	a
+	add	a, a
+	ld	b, a
+	ld	c, $0C
+	ld	hl, LABEL_B27_BB1F
 	call	LABEL_3A57
-	ld   hl, LABEL_B27_BB7F
-	ld   bc, $010C
-	jp   LABEL_3A57
+	ld	hl, LABEL_B27_BB7F
+	ld	bc, $010C
+	jp	LABEL_3A57
 
 LABEL_36BB:
-	ld   a, (Party_curr_num)
-	or   a
+	ld	a, (Party_curr_num)
+	or	a
 	ret  z
 
-	ld   hl, $DDA8
-	ld   de, $7A44
-	ld   bc, $090C
-	jp   LABEL_3A57
+	ld	hl, $DDA8
+	ld	de, $7A44
+	ld	bc, $090C
+	jp	LABEL_3A57
 
 
 LABEL_36CC:
@@ -7829,12 +7829,12 @@ LABEL_36CC:
 	jp LABEL_3A57
 
 LABEL_36DD:
-	ld   hl, $D8A4
-	ld   de, $7842
-	ld   bc, $0B0C
+	ld	hl, $D8A4
+	ld	de, $7842
+	ld	bc, $0B0C
 	call	LABEL_3AA6
-	ld   hl, LABEL_B27_BB8B
-	jp   LABEL_3A57
+	ld	hl, LABEL_B27_BB8B
+	jp	LABEL_3A57
 
 
 LABEL_36EF:
@@ -7851,40 +7851,40 @@ LABEL_36FB:
 
 LABEL_3707:
 	push	af
-	ld   hl, $D928
-	ld   de, $7A8C
-	ld   bc, $0814
+	ld	hl, $D928
+	ld	de, $7A8C
+	ld	bc, $0814
 	call	LABEL_3AA6
-	ld   hl, LABEL_B27_BACF
-	ld   de, $7A8C
-	ld   bc, $0114
+	ld	hl, LABEL_B27_BACF
+	ld	de, $7A8C
+	ld	bc, $0114
 	call	LABEL_3A57
-	pop  af
+	pop	af
 	push	af
-	add  a, a
-	add  a, a
-	add  a, a
-	add  a, a
-	ld   hl, $FFFF
-	ld   (hl), :Bank02
-	ld   hl, Char_stats+weapon
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
-	ld   b, $03
+	add	a, a
+	add	a, a
+	add	a, a
+	add	a, a
+	ld	hl, $FFFF
+	ld	(hl), :Bank02
+	ld	hl, Char_stats+weapon
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
+	ld	b, $03
 LABEL_3735:
-	ld   c, $00
+	ld	c, $00
 	call	LABEL_356B
-	ld   c, $01
+	ld	c, $01
 	call	LABEL_356B
-	inc  hl
+	inc	hl
 	djnz	LABEL_3735
-	ld   hl, LABEL_B27_BAE3
-	ld   bc, $0114
+	ld	hl, LABEL_B27_BAE3
+	ld	bc, $0114
 	call	LABEL_3A57
-	pop  af
+	pop	af
 	ret
 
 
@@ -7928,82 +7928,82 @@ LABEL_3797:
 	jp LABEL_3A57
 
 LABEL_37A3:
-	ld   hl, $DE64
-	ld   de, $7B6A
-	ld   bc, $050A
+	ld	hl, $DE64
+	ld	de, $7B6A
+	ld	bc, $050A
 	call	LABEL_3AA6
-	ld   hl, LABEL_B27_BC91
+	ld	hl, LABEL_B27_BC91
 	call	LABEL_3A57
-	ld   hl, $7BAA
-	ld   (Cursor_pos), hl
-	ld   a, $01
-	ld   (Option_total_num), a
-	jp   CheckOptionSelect
+	ld	hl, $7BAA
+	ld	(Cursor_pos), hl
+	ld	a, $01
+	ld	(Option_total_num), a
+	jp	CheckOptionSelect
 
 LABEL_37C3:
-	ld   hl, $DE64
-	ld   de, $7B6A
-	ld   bc, $050A
-	jp   LABEL_3A57
+	ld	hl, $DE64
+	ld	de, $7B6A
+	ld	bc, $050A
+	jp	LABEL_3A57
 
 LABEL_37CF:
-	add  a, a
-	add  a, a
-	add  a, a
-	add  a, a
-	ld   hl, Char_stats
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
+	add	a, a
+	add	a, a
+	add	a, a
+	add	a, a
+	ld	hl, Char_stats
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
 	push	hl
-	pop  ix
-	ld   hl, $DC04
-	ld   de, $7920
-	ld   bc, $0E18
+	pop	ix
+	ld	hl, $DC04
+	ld	de, $7920
+	ld	bc, $0E18
 	call	LABEL_3AA6
-	ld   hl, LABEL_B27_BCC3
-	ld   bc, $0118
+	ld	hl, LABEL_B27_BCC3
+	ld	bc, $0118
 	call	LABEL_3A57
-	ld   hl, LABEL_3865
-	ld   a, (ix+5)
+	ld	hl, LABEL_3865
+	ld	a, (ix+5)
 	call	LABEL_2FD8
-	ld   hl, LABEL_3875
-	ld   c, (ix+3)
-	ld   b, (ix+4)
+	ld	hl, LABEL_3875
+	ld	c, (ix+3)
+	ld	b, (ix+4)
 	call	LABEL_3036
-	ld   hl, LABEL_B27_BCDB
-	ld   bc, $0118
+	ld	hl, LABEL_B27_BCDB
+	ld	bc, $0118
 	call	LABEL_3A57
-	ld   hl, LABEL_3881
-	ld   a, (ix+8)
+	ld	hl, LABEL_3881
+	ld	a, (ix+8)
 	call	LABEL_2FD8
-	ld   hl, LABEL_B27_BCDB
-	ld   bc, $0118
+	ld	hl, LABEL_B27_BCDB
+	ld	bc, $0118
 	call	LABEL_3A57
-	ld   hl, LABEL_3891
-	ld   a, (ix+9)
+	ld	hl, LABEL_3891
+	ld	a, (ix+9)
 	call	LABEL_2FD8
-	ld   hl, LABEL_B27_BCDB
-	ld   bc, $0118
+	ld	hl, LABEL_B27_BCDB
+	ld	bc, $0118
 	call	LABEL_3A57
-	ld   hl, LABEL_38A1
-	ld   a, (ix+6)
+	ld	hl, LABEL_38A1
+	ld	a, (ix+6)
 	call	LABEL_2FD8
-	ld   hl, LABEL_B27_BCDB
-	ld   bc, $0118
+	ld	hl, LABEL_B27_BCDB
+	ld	bc, $0118
 	call	LABEL_3A57
-	ld   hl, LABEL_38B1
-	ld   a, (ix+7)
+	ld	hl, LABEL_38B1
+	ld	a, (ix+7)
 	call	LABEL_2FD8
-	ld   hl, LABEL_B27_BCF3
-	ld   bc, $0118
+	ld	hl, LABEL_B27_BCF3
+	ld	bc, $0118
 	call	LABEL_3A57
 	call	LABEL_35BC
-	ld   hl, LABEL_B27_BD0B
-	ld   bc, $0118
-	jp   LABEL_3A57
+	ld	hl, LABEL_B27_BD0B
+	ld	bc, $0118
+	jp	LABEL_3A57
 
 
 LABEL_3865:
@@ -8262,58 +8262,58 @@ LABEL_3A21:
 	ret
 
 LABEL_3A57:
-	ld   a, ($FFFF)
+	ld	a, ($FFFF)
 	push	af
-	ld   a, :Bank27
-	ld   ($FFFF), a
+	ld	a, :Bank27
+	ld	($FFFF), a
 	call	LABEL_3A68
-	pop  af
-	ld   ($FFFF), a
+	pop	af
+	ld	($FFFF), a
 	ret
 
 LABEL_3A68:
 	push	bc
 	di
 	rst  $08
-	ld   b, c
-	ld   c, $BE
+	ld	b, c
+	ld	c, $BE
 LABEL_3A6E:
 	outi
-	jp   nz, LABEL_3A6E
+	jp	nz, LABEL_3A6E
 	ex   de, hl
-	ld   bc, $0040
-	add  hl, bc
+	ld	bc, $0040
+	add	hl, bc
 	ex   de, hl
 	ei
-	ld   a, $0A
+	ld	a, $0A
 	call	WaitForVInt
-	pop  bc
+	pop	bc
 	djnz	LABEL_3A68
 	ret
 
 LABEL_3A83:
-	ld   a, ($FFFF)
+	ld	a, ($FFFF)
 	push	af
-	ld   a, :Bank27
-	ld   ($FFFF), a
+	ld	a, :Bank27
+	ld	($FFFF), a
 	di
 LABEL_3A8D:
 	push	bc
 	rst  $08
-	ld   b, c
-	ld   c, $BE
+	ld	b, c
+	ld	c, $BE
 LABEL_3A92:
 	outi
-	jp   nz, LABEL_3A92
+	jp	nz, LABEL_3A92
 	ex   de, hl
-	ld   bc, $0040
-	add  hl, bc
+	ld	bc, $0040
+	add	hl, bc
 	ex   de, hl
-	pop  bc
+	pop	bc
 	djnz	LABEL_3A8D
 	ei
-	pop  af
-	ld   ($FFFF), a
+	pop	af
+	ld	($FFFF), a
 	ret
 
 LABEL_3AA6:
@@ -8324,21 +8324,21 @@ LABEL_3AA6:
 LABEL_3AAB:
 	push	bc
 	rst  $08
-	ld   b, c
-	ld   c, $BE
+	ld	b, c
+	ld	c, $BE
 LABEL_3AB0:
 	ini
 	push	af
-	pop  af
-	jp   nz, LABEL_3AB0
+	pop	af
+	jp	nz, LABEL_3AB0
 	ex   de, hl
-	ld   bc, $0040
-	add  hl, bc
+	ld	bc, $0040
+	add	hl, bc
 	ex   de, hl
-	pop  bc
+	pop	bc
 	djnz	LABEL_3AAB
-	pop  de
-	pop  bc
+	pop	de
+	pop	bc
 	ei
 	ret
 
@@ -8572,78 +8572,78 @@ LABEL_3D25:
 .db $00, $00
 
 LABEL_3D36:
-	cp   $20
-	jr   nc, LABEL_3D4E
-	add  a, a
-	add  a, a
-	add  a, a
-	ld   l, a
-	ld   h, $00
-	ld   de, LABEL_3DA6-3
-	add  hl, de
-	jp   LABEL_3D96
+	cp	$20
+	jr	nc, LABEL_3D4E
+	add	a, a
+	add	a, a
+	add	a, a
+	ld	l, a
+	ld	h, $00
+	ld	de, LABEL_3DA6-3
+	add	hl, de
+	jp	LABEL_3D96
 
 LABEL_3D47:
-	ld   a, (Interaction_Type)
-	cp   $20
-	jr   c, LABEL_3D64
+	ld	a, (Interaction_Type)
+	cp	$20
+	jr	c, LABEL_3D64
 LABEL_3D4E:
-	ld   hl, $D000
-	ld   de, $D002
-	ld   bc, $05FE
-	ld   (hl), $00
-	inc  hl
-	ld   (hl), $08
+	ld	hl, $D000
+	ld	de, $D002
+	ld	bc, $05FE
+	ld	(hl), $00
+	inc	hl
+	ld	(hl), $08
 	dec  hl
 	ldir
-	xor  a
-	ld   ($C2D3), a
+	xor	a
+	ld	($C2D3), a
 	ret
 
 LABEL_3D64:
-	add  a, a
-	add  a, a
-	add  a, a
-	ld   l, a
-	ld   h, $00
-	ld   de, LABEL_3DA6-8
-	add  hl, de
-	ld   a, (hl)
-	ld   ($FFFF), a
-	inc  hl
-	ld   a, (hl)
-	inc  hl
+	add	a, a
+	add	a, a
+	add	a, a
+	ld	l, a
+	ld	h, $00
+	ld	de, LABEL_3DA6-8
+	add	hl, de
+	ld	a, (hl)
+	ld	($FFFF), a
+	inc	hl
+	ld	a, (hl)
+	inc	hl
 	push	hl
-	ld   h, (hl)
-	ld   l, a
-	ld   de, $C240
-	ld   bc, $0010
+	ld	h, (hl)
+	ld	l, a
+	ld	de, $C240
+	ld	bc, $0010
 	ldir
-	ld   hl, LABEL_3D1D
-	ld   c, $08
+	ld	hl, LABEL_3D1D
+	ld	c, $08
 	ldir
-	pop  hl
-	inc  hl
-	ld   a, (hl)
-	inc  hl
+	pop	hl
+	inc	hl
+	ld	a, (hl)
+	inc	hl
 	push	hl
-	ld   h, (hl)
-	ld   l, a
-	ld   de, $4000
+	ld	h, (hl)
+	ld	l, a
+	ld	de, $4000
 	call	LABEL_3FA
-	pop  hl
-	inc  hl
+	pop	hl
+	inc	hl
 LABEL_3D96:
-	xor  a
-	ld   ($C2D3), a
-	ld   a, (hl)
-	ld   ($FFFF), a
-	inc  hl
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	jp   LABEL_6B62
+	xor	a
+	ld	($C2D3), a
+	ld	a, (hl)
+	ld	($FFFF), a
+	inc	hl
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	jp	LABEL_6B62
 
 
 LABEL_3DA6:
@@ -9700,33 +9700,33 @@ LABEL_46D1:
 	ld	($FFFF), a
 	inc	hl
 	ld	e, (hl)
-	inc  hl
-	ld   d, (hl)
-	inc  hl
+	inc	hl
+	ld	d, (hl)
+	inc	hl
 	push	hl
 	ex   de, hl
-	ld   de, $C240
-	ld   bc, $0010
+	ld	de, $C240
+	ld	bc, $0010
 	ldir
-	ld   de, $6000
+	ld	de, $6000
 	call	LABEL_3FA
-	ld   hl, $FFFF
-	ld   (hl), :Bank24
-	pop  hl
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	ld   de, $78CC
-	ld   bc, $0C28
+	ld	hl, $FFFF
+	ld	(hl), :Bank24
+	pop	hl
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	ld	de, $78CC
+	ld	bc, $0C28
 	di
 	call	LABEL_390
-	ld   de, $7C00
-	ld   bc, $0100
-	ld   hl, $0800
+	ld	de, $7C00
+	ld	bc, $0100
+	ld	hl, $0800
 	call	LABEL_363
 	ei
-	jp   FadeIn
+	jp	FadeIn
 
 
 LABEL_471E:
@@ -9742,16 +9742,16 @@ LABEL_471E:
 
 
 LABEL_474B:
-	ld   a, ($C2DB)
-	or   a
-	jp   z, LABEL_1BE1
-	ld   de, LABEL_4773-2
+	ld	a, ($C2DB)
+	or	a
+	jp	z, LABEL_1BE1
+	ld	de, LABEL_4773-2
 	call	LABEL_4769
-	ld   a, (Interaction_Type)
-	or   a
-	jp   nz, LABEL_3464
+	ld	a, (Interaction_Type)
+	or	a
+	jp	nz, LABEL_3464
 	call	LABEL_3464
-	jp   LABEL_15DC
+	jp	LABEL_15DC
 
 
 LABEL_4765:
@@ -9759,15 +9759,15 @@ LABEL_4765:
 	jp	WaitForButton1Or2
 
 LABEL_4769:
-	ld   l, a
-	ld   h, $00
-	add  hl, hl
-	add  hl, de
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	jp   (hl)
+	ld	l, a
+	ld	h, $00
+	add	hl, hl
+	add	hl, de
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	jp	(hl)
 
 
 LABEL_4773:
@@ -11895,112 +11895,112 @@ ShowDialogue_B2:
 	jp LABEL_31D4
 
 LABEL_576A:
-	ld   hl, $C289
-	ld   ($C287), hl
-	ld   de, $C28B
-	ld   bc, $000E
-	ld   (hl), $00
-	inc  hl
-	ld   (hl), $FF
+	ld	hl, $C289
+	ld	($C287), hl
+	ld	de, $C28B
+	ld	bc, $000E
+	ld	(hl), $00
+	inc	hl
+	ld	(hl), $FF
 	dec  hl
 	ldir
-	ld   hl, $C900
-	ld   ($C217), hl
-	ld   hl, $C980
-	ld   ($C219), hl
-	ld   iy, $C800
-	ld   bc, $0800
+	ld	hl, $C900
+	ld	($C217), hl
+	ld	hl, $C980
+	ld	($C219), hl
+	ld	iy, $C800
+	ld	bc, $0800
 LABEL_5791:
-	ld   a, (iy+0)
-	and  $7F
-	jr   z, LABEL_57B1
+	ld	a, (iy+0)
+	and	$7F
+	jr	z, LABEL_57B1
 	push	bc
-	ld   hl, LABEL_5827-2
+	ld	hl, LABEL_5827-2
 	call	GetPtrAndJump
-	pop  bc
-	or   a
-	jp   z, LABEL_57B1
-	ld   hl, ($C287)
-	ld   a, (iy+2)
-	ld   (hl), a
-	inc  hl
-	ld   (hl), c
-	inc  hl
-	ld   ($C287), hl
+	pop	bc
+	or	a
+	jp	z, LABEL_57B1
+	ld	hl, ($C287)
+	ld	a, (iy+2)
+	ld	(hl), a
+	inc	hl
+	ld	(hl), c
+	inc	hl
+	ld	($C287), hl
 LABEL_57B1:
-	ld   de, $0020
-	add  iy, de
-	inc  c
+	ld	de, $0020
+	add	iy, de
+	inc	c
 	djnz	LABEL_5791
-	ld   de, $C289
-	ld   b, $03
+	ld	de, $C289
+	ld	b, $03
 LABEL_57BE:
 	push	bc
-	ld   l, e
-	ld   h, d
-	inc  hl
-	inc  hl
+	ld	l, e
+	ld	h, d
+	inc	hl
+	inc	hl
 LABEL_57C3:
-	ld   a, (de)
-	cp   (hl)
-	jr   nc, LABEL_57D4
-	ld   c, a
-	ld   a, (hl)
-	ld   (hl), c
-	ld   (de), a
-	inc  hl
-	inc  de
-	ld   a, (de)
-	ld   c, a
-	ld   a, (hl)
-	ld   (hl), c
-	ld   (de), a
+	ld	a, (de)
+	cp	(hl)
+	jr	nc, LABEL_57D4
+	ld	c, a
+	ld	a, (hl)
+	ld	(hl), c
+	ld	(de), a
+	inc	hl
+	inc	de
+	ld	a, (de)
+	ld	c, a
+	ld	a, (hl)
+	ld	(hl), c
+	ld	(de), a
 	dec  hl
 	dec  de
 LABEL_57D4:
-	inc  hl
-	inc  hl
+	inc	hl
+	inc	hl
 	djnz	LABEL_57C3
-	inc  de
-	inc  de
-	pop  bc
+	inc	de
+	inc	de
+	pop	bc
 	djnz	LABEL_57BE
-	ld   hl, $C28A
-	ld   b, $08
+	ld	hl, $C28A
+	ld	b, $08
 LABEL_57E2:
-	ld   a, (hl)
-	cp   $FF
-	jr   z, LABEL_580E
+	ld	a, (hl)
+	cp	$FF
+	jr	z, LABEL_580E
 	push	bc
 	push	hl
-	ld   l, a
-	ld   h, $00
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	ld   de, $C800
-	add  hl, de
+	ld	l, a
+	ld	h, $00
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	ld	de, $C800
+	add	hl, de
 	push	hl
-	pop  iy
-	cp   $04
-	ld   a, :Bank03
-	ld   bc, LABEL_B03_96F4
-	jr   c, LABEL_5806
-	ld   a, :Bank21
-	ld   bc, LABEL_B21_8000
+	pop	iy
+	cp	$04
+	ld	a, :Bank03
+	ld	bc, LABEL_B03_96F4
+	jr	c, LABEL_5806
+	ld	a, :Bank21
+	ld	bc, LABEL_B21_8000
 LABEL_5806:
-	ld   ($FFFF), a
+	ld	($FFFF), a
 	call	LABEL_5853
-	pop  hl
-	pop  bc
+	pop	hl
+	pop	bc
 LABEL_580E:
-	inc  hl
-	inc  hl
+	inc	hl
+	inc	hl
 	djnz	LABEL_57E2
-	ld   hl, ($C217)
-	ld   (hl), $D0
+	ld	hl, ($C217)
+	ld	(hl), $D0
 	ret
 
 
@@ -12043,42 +12043,42 @@ LABEL_5827:
 .dw	LABEL_5D5B
 
 LABEL_5853:
-	ld   l, (iy+1)
-	ld   h, $00
-	add  hl, hl
-	add  hl, bc
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	ld   b, (hl)
+	ld	l, (iy+1)
+	ld	h, $00
+	add	hl, hl
+	add	hl, bc
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	ld	b, (hl)
 	push	bc
-	inc  hl
-	ld   de, ($C217)
-	ld   c, (iy+2)
+	inc	hl
+	ld	de, ($C217)
+	ld	c, (iy+2)
 LABEL_5868:
-	ld   a, (hl)
-	add  a, c
-	ld   (de), a
-	inc  de
-	inc  hl
+	ld	a, (hl)
+	add	a, c
+	ld	(de), a
+	inc	de
+	inc	hl
 	djnz	LABEL_5868
-	ld   ($C217), de
-	pop  bc
-	ld   de, ($C219)
-	ld   c, (iy+4)
+	ld	($C217), de
+	pop	bc
+	ld	de, ($C219)
+	ld	c, (iy+4)
 LABEL_587B:
-	ld   a, (hl)
-	add  a, c
-	ld   (de), a
-	inc  de
-	inc  hl
-	ld   a, (hl)
-	ld   (de), a
-	inc  hl
-	inc  de
+	ld	a, (hl)
+	add	a, c
+	ld	(de), a
+	inc	de
+	inc	hl
+	ld	a, (hl)
+	ld	(de), a
+	inc	hl
+	inc	de
 	djnz	LABEL_587B
-	ld   ($C219), de
+	ld	($C219), de
 	ret
 
 
@@ -12958,299 +12958,299 @@ LABEL_5FF9:
 	ret
 
 LABEL_5FFE:
-	ld   hl, $FFFF
-	ld   (hl), :Bank03
-	ld   hl, $C800
-	ld   de, $C801
-	ld   bc, $00FF
-	ld   (hl), $00
+	ld	hl, $FFFF
+	ld	(hl), :Bank03
+	ld	hl, $C800
+	ld	de, $C801
+	ld	bc, $00FF
+	ld	(hl), $00
 	ldir
-	ld   hl, $C440
-	ld   de, $C441
-	ld   bc, $007F
-	ld   (hl), $00
+	ld	hl, $C440
+	ld	de, $C441
+	ld	bc, $007F
+	ld	(hl), $00
 	ldir
-	ld   a, ($C2E6)
-	ld   a, a
-	and  $7F
+	ld	a, ($C2E6)
+	ld	a, a
+	and	$7F
 	ret  z
 
-	ld   l, a
-	ld   h, $00
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	ld   de, B03_EnemyData
-	add  hl, de
-	ld   de, CurrentBattle_EnemyName
-	ld   bc, $0008
+	ld	l, a
+	ld	h, $00
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	ld	de, B03_EnemyData
+	add	hl, de
+	ld	de, CurrentBattle_EnemyName
+	ld	bc, $0008
 	ldir
-	ld   de, $C258
-	ld   bc, $0008
+	ld	de, $C258
+	ld	bc, $0008
 	ldir
-	ld   b, (hl)
-	inc  hl
-	ld   a, (hl)
-	inc  hl
+	ld	b, (hl)
+	inc	hl
+	ld	a, (hl)
+	inc	hl
 	push	hl
-	ld   h, (hl)
-	ld   l, a
-	ld   a, b
-	ld   ($FFFF), a
-	ld   de, $6000
+	ld	h, (hl)
+	ld	l, a
+	ld	a, b
+	ld	($FFFF), a
+	ld	de, $6000
 	call	LABEL_3FA
-	pop  hl
-	inc  hl
-	ld   a, :Bank03
-	ld   ($FFFF), a
-	ld   a, (hl)
+	pop	hl
+	inc	hl
+	ld	a, :Bank03
+	ld	($FFFF), a
+	ld	a, (hl)
 	push	hl
 	call	LABEL_60FD
-	pop  hl
-	inc  hl
-	ld   a, :Bank03
-	ld   ($FFFF), a
-	ld   a, (hl)
+	pop	hl
+	inc	hl
+	ld	a, :Bank03
+	ld	($FFFF), a
+	ld	a, (hl)
 	bit  7, a
-	jr   nz, LABEL_607F
-	and  $0F
-	ld   b, a
-	ld   a, (Party_curr_num)
-	inc  a
-	add  a, a
-	cp   b
-	jr   nc, LABEL_6075
-	ld   b, a
+	jr	nz, LABEL_607F
+	and	$0F
+	ld	b, a
+	ld	a, (Party_curr_num)
+	inc	a
+	add	a, a
+	cp	b
+	jr	nc, LABEL_6075
+	ld	b, a
 LABEL_6075:
 	call	UpdateRNGSeed
-	and  $07
-	cp   b
-	jp   nc, LABEL_6075
-	inc  a
+	and	$07
+	cp	b
+	jp	nc, LABEL_6075
+	inc	a
 LABEL_607F:
-	and  $0F
-	ld   b, a
-	ld   ($C2C7), a
-	inc  hl
-	ld   a, (hl)
-	inc  hl
-	ld   d, (hl)
-	inc  hl
-	ld   e, (hl)
-	inc  hl
+	and	$0F
+	ld	b, a
+	ld	($C2C7), a
+	inc	hl
+	ld	a, (hl)
+	inc	hl
+	ld	d, (hl)
+	inc	hl
+	ld	e, (hl)
+	inc	hl
 	push	hl
 	ex   de, hl
-	ld   ix, $C440
-	ld   de, $0010
+	ld	ix, $C440
+	ld	de, $0010
 LABEL_6095:
-	ld   (ix+0), $01
-	ld   (ix+1), a
-	ld   (ix+6), a
-	ld   (ix+8), h
-	ld   (ix+9), l
-	add  ix, de
+	ld	(ix+0), $01
+	ld	(ix+1), a
+	ld	(ix+6), a
+	ld	(ix+8), h
+	ld	(ix+9), l
+	add	ix, de
 	djnz	LABEL_6095
-	pop  hl
-	ld   a, (hl)
-	ld   ($C2DF), a
-	inc  hl
-	ld   e, (hl)
-	inc  hl
-	ld   d, (hl)
+	pop	hl
+	ld	a, (hl)
+	ld	($C2DF), a
+	inc	hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
 	push	hl
-	ld   a, ($C2C7)
-	ld   c, a
-	ld   b, $00
+	ld	a, ($C2C7)
+	ld	c, a
+	ld	b, $00
 	call	LABEL_44C
-	ld   ($C2DD), hl
-	pop  hl
-	inc  hl
-	ld   a, (hl)
-	ld   ($C2E0), a
-	inc  hl
-	ld   e, (hl)
-	inc  hl
-	ld   d, (hl)
+	ld	($C2DD), hl
+	pop	hl
+	inc	hl
+	ld	a, (hl)
+	ld	($C2E0), a
+	inc	hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
 	push	hl
-	ld   a, ($C2C7)
-	ld   c, a
-	ld   b, $00
+	ld	a, ($C2C7)
+	ld	c, a
+	ld	b, $00
 	call	LABEL_44C
-	ld   (CurrentBattle_EXPReward), hl
-	pop  hl
-	inc  hl
-	ld   a, (hl)
-	ld   ($C2E8), a
-	inc  hl
-	ld   a, (hl)
-	ld   ($C2E7), a
-	ld   hl, $C500
-	ld   ($C2E1), hl
+	ld	(CurrentBattle_EXPReward), hl
+	pop	hl
+	inc	hl
+	ld	a, (hl)
+	ld	($C2E8), a
+	inc	hl
+	ld	a, (hl)
+	ld	($C2E7), a
+	ld	hl, $C500
+	ld	($C2E1), hl
 	call	LABEL_576A
 	call	LABEL_576A
-	ld   hl, $C240
-	ld   de, $C220
-	ld   bc, $0020
+	ld	hl, $C240
+	ld	de, $C220
+	ld	bc, $0020
 	ldir
-	ld   a, $10
-	jp   WaitForVInt
+	ld	a, $10
+	jp	WaitForVInt
 
 LABEL_60FD:
-	ld   l, a
-	ld   h, $00
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	ld   e, l
-	ld   d, h
-	add  hl, hl
-	add  hl, de
-	ld   de, LABEL_B03_8FC7-$18
-	add  hl, de
-	ld   de, $C880
-	ld   bc, $0003
+	ld	l, a
+	ld	h, $00
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	ld	e, l
+	ld	d, h
+	add	hl, hl
+	add	hl, de
+	ld	de, LABEL_B03_8FC7-$18
+	add	hl, de
+	ld	de, $C880
+	ld	bc, $0003
 	ldir
-	inc  de
+	inc	de
 	ldi
-	ld   de, $C894
-	ld   bc, $0009
+	ld	de, $C894
+	ld	bc, $0009
 	ldir
-	ld   a, ($C898)
-	ld   ($C88E), a
-	ld   a, $01
-	ld   ($C88D), a
-	ld   c, (hl)
-	inc  hl
-	ld   b, (hl)
-	inc  hl
-	ld   e, (hl)
-	inc  hl
-	ld   d, (hl)
-	inc  hl
-	ld   a, (hl)
-	inc  hl
+	ld	a, ($C898)
+	ld	($C88E), a
+	ld	a, $01
+	ld	($C88D), a
+	ld	c, (hl)
+	inc	hl
+	ld	b, (hl)
+	inc	hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	inc	hl
+	ld	a, (hl)
+	inc	hl
 	push	hl
-	ld   h, (hl)
-	ld   l, c
-	ld   c, a
-	ld   a, h
-	ld   h, b
-	ld   b, a
-	or   c
-	ld   a, :Bank24
-	ld   ($FFFF), a
+	ld	h, (hl)
+	ld	l, c
+	ld	c, a
+	ld	a, h
+	ld	h, b
+	ld	b, a
+	or	c
+	ld	a, :Bank24
+	ld	($FFFF), a
 	call	nz, LABEL_615A
-	pop  hl
-	inc  hl
-	ld   a, :Bank03
-	ld   ($FFFF), a
-	ld   de, $C8A0
-	ld   bc, $0003
+	pop	hl
+	inc	hl
+	ld	a, :Bank03
+	ld	($FFFF), a
+	ld	de, $C8A0
+	ld	bc, $0003
 	ldir
-	inc  de
+	inc	de
 	ldi
-	ld   a, (hl)
-	ld   ($C2F1), a
+	ld	a, (hl)
+	ld	($C2F1), a
 	ret
 
 LABEL_615A:
 	push	bc
 	push	de
-	ld   c, $FF
+	ld	c, $FF
 LABEL_615E:
-	ld   a, (hl)
-	or   a
-	jp   z, LABEL_6176
+	ld	a, (hl)
+	or	a
+	jp	z, LABEL_6176
 	ldi
 	ldi
 LABEL_6167:
 	djnz	LABEL_615E
-	pop  de
+	pop	de
 	ex   de, hl
-	ld   bc, $0040
-	add  hl, bc
+	ld	bc, $0040
+	add	hl, bc
 	ex   de, hl
-	pop  bc
+	pop	bc
 	dec  c
-	jp   nz, LABEL_615A
+	jp	nz, LABEL_615A
 	ret
 
 LABEL_6176:
-	inc  hl
-	inc  de
-	inc  hl
-	inc  de
-	jp   LABEL_6167
+	inc	hl
+	inc	de
+	inc	hl
+	inc	de
+	jp	LABEL_6167
 
 LABEL_617D:
-	or   a
+	or	a
 	ret  z
 
-	ld   hl, $FFFF
-	ld   (hl), :Bank03
-	ld   hl, $C800
-	ld   de, $C801
-	ld   bc, $00FF
-	ld   (hl), $00
+	ld	hl, $FFFF
+	ld	(hl), :Bank03
+	ld	hl, $C800
+	ld	de, $C801
+	ld	bc, $00FF
+	ld	(hl), $00
 	ldir
-	ld   hl, $C440
-	ld   de, $C441
-	ld   bc, $007F
-	ld   (hl), $00
+	ld	hl, $C440
+	ld	de, $C441
+	ld	bc, $007F
+	ld	(hl), $00
 	ldir
-	ld   l, a
-	ld   h, $00
-	add  hl, hl
-	ld   de, LABEL_B03_9540
-	add  hl, de
-	ld   a, (hl)
+	ld	l, a
+	ld	h, $00
+	add	hl, hl
+	ld	de, LABEL_B03_9540
+	add	hl, de
+	ld	a, (hl)
 	push	hl
-	ld   l, a
-	ld   h, $00
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	ld   de, LABEL_B03_95BC
-	add  hl, de
+	ld	l, a
+	ld	h, $00
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	ld	de, LABEL_B03_95BC
+	add	hl, de
 	push	hl
-	ld   de, $C258
-	ld   bc, $0008
+	ld	de, $C258
+	ld	bc, $0008
 	ldir
-	pop  hl
-	ld   de, $C238
-	ld   bc, $0008
+	pop	hl
+	ld	de, $C238
+	ld	bc, $0008
 	ldir
-	pop  hl
-	inc  hl
-	ld   a, (hl)
-	ld   l, a
-	ld   h, $00
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	ld   de, LABEL_B03_966C
-	add  hl, de
-	ld   de, $C800
-	ld   bc, $0003
+	pop	hl
+	inc	hl
+	ld	a, (hl)
+	ld	l, a
+	ld	h, $00
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	ld	de, LABEL_B03_966C
+	add	hl, de
+	ld	de, $C800
+	ld	bc, $0003
 	ldir
-	inc  de
+	inc	de
 	ldi
-	inc  hl
-	ld   b, (hl)
-	inc  hl
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	ld   a, b
-	ld   ($FFFF), a
-	ld   de, $6000
+	inc	hl
+	ld	b, (hl)
+	inc	hl
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	ld	a, b
+	ld	($FFFF), a
+	ld	de, $6000
 	call	LABEL_3FA
 	call	LABEL_576A
-	ld   a, $16
-	jp   WaitForVInt
+	ld	a, $16
+	jp	WaitForVInt
 
 
 LABEL_61F5:
@@ -13789,188 +13789,188 @@ LABEL_65D6:
 
 
 LABEL_65EE:
-	ld   a, (Dungeon_position)
-	ld   l, a
-	ld   h, $CB
-	ld   a, (hl)
-	cp   $08
-	jp   nz, LABEL_66E1
-	ld   c, l
-	ld   a, (Dungeon_index)
-	ld   b, a
-	ld   hl, $FFFF
-	ld   (hl), :Bank03
-	ld   hl, B03_ObjectData
-	ld   de, $0006
+	ld	a, (Dungeon_position)
+	ld	l, a
+	ld	h, $CB
+	ld	a, (hl)
+	cp	$08
+	jp	nz, LABEL_66E1
+	ld	c, l
+	ld	a, (Dungeon_index)
+	ld	b, a
+	ld	hl, $FFFF
+	ld	(hl), :Bank03
+	ld	hl, B03_ObjectData
+	ld	de, $0006
 LABEL_660A:
-	ld   a, (hl)
-	cp   $FF
-	jr   z, LABEL_661C
-	inc  hl
-	cp   b
-	jr   nz, LABEL_6618
-	ld   a, (hl)
-	cp   c
-	jp   z, LABEL_66E1
+	ld	a, (hl)
+	cp	$FF
+	jr	z, LABEL_661C
+	inc	hl
+	cp	b
+	jr	nz, LABEL_6618
+	ld	a, (hl)
+	cp	c
+	jp	z, LABEL_66E1
 LABEL_6618:
-	add  hl, de
-	jp   LABEL_660A
+	add	hl, de
+	jp	LABEL_660A
 
 LABEL_661C:
-	ld   de, $7E00
-	ld   hl, $00C0
-	ld   bc, $0080
+	ld	de, $7E00
+	ld	hl, $00C0
+	ld	bc, $0080
 	di
 	call	LABEL_363
 	ei
-	ld   a, $C0
-	ld   ($C004), a
-	xor  a
-	ld   ($C304), a
-	ld   b, $0C
+	ld	a, $C0
+	ld	($C004), a
+	xor	a
+	ld	($C304), a
+	ld	b, $0C
 LABEL_6635:
 	push	bc
-	ld   a, ($C304)
-	add  a, $10
-	ld   ($C304), a
-	ld   a, $08
+	ld	a, ($C304)
+	add	a, $10
+	ld	($C304), a
+	ld	a, $08
 	call	WaitForVInt
-	ld   a, b
-	sub  $0C
+	ld	a, b
+	sub	$0C
 	neg
-	ld   c, $00
-	ld   b, a
+	ld	c, $00
+	ld	b, a
 	srl  b
 	rr   c
-	ld   hl, $7800
-	add  hl, bc
+	ld	hl, $7800
+	add	hl, bc
 	ex   de, hl
-	ld   hl, $00C0
-	ld   bc, $0040
+	ld	hl, $00C0
+	ld	bc, $0040
 	di
 	call	LABEL_363
 	ei
-	pop  bc
+	pop	bc
 	djnz	LABEL_6635
-	ld   a, (Dungeon_index)
-	sub  $01
-	jr   nc, LABEL_666A
-	xor  a
+	ld	a, (Dungeon_index)
+	sub	$01
+	jr	nc, LABEL_666A
+	xor	a
 LABEL_666A:
-	ld   (Dungeon_index), a
+	ld	(Dungeon_index), a
 	call	LABEL_6D56
-	xor  a
+	xor	a
 	call	LABEL_6AED
-	ld   hl, $C240
-	ld   de, $C220
-	ld   bc, $0020
+	ld	hl, $C240
+	ld	de, $C220
+	ld	bc, $0020
 	ldir
-	ld   a, $16
+	ld	a, $16
 	call	WaitForVInt
-	ld   a, $10
-	ld   ($C304), a
-	ld   b, $0C
+	ld	a, $10
+	ld	($C304), a
+	ld	b, $0C
 LABEL_668B:
 	push	bc
-	ld   a, ($C304)
-	add  a, $10
-	ld   ($C304), a
-	ld   a, $08
+	ld	a, ($C304)
+	add	a, $10
+	ld	($C304), a
+	ld	a, $08
 	call	WaitForVInt
-	ld   a, b
-	sub  $0C
+	ld	a, b
+	sub	$0C
 	neg
-	ld   c, $00
-	ld   b, a
+	ld	c, $00
+	ld	b, a
 	srl  b
 	rr   c
-	ld   hl, $7800
-	add  hl, bc
+	ld	hl, $7800
+	add	hl, bc
 	ex   de, hl
-	ld   hl, $D000
-	add  hl, bc
-	ld   bc, $0080
+	ld	hl, $D000
+	add	hl, bc
+	ld	bc, $0080
 	di
 	call	LABEL_346
 	ei
-	pop  bc
+	pop	bc
 	djnz	LABEL_668B
-	ld   b, $05
+	ld	b, $05
 LABEL_66BB:
-	ld   a, ($C304)
-	or   a
-	ld   a, $D8
-	jr   z, LABEL_66C4
-	xor  a
+	ld	a, ($C304)
+	or	a
+	ld	a, $D8
+	jr	z, LABEL_66C4
+	xor	a
 LABEL_66C4:
-	ld   ($C304), a
-	ld   a, $08
+	ld	($C304), a
+	ld	a, $08
 	call	WaitForVInt
 	djnz	LABEL_66BB
-	ld   hl, $FFFF
-	ld   (hl), :Bank16
-	ld   hl, LABEL_B16_BD58
-	ld   de, $7E00
+	ld	hl, $FFFF
+	ld	(hl), :Bank16
+	ld	hl, LABEL_B16_BD58
+	ld	de, $7E00
 	call	LABEL_3FA
-	ld   b, $01
-	jp   LABEL_6963
+	ld	b, $01
+	jp	LABEL_6963
 
 LABEL_66E1:
-	ld   a, (Ctrl_1_held)
-	and  ButtonUp_Mask|ButtonDown_Mask|ButtonLeft_Mask|ButtonRight_Mask
-	jp   z, LABEL_6802
-	ld   c, a
+	ld	a, (Ctrl_1_held)
+	and	ButtonUp_Mask|ButtonDown_Mask|ButtonLeft_Mask|ButtonRight_Mask
+	jp	z, LABEL_6802
+	ld	c, a
 	bit  0, c
-	jp   z, LABEL_677A
-	ld   b, $01
+	jp	z, LABEL_677A
+	ld	b, $01
 	call	LABEL_6BE9
-	ld   b, a
-	and  $07
-	jp   z, LABEL_6758
-	sub  $02
-	jp   c, LABEL_677A
-	cp   $05
-	jp   z, LABEL_6755
-	cp   $02
-	jp   nc, LABEL_6729
-	ld   c, a
-	ld   a, $C3
-	ld   ($C004), a
-	ld   a, c
+	ld	b, a
+	and	$07
+	jp	z, LABEL_6758
+	sub	$02
+	jp	c, LABEL_677A
+	cp	$05
+	jp	z, LABEL_6755
+	cp	$02
+	jp	nc, LABEL_6729
+	ld	c, a
+	ld	a, $C3
+	ld	($C004), a
+	ld	a, c
 	bit  3, b
-	jp   nz, LABEL_68BC
-	or   a
-	ld   b, $01
-	jr   z, LABEL_671C
-	ld   b, $FF
+	jp	nz, LABEL_68BC
+	or	a
+	ld	b, $01
+	jr	z, LABEL_671C
+	ld	b, $FF
 LABEL_671C:
-	ld   a, (Dungeon_index)
-	add  a, b
-	ld   (Dungeon_index), a
+	ld	a, (Dungeon_index)
+	add	a, b
+	ld	(Dungeon_index), a
 	call	LABEL_6D56
-	jp   LABEL_6731
+	jp	LABEL_6731
 
 LABEL_6729:
 	bit  7, (hl)
 	ret  z
 
 	bit  3, b
-	jp   nz, LABEL_68BC
+	jp	nz, LABEL_68BC
 LABEL_6731:
 	call	FadeOut2
-	ld   a, (Dungeon_direction)
-	and  $03
-	ld   hl, $6ADF
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
-	ld   a, (Dungeon_position)
-	add  a, (hl)
-	add  a, (hl)
-	ld   (Dungeon_position), a
-	xor  a
+	ld	a, (Dungeon_direction)
+	and	$03
+	ld	hl, $6ADF
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
+	ld	a, (Dungeon_position)
+	add	a, (hl)
+	add	a, (hl)
+	ld	(Dungeon_position), a
+	xor	a
 	call	LABEL_6AE5
 	call	FadeIn2
 	ld	b, $01
@@ -13979,30 +13979,30 @@ LABEL_6731:
 LABEL_6755:
 	call	LABEL_6758
 LABEL_6758:
-	ld   a, $00
+	ld	a, $00
 	call	LABEL_6A58
-	ld   a, (Dungeon_direction)
-	and  $03
-	ld   hl, LABEL_6AE1-2
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
-	ld   a, (Dungeon_position)
-	add  a, (hl)
-	ld   (Dungeon_position), a
-	xor  a
+	ld	a, (Dungeon_direction)
+	and	$03
+	ld	hl, LABEL_6AE1-2
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
+	ld	a, (Dungeon_position)
+	add	a, (hl)
+	ld	(Dungeon_position), a
+	xor	a
 	call	LABEL_6AE5
 	ld	b, $01
 	jp	LABEL_6963
 
 LABEL_677A:
 	bit  1, c
-	jr   z, LABEL_67AB
-	ld   b, $0B
+	jr	z, LABEL_67AB
+	ld	b, $0B
 	call	LABEL_6BCA
-	jr   nz, LABEL_67AB
+	jr	nz, LABEL_67AB
 	call	LABEL_6792
 	ld	b, $01
 	call	LABEL_6963
@@ -14010,46 +14010,46 @@ LABEL_677A:
 	jp	LABEL_6963
 
 LABEL_6792:
-	ld   a, (Dungeon_direction)
-	and  $03
-	ld   hl, LABEL_6AE1
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
-	ld   a, (Dungeon_position)
-	add  a, (hl)
-	ld   (Dungeon_position), a
-	ld   a, $01
-	jp   LABEL_6A58
+	ld	a, (Dungeon_direction)
+	and	$03
+	ld	hl, LABEL_6AE1
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
+	ld	a, (Dungeon_position)
+	add	a, (hl)
+	ld	(Dungeon_position), a
+	ld	a, $01
+	jp	LABEL_6A58
 
 LABEL_67AB:
 	bit  2, c
-	jr   z, LABEL_67D7
+	jr	z, LABEL_67D7
 	call	LABEL_67B7
 	ld	b, $01
 	jp	LABEL_6963
 
 LABEL_67B7:
-	ld   a, (Dungeon_direction)
+	ld	a, (Dungeon_direction)
 	dec  a
-	and  $03
-	ld   (Dungeon_direction), a
-	ld   h, $02
-	ld   b, $0D
+	and	$03
+	ld	(Dungeon_direction), a
+	ld	h, $02
+	ld	b, $0D
 	call	LABEL_6BCA
-	jr   z, LABEL_67CB
-	inc  h
-	inc  h
+	jr	z, LABEL_67CB
+	inc	h
+	inc	h
 LABEL_67CB:
-	ld   b, $01
+	ld	b, $01
 	call	LABEL_6BCA
-	jr   z, LABEL_67D3
-	inc  h
+	jr	z, LABEL_67D3
+	inc	h
 LABEL_67D3:
-	ld   a, h
-	jp   LABEL_6A58
+	ld	a, h
+	jp	LABEL_6A58
 
 LABEL_67D7:
 	bit  3, c
@@ -14059,35 +14059,35 @@ LABEL_67D7:
 	jp	LABEL_6963
 
 LABEL_67E2:
-	ld   a, (Dungeon_direction)
-	inc  a
-	and  $03
-	ld   (Dungeon_direction), a
-	ld   h, $06
-	ld   b, $0C
+	ld	a, (Dungeon_direction)
+	inc	a
+	and	$03
+	ld	(Dungeon_direction), a
+	ld	h, $06
+	ld	b, $0C
 	call	LABEL_6BCA
-	jr   z, LABEL_67F6
-	inc  h
-	inc  h
+	jr	z, LABEL_67F6
+	inc	h
+	inc	h
 LABEL_67F6:
-	ld   b, $01
+	ld	b, $01
 	call	LABEL_6BCA
-	jr   z, LABEL_67FE
-	inc  h
+	jr	z, LABEL_67FE
+	inc	h
 LABEL_67FE:
-	ld   a, h
-	jp   LABEL_6A58
+	ld	a, h
+	jp	LABEL_6A58
 
 LABEL_6802:
-	ld   a, (Ctrl_1_pressed)
-	and  Button_1_Mask|Button_2_Mask
+	ld	a, (Ctrl_1_pressed)
+	and	Button_1_Mask|Button_2_Mask
 	ret  z
 
-	ld   b, $01
+	ld	b, $01
 	call	LABEL_6BCA
-	cp   $04
-	jr   nz, LABEL_6817
-	ld   c, $02
+	cp	$04
+	jr	nz, LABEL_6817
+	ld	c, $02
 	call	LABEL_681B
 	ret  z
 
@@ -14096,36 +14096,36 @@ LABEL_6817:
 	ret
 
 LABEL_681B:
-	ld   b, $01
+	ld	b, $01
 	call	LABEL_6BE9
 	bit  7, (hl)
 	ret  nz
 
 	set  7, (hl)
-	ld   a, $BD
-	ld   ($C004), a
-	ld   h, c
-	ld   l, $00
-	ld   b, $03
+	ld	a, $BD
+	ld	($C004), a
+	ld	h, c
+	ld	l, $00
+	ld	b, $03
 LABEL_682F:
 	push	bc
 LABEL_6830:
 	push	hl
-	ld   a, h
+	ld	a, h
 	call	LABEL_6E4C
-	ld   a, $0C
+	ld	a, $0C
 	call	WaitForVInt
-	pop  hl
-	ld   a, h
-	ld   bc, $0040
-	add  hl, bc
-	cp   h
-	jr   z, LABEL_6830
-	inc  h
-	inc  h
-	pop  bc
+	pop	hl
+	ld	a, h
+	ld	bc, $0040
+	add	hl, bc
+	cp	h
+	jr	z, LABEL_6830
+	inc	h
+	inc	h
+	pop	bc
 	djnz	LABEL_682F
-	xor  a
+	xor	a
 	ret
 
 
@@ -14202,80 +14202,80 @@ LABEL_688C:
 	jp LABEL_6963
 
 LABEL_68BC:
-	ld   b, $01
+	ld	b, $01
 	call	LABEL_6BE9
-	and  $08
+	and	$08
 	ret  z
 
-	ld   c, l
-	ld   a, (Dungeon_index)
-	ld   b, a
-	ld   hl, $FFFF
-	ld   (hl), :Bank03
-	ld   hl, B03_DungeonTransitionData
-	ld   de, $0004
+	ld	c, l
+	ld	a, (Dungeon_index)
+	ld	b, a
+	ld	hl, $FFFF
+	ld	(hl), :Bank03
+	ld	hl, B03_DungeonTransitionData
+	ld	de, $0004
 LABEL_68D4:
-	ld   a, (hl)
-	cp   $FF
-	jr   z, LABEL_68E6
-	inc  hl
-	cp   b
-	jr   nz, LABEL_68E1
-	ld   a, (hl)
-	cp   c
-	jr   z, LABEL_68EC
+	ld	a, (hl)
+	cp	$FF
+	jr	z, LABEL_68E6
+	inc	hl
+	cp	b
+	jr	nz, LABEL_68E1
+	ld	a, (hl)
+	cp	c
+	jr	z, LABEL_68EC
 LABEL_68E1:
-	add  hl, de
-	jp   LABEL_68D4
+	add	hl, de
+	jp	LABEL_68D4
 	ret
 
 
 LABEL_68E6:
-	ld   hl, Game_mode
-	ld   (hl), $08 ; GameMode_LoadMap
+	ld	hl, Game_mode
+	ld	(hl), $08 ; GameMode_LoadMap
 	ret
 
 LABEL_68EC:
-	inc  hl
-	ld   a, (hl)
-	ld   d, a
+	inc	hl
+	ld	a, (hl)
+	ld	d, a
 	dec  hl
-	cp   $80
-	ld   a, $08
-	jp   c, LABEL_7877
-	ld   a, d
-	cp   $FF
-	jr   nz, LABEL_6947
+	cp	$80
+	ld	a, $08
+	jp	c, LABEL_7877
+	ld	a, d
+	cp	$FF
+	jr	nz, LABEL_6947
 	push	hl
 	call	FadeOut2
-	ld   hl, $FFFF
-	ld   (hl), :Bank09
-	ld   hl, LABEL_B09_B471
-	ld   de, $4000
+	ld	hl, $FFFF
+	ld	(hl), :Bank09
+	ld	hl, LABEL_B09_B471
+	ld	de, $4000
 	call	LABEL_3FA
-	ld   hl, LABEL_B09_B130
+	ld	hl, LABEL_B09_B130
 	call	LABEL_6B62
-	ld   a, $0F
-	ld   (Interaction_Type), a
-	xor  a
-	ld   ($C250), a
+	ld	a, $0F
+	ld	(Interaction_Type), a
+	xor	a
+	ld	($C250), a
 LABEL_691D:
-	ld   a, $0C
+	ld	a, $0C
 	call	WaitForVInt
 	call	FadeIn2
 LABEL_6925:
-	ld   hl, $FFFF
-	ld   (hl), :Bank03
-	pop  hl
-	inc  hl
-	inc  hl
+	ld	hl, $FFFF
+	ld	(hl), :Bank03
+	pop	hl
+	inc	hl
+	inc	hl
 	call	LABEL_6A2F
-	ld   a, (Game_mode)
-	cp   $0B ; GameMode_Dungeon
+	ld	a, (Game_mode)
+	cp	$0B ; GameMode_Dungeon
 	ret  nz
 
 	call	FadeOut2
-	xor  a
+	xor	a
 	call	LABEL_6AE5
 	call	LABEL_6D7F
 	call	LABEL_6DE2
@@ -14286,97 +14286,97 @@ LABEL_6947:
 	push	hl
 	push	af
 	call	FadeOut2
-	pop  af
-	ld   c, $0D
-	cp   $FE
-	jr   z, LABEL_6959
-	ld   c, $1E
-	cp   $FD
-	jr   nz, LABEL_6925
+	pop	af
+	ld	c, $0D
+	cp	$FE
+	jr	z, LABEL_6959
+	ld	c, $1E
+	cp	$FD
+	jr	nz, LABEL_6925
 LABEL_6959:
-	ld   a, c
-	ld   (Interaction_Type), a
+	ld	a, c
+	ld	(Interaction_Type), a
 	call	LABEL_3D47
-	jp   LABEL_691D
+	jp	LABEL_691D
 
 LABEL_6963:
 	call	LABEL_6BE9
-	cp   $08
+	cp	$08
 	ret  nz
 
-	ld   c, l
+	ld	c, l
 	push	bc
-	ld   a, (Dungeon_index)
-	ld   b, a
-	ld   hl, $FFFF
-	ld   (hl), :Bank03
-	ld   hl, B03_ObjectData
-	ld   de, $0006
+	ld	a, (Dungeon_index)
+	ld	b, a
+	ld	hl, $FFFF
+	ld	(hl), :Bank03
+	ld	hl, B03_ObjectData
+	ld	de, $0006
 LABEL_697A:
-	ld   a, (hl)
-	cp   $FF
-	jp   z, LABEL_698C
-	inc  hl
-	cp   b
-	jr   nz, LABEL_6988
-	ld   a, (hl)
-	cp   c
-	jr   z, LABEL_698E
+	ld	a, (hl)
+	cp	$FF
+	jp	z, LABEL_698C
+	inc	hl
+	cp	b
+	jr	nz, LABEL_6988
+	ld	a, (hl)
+	cp	c
+	jr	z, LABEL_698E
 LABEL_6988:
-	add  hl, de
-	jp   LABEL_697A
+	add	hl, de
+	jp	LABEL_697A
 
 LABEL_698C:
-	pop  bc
+	pop	bc
 	ret
 
 LABEL_698E:
-	pop  bc
-	inc  hl
-	ld   e, (hl)
-	inc  hl
-	ld   d, (hl)
-	ld   a, (de)
-	cp   $FF
+	pop	bc
+	inc	hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	a, (de)
+	cp	$FF
 	ret  z
 
-	ld   ($C2E1), de
-	ld   a, $FF
-	ld   ($C2D2), a
-	inc  hl
-	ld   a, (hl)
-	inc  hl
-	or   a
-	jr   nz, LABEL_69B8
-	ld   a, (hl)
-	ld   ($C2DF), a
-	inc  hl
-	ld   a, (hl)
-	ld   ($C2E0), a
-	ld   hl, $0000
-	ld   ($C2DD), hl
-	jp   LABEL_69C7
+	ld	($C2E1), de
+	ld	a, $FF
+	ld	($C2D2), a
+	inc	hl
+	ld	a, (hl)
+	inc	hl
+	or	a
+	jr	nz, LABEL_69B8
+	ld	a, (hl)
+	ld	($C2DF), a
+	inc	hl
+	ld	a, (hl)
+	ld	($C2E0), a
+	ld	hl, $0000
+	ld	($C2DD), hl
+	jp	LABEL_69C7
 
 LABEL_69B8:
-	cp   $01
-	jr   nz, LABEL_69E1
-	xor  a
-	ld   ($C2DF), a
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	ld   ($C2DD), hl
+	cp	$01
+	jr	nz, LABEL_69E1
+	xor	a
+	ld	($C2DF), a
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	ld	($C2DD), hl
 LABEL_69C7:
-	ld   a, b
-	cp   $01
+	ld	a, b
+	cp	$01
 	ret  nz
 
-	ld   hl, LABEL_B12_BD97
+	ld	hl, LABEL_B12_BD97
 	call	ShowDialogue_B12
 	push	bc
 	call	LABEL_16B2
-	pop  bc
+	pop	bc
 	call	LABEL_28DB
 	ld	a, ($C800)
 	or	a
@@ -14384,89 +14384,89 @@ LABEL_69C7:
 	jp	LABEL_1BE1
 
 LABEL_69E1:
-	cp   $02
-	jr   nz, LABEL_6A1A
-	ld   a, b
-	cp   $01
-	jr   z, LABEL_69F7
+	cp	$02
+	jr	nz, LABEL_6A1A
+	ld	a, b
+	cp	$01
+	jr	z, LABEL_69F7
 	push	hl
 	call	LABEL_67B7
 	call	LABEL_67B7
-	ld   hl, $FFFF
-	ld   (hl), :Bank03
-	pop  hl
+	ld	hl, $FFFF
+	ld	(hl), :Bank03
+	pop	hl
 LABEL_69F7:
-	ld   a, (hl)
-	ld   ($C2E6), a
-	or   a
+	ld	a, (hl)
+	ld	($C2E6), a
+	or	a
 	ret  z
 
-	inc  hl
-	ld   a, (hl)
+	inc	hl
+	ld	a, (hl)
 	push	af
-	ld   hl, ($C2E1)
+	ld	hl, ($C2E1)
 	push	hl
 	call	LABEL_5FFE
-	pop  hl
-	ld   ($C2E1), hl
-	pop  af
-	ld   ($C2DF), a
+	pop	hl
+	ld	($C2E1), hl
+	pop	af
+	ld	($C2DF), a
 	call	LABEL_100F
-	ld   a, ($C800)
-	or   a
+	ld	a, ($C800)
+	or	a
 	ret  z
 
-	jp   LABEL_1BE1
+	jp	LABEL_1BE1
 
 LABEL_6A1A:
-	cp   $03
+	cp	$03
 	ret  nz
 
-	ld   a, b
-	cp   $01
-	jr   z, LABEL_6A2F
+	ld	a, b
+	cp	$01
+	jr	z, LABEL_6A2F
 	push	hl
 	call	LABEL_67E2
 	call	LABEL_67E2
-	ld   hl, $FFFF
-	ld   (hl), :Bank03
-	pop  hl
+	ld	hl, $FFFF
+	ld	(hl), :Bank03
+	pop	hl
 LABEL_6A2F:
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	ld   ($C2DB), hl
-	ld   a, ($C2DC)
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	ld	($C2DB), hl
+	ld	a, ($C2DC)
 	call	LABEL_617D
 	call	LABEL_474B
-	ld   a, $D0
-	ld   ($C900), a
-	xor  a
-	ld   ($C800), a
-	ld   ($C29D), a
-	ld   (Interaction_Type), a
-	ld   ($C2D5), a
-	ld   hl, $0000
-	ld   ($C2DB), hl
+	ld	a, $D0
+	ld	($C900), a
+	xor	a
+	ld	($C800), a
+	ld	($C29D), a
+	ld	(Interaction_Type), a
+	ld	($C2D5), a
+	ld	hl, $0000
+	ld	($C2DB), hl
 	ret
 
 LABEL_6A58:
-	ld   l, a
-	ld   h, $00
-	add  hl, hl
-	ld   de, LABEL_6A76
-	add  hl, de
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	ld   a, $FF
-	ld   ($C2D2), a
+	ld	l, a
+	ld	h, $00
+	add	hl, hl
+	ld	de, LABEL_6A76
+	add	hl, de
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	ld	a, $FF
+	ld	($C2D2), a
 
 -:
-	ld   a, (hl)
-	cp   $FF
+	ld	a, (hl)
+	cp	$FF
 	ret  z
 	push	hl
 	call	LABEL_6AE5
@@ -14488,214 +14488,214 @@ LABEL_6AE1:
 
 LABEL_6AE5:
 	call	LABEL_6AED
-	ld   a, $0C
-	jp   WaitForVInt
+	ld	a, $0C
+	jp	WaitForVInt
 
 LABEL_6AED:
-	and  $3F
-	jr   nz, LABEL_6AFC
-	ld   b, $01
+	and	$3F
+	jr	nz, LABEL_6AFC
+	ld	b, $01
 	call	LABEL_6BCA
-	ld   a, $00
-	jr   z, LABEL_6AFC
-	ld   a, $06
+	ld	a, $00
+	jr	z, LABEL_6AFC
+	ld	a, $06
 LABEL_6AFC:
-	ld   c, a
-	add  a, a
-	ld   b, a
-	add  a, a
-	add  a, b
-	ld   hl, LABEL_705F
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
+	ld	c, a
+	add	a, a
+	ld	b, a
+	add	a, a
+	add	a, b
+	ld	hl, LABEL_705F
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
 	push	bc
-	ld   a, (hl)
-	ld   ($FFFF), a
-	inc  hl
-	ld   a, (hl)
-	inc  hl
+	ld	a, (hl)
+	ld	($FFFF), a
+	inc	hl
+	ld	a, (hl)
+	inc	hl
 	push	hl
-	ld   h, (hl)
-	ld   l, a
+	ld	h, (hl)
+	ld	l, a
 	rr   c
-	ld   d, $40
-	jr   nc, LABEL_6B1C
-	ld   d, $60
+	ld	d, $40
+	jr	nc, LABEL_6B1C
+	ld	d, $60
 LABEL_6B1C:
 	di
-	xor  a
-	out  (Port_VDPAddress), a
-	ld   a, d
-	out  (Port_VDPAddress), a
+	xor	a
+	out	(Port_VDPAddress), a
+	ld	a, d
+	out	(Port_VDPAddress), a
 	ei
 	call	LABEL_6B8E
-	pop  hl
-	inc  hl
-	ld   a, (hl)
-	ld   ($FFFF), a
-	inc  hl
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
+	pop	hl
+	inc	hl
+	ld	a, (hl)
+	ld	($FFFF), a
+	inc	hl
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
 	call	LABEL_6B62
-	pop  bc
+	pop	bc
 	call	LABEL_6C46
 	ret
 
 LABEL_6B3A:
-	ld   b, $01
+	ld	b, $01
 	call	LABEL_6BCA
-	ld   a, $00
-	jr   z, LABEL_6B45
-	ld   a, $06
+	ld	a, $00
+	jr	z, LABEL_6B45
+	ld	a, $06
 LABEL_6B45:
-	ld   c, a
-	add  a, a
-	ld   e, a
-	add  a, a
-	add  a, e
-	ld   e, a
-	ld   d, $00
-	ld   hl, LABEL_705F+3
-	add  hl, de
+	ld	c, a
+	add	a, a
+	ld	e, a
+	add	a, a
+	add	a, e
+	ld	e, a
+	ld	d, $00
+	ld	hl, LABEL_705F+3
+	add	hl, de
 	push	bc
-	ld   a, (hl)
-	ld   ($FFFF), a
-	inc  hl
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
+	ld	a, (hl)
+	ld	($FFFF), a
+	inc	hl
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
 	call	LABEL_6B62
-	pop  bc
-	jp   LABEL_6C46
+	pop	bc
+	jp	LABEL_6C46
 
 LABEL_6B62:
-	ld   b, $00
-	ld   de, $D000
+	ld	b, $00
+	ld	de, $D000
 	call	LABEL_6B6E
-	inc  hl
-	ld   de, $D001
+	inc	hl
+	ld	de, $D001
 LABEL_6B6E:
-	ld   a, (hl)
-	or   a
+	ld	a, (hl)
+	or	a
 	ret  z
 
-	jp   m, LABEL_6B81
-	ld   c, a
-	inc  hl
+	jp	m, LABEL_6B81
+	ld	c, a
+	inc	hl
 LABEL_6B76:
 	ldi
 	dec  hl
-	inc  de
-	jp   pe, LABEL_6B76
-	inc  hl
-	jp   LABEL_6B6E
+	inc	de
+	jp	pe, LABEL_6B76
+	inc	hl
+	jp	LABEL_6B6E
 
 LABEL_6B81:
-	and  $7F
-	ld   c, a
-	inc  hl
+	and	$7F
+	ld	c, a
+	inc	hl
 LABEL_6B85:
 	ldi
-	inc  de
-	jp   pe, LABEL_6B85
-	jp   LABEL_6B6E
+	inc	de
+	jp	pe, LABEL_6B85
+	jp	LABEL_6B6E
 
 LABEL_6B8E:
-	ld   c, $BE
+	ld	c, $BE
 LABEL_6B90:
-	ld   a, (hl)
-	or   a
+	ld	a, (hl)
+	or	a
 	ret  z
 
-	jp   m, LABEL_6BB1
-	ld   b, a
-	inc  hl
+	jp	m, LABEL_6BB1
+	ld	b, a
+	inc	hl
 LABEL_6B98:
-	ld   a, (hl)
+	ld	a, (hl)
 	outi
-	inc  b
-	or   (hl)
+	inc	b
+	or	(hl)
 	outi
-	inc  b
-	or   (hl)
+	inc	b
+	or	(hl)
 	outi
 	dec  hl
 	dec  hl
 	dec  hl
-	out  (Port_VDPData), a
-	jp   nz, LABEL_6B98
-	inc  hl
-	inc  hl
-	inc  hl
-	jp   LABEL_6B90
+	out	(Port_VDPData), a
+	jp	nz, LABEL_6B98
+	inc	hl
+	inc	hl
+	inc	hl
+	jp	LABEL_6B90
 
 LABEL_6BB1:
-	and  $7F
-	ld   b, a
-	inc  hl
+	and	$7F
+	ld	b, a
+	inc	hl
 LABEL_6BB5:
-	ld   a, (hl)
+	ld	a, (hl)
 	outi
-	inc  b
-	or   (hl)
+	inc	b
+	or	(hl)
 	outi
-	inc  b
-	or   (hl)
+	inc	b
+	or	(hl)
 	outi
 	push	af
-	pop  af
-	out  (Port_VDPData), a
-	jp   nz, LABEL_6BB5
-	jp   LABEL_6B90
+	pop	af
+	out	(Port_VDPData), a
+	jp	nz, LABEL_6BB5
+	jp	LABEL_6B90
 
 LABEL_6BCA:
 	push	hl
-	ld   a, (Dungeon_direction)
-	and  $03
-	add  a, a
-	add  a, a
-	add  a, a
-	add  a, a
-	ld   e, a
-	ld   d, $00
-	ld   hl, LABEL_6C06
-	add  hl, de
-	ld   e, b
-	add  hl, de
-	ld   a, (Dungeon_position)
-	add  a, (hl)
-	ld   h, $CB
-	ld   l, a
-	ld   a, (hl)
-	and  $07
-	pop  hl
+	ld	a, (Dungeon_direction)
+	and	$03
+	add	a, a
+	add	a, a
+	add	a, a
+	add	a, a
+	ld	e, a
+	ld	d, $00
+	ld	hl, LABEL_6C06
+	add	hl, de
+	ld	e, b
+	add	hl, de
+	ld	a, (Dungeon_position)
+	add	a, (hl)
+	ld	h, $CB
+	ld	l, a
+	ld	a, (hl)
+	and	$07
+	pop	hl
 	ret
 
 LABEL_6BE9:
-	ld   a, (Dungeon_direction)
-	and  $03
-	add  a, a
-	add  a, a
-	add  a, a
-	add  a, a
-	ld   e, a
-	ld   d, $00
-	ld   hl, LABEL_6C06
-	add  hl, de
-	ld   e, b
-	add  hl, de
-	ld   a, (Dungeon_position)
-	add  a, (hl)
-	ld   h, $CB
-	ld   l, a
-	ld   a, (hl)
-	and  $7F
+	ld	a, (Dungeon_direction)
+	and	$03
+	add	a, a
+	add	a, a
+	add	a, a
+	add	a, a
+	ld	e, a
+	ld	d, $00
+	ld	hl, LABEL_6C06
+	add	hl, de
+	ld	e, b
+	add	hl, de
+	ld	a, (Dungeon_position)
+	add	a, (hl)
+	ld	h, $CB
+	ld	l, a
+	ld	a, (hl)
+	and	$7F
 	ret
 
 
@@ -14706,266 +14706,266 @@ LABEL_6C06:
 .db $00, $FF, $0F, $EF, $FE, $0E, $EE, $FD, $0D, $ED, $FC, $01, $10, $F0, $00, $00
 
 LABEL_6C46:
-	ld   a, c
-	cp   $06
-	jp   z, LABEL_6E38
+	ld	a, c
+	cp	$06
+	jp	z, LABEL_6E38
 	ret  nc
 
-	ld   hl, $FFFF
-	ld   (hl), :Bank06
-	add  a, a
-	ld   l, a
-	add  a, a
-	add  a, a
-	ld   h, a
-	add  a, a
-	add  a, h
-	add  a, l
-	ld   l, a
-	ld   h, $00
-	ld   e, l
-	ld   d, h
-	add  hl, hl
-	add  hl, de
-	ld   de, LABEL_6E8B
-	add  hl, de
-	ld   b, $04
+	ld	hl, $FFFF
+	ld	(hl), :Bank06
+	add	a, a
+	ld	l, a
+	add	a, a
+	add	a, a
+	ld	h, a
+	add	a, a
+	add	a, h
+	add	a, l
+	ld	l, a
+	ld	h, $00
+	ld	e, l
+	ld	d, h
+	add	hl, hl
+	add	hl, de
+	ld	de, LABEL_6E8B
+	add	hl, de
+	ld	b, $04
 	call	LABEL_6BCA
-	jr   z, LABEL_6C85
+	jr	z, LABEL_6C85
 	call	LABEL_6D13
-	ld   b, $02
+	ld	b, $02
 	call	LABEL_6BCA
-	ld   b, (hl)
-	inc  hl
-	ld   c, (hl)
-	inc  hl
+	ld	b, (hl)
+	inc	hl
+	ld	c, (hl)
+	inc	hl
 	push	bc
 	call	LABEL_6D34
-	ld   b, $03
+	ld	b, $03
 	call	LABEL_6BCA
-	pop  bc
-	jp   LABEL_6D34
+	pop	bc
+	jp	LABEL_6D34
 
 LABEL_6C85:
-	ld   de, $000C
-	add  hl, de
-	ld   b, $02
+	ld	de, $000C
+	add	hl, de
+	ld	b, $02
 	call	LABEL_6BCA
-	ld   b, (hl)
-	inc  hl
-	ld   c, (hl)
-	inc  hl
+	ld	b, (hl)
+	inc	hl
+	ld	c, (hl)
+	inc	hl
 	push	bc
 	call	LABEL_6D45
-	ld   b, $03
+	ld	b, $03
 	call	LABEL_6BCA
-	pop  bc
+	pop	bc
 	call	LABEL_6D45
-	ld   b, $07
+	ld	b, $07
 	call	LABEL_6BCA
-	jr   z, LABEL_6CBF
+	jr	z, LABEL_6CBF
 	call	LABEL_6D13
-	ld   b, $05
+	ld	b, $05
 	call	LABEL_6BCA
-	ld   b, (hl)
-	inc  hl
-	ld   c, (hl)
-	inc  hl
+	ld	b, (hl)
+	inc	hl
+	ld	c, (hl)
+	inc	hl
 	push	bc
 	call	LABEL_6D34
-	ld   b, $06
+	ld	b, $06
 	call	LABEL_6BCA
-	pop  bc
-	jp   LABEL_6D34
+	pop	bc
+	jp	LABEL_6D34
 
 LABEL_6CBF:
-	ld   de, $000C
-	add  hl, de
-	ld   b, $05
+	ld	de, $000C
+	add	hl, de
+	ld	b, $05
 	call	LABEL_6BCA
-	ld   b, (hl)
-	inc  hl
-	ld   c, (hl)
-	inc  hl
+	ld	b, (hl)
+	inc	hl
+	ld	c, (hl)
+	inc	hl
 	push	bc
 	call	LABEL_6D45
-	ld   b, $06
+	ld	b, $06
 	call	LABEL_6BCA
-	pop  bc
+	pop	bc
 	call	LABEL_6D45
-	ld   b, $0A
+	ld	b, $0A
 	call	LABEL_6BCA
-	jr   z, LABEL_6CF9
+	jr	z, LABEL_6CF9
 	call	LABEL_6D13
-	ld   b, $08
+	ld	b, $08
 	call	LABEL_6BCA
-	ld   b, (hl)
-	inc  hl
-	ld   c, (hl)
-	inc  hl
+	ld	b, (hl)
+	inc	hl
+	ld	c, (hl)
+	inc	hl
 	push	bc
 	call	LABEL_6D34
-	ld   b, $09
+	ld	b, $09
 	call	LABEL_6BCA
-	pop  bc
-	jp   LABEL_6D34
+	pop	bc
+	jp	LABEL_6D34
 
 LABEL_6CF9:
-	ld   de, $000C
-	add  hl, de
-	ld   b, $08
+	ld	de, $000C
+	add	hl, de
+	ld	b, $08
 	call	LABEL_6BCA
-	ld   b, (hl)
-	inc  hl
-	ld   c, (hl)
-	inc  hl
+	ld	b, (hl)
+	inc	hl
+	ld	c, (hl)
+	inc	hl
 	push	bc
 	call	LABEL_6D45
-	ld   b, $09
+	ld	b, $09
 	call	LABEL_6BCA
-	pop  bc
-	jp   LABEL_6D45
+	pop	bc
+	jp	LABEL_6D45
 
 LABEL_6D13:
 	push	af
 	call	LABEL_6D21
-	pop  af
-	cp   $07
-	jr   z, LABEL_6D21
-	cp   $01
-	jr   nc, LABEL_6D21
-	xor  a
+	pop	af
+	cp	$07
+	jr	z, LABEL_6D21
+	cp	$01
+	jr	nc, LABEL_6D21
+	xor	a
 LABEL_6D21:
-	ld   e, (hl)
-	inc  hl
-	ld   d, (hl)
-	inc  hl
-	ld   b, (hl)
-	inc  hl
-	ld   c, (hl)
-	inc  hl
-	ld   a, (hl)
-	inc  hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	inc	hl
+	ld	b, (hl)
+	inc	hl
+	ld	c, (hl)
+	inc	hl
+	ld	a, (hl)
+	inc	hl
 	push	hl
-	ld   h, (hl)
-	ld   l, a
+	ld	h, (hl)
+	ld	l, a
 	call	nz, LABEL_6E64
-	pop  hl
-	inc  hl
+	pop	hl
+	inc	hl
 	ret
 
 LABEL_6D34:
-	ld   e, (hl)
-	inc  hl
-	ld   d, (hl)
-	inc  hl
-	inc  hl
-	inc  hl
-	ld   a, (hl)
-	inc  hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	inc	hl
+	inc	hl
+	inc	hl
+	ld	a, (hl)
+	inc	hl
 	push	hl
-	ld   h, (hl)
-	ld   l, a
+	ld	h, (hl)
+	ld	l, a
 	call	z, LABEL_6E64
-	pop  hl
-	inc  hl
+	pop	hl
+	inc	hl
 	ret
 
 LABEL_6D45:
-	ld   e, (hl)
-	inc  hl
-	ld   d, (hl)
-	inc  hl
-	ld   a, (hl)
-	inc  hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	inc	hl
+	ld	a, (hl)
+	inc	hl
 	push	hl
-	ld   h, (hl)
-	ld   l, a
+	ld	h, (hl)
+	ld	l, a
 	call	z, LABEL_6E64
-	pop  hl
-	inc  hl
-	inc  hl
-	inc  hl
+	pop	hl
+	inc	hl
+	inc	hl
+	inc	hl
 	ret
 
 LABEL_6D56:
-	ld   hl, $FFFF
-	ld   (hl), :Bank15
-	ld   a, (Dungeon_index)
-	ld   h, a
-	ld   l, $00
+	ld	hl, $FFFF
+	ld	(hl), :Bank15
+	ld	a, (Dungeon_index)
+	ld	h, a
+	ld	l, $00
 	srl  h
 	rr   l
-	ld   de, B15_DungeonLayouts
-	add  hl, de
-	ld   de, Dungeon_layout
-	ld   b, $80
+	ld	de, B15_DungeonLayouts
+	add	hl, de
+	ld	de, Dungeon_layout
+	ld	b, $80
 LABEL_6D6E:
-	ld   a, (hl)
+	ld	a, (hl)
 	rrca
 	rrca
 	rrca
 	rrca
-	and  $0F
-	ld   (de), a
-	inc  de
-	ld   a, (hl)
-	and  $0F
-	ld   (de), a
-	inc  de
-	inc  hl
+	and	$0F
+	ld	(de), a
+	inc	de
+	ld	a, (hl)
+	and	$0F
+	ld	(de), a
+	inc	de
+	inc	hl
 	djnz	LABEL_6D6E
 
 LABEL_6D7F:
-	ld   hl, $FFFF
-	ld   (hl), :Bank03
-	ld   hl, LABEL_6DF7
-	ld   de, $C251
-	ld   bc, $0007
+	ld	hl, $FFFF
+	ld	(hl), :Bank03
+	ld	hl, LABEL_6DF7
+	ld	de, $C251
+	ld	bc, $0007
 	ldir
-	ld   a, (Dungeon_index)
-	add  a, a
-	add  a, a
-	ld   l, a
-	ld   h, $00
-	ld   de, LABEL_B03_B619
-	add  hl, de
-	ld   e, (hl)
-	inc  hl
-	ld   d, (hl)
-	ld   ($C2E3), de
-	inc  hl
-	ld   a, ($C315)
-	or   a
-	ld   a, (hl)
-	jr   nz, LABEL_6DBB
-	ld   e, a
-	ld   a, (Dungeon_index)
-	ld   hl, LABEL_6DFE
-	ld   bc, $0006
+	ld	a, (Dungeon_index)
+	add	a, a
+	add	a, a
+	ld	l, a
+	ld	h, $00
+	ld	de, LABEL_B03_B619
+	add	hl, de
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	ld	($C2E3), de
+	inc	hl
+	ld	a, ($C315)
+	or	a
+	ld	a, (hl)
+	jr	nz, LABEL_6DBB
+	ld	e, a
+	ld	a, (Dungeon_index)
+	ld	hl, LABEL_6DFE
+	ld	bc, $0006
 	cpir
-	ld   a, e
-	jr   z, LABEL_6DBB
-	ld   a, $FF
+	ld	a, e
+	jr	z, LABEL_6DBB
+	ld	a, $FF
 LABEL_6DBB:
-	inc  a
-	ld   ($C315), a
-	add  a, a
-	add  a, a
-	add  a, a
-	ld   l, a
-	ld   h, $00
-	ld   de, LABEL_B03_B5B9
-	add  hl, de
-	ld   a, (hl)
-	ld   ($C240), a
-	ld   de, $C248
-	ld   bc, $0008
+	inc	a
+	ld	($C315), a
+	add	a, a
+	add	a, a
+	add	a, a
+	ld	l, a
+	ld	h, $00
+	ld	de, LABEL_B03_B5B9
+	add	hl, de
+	ld	a, (hl)
+	ld	($C240), a
+	ld	de, $C248
+	ld	bc, $0008
 	ldir
-	ld   a, ($C249)
-	ld   ($C248), a
-	ld   a, ($C24D)
-	ld   ($C250), a
+	ld	a, ($C249)
+	ld	($C248), a
+	ld	a, ($C24D)
+	ld	($C250), a
 	ret
 
 
@@ -14989,87 +14989,87 @@ LABEL_6DFE:
 .db	$01, $02, $14, $15, $16, $21
 
 LABEL_6E04:
-	ld   a, ($C2F5)
-	or   a
+	ld	a, ($C2F5)
+	or	a
 	ret  z
 
-	inc  a
-	ld   ($C2F5), a
-	ld   hl, $FFFF
-	ld   (hl), :Bank20
-	ld   h, $00
-	ld   l, a
-	add  hl, hl
-	ld   de, LABEL_B20_BDB8
-	add  hl, de
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	ld   b, (hl)
-	inc  hl
+	inc	a
+	ld	($C2F5), a
+	ld	hl, $FFFF
+	ld	(hl), :Bank20
+	ld	h, $00
+	ld	l, a
+	add	hl, hl
+	ld	de, LABEL_B20_BDB8
+	add	hl, de
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	ld	b, (hl)
+	inc	hl
 LABEL_6E20:
 	push	bc
-	ld   e, (hl)
-	inc  hl
-	ld   d, (hl)
-	inc  hl
-	ld   b, (hl)
-	inc  hl
+	ld	e, (hl)
+	inc	hl
+	ld	d, (hl)
+	inc	hl
+	ld	b, (hl)
+	inc	hl
 LABEL_6E27:
-	ld   a, (hl)
-	add  a, $80
-	cp   $C0
-	jr   c, LABEL_6E2F
-	ld   (de), a
+	ld	a, (hl)
+	add	a, $80
+	cp	$C0
+	jr	c, LABEL_6E2F
+	ld	(de), a
 LABEL_6E2F:
-	inc  de
-	inc  de
-	inc  hl
+	inc	de
+	inc	de
+	inc	hl
 	djnz	LABEL_6E27
-	pop  bc
+	pop	bc
 	djnz	LABEL_6E20
 	ret
 
 LABEL_6E38:
-	ld   b, $01
+	ld	b, $01
 	call	LABEL_6BE9
-	and  $07
-	cp   $07
-	jr   z, LABEL_6E04
-	sub  $02
+	and	$07
+	cp	$07
+	jr	z, LABEL_6E04
+	sub	$02
 	ret  c
 
 	bit  7, (hl)
-	jr   z, LABEL_6E4C
-	add  a, $06
+	jr	z, LABEL_6E4C
+	add	a, $06
 LABEL_6E4C:
-	ld   hl, $FFFF
-	ld   (hl), :Bank06
-	add  a, a
-	ld   hl, LABEL_6E75
-	add  a, l
-	ld   l, a
-	adc  a, h
-	sub  l
-	ld   h, a
-	ld   a, (hl)
-	inc  hl
-	ld   h, (hl)
-	ld   l, a
-	ld   de, $D114
-	ld   bc, $1218
+	ld	hl, $FFFF
+	ld	(hl), :Bank06
+	add	a, a
+	ld	hl, LABEL_6E75
+	add	a, l
+	ld	l, a
+	adc	a, h
+	sub	l
+	ld	h, a
+	ld	a, (hl)
+	inc	hl
+	ld	h, (hl)
+	ld	l, a
+	ld	de, $D114
+	ld	bc, $1218
 LABEL_6E64:
 	push	bc
 	push	de
-	ld   b, $00
+	ld	b, $00
 	ldir
 	ex   de, hl
-	pop  hl
-	ld   bc, $0040
-	add  hl, bc
+	pop	hl
+	ld	bc, $0040
+	add	hl, bc
 	ex   de, hl
-	pop  bc
+	pop	bc
 	djnz	LABEL_6E64
 	ret
 
@@ -16484,51 +16484,51 @@ LABEL_77AC:
 	jp nz, LABEL_78BD
 
 LABEL_7877:
-	ld   (Game_mode), a
-	inc  hl
+	ld	(Game_mode), a
+	inc	hl
 LABEL_787B:
-	ld   a, (hl)
-	ld   ($C308), a
-	ld   ($C309), a
-	inc  hl
-	ld   e, (hl)
-	ld   d, $00
+	ld	a, (hl)
+	ld	($C308), a
+	ld	($C309), a
+	inc	hl
+	ld	e, (hl)
+	ld	d, $00
 	ex   de, hl
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	ld   a, l
-	sub  $60
-	jr   c, LABEL_7894
-	cp   $C0
-	jr   c, LABEL_7897
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	ld	a, l
+	sub	$60
+	jr	c, LABEL_7894
+	cp	$C0
+	jr	c, LABEL_7897
 LABEL_7894:
-	sub  $40
+	sub	$40
 	dec  h
 LABEL_7897:
-	ld   l, a
-	ld   a, h
-	and  $07
-	ld   h, a
-	ld   ($C305), hl
-	ld   ($C311), hl
+	ld	l, a
+	ld	a, h
+	and	$07
+	ld	h, a
+	ld	($C305), hl
+	ld	($C311), hl
 	ex   de, hl
-	inc  hl
-	ld   a, (hl)
-	sub  $08
-	and  $7F
-	ld   l, a
-	ld   h, $00
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	add  hl, hl
-	ld   ($C301), hl
-	ld   ($C313), hl
-	xor  a
-	ld   ($C30E), a
-	jp   LABEL_7908
+	inc	hl
+	ld	a, (hl)
+	sub	$08
+	and	$7F
+	ld	l, a
+	ld	h, $00
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	add	hl, hl
+	ld	($C301), hl
+	ld	($C313), hl
+	xor	a
+	ld	($C30E), a
+	jp	LABEL_7908
 
 
 LABEL_78BD:
@@ -16572,19 +16572,19 @@ LABEL_78BD:
 	ld ($C301), hl
 
 LABEL_7908:
-	ld   a, ($C810)
-	ld   ($C2D7), a
-	ld   hl, $C26F
-	ld   de, $C270
-	ld   bc, $0017
-	ld   (hl), $00
+	ld	a, ($C810)
+	ld	($C2D7), a
+	ld	hl, $C26F
+	ld	de, $C270
+	ld	bc, $0017
+	ld	(hl), $00
 	ldir
-	ld   hl, $C800
-	ld   de, $C801
-	ld   bc, $00FF
-	ld   (hl), $00
+	ld	hl, $C800
+	ld	de, $C801
+	ld	bc, $00FF
+	ld	(hl), $00
 	ldir
-	pop  hl
+	pop	hl
 	ret
 
 
@@ -16772,35 +16772,35 @@ FadeOut:
 	jr LABEL_7B0B
 
 FadeOut2:
-	ld   hl, $2009
-	ld   (Fade_timer), hl
+	ld	hl, $2009
+	ld	(Fade_timer), hl
 LABEL_7B0B:
-	ld   a, $16
+	ld	a, $16
 	call	WaitForVInt
-	ld   a, (Fade_timer)
-	or   a
-	jp   nz, LABEL_7B0B
+	ld	a, (Fade_timer)
+	or	a
+	jp	nz, LABEL_7B0B
 	ret
 
 FadeIn:
-	ld   hl, $1089
-	ld   (Fade_timer), hl
-	jr   LABEL_7B33
+	ld	hl, $1089
+	ld	(Fade_timer), hl
+	jr	LABEL_7B33
 
 FadeIn2:
-	ld   hl, $2089
-	ld   (Fade_timer), hl
-	ld   hl, $C220
-	ld   de, $C221
-	ld   bc, $001F
-	ld   (hl), $00
+	ld	hl, $2089
+	ld	(Fade_timer), hl
+	ld	hl, $C220
+	ld	de, $C221
+	ld	bc, $001F
+	ld	(hl), $00
 	ldir
 LABEL_7B33:
-	ld   a, $16
+	ld	a, $16
 	call	WaitForVInt
-	ld   a, (Fade_timer)
-	or   a
-	jp   nz, LABEL_7B33
+	ld	a, (Fade_timer)
+	or	a
+	jp	nz, LABEL_7B33
 	ret
 
 
