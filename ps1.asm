@@ -1835,7 +1835,7 @@ LABEL_C54:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	ld	($C2D9), hl
+	ld	(Dungeon_entrance_points_addr), hl
 	call	LABEL_723D
 	call	LABEL_744B
 	ld	a, $14
@@ -16441,7 +16441,7 @@ LABEL_77AC:
 	ld e, h
 	ld hl, $FFFF
 	ld (hl), :Bank03
-	ld hl, ($C2D9)
+	ld hl, (Dungeon_entrance_points_addr)
 -:
 	ld a, (hl)
 	cp $FF

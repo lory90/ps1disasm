@@ -456,6 +456,8 @@
 .define	CurrentBattle_EnemyName $C2C8 ; 8 bytes
 .define	CurrentBattle_EXPReward $C2D0 ; unsigned 2 bytes, little endian
 
+.define Dungeon_entrance_points_addr $C2D9
+
 .define	Dungeon_direction $C30A
 .define	Dungeon_position $C30C
 .define	Dungeon_index $C30D
