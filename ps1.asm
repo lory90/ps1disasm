@@ -15181,82 +15181,234 @@ LABEL_6E8B:
 .db $68, $A6
 
 LABEL_705F:
-.db	:Bank07, $00, $80
-.db	:Bank04, $0F, $8B
-.db :Bank07, $4B, $8A
-.db :Bank04, $D4, $8E
-.db :Bank07, $1E, $95
-.db :Bank04, $A4, $92
-.db :Bank07, $6B, $9F
-.db :Bank04, $73, $96
-.db :Bank07, $13, $AA
-.db :Bank04, $34, $9A
-.db :Bank08, $00, $80
-.db :Bank04, $02, $9E
-.db :Bank08, $ED, $89
-.db :Bank04, $06, $89
-.db :Bank08, $23, $A4
-.db :Bank04, $D3, $A1
-.db :Bank09, $D1, $83
-.db :Bank04, $35, $A5
-.db :Bank07, $22, $B4
-.db :Bank04, $80, $A8
-.db :Bank05, $AF, $B1
-.db :Bank04, $A6, $AB
-.db :Bank07, $22, $B4
-.db :Bank04, $5B, $AF
-.db :Bank09, $D1, $83
-.db :Bank04, $3D, $B3
-.db :Bank08, $23, $A4
-.db :Bank04, $6C, $B7
-.db :Bank08, $ED, $89
-.db :Bank04, $06, $89
-.db :Bank08, $3F, $96
-.db :Bank28, $C0, $A6
-.db :Bank08, $06, $9D
-.db :Bank28, $35, $A9
-.db :Bank05, $27, $AA
-.db :Bank28, $D0, $AB
-.db :Bank09, $00, $80
-.db :Bank28, $C9, $AE
-.db :Bank05, $27, $AA
-.db :Bank28, $0C, $B2
-.db :Bank08, $06, $9D
-.db :Bank28, $C2, $B5
-.db :Bank08, $3F, $96
-.db :Bank28, $5A, $B9
-.db :Bank08, $ED, $89
-.db :Bank04, $06, $89
-.db :Bank09, $4A, $8F
-.db :Bank05, $00, $80
-.db :Bank09, $BD, $9A
-.db :Bank05, $67, $83
-.db :Bank09, $0D, $A6
-.db :Bank05, $95, $86
-.db :Bank08, $75, $AF,
-.db :Bank05, $7A, $89
-.db :Bank04, $00, $80
-.db :Bank05, $62, $8C
-.db :Bank05, $30, $B8
-.db :Bank05, $18, $8F
-.db :Bank08, $26, $B9
-.db :Bank05, $8F, $91
-.db :Bank08, $ED, $89,
-.db :Bank04, $06, $89
-.db :Bank08, $26, $B9
-.db :Bank05, $C6, $93
-.db :Bank05, $30, $B8
-.db :Bank05, $2E, $97
-.db :Bank04, $00, $80
-.db :Bank05, $AD, $9A
-.db :Bank08, $75, $AF
-.db :Bank05, $7E, $9E
-.db :Bank09, $0D, $A6
-.db :Bank05, $48, $A2
-.db :Bank09, $BD, $9A
-.db :Bank05, $12, $A6
-.db :Bank09, $4A, $8F
-.db :Bank04, $BE, $BB
+.db	:Bank07
+.dw	LABEL_B07_8000
+
+.db	:Bank04
+.dw	LABEL_B04_8B0F
+
+.db :Bank07
+.dw	LABEL_B07_8A4B
+
+.db :Bank04
+.dw	LABEL_B04_8ED4
+
+.db :Bank07
+.dw	LABEL_B07_951E
+
+.db :Bank04
+.dw	LABEL_B04_92A4
+
+.db :Bank07
+.dw	LABEL_B07_9F6B
+
+.db :Bank04
+.dw	LABEL_B04_9673
+
+.db :Bank07
+.dw	LABEL_B07_AA13
+
+.db :Bank04
+.dw	LABEL_B04_9A34
+
+.db :Bank08
+.dw	LABEL_B08_8000
+
+.db :Bank04
+.dw	LABEL_B04_9E02
+
+.db :Bank08
+.dw	LABEL_B08_89ED
+
+.db :Bank04
+.dw	LABEL_B04_8906
+
+.db :Bank08
+.dw	LABEL_B08_A423
+
+.db :Bank04
+.dw	LABEL_B04_A1D3
+
+.db :Bank09
+.dw	LABEL_B09_83D1
+
+.db :Bank04
+.dw	LABEL_B04_A535
+
+.db :Bank07
+.dw	LABEL_B07_B422
+
+.db :Bank04
+.dw	LABEL_B04_A880
+
+.db :Bank05
+.dw	LABEL_B05_B1AF
+
+.db :Bank04
+.dw	LABEL_B04_ABA6
+
+.db :Bank07
+.dw	LABEL_B07_B422
+
+.db :Bank04
+.dw	LABEL_B04_AF5B
+
+.db :Bank09
+.dw	LABEL_B09_83D1
+
+.db :Bank04
+.dw	LABEL_B04_B33D
+
+.db :Bank08
+.dw	LABEL_B08_A423
+
+.db :Bank04
+.dw	LABEL_B04_B76C
+
+.db :Bank08
+.dw	LABEL_B08_89ED
+
+.db :Bank04
+.dw	LABEL_B04_8906
+
+.db :Bank08
+.dw	LABEL_B08_963F
+
+.db :Bank28
+.dw	LABEL_B28_A6C0
+
+.db :Bank08
+.dw	LABEL_B08_9D06
+
+.db :Bank28
+.dw	LABEL_B28_A935
+
+.db :Bank05
+.dw	LABEL_B05_AA27
+
+.db :Bank28
+.dw	LABEL_B28_ABD0
+
+.db :Bank09
+.dw	LABEL_B09_8000
+
+.db :Bank28
+.dw	LABEL_B28_AEC9
+
+.db :Bank05
+.dw	LABEL_B05_AA27
+
+.db :Bank28
+.dw	LABEL_B28_B20C
+
+.db :Bank08
+.dw	LABEL_B08_9D06
+
+.db :Bank28
+.dw	LABEL_B28_B5C2
+
+.db :Bank08
+.dw	LABEL_B08_963F
+
+.db :Bank28
+.dw	LABEL_B28_B95A
+
+.db :Bank08
+.dw	LABEL_B08_89ED
+
+.db :Bank04
+.dw	LABEL_B04_8906
+
+.db :Bank09
+.dw	LABEL_B09_8F4A
+
+.db :Bank05
+.dw	LABEL_B05_8000
+
+.db :Bank09
+.dw	LABEL_B09_9ABD
+
+.db :Bank05
+.dw	LABEL_B05_8367
+
+.db :Bank09
+.dw	LABEL_B09_A60D
+
+.db :Bank05
+.dw	LABEL_B05_8695
+
+.db :Bank08
+.dw	LABEL_B08_AF75
+
+.db :Bank05
+.dw	LABEL_B05_897A
+
+.db :Bank04
+.dw	LABEL_B04_8000
+
+.db :Bank05
+.dw	LABEL_B05_8C62
+
+.db :Bank05
+.dw	LABEL_B05_B830
+
+.db :Bank05
+.dw	LABEL_B05_8F18
+
+.db :Bank08
+.dw	LABEL_B08_B926
+
+.db :Bank05
+.dw	LABEL_B05_918F
+
+.db :Bank08
+.dw	LABEL_B08_89ED
+
+.db :Bank04
+.dw	LABEL_B04_8906
+
+.db :Bank08
+.dw	LABEL_B08_B926
+
+.db :Bank05
+.dw	LABEL_B05_93C6
+
+.db :Bank05
+.dw	LABEL_B05_B830
+
+.db :Bank05
+.dw	LABEL_B05_972E
+
+.db :Bank04
+.dw	LABEL_B04_8000
+
+.db :Bank05
+.dw	LABEL_B05_9AAD
+
+.db :Bank08
+.dw	LABEL_B08_AF75
+
+.db :Bank05
+.dw	LABEL_B05_9E7E
+
+.db :Bank09
+.dw	LABEL_B09_A60D
+
+.db :Bank05
+.dw	LABEL_B05_A248
+
+.db :Bank09
+.dw	LABEL_B09_9ABD
+
+.db :Bank05
+.dw	LABEL_B05_A612
+
+.db :Bank09
+.dw	LABEL_B09_8F4A
+
+.db :Bank04
+.dw	LABEL_B04_BBBE
+
 
 LABEL_7143:
 	push bc
