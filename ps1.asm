@@ -5024,11 +5024,11 @@ ItemUse_IceDigger:
 	jp LABEL_3464
 
 ItemUse_Cola:
-	ld d, $0A
+	ld d, 10	; heal 10
 	jr +
 
 ItemUse_Burger:
-	ld d, $28
+	ld d, 40	; heal 40
 +:
 	ld a, ($C29D)
 	or a
@@ -5305,7 +5305,7 @@ ItemUse_EclipseTorch:
 	push bc
 	call LABEL_7CA6
 	pop bc
-	ld a, $38
+	ld a, ItemID_LaconiaPot
 	call Inventory_FindFreeSlot
 	jr z, +
 	ld hl, LABEL_B12_B49A
