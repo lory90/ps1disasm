@@ -8647,16 +8647,46 @@ LABEL_3D96:
 
 
 LABEL_3DA6:
-.db :Bank16, $00, $80, $20, $80, $0F, $00, $80
-.db	:Bank16, $16, $8F, $36, $8F, $0F, $33, $83
-.db :Bank16, $72, $9C, $82, $9C, $0F, $E9, $86
-.db	:Bank16, $72, $9C, $82, $9C, $0F, $A0, $89
-.db :Bank16, $F6, $B3, $06, $B4, $0F, $80, $8C
-.db	:Bank16, $10, $80, $20, $80, $0F, $46, $8E
-.db :Bank16, $00, $80, $20, $80, $0F, $16, $91
-.db	:Bank17, $40, $86, $50, $86, $0F, $7B, $94
-.db :Bank17, $C4, $97, $D4, $97, $0F, $0A, $97
-.db	:Bank17, $B1, $A4, $C1, $A4, $0F, $2C, $9A
+.db :Bank16
+.dw	LABEL_B16_8000, LABEL_B16_8020
+.db	:Bank15
+.dw	LABEL_B15_8000
+.db	:Bank16
+.dw	LABEL_B16_8F16, LABEL_B16_8F36
+.db	:Bank15
+.dw	LABEL_B15_8333
+.db :Bank16
+.dw	LABEL_B16_9C72, LABEL_B16_9C82
+.db	:Bank15
+.dw	LABEL_B15_86E9
+.db	:Bank16
+.dw	LABEL_B16_9C72, LABEL_B16_9C82
+.db	:Bank15
+.dw	LABEL_B15_89A0
+.db :Bank16
+.dw	LABEL_B16_B3F6, LABEL_B16_B406
+.db	:Bank15
+.dw	LABEL_B15_8C80
+.db	:Bank16
+.dw	LABEL_B16_8010, LABEL_B16_8020
+.db	:Bank15
+.dw	LABEL_B15_8E46
+.db :Bank16
+.dw	LABEL_B16_8000, LABEL_B16_8020
+.db	:Bank15
+.dw	LABEL_B15_9116
+.db	:Bank17
+.dw	LABEL_B17_8640, LABEL_B17_8650
+.db	:Bank15
+.dw	LABEL_B15_947B
+.db :Bank17
+.dw	LABEL_B17_97C4, LABEL_B17_97D4
+.db	:Bank15
+.dw	LABEL_B15_970A
+.db	:Bank17
+.dw	LABEL_B17_A4B1, LABEL_B17_A4C1
+.db	:Bank15
+.dw	LABEL_B15_9A2C
 
 LABEL_3DF6:
 .db $11, $58, $AF, $68, $AF, $0F, $11, $9C
