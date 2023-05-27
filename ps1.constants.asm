@@ -436,7 +436,7 @@
 .define Word_Ould $FF
 
 ; RAM
-.define Music_to_play $C004
+.define Sound_index $C004
 
 .define VDP_reg_0 $C200
 .define VDP_reg_1 $C201
@@ -463,11 +463,13 @@
 
 .define	Scroll_direction $C264
 .define	Rotate_palette_flag $C265
-
+.define	Battle_current_player $C267
 .define	Cursor_pos $C269
 .define	Option_total_num $C26E	; number of options available for an interactive menu (e.g. player menu)
-.define Anim_counters $C26F
 
+.define Anim_counters $C26F
+.define	Battle_selected_item $C29B
+.define	Battle_flag $C29D
 .define	Interaction_Type $C29E ; Background?
 
 .define	CurrentCharacter $C2C2 ; Used for battle dialogue etc
@@ -476,7 +478,18 @@
 .define	CurrentBattle_EnemyName $C2C8 ; 8 bytes
 .define	CurrentBattle_EXPReward $C2D0 ; unsigned 2 bytes, little endian
 
+.define Dungeon_moving_flag $C2D2
+.define Text_box_open_flag $C2D3
+.define Map_anim_flag $C2D6
+
 .define Dungeon_entrance_points_addr $C2D9
+
+.define Battle_rate $C2E3
+.define Battle_enemy_pool_index $C2E4
+.define Battle_enemy_id $C2E6
+.define Magic_wall_active $C2EF
+
+.define Current_sound $C2F4
 
 .define Game_data $C300
 
@@ -490,12 +503,14 @@
 .define	Dungeon_position $C30C
 .define	Dungeon_index $C30D
 .define	Vehicle_movement_flags $C30E
+.define	Dungeon_palette_index $C315
 
 .define	Char_stats $C400
 .define	Alis_stats $C400
 .define	Myau_stats $C410
 .define	Odin_stats $C420
 .define	Noah_stats $C430
+.define	Enemy_stats $C440
 
 .define	Inventory $C4C0
 .define	Current_money $C4E0

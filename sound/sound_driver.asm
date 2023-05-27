@@ -2960,7 +2960,7 @@ LABEL_B12_B1E0:
 LABEL_B12_B1EE:
 .db Dialogue_CurrentCharacter, " IS TIED UP.", Dialogue_Terminator63
 
-LABEL_B12_B1FC:
+DialogueBattleCannotMove_B12:
 .db Dialogue_CurrentCharacter, " ", Word_Cannot, " "
 .db Word_Move, ".", Dialogue_Terminator63
 
@@ -2968,7 +2968,7 @@ LABEL_B12_B203:
 .db Dialogue_EnemyName, " ", Word_Cannot, Dialogue_NewLine
 .db Word_Move, ".", Dialogue_Terminator63
 
-LABEL_B12_B20A:
+DialogueBattleRemoveBindings_B12:
 .db Dialogue_CurrentCharacter, " RE", Word_Move, "S ", Word_The, Dialogue_NewLine
 .db "BINDINGS.", Dialogue_Terminator63
 
@@ -3051,7 +3051,7 @@ LABEL_B12_B366:
 LABEL_B12_B375:
 .db "IT DOESN", Dialogue_Apostrophe, "T SEEM TOBE BROKEN.", Dialogue_Terminator65
 
-LABEL_B12_B392:
+DialogueDungeonTooDark_B12:
 .db Word_Cannot, " GO FORWARD,IT", Dialogue_Apostrophe, "S PITCH BLACK.", Dialogue_Terminator65
 
 LABEL_B12_B3B1:
@@ -3566,7 +3566,7 @@ LABEL_B12_BE93:
 .db Dialogue_CurrentCharacter, " HAS BEEN", Dialogue_NewLine
 .db Word_Turned_To_Stone, ".", Dialogue_Terminator65
 
-LABEL_B12_BEA1:
+DialogueBattleItemUsedUp_B12:
 .db Dialogue_CurrentItem, " IS USED", Dialogue_NewLine
 .db "BY ", Word_Some, Word_One, " NOW.", Dialogue_Terminator65
 
