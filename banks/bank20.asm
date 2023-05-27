@@ -1,7 +1,7 @@
-LABEL_B20_8000:
+Palette_TreasureChest_B20:
 .db $12, $06, $1A, $01, $25, $2F, $2A, $02
 
-LABEL_B20_8008:
+Tiles_TreasureChest_B20:
 .db $03, $00, $8D, $0F, $3F, $55, $AA, $A1
 .db $00, $00, $38, $EF, $D7, $A7, $AA, $11
 .db $03, $00, $02, $FF, $8B, $56, $28, $CE

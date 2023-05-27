@@ -21,6 +21,7 @@
 .define	weapon $A	; byte
 .define	armor $B	; byte
 .define shield $C	; byte
+.define tied_up $D	; byte
 .define	battle_magic_num $E	; byte
 .define	map_magic_num $F	; byte
 
@@ -483,10 +484,16 @@
 .define Map_anim_flag $C2D6
 
 .define Dungeon_entrance_points_addr $C2D9
+.define Enemy_money $C2DD
+.define Dungeon_item_index $C2DF
 
 .define Battle_rate $C2E3
 .define Battle_enemy_pool_index $C2E4
 .define Battle_enemy_id $C2E6
+.define Battle_escape_rate $C2E7
+.define Battle_enemy_action $C2E8
+.define Battle_player_hurt_flag $C2ED
+.define Battle_player_target $C2EE
 .define Magic_wall_active $C2EF
 
 .define Current_sound $C2F4

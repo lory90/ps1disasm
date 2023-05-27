@@ -2898,26 +2898,26 @@ LABEL_B12_A969:
 ; $63 terminator
 ; $65 terminator
 
-LABEL_B12_B108:
+DialogueEnemyDodgesAttack_B12:
 .db Dialogue_EnemyName, " DODGES", Dialogue_NewLine
 .db Dialogue_CurrentCharacter, Dialogue_Apostrophe, "S ", Word_Attack, ".", Dialogue_Terminator63
 
-LABEL_B12_B118:
+DialogueBattlePlayerDodgesAttack_B12:
 .db Dialogue_CurrentCharacter, " DODGES", Dialogue_NewLine
 .db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", Word_Attack, ".", Dialogue_Terminator63
 
-LABEL_B12_B128:
+DialogueBattleCharacterSpeaks_B12:
 .db Dialogue_CurrentCharacter, " SPEAKS.", Dialogue_Terminator62
 
-LABEL_B12_B132:
+DialogueBattleEnemyAnswers_B12:
 .db Dialogue_EnemyName, " ANSWERS.", Dialogue_Terminator63
 
-LABEL_B12_B13D:
+DialogueBattleNotUnderstand_B12:
 .db Dialogue_CurrentCharacter, " AND ", Dialogue_EnemyName, Dialogue_NewLine
 .db Word_Cannot, " UNDERSTAND", Dialogue_NewPage
 .db "EACH OTHER.", Dialogue_Terminator63
 
-LABEL_B12_B15E:
+DialogueBattleEnemyBlocksRetreat_B12:
 .db	Dialogue_EnemyName, " BLOCKS", Dialogue_NewLine
 .db Word_Any, " RETREAT.", Dialogue_Terminator63
 
@@ -2932,24 +2932,24 @@ LABEL_B12_B172:
 LABEL_B12_B18B:
 .db	"AN INVISIBLE ", Word_Magic_EF, Word_Wall, " ARISES.", Dialogue_Terminator63
 
-LABEL_B12_B1A3:
+DialogueBattleMagicWallDeflects_B12:
 .db Word_The, Word_Magic_84, Word_Wall, Dialogue_NewLine
 .db Word_Deflects, " ", Word_The, Dialogue_NewPage
 .db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", Word_Attack, ".", Dialogue_Terminator63
 
-LABEL_B12_B1B2:
+DialogueBattleMagicWallDeflectsEnemyMagic_B12:
 .db Word_The, Word_Magic_84, Word_Wall, Dialogue_NewLine
 .db Word_Deflects, " ", Word_The, Dialogue_NewPage
 .db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", Word_Magic_EF, ".", Dialogue_Terminator63
 
-LABEL_B12_B1C1:
+DialogueBattleMagicWallDisappears_B12:
 .db Word_The, Word_Magic_84, Word_Wall, Dialogue_NewLine
 .db "DISAPPEAR.", Dialogue_Terminator63
 
 LABEL_B12_B1D0:
 .db Dialogue_CurrentCharacter, " IS ", Word_Healed, ".", Dialogue_Terminator63
 
-LABEL_B12_B1D8:
+DialogueBattleEnemyHealed_B12:
 .db Dialogue_EnemyName, " IS", Dialogue_NewLine
 .db Word_Healed, ".", Dialogue_Terminator63
 
@@ -2957,14 +2957,14 @@ LABEL_B12_B1E0:
 .db Dialogue_EnemyName, " IS TIED", Dialogue_NewLine
 .db "UP.", Dialogue_Terminator63
 
-LABEL_B12_B1EE:
+DialogueBattleMagicPlayerTiedUp_B12:
 .db Dialogue_CurrentCharacter, " IS TIED UP.", Dialogue_Terminator63
 
 DialogueBattleCannotMove_B12:
 .db Dialogue_CurrentCharacter, " ", Word_Cannot, " "
 .db Word_Move, ".", Dialogue_Terminator63
 
-LABEL_B12_B203:
+DialogueBattleEnemyCannotMove_B12:
 .db Dialogue_EnemyName, " ", Word_Cannot, Dialogue_NewLine
 .db Word_Move, ".", Dialogue_Terminator63
 
@@ -2972,7 +2972,7 @@ DialogueBattleRemoveBindings_B12:
 .db Dialogue_CurrentCharacter, " RE", Word_Move, "S ", Word_The, Dialogue_NewLine
 .db "BINDINGS.", Dialogue_Terminator63
 
-LABEL_B12_B21D:
+DialogueBattleEnemyRemovedBindings_B12:
 .db Dialogue_EnemyName, " RE", Word_Move, "S", Dialogue_NewLine
 .db Word_The, "BINDINGS.", Dialogue_Terminator63
 
@@ -3135,11 +3135,11 @@ LABEL_B12_B5B0:
 .db Dialogue_CurrentCharacter, " IS", Dialogue_NewLine
 .db Word_Resurrect, "ED.", Dialogue_Terminator65
 
-LABEL_B12_B5BA:
+DialogueBattleOdinCannotUseMagic_B12:
 .db "ODIN ", Word_Cannot, " USE", Dialogue_NewLine
 .db Word_Magic_EF, ".", Dialogue_Terminator63
 
-LABEL_B12_B5C8:
+DialogueBattleNotLearnedMagic_B12:
 .db Dialogue_CurrentCharacter, " HAS ", Word_Not, Dialogue_NewLine
 .db "LEARNED ", Word_Magic_EF, " YET", Dialogue_Terminator63
 
@@ -3150,7 +3150,7 @@ LABEL_B12_B5DE:
 LABEL_B12_B5F0:
 .db Word_You, "NEED ", Word_Not, "EQUIP", Word_That, " ITEM.", Dialogue_Terminator65
 
-LABEL_B12_B604:
+DialogueGainedEXP_B12:
 .db Word_You, "GAINED ", Dialogue_NumberFromC2C5, Dialogue_NewLine
 .db "EXPERIENCE POINTS.", Dialogue_Terminator65
 
@@ -3158,7 +3158,7 @@ LABEL_B12_B621:
 .db Dialogue_CurrentCharacter, " ADVANCED", Dialogue_NewLine
 .db "A LEVEL.", Dialogue_Terminator65
 
-LABEL_B12_B635:
+DialogueLearnedSpell_B12:
 .db Dialogue_CurrentCharacter, " LEARNED", Dialogue_NewLine
 .db "A SPELL.", Dialogue_Terminator65
 
@@ -3203,7 +3203,7 @@ LABEL_B12_B6DE:
 .db Dialogue_CurrentItem, " SH", Word_Ould, "N", Dialogue_Apostrophe, "T", Dialogue_NewLine
 .db "BE THROWN AWAY.", Dialogue_Terminator65
 
-LABEL_B12_B6F7:
+DialogueBattleNotEnoughPoints_B12:
 .db Word_Not, "ENOUGH ", Word_Magic_EF, Dialogue_NewLine
 .db "POINTS.", Dialogue_Terminator63
 
@@ -3211,14 +3211,14 @@ LABEL_B12_B709:
 .db Dialogue_CurrentCharacter, " IS STILL", Dialogue_NewLine
 .db "ALIVE.", Dialogue_Terminator63
 
-LABEL_B12_B71B:
+DialogueBattleEnemyKilled_B12:
 .db Dialogue_EnemyName, Dialogue_NewLine
 .db "IS KILLED.", Dialogue_Terminator65
 
-LABEL_B12_B728:
+DialogueBattlePlayerDied_B12:
 .db Dialogue_CurrentCharacter, " DIED.", Dialogue_Terminator63
 
-LABEL_B12_B730:
+DialogueCharacterAlreadyDead_B12:
 .db Dialogue_CurrentCharacter, " IS ALREADY", Dialogue_NewLine
 .db "DEAD.", Dialogue_Terminator63
 
@@ -3391,38 +3391,38 @@ LABEL_B12_BA93:
 LABEL_B12_BAA3:
 .db "COMPLETED.", Dialogue_Terminator65
 
-LABEL_B12_BAAE:
+DialogueBattleWantToBeFriends_B12:
 .db "WE ", Word_Want, "TO BE", Dialogue_NewLine
 .db "FRIENDS WITH", Dialogue_NewPage
 .db "PEOPLE ", Word_From, Word_Palma, ".", Dialogue_Terminator65
 
-LABEL_B12_BAD0:
+DialogueBattleWantToEatLaerma_B12:
 .db "I ", Word_Want, "TO EAT A", Dialogue_NewLine
 .db "NUT OF ", Word_Laerma, ".", Dialogue_Terminator65
 
-LABEL_B12_BAE6:
+DialogueBattleDontOffendLassic_B12:
 .db "DO ", Word_Not, "OFFEND", Dialogue_NewLine
 .db Word_Lassic, ".", Dialogue_Terminator65
 
-LABEL_B12_BAF4:
+DialogueBattleUnderstandOurLanguage_B12:
 .db Word_You, "UNDERSTAND OUR", Word_Language, "?", Dialogue_Terminator65
 
-LABEL_B12_BB06:
+DialogueBattleEnemyHello_B12:
 .db "HELLO!", Dialogue_Terminator65
 
-LABEL_B12_BB0D:
+DialogueBattleCarefulOfPitsin_B12:
 .db "BE ", Word_Careful, " OF PITSIN ", Word_The, Word_Dungeon, ".", Dialogue_Terminator65
 
-LABEL_B12_BB20:
+DialogueBattleChestsTrapped_B12:
 .db "M", Word_Any, " OF ", Word_The, Dialogue_NewLine
 .db Word_Treasure, Word_Chest, "S IN", Dialogue_NewPage
 .db Word_The, Word_Dungeon, " ", Word_Are, Dialogue_NewLine
 .db "TRAPPED.", Dialogue_Terminator65
 
-LABEL_B12_BB3D:
+DialogueBattleYouThief_B12:
 .db Word_You, "THIEF!", Dialogue_Terminator65
 
-LABEL_B12_BB45:
+DialogueBattleWeAreOutcasts_B12:
 .db Word_We_Are, "OUTCASTS.", Dialogue_NewLine
 .db "FORGIVE US.", Dialogue_Terminator65
 
@@ -3477,11 +3477,11 @@ LABEL_B12_BCAA:
 .db Word_You, Word_Are, "BRAVE TO", Dialogue_NewLine
 .db "APPROACH ME!", Dialogue_Terminator65
 
-LABEL_B12_BCC2:
+DialogueBattlePowerUp_B12:
 .db Dialogue_EnemyName, " IS BURST-", Dialogue_NewLine
 .db "ING WITH STRENGTH.", Dialogue_Terminator63
 
-LABEL_B12_BCE1:
+DialogueBattleEnemyHadChest:
 .db Dialogue_EnemyName, " HAD A", Dialogue_NewLine
 .db Word_Treasure, Word_Chest, ".", Dialogue_Terminator62
 
@@ -3501,10 +3501,10 @@ LABEL_B12_BD0C:
 .db Word_We_Are, Word_Currently, Dialogue_NewLine
 .db Word_Facing, "SOUTH.", Dialogue_Terminator65
 
-LABEL_B12_BD17:
+DialogueBattleAllDead_B12:
 .db Word_You, Word_Are, "ALL DEAD.", Dialogue_Terminator65
 
-LABEL_B12_BD23:
+DialogueBattleAlisGameOver_B12:
 .db Word_Alis, Dialogue_Apostrophe, "S HOPE ", Word_Cannot, "OVERCOME ", Word_The, "POWER", Dialogue_NewPage
 .db "OF ", Word_Lassic, ".", Dialogue_NewLine
 .db Word_The, "ADVENTURE IS", Dialogue_NewPage
@@ -3562,7 +3562,7 @@ DialogueSaveBeenDeleted_B12:
 .db Word_Game, " ", Dialogue_NumberFromC2C5, " HAS BEEN", Dialogue_NewLine
 .db Word_Delete, "D.", Dialogue_Terminator65
 
-LABEL_B12_BE93:
+DialogueBattleTurnedToStone_B12:
 .db Dialogue_CurrentCharacter, " HAS BEEN", Dialogue_NewLine
 .db Word_Turned_To_Stone, ".", Dialogue_Terminator65
 
@@ -3593,7 +3593,7 @@ LABEL_B12_BF09:
 LABEL_B12_BF21:
 .db Word_The, "HARDSHIPS ", Word_That, "THEY ENDURED?", Dialogue_Terminator64
 
-LABEL_B12_BF3B:
+DialogueBattleMyauDiesFlying_B12:
 .db Word_Alis, " AND HER", Dialogue_NewLine
 .db "COMP", Word_Any, " ON ", Word_Myau, ",", Dialogue_NewPage
 .db Word_Are, "TOSSED INTO", Dialogue_NewLine
