@@ -274,6 +274,7 @@
 .define DungeonID_CreditsDungeonB1F $3B
 .define DungeonID_CreditsDungeon1F $3C
 
+
 ; Buttons
 .define	ButtonUp 0
 .define	ButtonDown 1
@@ -435,15 +436,27 @@
 .define Word_Ould $FF
 
 ; RAM
+.define VDP_reg_0 $C200
+.define VDP_reg_1 $C201
+
 .define	Game_mode $C202
-.define	Game_is_paused $C212
-.define	Fade_timer $C21B
 
 .define	Ctrl_1 $C204
 .define	Ctrl_1_held $C204
 .define	Ctrl_1_pressed $C205
 
+.define V_int_routine $C208
+.define Region_setting $C20A
+.define Reset_button $C20B
+
 .define RNG_seed $C20C
+
+.define	Tile_map_high_byte $C210
+
+.define	Game_is_paused $C212
+.define	Fade_timer $C21B
+
+.define	Normal_palette $C220
 
 .define	Cursor_pos $C269
 .define	Option_total_num $C26E	; number of options available for an interactive menu (e.g. player menu)
@@ -457,6 +470,13 @@
 .define	CurrentBattle_EXPReward $C2D0 ; unsigned 2 bytes, little endian
 
 .define Dungeon_entrance_points_addr $C2D9
+
+.define Game_data $C300
+
+.define	H_scroll $C300
+.define	H_location $C301
+.define	V_scroll $C304
+.define	V_location $C305
 
 .define	Dungeon_direction $C30A
 .define	Dungeon_position $C30C
@@ -476,6 +496,9 @@
 
 .define Dialogue_flags $C500	; table holding flags for dialogues; if value is $FF, dialogue is not loaded
 .define Event_flags $C600	; used for chests and scripted encounters in dungeons
+.define Battle_flags $C6C0	; used for chests and scripted encounters in dungeons
+
+.define Sprite_table $C900
 
 .define	System_stack $CB00
 .define	Dungeon_layout $CB00	; $100 bytes; 1 byte per tile;

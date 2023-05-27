@@ -3540,14 +3540,14 @@ LABEL_B12_BDFF:
 .db Dialogue_CurrentCharacter, " IS STRONG", Dialogue_NewLine
 .db "ENOUGH ALREADY.", Dialogue_Terminator65
 
-LABEL_B12_BE1B:
+DialogueContinueChooseSlot:
 .db "CONTINUE A ", Word_Game, ".", Dialogue_NewLine
 .db Word_Select, " A NUMBER.", Dialogue_Terminator62
 
 LABEL_B12_BE35:
 .db "CONTINUING ", Word_Game, " ", Dialogue_NumberFromC2C5, ".", Dialogue_Terminator63
 
-LABEL_B12_BE45:
+DialogueContinueOrDelete_B12:
 .db "CONTINUE ", Word_Game, "- YES", Word_Delete, "   ", Word_Game, "- NO", Dialogue_Terminator62
 
 LABEL_B12_BE5E:

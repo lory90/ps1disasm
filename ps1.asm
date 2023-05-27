@@ -10,6 +10,8 @@
 ; - Veo for researching and documenting the ROM locations and data on stuff like items, enemies, dungeons, etc.
 ;
 ; - Isotarge for contributions on relabeling, documenting code, RAM constants.
+;
+; - Maxim for lots of documentation, relabeling, constants, etc.
 
 
 .MEMORYMAP
@@ -41,6 +43,7 @@ _START:
 	jr	MainSetup
 
 _RST_08H:
+; Set VRAM address to DE
 	ld	a, e
 	out	(Port_VDPAddress), a
 	ld	a, d
@@ -72,25 +75,25 @@ _IRQ_HANDLER:
 	jp	VInt
 
 
-LABEL_3E:
-	ld	a, ($C201)
+DisableDisplay:
+	ld	a, (VDP_reg_1)
 	and	$BF
 	jr	+
 
-LABEL_45:
-	ld	a, ($C201)
+EnableDisplay:
+	ld	a, (VDP_reg_1)
 	or	$40
 +
-	ld	($C201), a
+	ld	(VDP_reg_1), a
 	ld	e, a
 	ld	d, $81
 	rst	$08
 	ret
 
 WaitForVInt:
-	ld	($C208), a
+	ld	(V_int_routine), a
 -
-	ld	a, ($C208)
+	ld	a, (V_int_routine)
 	or	a
 	jr	nz, -
 	ret
@@ -139,9 +142,9 @@ MainSetup:
 	ldir			; then do the rest (until bc = 0)
 
 	call	CallSndInit
-	call	LABEL_3A4
-	call	LABEL_318
-	call	LABEL_7DA
+	call	VDPInitRegs
+	call	DetectNTSC
+	call	CheckSRAM
 	ei
 
 MainGameLoop:
@@ -160,8 +163,8 @@ GameModeTbl:
 .dw	GameMode_Intro	; 3
 .dw	GameMode_LoadShip	; 4
 .dw	GameMode_Ship	; 5
-.dw	LABEL_B07	; 6
-.dw	LABEL_B07	; 7
+.dw	GameMode_Nothing	; 6
+.dw	GameMode_Nothing	; 7
 .dw	GameMode_LoadMap	; 8
 .dw	GameMode_Map	; 9
 .dw	GameMode_LoadDungeon	; $A
@@ -172,8 +175,8 @@ GameModeTbl:
 .dw	GameMode_Road	; $F
 .dw	GameMode_LoadNameInput	; $10
 .dw	GameMode_NameInput	; $11
-.dw	LABEL_467C	; $12
-.dw	LABEL_467C	; $13
+.dw	GameMode_FadeToPicture	; $12
+.dw	GameMode_FadeToPicture	; $13
 
 
 GetPtrAndJump:
@@ -211,28 +214,28 @@ VInt:
 	ld	a, $80
 	ld	($FFFC), a
 	in	a, (Port_IOPort2)
-	and	$10
-	ld	hl, $C20B
-	ld	c, (hl)
+	and	$10     ; check for reset button
+	ld	hl, Reset_button
+	ld	c, (hl)         ; c = old value of Reset_button
 	ld	(hl), a
 	xor	c
 	and	c
-	jp	nz, MainSetup
-	ld	a, ($C20A)
+	jp	nz, MainSetup	; if 1, reset game
+	ld	a, (Region_setting)
 	or	a
-	jp	nz, LABEL_12A
+	jp	nz, +
 	ld	b, $00
-LABEL_126:
-	djnz	LABEL_126
-LABEL_128:
-	djnz	LABEL_128
-LABEL_12A:
+-
+	djnz	-
+-
+	djnz	-
++
 	ld	a, (Game_is_paused)
 	or	a
-	jp	nz, LABEL_2DF
-	ld	a, ($C208)
+	jp	nz, VIntPaused
+	ld	a, (V_int_routine)
 	and	$1F
-	ld	hl, LABEL_18F
+	ld	hl, VIntRoutines
 	add	a, l
 	ld	l, a
 	adc	a, h
@@ -245,10 +248,10 @@ LABEL_12A:
 	jp	(hl)
 
 
-LABEL_143:
+VIntRoutineEnd:
 	xor	a
-	ld	($C208), a
-LABEL_147:
+	ld	(V_int_routine), a
+VIntEnd:
 	pop	af
 	ld	($FFFF), a
 	pop	af
@@ -263,85 +266,89 @@ LABEL_147:
 	ret
 
 
-LABEL_159:
-	call	LABEL_45
-	jp	LABEL_143
+VInt_EnableDisplay:
+	call	EnableDisplay
+	jp	VIntRoutineEnd
 
-LABEL_15F:
-	ld	a, ($C300)
+VInt_PaletteEffects:
+	ld	a, (H_scroll)
 	out (Port_VDPAddress), a
 	ld	a, $88
 	out	(Port_VDPAddress), a
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $89
 	out	(Port_VDPAddress), a
-	call	LABEL_588B
-	call	LABEL_7B40
-	call	LABEL_7BEE
-	ld	hl, $C220
+	call	UpdateSpriteTable
+	call	FadePaletteInRAM
+	call	FlashPaletteInRAM
+	ld	hl, Normal_palette
 	ld	de, $C000
 	rst	$08
 	ld	c, Port_VDPData
-	call	LABEL_595E
-	call	LABEL_63A5
+	call	GoToOuti32
+	call	AnimateEnemyTile
 	call	CallSndUpdate
-	jp	LABEL_143
+	jp	VIntRoutineEnd
 
-LABEL_18F:
-.dw	LABEL_1A7
-.dw	LABEL_1A7
-.dw	LABEL_1A7
-.dw	LABEL_1A7
-.dw	LABEL_1AD
-.dw LABEL_1D1
-.dw LABEL_1EF
-.dw LABEL_235
-.dw LABEL_25F
-.dw LABEL_29F
-.dw LABEL_159
-.dw LABEL_15F
 
-LABEL_1A7:
+; =================================================================
+VIntRoutines:
+.dw	VInt_SoundUpdate
+.dw	VInt_SoundUpdate
+.dw	VInt_SoundUpdate
+.dw	VInt_SoundUpdate
+.dw	VInt_Menu
+.dw VInt_Enemy
+.dw Vint_UpdateTilemap
+.dw VInt_Scrolling
+.dw Vint_10
+.dw Vint_12
+.dw VInt_EnableDisplay
+.dw VInt_PaletteEffects
+; =================================================================
+
+
+VInt_SoundUpdate:
 	call	CallSndUpdate
-	jp	LABEL_143
+	jp	VIntRoutineEnd
 
-LABEL_1AD:
-	ld	a, ($C300)
+VInt_Menu:
+	ld	a, (H_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $88
 	out	(Port_VDPAddress), a
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $89
 	out	(Port_VDPAddress), a
-	call	LABEL_588B
-	call	LABEL_63A5
+	call	UpdateSpriteTable
+	call	AnimateEnemyTile
 	call	ReadJoypad
-	call	LABEL_2E62
+	call	CursorBlink
 	call	CallSndUpdate
-	jp	LABEL_143
+	jp	VIntRoutineEnd
 
-LABEL_1D1:
-	ld	a, ($C300)
+VInt_Enemy:
+	ld	a, (H_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $88
 	out	(Port_VDPAddress), a
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $89
 	out	(Port_VDPAddress), a
-	call	LABEL_588B
-	call	LABEL_63A5
+	call	UpdateSpriteTable
+	call	AnimateEnemyTile
 	call	CallSndUpdate
-	jp	LABEL_143
+	jp	VIntRoutineEnd
 
-LABEL_1EF:
-	ld	a, ($C300)
+Vint_UpdateTilemap:
+	ld	a, (H_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $88
 	out	(Port_VDPAddress), a
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $89
 	out	(Port_VDPAddress), a
@@ -351,56 +358,56 @@ LABEL_1EF:
 	ld	a, $78
 	out	(Port_VDPAddress), a
 	ld	c, Port_VDPData
-	call	LABEL_589E
-	call	LABEL_589E
-	call	LABEL_589E
-	call	LABEL_589E
-	call	LABEL_589E
-	call	LABEL_589E
-	call	LABEL_589E
+	call	GoToOuti128
+	call	GoToOuti128
+	call	GoToOuti128
+	call	GoToOuti128
+	call	GoToOuti128
+	call	GoToOuti128
+	call	GoToOuti128
 	ld	a, $03
 	ld	b, $80
-LABEL_226:
+-
 	outi
-	jp	nz, LABEL_226
+	jp	nz, -
 	dec	a
-	jp	nz, LABEL_226
+	jp	nz, -
 	call	CallSndUpdate
-	jp	LABEL_143
+	jp	VIntRoutineEnd
 
-LABEL_235:
-	ld	a, ($C300)
+VInt_Scrolling:
+	ld	a, (H_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $88
 	out	(Port_VDPAddress), a
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $89
 	out	(Port_VDPAddress), a
-	call	LABEL_588B
-	call	LABEL_7C18
-	call	LABEL_61F5
-	call	LABEL_73D0
-	call	LABEL_62BC
+	call	UpdateSpriteTable
+	call	Palette_Rotate
+	call	AnimateCharacterSprites
+	call	UpdateScrollingTilemap
+	call	AnimateMapTiles
 	call	ReadJoypad
 	call	CallSndUpdate
-	jp	LABEL_143
+	jp	VIntRoutineEnd
 
-LABEL_25F:
-	ld	a, ($C300)
+Vint_10:
+	ld	a, (H_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $88
 	out	(Port_VDPAddress), a
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $89
 	out	(Port_VDPAddress), a
-	call	LABEL_588B
-	ld	hl, $C220
+	call	UpdateSpriteTable
+	ld	hl, Normal_palette
 	ld	de, $C000
 	rst	$08
 	ld	c, Port_VDPData
-	call	LABEL_595E
+	call	GoToOuti32
 	ld	hl, $D000
 	xor	a
 	out	(Port_VDPAddress), a
@@ -409,29 +416,29 @@ LABEL_25F:
 	ld	c, Port_VDPData
 	ld	a, $06
 	ld	b, 0
-LABEL_290:
+-
 	outi
-	jp	nz, LABEL_290
+	jp	nz, -
 	dec	a
-	jp	nz, LABEL_290
+	jp	nz, -
 	call	CallSndUpdate
-	jp	LABEL_143
+	jp	VIntRoutineEnd
 
-LABEL_29F:
-	ld	a, ($C300)
+Vint_12:
+	ld	a, (H_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $88
 	out	(Port_VDPAddress), a
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	out	(Port_VDPAddress), a
 	ld	a, $89
 	out	(Port_VDPAddress), a
-	call	LABEL_588B
-	ld	hl, $C220
+	call	UpdateSpriteTable
+	ld	hl, Normal_palette
 	ld	de, $C000
 	rst	$08
 	ld	c, Port_VDPData
-	call	LABEL_595E
+	call	GoToOuti32
 	ld	hl, $D000
 	xor	a
 	out	(Port_VDPAddress), a
@@ -440,17 +447,17 @@ LABEL_29F:
 	ld	c, Port_VDPData
 	ld	a, $07
 	ld	b, 0
-LABEL_2D0:
+-
 	outi
-	jp	nz, LABEL_2D0
+	jp	nz, -
 	dec	a
-	jp	nz, LABEL_2D0
+	jp	nz, -
 	call	CallSndUpdate
-	jp	LABEL_143
+	jp	VIntRoutineEnd
 
-LABEL_2DF:
+VIntPaused:
 	call	CallSndMute
-	jp	LABEL_147
+	jp	VIntEnd
 
 
 CallSndUpdate:
@@ -469,9 +476,9 @@ CallSndMute:
 	jp	Snd_SilencePSG
 
 
-LABEL_2FD:
-	ld	hl, $C900
-	ld	de, $C901
+ClearSpriteTableFadeIn:
+	ld	hl, Sprite_table
+	ld	de, Sprite_table+1
 	ld	bc, $40
 	ld	(hl), $E0
 	ldir
@@ -482,71 +489,72 @@ LABEL_2FD:
 	call	WaitForVInt
 	jp	FadeIn2
 
-LABEL_318:
+DetectNTSC:
 	ld	hl, $0000
-LABEL_31B:
+-
+	in	a, (Port_VDPStatus)   ; Check VDP status
+	or	a
+	jp	p, -             ; Wait for bit 7 (VSync) to be 0
+-
 	in	a, (Port_VDPStatus)
 	or	a
-	jp	p, LABEL_31B
-LABEL_321:
-	in	a, (Port_VDPStatus)
-	or	a
-	jp	p, LABEL_321
-LABEL_327:
+	jp	p, -
+-
 	inc	hl
 	in	a, (Port_VDPStatus)
 	or	a
-	jp	p, LABEL_327
+	jp	p, -
 	xor	a
 	ld	de, $0800
 	sbc  hl, de
 	sbc  a, a
-	ld	($C20A), a
+	ld	(Region_setting), a
 	ret
 
 
 ReadJoypad:
-	in	a, (Port_IOPort1)
+	in	a, (Port_IOPort1)	; get controls
 	ld	hl, Ctrl_1
-	cpl
+	cpl                ; Invert so 1 = pressed
 	ld	b, a
 	xor	(hl)
-	ld	(hl), b
-	inc	hl
+	ld	(hl), b			; store held state
+	inc	hl				; go to Ctrl_1_pressed
 	and	b
-	ld	(hl), a
+	ld	(hl), a			; store pressed state
 	ret
 
-LABEL_346:
+DataToVRAM:
 	rst  $08
 	ld	a, c
 	or	a
-	jr	z, LABEL_34C
+	jr	z, +
 	inc	b
-LABEL_34C:
++
 	ld	a, b
 	ld	b, c
 	ld	c, Port_VDPData
-LABEL_350:
+-
 	outi
-	jp	nz, LABEL_350
+	jp	nz, -
 	dec  a
-	jp	nz, LABEL_350
+	jp	nz, -
 	ret
 
 
-LABEL_35A:
+ClearTilemap:
 	ld	de, $7800
 	ld	bc, $380
 	ld	hl, 0
 
-LABEL_363:
+FillVRAMWithHL:
 	rst  $08
 	ld	a, c
 	or	a
-	jr	z, LABEL_369
+	jr	z, +
 	inc	b
-LABEL_369:
++
+-
 	ld	a, l
 	out	(Port_VDPData), a
 	push	af
@@ -554,20 +562,20 @@ LABEL_369:
 	ld	a, h
 	out	(Port_VDPData), a
 	dec  c
-	jr	nz, LABEL_369
-	djnz	LABEL_369
+	jr	nz, -
+	djnz	-
 	ret
 
 
 ; -----------------------------------------------------------------
-LABEL_377:
+OutputTilemapRaw:
 	push	bc
 	rst	$08
 	ld	b, c
 	ld	c, $BE
 -
 	outi
-	ld	a, ($C210)
+	ld	a, (Tile_map_high_byte)
 	nop
 	out	(c), a
 	jr	nz, -
@@ -576,55 +584,70 @@ LABEL_377:
 	add	hl, bc
 	ex	de, hl
 	pop	bc
-	djnz	LABEL_377
+	djnz	OutputTilemapRaw
 	ret
 ; -----------------------------------------------------------------
 
 
-LABEL_390:
+; -----------------------------------------------------------------
+OutputTilemapRawDataBox:
 	push	bc
 	rst  $08
 	ld	b, c
 	ld	c, $BE
-LABEL_395:
+-
 	outi
-	jp	nz, LABEL_395
+	jp	nz, -
 	ex   de, hl
 	ld	bc, $40
 	add	hl, bc
 	ex   de, hl
 	pop	bc
-	djnz	LABEL_390
+	djnz	OutputTilemapRawDataBox
 	ret
+; -----------------------------------------------------------------
 
-LABEL_3A4:
-	ld	hl, LABEL_3B9
+
+; -----------------------------------------------------------------
+VDPInitRegs:
+	ld	hl, VDPInitData
 	ld	bc, $14BF
 	otir
-	ld	a, (LABEL_3B9)
-	ld	($C200), a
-	ld	a, (LABEL_3B9+2)
-	ld	($C201), a
+	ld	a, (VDPInitData)
+	ld	(VDP_reg_0), a
+	ld	a, (VDPInitData+2)
+	ld	(VDP_reg_1), a
 	ret
+; -----------------------------------------------------------------
 
+; =================================================================
+VDPInitData:
+.db $06, $80
+.db $A0, $81
+.db $FF, $82	; Tile map
+.db $FF, $83
+.db $FF, $84
+.db $FF, $85	; Sprite table
+.db $FF, $86	; Sprite tile set
+.db $00, $87	; Border color
+.db $00, $88	; H scroll
+.db $00, $89	; V scroll
+; =================================================================
 
-LABEL_3B9:
-.db $06, $80, $A0, $81, $FF, $82, $FF, $83, $FF, $84, $FF, $85, $FF, $86, $00, $87
-.db $00, $88, $00, $89
-
-LABEL_3CD:
+LoadTiles4BitRLENoDI:
 	ld	b, $04
 -
 	push	bc
 	push	de
-	call	LABEL_3DA
+	call	+
 	pop	de
 	inc	de
 	pop	bc
 	djnz	-
 	ret
 
-LABEL_3DA:
++
+--
 	ld	a, (hl)
 	inc	hl
 	or	a
@@ -646,24 +669,25 @@ LABEL_3DA:
 	inc	de
 	inc	de
 	djnz	-
-	jp	nz, LABEL_3DA
+	jp	nz, --
 	inc	hl
-	jp	LABEL_3DA
+	jp	--
 
 
-LABEL_3FA:
+LoadTiles4BitRLE:
 	ld	b, $04
-LABEL_3FC:
+-
 	push	bc
 	push	de
-	call	LABEL_407
+	call	+
 	pop	de
 	inc	de
 	pop	bc
-	djnz	LABEL_3FC
+	djnz	-
 	ret
 
-LABEL_407:
++
+--
 	ld	a, (hl)
 	inc	hl
 	or	a
@@ -674,186 +698,55 @@ LABEL_407:
 	ld	b, a
 	ld	a, c
 	and	$80
-LABEL_412:
+-
 	di
 	rst  $08
 	ld	a, (hl)
 	out	(Port_VDPData), a
 	ei
-	jp	z, LABEL_41C
+	jp	z, +
 	inc	hl
-LABEL_41C:
++
 	inc	de
 	inc	de
 	inc	de
 	inc	de
-	djnz	LABEL_412
-	jp	nz, LABEL_407
+	djnz	-
+	jp	nz, --
 	inc	hl
-	jp	LABEL_407
+	jp	--
 
 
-
-LABEL_429:
+; -----------------------------------------------------------------
+Multiply8Bit:
 	ld	d, $00
 	ld	l, d
 	add	hl, hl
+.REPEAT 7
 	jr	nc, +
 	add	hl, de
 +
 	add	hl, hl
-	jr	nc, +
-	add	hl, de
-+
-	add	hl, hl
-	jr	nc, +
-	add	hl, de
-+
-	add	hl, hl
-	jr	nc, +
-	add	hl, de
-+
-	add	hl, hl
-	jr	nc, +
-	add	hl, de
-+
-	add	hl, hl
-	jr	nc, +
-	add	hl, de
-+
-	add	hl, hl
-	jr	nc, +
-	add	hl, de
-+
-	add	hl, hl
+.ENDR
 	ret	nc
 	add	hl, de
 	ret
+; -----------------------------------------------------------------
 
-
-LABEL_44C:
-	or	a
+; -----------------------------------------------------------------
+Multiply16Bit:
+	or	a		; clear carry
 	ld	hl, $0000
+.REPEAT 15
 	rl   e
 	rl   d
-	jr	nc, LABEL_45A
+	jr	nc, +
 	add	hl, bc
-	jr	nc, LABEL_45A
+	jr	nc, +
 	inc	de
-LABEL_45A:
++
 	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_465
-	add	hl, bc
-	jr	nc, LABEL_465
-	inc	de
-LABEL_465:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_470
-	add	hl, bc
-	jr	nc, LABEL_470
-	inc	de
-LABEL_470:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_47B
-	add	hl, bc
-	jr	nc, LABEL_47B
-	inc	de
-LABEL_47B:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_486
-	add	hl, bc
-	jr	nc, LABEL_486
-	inc	de
-LABEL_486:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_491
-	add	hl, bc
-	jr	nc, LABEL_491
-	inc	de
-LABEL_491:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_49C
-	add	hl, bc
-	jr	nc, LABEL_49C
-	inc	de
-LABEL_49C:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_4A7
-	add	hl, bc
-	jr	nc, LABEL_4A7
-	inc	de
-LABEL_4A7:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_4B2
-	add	hl, bc
-	jr	nc, LABEL_4B2
-	inc	de
-LABEL_4B2:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_4BD
-	add	hl, bc
-	jr	nc, LABEL_4BD
-	inc	de
-LABEL_4BD:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_4C8
-	add	hl, bc
-	jr	nc, LABEL_4C8
-	inc	de
-LABEL_4C8:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_4D3
-	add	hl, bc
-	jr	nc, LABEL_4D3
-	inc	de
-LABEL_4D3:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_4DE
-	add	hl, bc
-	jr	nc, LABEL_4DE
-	inc	de
-LABEL_4DE:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_4E9
-	add	hl, bc
-	jr	nc, LABEL_4E9
-	inc	de
-LABEL_4E9:
-	add	hl, hl
-	rl   e
-	rl   d
-	jr	nc, LABEL_4F4
-	add	hl, bc
-	jr	nc, LABEL_4F4
-	inc	de
-LABEL_4F4:
-	add	hl, hl
+.ENDR
 	rl   e
 	rl   d
 	ret  nc
@@ -863,12 +756,14 @@ LABEL_4F4:
 
 	inc	de
 	ret
+; -----------------------------------------------------------------
 
 
 ; -----------------------------------------------------------------
-LABEL_4FE:
+Divide16Bit:
 	xor	a
 	add	hl, hl
+.REPEAT 16
 	adc	a, a
 	jr	c, +
 	cp	e
@@ -879,160 +774,12 @@ LABEL_4FE:
 ++
 	ccf
 	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
-	adc	a, a
-	jr	c, +
-	cp	e
-	jr	c, ++
-+
-	sub	e
-	or	a
-++
-	ccf
-	adc	hl, hl
+.ENDR
 	ret
 ; -----------------------------------------------------------------
 
 
+; -----------------------------------------------------------------
 UpdateRNGSeed:
 	push	hl
 	ld	hl, (RNG_seed)
@@ -1049,14 +796,15 @@ UpdateRNGSeed:
 	xor	l
 	rra
 	adc	hl, hl
-	jr	nz, LABEL_5C8
+	jr	nz, +
 	ld	hl, $733C
-LABEL_5C8:
++
 	ld	a, r
 	xor	l
 	ld	(RNG_seed), hl
 	pop	hl
 	ret
+; -----------------------------------------------------------------
 
 
 GameMode_InitIntro:
@@ -1071,11 +819,11 @@ GameMode_Intro:
 	ld	(Option_total_num), a
 	call	CheckOptionSelect
 	or	a
-	jp	nz, LABEL_634
+	jp	nz, TitleScreenContinue
 
-LABEL_5E8:
-	ld	hl, $C300
-	ld	de, $C301
+InitNewGame:
+	ld	hl, Game_data
+	ld	de, Game_data+1
 	ld	bc, $3FF
 	ld	(hl), l
 	ldir
@@ -1084,69 +832,70 @@ LABEL_5E8:
 	ld	(iy+armor), ItemID_LeatherArmor
 	call	UnlockCharacter
 	ld	hl, $C600
-	ld	(hl), $FF
+	ld	(hl), $FF	; make Compass hidden
 	ld	hl, $C604
-	ld	(hl), $FF
+	ld	(hl), $FF	; make Dungeon Key hidden
 	ld	hl, $404
 	ld	($C308), hl
 	ld	hl, $610
-	ld	($C301), hl
+	ld	(H_location), hl
 	ld	($C313), hl
 	ld	hl, $100
-	ld	($C305), hl
+	ld	(V_location), hl
 	ld	($C311), hl
 	ld	hl, 0
 	ld	(Current_money), hl
-	call	LABEL_42AC
+	call	GoToIntroSequence
 	ld	hl, Game_mode
 	ld	(hl), $08 ; GameMode_LoadMap
 	ret
 
-LABEL_634:
+TitleScreenContinue:
 	ld	a, $08
 	ld	($FFFC), a
 	ld	hl, $8201
-	ld	b, $05
-LABEL_63E:
+	ld	b, $05	; number of slots
+-
 	ld	a, (hl)
 	or	a
-	jr	nz, LABEL_64D
+	jr	nz, TitleScreen_UsedSlotFound
 	inc	hl
-	djnz	LABEL_63E
+	djnz	-
 	ld	a, $80
 	ld	($FFFC), a
-	jp	LABEL_5E8
+	jp	InitNewGame
 
-LABEL_64D:
+TitleScreen_UsedSlotFound:
 	ld	a, $80
 	ld	($FFFC), a
 	call	FadeOut2
 	di
-	call	LABEL_35A
+	call	ClearTilemap
 	ei
 	ld	hl, Game_mode
 	ld	(hl), $08 ; GameMode_LoadMap
 	ld	hl, $FFFF
 	ld	(hl), :Bank16
-	ld	hl, LABEL_B16_BAD8
+	ld	hl, TilesFont_B16
 	ld	de, $5800
-	call	LABEL_3FA
-	ld	hl, LABEL_B16_BD58
+	call	LoadTiles4BitRLE
+	ld	hl, TilesExtraFont_B16
 	ld	de, $7E00
-	call	LABEL_3FA
-	call	LABEL_2FD
-LABEL_678:
-	ld	hl, LABEL_B12_BE45
+	call	LoadTiles4BitRLE
+	call	ClearSpriteTableFadeIn
+Menu_ContinueOrDelete:
+	ld	hl, DialogueContinueOrDelete_B12
 	call	ShowDialogue_B12
 	call	ShowYesNoPrompt
-	jr	nz, LABEL_6C5
-	ld	hl, LABEL_B12_BE1B
+	jr	nz, Menu_Delete
+; picked Yes, so continue
+	ld	hl, DialogueContinueChooseSlot
 	call	ShowDialogue_B12
 -
 	push	bc
-	call	LABEL_39B1
+	call	GetSaveGameSelection
 	pop	bc
-	call	LABEL_73A
+	call	CheckSlotUsed
 	jr	z, -
 	ld	hl, LABEL_B12_BE35
 	call	ShowDialogue_B12
@@ -1159,7 +908,7 @@ LABEL_678:
 	add	hl, hl
 	add	hl, hl
 	set	7, h
-	ld	de, $C300
+	ld	de, H_scroll
 	ld	bc, $400
 	ldir
 	ld	a, $80
@@ -1171,21 +920,21 @@ LABEL_678:
 	ld	(hl), $0A ; GameMode_LoadDungeon
 	ret
 
-LABEL_6C5:
+Menu_Delete:
 	ld	hl, LABEL_B12_BE5E
 	call	ShowDialogue_B12
 	call	ShowYesNoPrompt
-	jr	nz, LABEL_678
+	jr	nz, Menu_ContinueOrDelete
 --
 	ld	hl, LABEL_B12_BE6F
 	call	ShowDialogue_B12
 -
 	push	bc
-	call	LABEL_39B1
+	call	GetSaveGameSelection
 	bit	4, c
 	pop	bc
-	jr	nz, LABEL_6C5
-	call	LABEL_73A
+	jr	nz, Menu_Delete
+	call	CheckSlotUsed
 	jr	z, -
 	ld	hl, LABEL_B12_BA82
 	call	ShowDialogue_B12
@@ -1229,7 +978,7 @@ LABEL_6C5:
 LABEL_730:
 .db $C0, $10, $C0, $10, $C0, $10, $C0, $10, $C0, $10
 
-LABEL_73A:
+CheckSlotUsed:
 	ld	a, $08
 	ld	($FFFC), a
 	ld	a, (CurrentDialogueNumber)
@@ -1244,9 +993,9 @@ LABEL_73A:
 GameMode_LoadIntro:
 	call	FadeOut2
 	di
-	call	LABEL_3E
+	call	DisableDisplay
 	call	CallSndInit
-	call	LABEL_35A
+	call	ClearTilemap
 	ld	hl, Game_mode
 	inc	(hl) ; GameMode_Intro
 	ld	hl, $258
@@ -1269,14 +1018,14 @@ GameMode_LoadIntro:
 	ld	(hl), :Bank31
 	ld	hl, LABEL_B31_A8BD
 	ld	de, $4000
-	call	LABEL_3CD
+	call	LoadTiles4BitRLENoDI
 	ld	hl, $FFFF
 	ld	(hl), :Bank14
 	ld	hl, LABEL_B14_BC68
 	call	LABEL_6B62
 	xor	a
-	ld	($C304), a
-	ld	($C300), a
+	ld	(V_scroll), a
+	ld	(H_scroll), a
 	ld	a, $81
 	ld	($C004), a
 	ld	de, $8006
@@ -1284,21 +1033,21 @@ GameMode_LoadIntro:
 	ei
 	ld	a, $0C
 	call	WaitForVInt
-	jp	LABEL_2FD
+	jp	ClearSpriteTableFadeIn
 
 LABEL_7BA:
 .db	$00, $00, $3F, $0F, $0B, $06
 .db $2B, $2A, $25, $27, $3B, $01, $3C, $34, $2F, $3C, $00, $00, $3C, $0F, $0B, $06
 .db $2B, $2A, $25, $27, $3B, $01, $3C, $34, $2F, $3C
 
-LABEL_7DA:
+CheckSRAM:
 	ld	a, $08
 	ld	($FFFC), a
 	ld	bc, $1000
 LABEL_7E2:
 	push	bc
 	ld	hl, $8001
-	ld	de, LABEL_807+1
+	ld	de, SRAMIdentificationData+1
 	ld	bc, $20
 LABEL_7EC:
 	ld	a, (de)
@@ -1311,7 +1060,7 @@ LABEL_7F6:
 	djnz	LABEL_7E2
 	ld	a, c
 	cp	$08
-	jr	nc, LABEL_847
+	jr	nc, InitSRAM
 	ld	a, $80
 	ld	($FFFC), a
 	ret
@@ -1322,13 +1071,16 @@ LABEL_803:
 	jr	LABEL_7F6
 
 
-LABEL_807:
+; =================================================================
+SRAMIdentificationData:
 .db "PHANTASY STAR         "
 .db	"BACKUP RAM"
 .db	"PROGRAMMED BY          "
 .db	"NAKA YUJI"
+; =================================================================
 
-LABEL_847:
+
+InitSRAM:
 	ld	hl, $8000
 	ld	de, $8001
 	ld	bc, $1FFB
@@ -1338,7 +1090,7 @@ LABEL_847:
 	ld	de, $8100
 	ld	bc, $D8
 	ldir
-	ld	hl, LABEL_807
+	ld	hl, SRAMIdentificationData
 	ld	de, $8000
 	ld	bc, $40
 	ldir
@@ -1384,7 +1136,7 @@ __
 	call	LABEL_A31
 	ld	hl, LABEL_B23_B778
 	ld	de, $4000
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 	ld	hl, $FFFF
 	ld	(hl), :Bank28
 	ld	hl, LABEL_B28_BE88
@@ -1399,13 +1151,13 @@ __
 	ld	hl, LABEL_B28_BE00
 	call	LABEL_6B62
 	xor	a
-	ld	($C300), a
-	ld	($C304), a
+	ld	(H_scroll), a
+	ld	(V_scroll), a
 	ld	hl, $D000
 	ld	de, $7800
 	ld	bc, $700
 	di
-	call	LABEL_346
+	call	DataToVRAM
 	ei
 	ld	hl, $D000
 	ld	de, $D300
@@ -1480,7 +1232,7 @@ __
 
 LABEL_998:
 	ld	de, ($C2F2)
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	ld	h, a
 	ld	b, a
 	ld	a, ($C307)
@@ -1493,7 +1245,7 @@ LABEL_998:
 	sub	$20
 +
 	ld	h, a
-	ld	($C304), a
+	ld	(V_scroll), a
 	ld	a, l
 	ld	($C307), a
 	ld	a, b
@@ -1524,19 +1276,19 @@ LABEL_998:
 	ret	nz
 	ld	a, (Fade_timer)
 	or	a
-	call	nz, LABEL_7B40
+	call	nz, FadePaletteInRAM
 	ret
 
 LABEL_9E9:
 	ld	de, $02
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	sub	e
 	cp	$E0
 	jr	c, +
 	ld	d, $01
 	sub	$20
 +
-	ld	($C304), a
+	ld	(V_scroll), a
 	ld	a, ($C307)
 	sub	d
 	ld	($C307), a
@@ -1560,7 +1312,7 @@ LABEL_9E9:
 	ld	($C308), a
 	call	LABEL_A31
 	ld	hl, $C240
-	ld	de, $C220
+	ld	de, Normal_palette
 	ld	bc, $20
 	ldir
 	ld	hl, LABEL_B28_BD00
@@ -1655,7 +1407,7 @@ LABEL_ABF:
 .db $2D, $00, $1B, $35, $07, $25, $13, $02
 .db $5B, $2D, $01, $27, $74, $0F, $20, $58
 
-LABEL_B07:
+GameMode_Nothing:
 	ret
 
 GameMode_Map:
@@ -1709,7 +1461,7 @@ LABEL_B41:
 GameMode_LoadMap:
 	call	FadeOut2
 	di
-	call	LABEL_3E
+	call	DisableDisplay
 	ei
 	ld	hl, Game_mode
 	inc	(hl) ; GameMode_Map
@@ -1725,14 +1477,14 @@ GameMode_LoadMap:
 	ld	(hl), :Bank29
 	ld	hl, LABEL_B29_87B8
 	ld	de, $4000
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 	jr	++
 +
 	ld	hl, $FFFF
 	ld	(hl), :Bank22
 	ld	hl, LABEL_B22_8570
 	ld	de, $4000
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 ++
 	call	LABEL_CA6
 	call	LABEL_576A
@@ -1742,15 +1494,15 @@ GameMode_LoadMap:
 	ld	a, $0A
 	call	WaitForVInt
 	di
-	call	LABEL_61F5
+	call	AnimateCharacterSprites
 	ei
 	pop	bc
 	djnz	-
 	ld	a, ($C301)
 	neg
-	ld	($C300), a
+	ld	(H_scroll), a
 	ld	a, ($C305)
-	ld	($C304), a
+	ld	(V_scroll), a
 	ld	a, ($C309)
 	ld	e, a
 	ld	d, 0
@@ -1866,7 +1618,7 @@ LABEL_C54:
 	di
 	rst	$08
 	ei
-	jp	LABEL_2FD
+	jp	ClearSpriteTableFadeIn
 
 LABEL_C97:
 	push	hl
@@ -2106,12 +1858,12 @@ GameMode_LoadDungeon:
 	inc	(hl) ; GameMode_Dungeon
 	ld	hl, $FFFF
 	ld	(hl), :Bank16
-	ld	hl, LABEL_B16_BAD8
+	ld	hl, TilesFont_B16
 	ld	de, $5800
-	call	LABEL_3FA
-	ld	hl, LABEL_B16_BD58
+	call	LoadTiles4BitRLE
+	ld	hl, TilesExtraFont_B16
 	ld	de, $7E00
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 	ld	a, $39
 	call	Inventory_FindFreeSlot
 	jr	nz, +
@@ -2120,8 +1872,8 @@ GameMode_LoadDungeon:
 +
 	call	LABEL_FF3
 	xor	a
-	ld	($C304), a
-	ld	($C300), a
+	ld	(V_scroll), a
+	ld	(H_scroll), a
 	ld	($C2D5), a
 	ld	($C2D6), a
 	ld	($C2D3), a
@@ -2129,7 +1881,7 @@ GameMode_LoadDungeon:
 	di
 	rst	$08
 	ei
-	call	LABEL_2FD
+	call	ClearSpriteTableFadeIn
 	ld	b, $01
 	call	LABEL_6963
 	ld	a, ($C315)
@@ -2159,7 +1911,7 @@ LABEL_FF3:
 	ld	(hl), $00
 	ldir
 	ld	a, $D0
-	ld	($C900), a
+	ld	(Sprite_table), a
 	call	LABEL_6D56
 	xor	a
 	ld	(Interaction_Type), a
@@ -2533,7 +2285,7 @@ LABEL_1279:
 	ld	e, a
 	call	UpdateRNGSeed
 	ld	h, a
-	call	LABEL_429
+	call	Multiply8Bit
 	ld	a, e
 	add	a, b
 	add	a, h
@@ -3132,12 +2884,12 @@ LABEL_16B2:
 	ld	bc, $0008
 	ldir
 	ld	hl, $C240
-	ld	de, $C220
+	ld	de, Normal_palette
 	ld	bc, $0020
 	ldir
 	ld	hl, LABEL_B20_8008
 	ld	de, $6000
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 	ld	hl, $C800
 	ld	de, $C801
 	ld	bc, $00FF
@@ -3692,12 +3444,12 @@ LABEL_1A66:
 .dw	LABEL_1AB1
 .dw	LABEL_1AFD
 .dw	LABEL_1AFD
-.dw	LABEL_1AD0
-.dw	LABEL_1AD0
-.dw	LABEL_1AD0
-.dw	LABEL_1AD0
+.dw	VInt_Menu0
+.dw	VInt_Menu0
+.dw	VInt_Menu0
+.dw	VInt_Menu0
 .dw	LABEL_1AFD
-.dw	LABEL_1ADE
+.dw	VInt_MenuE
 .dw	LABEL_1AFD
 .dw	LABEL_1AFD
 .dw	LABEL_1AFD
@@ -3750,7 +3502,7 @@ LABEL_1ACC:
 	call	LABEL_36CC
 	ret
 
-LABEL_1AD0:
+VInt_Menu0:
 	ld	c, $03
 	xor	a
 	call	LABEL_1BB9
@@ -3759,7 +3511,7 @@ LABEL_1AD0:
 	ld	($C267), a
 	ret
 
-LABEL_1ADE:
+VInt_MenuE:
 	push	bc
 	call	LABEL_3682
 	pop	de
@@ -3963,7 +3715,7 @@ LABEL_1C15:
 	xor	a
 	ld	($C800), a
 	ld	a, $D0
-	ld	($C900), a
+	ld	(Sprite_table), a
 +
 	call	LABEL_30B7
 	call	LABEL_36FB
@@ -4086,13 +3838,13 @@ PlayerMenu_Save:
 	add	hl, hl
 	set	7, h
 	ex	de, hl
-	call	LABEL_73A
+	call	CheckSlotUsed
 	push	af
 	push	hl
 	ld	a, $08
 	ld	($FFFC), a
 	ld	(hl), $00
-	ld	hl, $C300
+	ld	hl, H_scroll
 	ld	bc, $400
 	ldir
 	ld	a, $80
@@ -5825,7 +5577,7 @@ LABEL_28EE:
 	ld hl, LABEL_B12_B665
 	call ShowDialogue_B12
 	ld a, $D0
-	ld ($C900), a
+	ld (Sprite_table), a
 	jp LABEL_3464
 
 +:
@@ -5845,7 +5597,7 @@ LABEL_28EE:
 	call Inventory_AddItem
 +:
 	ld a, $D0
-	ld ($C900), a
+	ld (Sprite_table), a
 	jp LABEL_3464
 
 LABEL_2950:
@@ -5871,7 +5623,7 @@ LABEL_2950:
 	ld h, (hl)
 	ld l, $00
 	ld e, $03
-	call LABEL_4FE
+	call Divide16Bit
 	pop de
 	ex de, hl
 	ld a, (hl)
@@ -6267,7 +6019,7 @@ LABEL_2C8F:
 LABEL_2C98:
 	ld hl, LABEL_B12_B85D
 	call ShowDialogue_B12
-	call LABEL_3777
+	call OutputTilemapRaw7
 	push af
 	push bc
 	call LABEL_3797
@@ -6537,7 +6289,7 @@ LABEL_2DAA:
 	ld ($C26B), hl
 	jp LABEL_2DA5
 
-LABEL_2E62:
+CursorBlink:
 	ld a, ($C268)
 	or a
 	ret z
@@ -6702,7 +6454,7 @@ LABEL_2FA1:
 	ld ix, Noah_stats
 	jp LABEL_2F1B
 
-LABEL_2FD8:
+ClearSpriteTableFadeIn8:
 	di
 	push	de
 	push	af
@@ -7326,7 +7078,7 @@ LABEL_3389:
 	ld bc, $0100
 	ld hl, $0800
 	di
-	call LABEL_363
+	call FillVRAMWithHL
 	ei
 	pop hl
 	inc hl
@@ -7908,7 +7660,7 @@ LABEL_376B:
 	ld bc, $070A
 	jp LABEL_3A57
 
-LABEL_3777:
+OutputTilemapRaw7:
 	ld hl, $DE14
 	ld de, $7B48
 	ld bc, $050C
@@ -7968,7 +7720,7 @@ LABEL_37CF:
 	call	LABEL_3A57
 	ld	hl, LABEL_3865
 	ld	a, (ix+5)
-	call	LABEL_2FD8
+	call	ClearSpriteTableFadeIn8
 	ld	hl, LABEL_3875
 	ld	c, (ix+3)
 	ld	b, (ix+4)
@@ -7978,25 +7730,25 @@ LABEL_37CF:
 	call	LABEL_3A57
 	ld	hl, LABEL_3881
 	ld	a, (ix+8)
-	call	LABEL_2FD8
+	call	ClearSpriteTableFadeIn8
 	ld	hl, LABEL_B27_BCDB
 	ld	bc, $0118
 	call	LABEL_3A57
 	ld	hl, LABEL_3891
 	ld	a, (ix+9)
-	call	LABEL_2FD8
+	call	ClearSpriteTableFadeIn8
 	ld	hl, LABEL_B27_BCDB
 	ld	bc, $0118
 	call	LABEL_3A57
 	ld	hl, LABEL_38A1
 	ld	a, (ix+6)
-	call	LABEL_2FD8
+	call	ClearSpriteTableFadeIn8
 	ld	hl, LABEL_B27_BCDB
 	ld	bc, $0118
 	call	LABEL_3A57
 	ld	hl, LABEL_38B1
 	ld	a, (ix+7)
-	call	LABEL_2FD8
+	call	ClearSpriteTableFadeIn8
 	ld	hl, LABEL_B27_BCF3
 	ld	bc, $0118
 	call	LABEL_3A57
@@ -8181,7 +7933,7 @@ LABEL_39A5:
 	ld bc, $0C12
 	call LABEL_3AA6
 
-LABEL_39B1:
+GetSaveGameSelection:
 	ld a, $08
 	ld ($FFFC), a
 	ld hl, $8100
@@ -8517,15 +8269,15 @@ LABEL_3CAD:
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank16
-	ld hl, LABEL_B16_BAD8
+	ld hl, TilesFont_B16
 	ld de, $5800
-	call LABEL_3FA
-	ld hl, LABEL_B16_BD58
+	call LoadTiles4BitRLE
+	ld hl, TilesExtraFont_B16
 	ld de, $7E00
-	call LABEL_3FA
+	call LoadTiles4BitRLE
 	xor a
-	ld ($C304), a
-	ld ($C300), a
+	ld (V_scroll), a
+	ld (H_scroll), a
 	ld ($C800), a
 	ld ($C2E9), a
 	dec a
@@ -8535,7 +8287,7 @@ LABEL_3CAD:
 	ld hl, $FF00
 	ld ($C2BC), hl
 	di
-	call LABEL_63A5
+	call AnimateEnemyTile
 	ei
 	ld a, (Interaction_Type)
 	sub $0F
@@ -8560,7 +8312,7 @@ LABEL_3CAD:
 	ei
 	ld a, $0C
 	call WaitForVInt
-	jp LABEL_2FD
+	jp ClearSpriteTableFadeIn
 
 
 LABEL_3D1D:
@@ -8630,7 +8382,7 @@ LABEL_3D64:
 	ld	h, (hl)
 	ld	l, a
 	ld	de, $4000
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 	pop	hl
 	inc	hl
 LABEL_3D96:
@@ -8951,7 +8703,7 @@ GameMode_LoadNameInput:
 	ld bc, $0300
 	ld hl, $0000
 	di
-	call LABEL_363
+	call FillVRAMWithHL
 	ei
 	ld hl, Game_mode
 	inc (hl) ; GameMode_NameInput
@@ -8977,7 +8729,7 @@ GameMode_LoadNameInput:
 	ld hl, $D0C0
 	ld bc, $0540
 	di
-	call LABEL_346
+	call DataToVRAM
 	ei
 	call LABEL_41DB
 	ld hl, LABEL_41FC
@@ -8988,21 +8740,21 @@ GameMode_LoadNameInput:
 	ld hl, LABEL_421C
 	ld bc, $0020
 	di
-	call LABEL_346
+	call DataToVRAM
 	ei
 	ld de, $C784
 	ld hl, LABEL_40C0
 	ld bc, $0005
 	ldir
 	xor a
-	ld ($C304), a
-	ld ($C300), a
+	ld (V_scroll), a
+	ld (H_scroll), a
 	ld ($C2D3), a
 	ld de, $8006
 	di
 	rst $08
 	ei
-	jp LABEL_2FD
+	jp ClearSpriteTableFadeIn
 
 
 LABEL_40C0:
@@ -9014,7 +8766,7 @@ LABEL_40C5:
 	add hl, de
 	add hl, hl
 	add hl, hl
-	ld de, $C900
+	ld de, Sprite_table
 	ld a, h
 	add a, a
 	add a, a
@@ -9270,7 +9022,7 @@ LABEL_4280:
 .db $22, $5C, $5C, $5C, $5C, $5C, $5C, $5C
 .db $5D, $5D, $5E, $5E
 
-LABEL_42AC:
+GoToIntroSequence:
 	ld a, $D7
 	ld ($C004), a
 	call FadeOut2
@@ -9282,7 +9034,7 @@ LABEL_42AC:
 	ldir
 	ld hl, LABEL_B23_B778
 	ld de, $4000
-	call LABEL_3FA
+	call LoadTiles4BitRLE
 	ld hl, $FFFF
 	ld (hl), :Bank28
 	ld hl, LABEL_B28_BE00
@@ -9295,14 +9047,14 @@ LABEL_42AC:
 	ld bc, $0100
 	ldir
 	xor a
-	ld ($C300), a
+	ld (H_scroll), a
 	ld a, $80
-	ld ($C304), a
+	ld (V_scroll), a
 	ld hl, $D000
 	ld de, $7800
 	ld bc, $0700
 	di
-	call LABEL_346
+	call DataToVRAM
 	ei
 	ld a, $8C
 	ld ($C004), a
@@ -9321,7 +9073,7 @@ LABEL_42AC:
 	ld a, ($C307)
 	cp $01
 	jr nz, -
-	ld a, ($C304)
+	ld a, (V_scroll)
 	cp $80
 	jr nz, -
 	call LABEL_2D37
@@ -9335,15 +9087,15 @@ LABEL_42AC:
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank16
-	ld hl, LABEL_B16_BAD8
+	ld hl, TilesFont_B16
 	ld de, $5800
-	call LABEL_3FA
-	ld hl, LABEL_B16_BD58
+	call LoadTiles4BitRLE
+	ld hl, TilesExtraFont_B16
 	ld de, $7E00
-	call LABEL_3FA
+	call LoadTiles4BitRLE
 	xor a
-	ld ($C304), a
-	ld ($C300), a
+	ld (V_scroll), a
+	ld (H_scroll), a
 	ld a, $0C
 	call WaitForVInt
 	call FadeIn2
@@ -9354,7 +9106,7 @@ LABEL_42AC:
 	ld bc, $0528
 	call LABEL_3A68
 	call LABEL_2D37
-	call LABEL_467C
+	call GameMode_FadeToPicture
 	ld a, $00
 	call LABEL_46D1
 	ld hl, LABEL_B49B
@@ -9373,14 +9125,14 @@ LABEL_42AC:
 
 LABEL_43AA:
 	ld de, $0001
-	ld a, ($C304)
+	ld a, (V_scroll)
 	add a, e
 	cp $E0
 	jr c, +
 	ld d, $01
 	add a, $20
 +:
-	ld ($C304), a
+	ld (V_scroll), a
 	ld a, ($C307)
 	sub d
 	ld ($C307), a
@@ -9393,7 +9145,7 @@ LABEL_43AA:
 	jp LABEL_6B62
 
 LABEL_43CF:
-	call LABEL_467C
+	call GameMode_FadeToPicture
 	ld a, $8A
 	ld ($C004), a
 	ld a, $03
@@ -9421,7 +9173,7 @@ LABEL_43CF:
 	ret
 
 LABEL_4414:
-	call LABEL_467C
+	call GameMode_FadeToPicture
 	ld a, $8A
 	ld ($C004), a
 	ld a, $05
@@ -9451,7 +9203,7 @@ LABEL_4414:
 	jp FadeIn2
 
 LABEL_4461:
-	call LABEL_467C
+	call GameMode_FadeToPicture
 	ld a, $8A
 	ld ($C004), a
 	ld a, $03
@@ -9484,7 +9236,7 @@ LABEL_4497:
 	jp LABEL_4509
 
 +:
-	call LABEL_467C
+	call GameMode_FadeToPicture
 	ld a, $8A
 	ld ($C004), a
 	ld a, $07
@@ -9549,7 +9301,7 @@ LABEL_4517:
 	ldir
 	ld hl, LABEL_B22_B9E7
 	ld de, $6000
-	call LABEL_3FA
+	call LoadTiles4BitRLE
 	ld a, $0C
 	call WaitForVInt
 	call FadeIn2
@@ -9561,7 +9313,7 @@ LABEL_4517:
 LABEL_454E:
 	call FadeOut2
 	ld a, $D0
-	ld ($C900), a
+	ld (Sprite_table), a
 	ld a, $8B
 	ld ($C004), a
 	ld a, $0D
@@ -9586,7 +9338,7 @@ LABEL_454E:
 	ld hl, LABEL_B12_BF21
 	call ShowDialogue_B12
 	call LABEL_3464
-	call LABEL_467C
+	call GameMode_FadeToPicture
 	ld a, $03
 	call LABEL_46D1
 	ld hl, LABEL_B9E8
@@ -9618,7 +9370,7 @@ LABEL_454E:
 	ldir
 	ld hl, LABEL_B31_9687
 	ld de, $4000
-	call LABEL_3FA
+	call LoadTiles4BitRLE
 	ld hl, $FFFF
 	ld (hl), :Bank24
 	ld hl, $D000
@@ -9643,7 +9395,7 @@ LABEL_454E:
 	ld (hl), :Bank15
 	ld hl, LABEL_B15_BDEE
 	ld de, $5820
-	call LABEL_3FA
+	call LoadTiles4BitRLE
 	ld a, $01
 	ld ($C2F5), a
 	ld a, $91
@@ -9681,16 +9433,16 @@ LABEL_454E:
 	ld (Game_mode), a
 	ret
 
-LABEL_467C:
+GameMode_FadeToPicture:
 	call FadeOut2
 	ld hl, $FFFF
 	ld (hl), :Bank16
-	ld hl, LABEL_B16_BAD8
+	ld hl, TilesFont_B16
 	ld de, $5800
-	call LABEL_3FA
-	ld hl, LABEL_B16_BD58
+	call LoadTiles4BitRLE
+	ld hl, TilesExtraFont_B16
 	ld de, $7E00
-	call LABEL_3FA
+	call LoadTiles4BitRLE
 	ld hl, $FFFF
 	ld (hl), :Bank24
 	ld hl, $C240
@@ -9703,16 +9455,16 @@ LABEL_467C:
 	ldir
 	ld hl, LABEL_B24_A58A
 	ld de, $4000
-	call LABEL_3FA
+	call LoadTiles4BitRLE
 	ld hl, LABEL_B24_A484
 	call LABEL_6B62
 	xor a
-	ld ($C304), a
-	ld ($C300), a
+	ld (V_scroll), a
+	ld (H_scroll), a
 	ld ($C2D3), a
 	ld a, $0C
 	call WaitForVInt
-	jp LABEL_2FD
+	jp ClearSpriteTableFadeIn
 
 LABEL_46D1:
 	push	af
@@ -9739,7 +9491,7 @@ LABEL_46D1:
 	ld	bc, $0010
 	ldir
 	ld	de, $6000
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 	ld	hl, $FFFF
 	ld	(hl), :Bank24
 	pop	hl
@@ -9750,11 +9502,11 @@ LABEL_46D1:
 	ld	de, $78CC
 	ld	bc, $0C28
 	di
-	call	LABEL_390
+	call	OutputTilemapRawDataBox
 	ld	de, $7C00
 	ld	bc, $0100
 	ld	hl, $0800
-	call	LABEL_363
+	call	FillVRAMWithHL
 	ei
 	jp	FadeIn
 
@@ -10528,7 +10280,7 @@ LABEL_4C70:
 	ld (Interaction_Type), a
 	call LABEL_3D47
 	ld a, $D0
-	ld ($C900), a
+	ld (Sprite_table), a
 	ld a, $0C
 	call WaitForVInt
 	ld hl, LABEL_4D6C
@@ -10561,7 +10313,7 @@ LABEL_4C70:
 	call FadeOut2
 	call LABEL_3D47
 	ld a, $D0
-	ld ($C900), a
+	ld (Sprite_table), a
 	ld a, $0C
 	call WaitForVInt
 	call FadeIn2
@@ -11934,7 +11686,7 @@ LABEL_576A:
 	ld	(hl), $FF
 	dec  hl
 	ldir
-	ld	hl, $C900
+	ld	hl, Sprite_table
 	ld	($C217), hl
 	ld	hl, $C980
 	ld	($C219), hl
@@ -12113,27 +11865,27 @@ LABEL_587B:
 
 
 ; Data from 588B to 5FFD (1907 bytes)
-LABEL_588B:
-	ld	hl, $C900
+UpdateSpriteTable:
+	ld	hl, Sprite_table
 	ld	de, $7F00
 	rst	$08
 	ld	c, $BE
-	call	LABEL_591E
+	call	GoToOuti64
 	ld	hl, $C980
 	ld	de, $7F80
 	rst	$08
 
-LABEL_589E:
+GoToOuti128:
 .REPEAT 64
 	outi
 .ENDR
 
-LABEL_591E:
+GoToOuti64:
 .REPEAT 32
 	outi
 .ENDR
 
-LABEL_595E:
+GoToOuti32:
 .REPEAT 32
 	outi
 .ENDR
@@ -12440,7 +12192,7 @@ LABEL_5B87:
 	ld h, (hl)
 	ld l, a
 	ld de, $7400
-	call LABEL_3FA
+	call LoadTiles4BitRLE
 	xor a
 	ret
 
@@ -12753,7 +12505,7 @@ LABEL_5E2E:
 	ld h, (hl)
 	ld l, a
 	ld de, $7400
-	call LABEL_3FA
+	call LoadTiles4BitRLE
 	xor a
 	ret
 
@@ -12852,7 +12604,7 @@ LABEL_5F11:
 	ld de, $7A5C
 	ld bc, $0608
 	di
-	call LABEL_390
+	call OutputTilemapRawDataBox
 	ei
 	ret
 
@@ -13030,7 +12782,7 @@ LABEL_5FFE:
 	ld	a, b
 	ld	($FFFF), a
 	ld	de, $6000
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 	pop	hl
 	inc	hl
 	ld	a, :Bank03
@@ -13093,7 +12845,7 @@ LABEL_6095:
 	ld	a, ($C2C7)
 	ld	c, a
 	ld	b, $00
-	call	LABEL_44C
+	call	Multiply16Bit
 	ld	($C2DD), hl
 	pop	hl
 	inc	hl
@@ -13107,7 +12859,7 @@ LABEL_6095:
 	ld	a, ($C2C7)
 	ld	c, a
 	ld	b, $00
-	call	LABEL_44C
+	call	Multiply16Bit
 	ld	(CurrentBattle_EXPReward), hl
 	pop	hl
 	inc	hl
@@ -13121,7 +12873,7 @@ LABEL_6095:
 	call	LABEL_576A
 	call	LABEL_576A
 	ld	hl, $C240
-	ld	de, $C220
+	ld	de, Normal_palette
 	ld	bc, $0020
 	ldir
 	ld	a, $10
@@ -13277,13 +13029,13 @@ LABEL_617D:
 	ld	a, b
 	ld	($FFFF), a
 	ld	de, $6000
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 	call	LABEL_576A
 	ld	a, $16
 	jp	WaitForVInt
 
 
-LABEL_61F5:
+AnimateCharacterSprites:
 	ld hl, $FFFF
 	ld (hl), :Bank28
 	ld ix, $C800
@@ -13327,8 +13079,8 @@ LABEL_6229:
 	ld de, $7540
 	rst $08
 	ld c, $BE
-	call LABEL_589E
-	jp LABEL_591E
+	call GoToOuti128
+	jp GoToOuti64
 
 LABEL_6246:
 	ld e, $00
@@ -13344,8 +13096,8 @@ LABEL_6246:
 	ld de, $7600
 	rst $08
 	ld c, $BE
-	call LABEL_589E
-	jp LABEL_591E
+	call GoToOuti128
+	jp GoToOuti64
 
 LABEL_6263:
 	ld e, $00
@@ -13361,8 +13113,8 @@ LABEL_6263:
 	ld de, $76C0
 	rst $08
 	ld c, $BE
-	call LABEL_589E
-	jp LABEL_591E
+	call GoToOuti128
+	jp GoToOuti64
 
 LABEL_6280:
 	ld e, $00
@@ -13373,7 +13125,7 @@ LABEL_6280:
 	ld de, $7780
 	rst $08
 	ld c, $BE
-	jp LABEL_589E
+	jp GoToOuti128
 
 LABEL_6293:
 	ld a, (Game_mode)
@@ -13392,12 +13144,12 @@ LABEL_6293:
 	ld de, $7540
 	rst $08
 	ld c, $BE
-	call LABEL_589E
-	call LABEL_589E
-	call LABEL_589E
-	jp LABEL_589E
+	call GoToOuti128
+	call GoToOuti128
+	call GoToOuti128
+	jp GoToOuti128
 
-LABEL_62BC:
+AnimateMapTiles:
 	ld hl, $FFFF
 	ld (hl), :Bank14
 	ld hl, $C26F
@@ -13544,7 +13296,7 @@ LABEL_6395:
 .dw	LABEL_B14_B2E8
 
 
-LABEL_63A5:
+AnimateEnemyTile:
 	ld a, ($C2D6)
 	or a
 	ret z
@@ -13851,18 +13603,18 @@ LABEL_661C:
 	ld	hl, $00C0
 	ld	bc, $0080
 	di
-	call	LABEL_363
+	call	FillVRAMWithHL
 	ei
 	ld	a, $C0
 	ld	($C004), a
 	xor	a
-	ld	($C304), a
+	ld	(V_scroll), a
 	ld	b, $0C
 LABEL_6635:
 	push	bc
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	add	a, $10
-	ld	($C304), a
+	ld	(V_scroll), a
 	ld	a, $08
 	call	WaitForVInt
 	ld	a, b
@@ -13878,7 +13630,7 @@ LABEL_6635:
 	ld	hl, $00C0
 	ld	bc, $0040
 	di
-	call	LABEL_363
+	call	FillVRAMWithHL
 	ei
 	pop	bc
 	djnz	LABEL_6635
@@ -13892,19 +13644,19 @@ LABEL_666A:
 	xor	a
 	call	LABEL_6AED
 	ld	hl, $C240
-	ld	de, $C220
+	ld	de, Normal_palette
 	ld	bc, $0020
 	ldir
 	ld	a, $16
 	call	WaitForVInt
 	ld	a, $10
-	ld	($C304), a
+	ld	(V_scroll), a
 	ld	b, $0C
 LABEL_668B:
 	push	bc
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	add	a, $10
-	ld	($C304), a
+	ld	(V_scroll), a
 	ld	a, $08
 	call	WaitForVInt
 	ld	a, b
@@ -13921,27 +13673,27 @@ LABEL_668B:
 	add	hl, bc
 	ld	bc, $0080
 	di
-	call	LABEL_346
+	call	DataToVRAM
 	ei
 	pop	bc
 	djnz	LABEL_668B
 	ld	b, $05
 LABEL_66BB:
-	ld	a, ($C304)
+	ld	a, (V_scroll)
 	or	a
 	ld	a, $D8
 	jr	z, LABEL_66C4
 	xor	a
 LABEL_66C4:
-	ld	($C304), a
+	ld	(V_scroll), a
 	ld	a, $08
 	call	WaitForVInt
 	djnz	LABEL_66BB
 	ld	hl, $FFFF
 	ld	(hl), :Bank16
-	ld	hl, LABEL_B16_BD58
+	ld	hl, TilesExtraFont_B16
 	ld	de, $7E00
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 	ld	b, $01
 	jp	LABEL_6963
 
@@ -14282,7 +14034,7 @@ LABEL_68EC:
 	ld	(hl), :Bank09
 	ld	hl, LABEL_B09_B471
 	ld	de, $4000
-	call	LABEL_3FA
+	call	LoadTiles4BitRLE
 	ld	hl, LABEL_B09_B130
 	call	LABEL_6B62
 	ld	a, $0F
@@ -14471,7 +14223,7 @@ LABEL_6A2F:
 	call	LABEL_617D
 	call	LABEL_474B
 	ld	a, $D0
-	ld	($C900), a
+	ld	(Sprite_table), a
 	xor	a
 	ld	($C800), a
 	ld	($C29D), a
@@ -15449,7 +15201,7 @@ LABEL_7143:
 	jr z, +
 	inc e
 +:
-	ld a, ($C304)
+	ld a, (V_scroll)
 	ld d, a
 	ld hl, ($C305)
 	ld b, h
@@ -15505,7 +15257,7 @@ LABEL_7143:
 	ld a, $FF
 	ld ($C2D2), a
 	ld a, d
-	ld ($C304), a
+	ld (V_scroll), a
 	ld a, h
 	and $07
 	ld h, a
@@ -15544,7 +15296,7 @@ LABEL_7143:
 	ld ($C2D2), a
 	ld a, l
 	neg
-	ld ($C300), a
+	ld (H_scroll), a
 	ld a, h
 	and $07
 	ld h, a
@@ -15653,7 +15405,7 @@ LABEL_72A6:
 	jr nz, +
 	ld c, $08
 +:
-	ld a, ($C304)
+	ld a, (V_scroll)
 	and $F0
 	ld l, a
 	ld h, $00
@@ -15747,7 +15499,7 @@ LABEL_733A:
 	and $01
 	ld a, ($C263)
 	ld ($FFFF), a
-	ld a, ($C304)
+	ld a, (V_scroll)
 	ld b, $00
 	jr nz, ++
 	cp $20
@@ -15844,7 +15596,7 @@ LABEL_733A:
 	djnz -
 	ret
 
-LABEL_73D0:
+UpdateScrollingTilemap:
 	ld a, ($C264)
 	and $0F
 	ret z
@@ -15896,7 +15648,7 @@ LABEL_73D0:
 ++:
 	ld a, b
 	and $01
-	ld a, ($C304)
+	ld a, (V_scroll)
 	ld b, $00
 	jr nz, ++
 	cp $20
@@ -15931,7 +15683,7 @@ LABEL_744B:
 	call LABEL_7602
 	ld a, ($C263)
 	ld ($FFFF), a
-	ld a, ($C304)
+	ld a, (V_scroll)
 	and $F0
 	ld l, a
 	ld h, $00
@@ -16177,7 +15929,7 @@ LABEL_74E4:
 	jr nc, LABEL_75E8
 	ld (hl), $D7
 	push de
-	ld a, ($C304)
+	ld a, (V_scroll)
 	add a, c
 	jr nc, +
 	add a, $20
@@ -16972,7 +16724,7 @@ FadeIn:
 FadeIn2:
 	ld	hl, $2089
 	ld	(Fade_timer), hl
-	ld	hl, $C220
+	ld	hl, Normal_palette
 	ld	de, $C221
 	ld	bc, $001F
 	ld	(hl), $00
@@ -16986,7 +16738,7 @@ LABEL_7B33:
 	ret
 
 
-LABEL_7B40:
+FadePaletteInRAM:
 	ld hl, $C21D
 	dec (hl)
 	ret p
@@ -17000,7 +16752,7 @@ LABEL_7B40:
 	dec (hl)
 	inc hl
 	ld b, (hl)
-	ld hl, $C220
+	ld hl, Normal_palette
 -:
 	call +
 	inc hl
@@ -17044,7 +16796,7 @@ LABEL_7B40:
 	inc hl
 	ld b, (hl)
 	ld hl, $C240
-	ld de, $C220
+	ld de, Normal_palette
 -:
 	call +
 	inc hl
@@ -17115,7 +16867,7 @@ LABEL_7BC4:
 	jp nz, -
 	ret
 
-LABEL_7BEE:
+FlashPaletteInRAM:
 	ld a, ($C2BE)
 	or a
 	ret z
@@ -17124,7 +16876,7 @@ LABEL_7BEE:
 	rrca
 	jp c, +
 	ld hl, $C240
-	ld de, $C220
+	ld de, Normal_palette
 	ld bc, $0020
 	ldir
 	ret
@@ -17133,7 +16885,7 @@ LABEL_7BEE:
 	ld hl, ($C2C0)
 	ld b, h
 	ld a, l
-	ld hl, $C220
+	ld hl, Normal_palette
 	add a, l
 	ld l, a
 	ld a, $3F
@@ -17143,7 +16895,7 @@ LABEL_7BEE:
 	djnz -
 	ret
 
-LABEL_7C18:
+Palette_Rotate:
 	ld a, ($C30E)
 	or a
 	ret z
@@ -17204,11 +16956,11 @@ LABEL_7C73:
 .db $2A
 
 LABEL_7C79:
-	ld hl, $C220
+	ld hl, Normal_palette
 	ld de, $C000
 	rst $08
 	ld c, $BE
-	jp LABEL_595E
+	jp GoToOuti32
 
 
 LABEL_7C85:
@@ -17277,7 +17029,7 @@ LABEL_7CE4:
 LABEL_7CF7:
 	push bc
 	ld a, (hl)
-	ld ($C220), a
+	ld (Normal_palette), a
 	ld b, $06
 	ld de, $C22A
 -:
