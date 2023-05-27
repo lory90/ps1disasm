@@ -157,10 +157,10 @@ MainGameLoop:
 
 
 GameModeTbl:
-.dw	GameMode_InitIntro	; 0
-.dw	GameMode_InitIntro	; 1
-.dw	GameMode_LoadIntro	; 2
-.dw	GameMode_Intro	; 3
+.dw	GameMode_InitTitleScreen	; 0
+.dw	GameMode_InitTitleScreen	; 1
+.dw	GameMode_LoadTitleScreen	; 2
+.dw	GameMode_TitleScreen	; 3
 .dw	GameMode_LoadShip	; 4
 .dw	GameMode_Ship	; 5
 .dw	GameMode_Nothing	; 6
@@ -807,12 +807,12 @@ UpdateRNGSeed:
 ; -----------------------------------------------------------------
 
 
-GameMode_InitIntro:
+GameMode_InitTitleScreen:
 	ld	hl, Game_mode
-	ld	(hl), $02 ; GameMode_LoadIntro
+	ld	(hl), $02 ; GameMode_LoadTitleScreen
 	ret
 
-GameMode_Intro:
+GameMode_TitleScreen:
 	ld	hl, $7C12
 	ld	(Cursor_pos), hl
 	ld	a, $01
@@ -889,7 +889,7 @@ Menu_ContinueOrDelete:
 	call	ShowYesNoPrompt
 	jr	nz, Menu_Delete
 ; picked Yes, so continue
-	ld	hl, DialogueContinueChooseSlot
+	ld	hl, DialogueContinueChooseSlot_B12
 	call	ShowDialogue_B12
 -
 	push	bc
@@ -897,9 +897,9 @@ Menu_ContinueOrDelete:
 	pop	bc
 	call	CheckSlotUsed
 	jr	z, -
-	ld	hl, LABEL_B12_BE35
+	ld	hl, DialogueContinuingGame_B12
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	ld	a, $08
 	ld	($FFFC), a
 	ld	a, (CurrentDialogueNumber)
@@ -921,12 +921,12 @@ Menu_ContinueOrDelete:
 	ret
 
 Menu_Delete:
-	ld	hl, LABEL_B12_BE5E
+	ld	hl, DialogueConfirmDelete_B12
 	call	ShowDialogue_B12
 	call	ShowYesNoPrompt
 	jr	nz, Menu_ContinueOrDelete
 --
-	ld	hl, LABEL_B12_BE6F
+	ld	hl, DialogueChooseDelete_B12
 	call	ShowDialogue_B12
 -
 	push	bc
@@ -936,11 +936,11 @@ Menu_Delete:
 	jr	nz, Menu_Delete
 	call	CheckSlotUsed
 	jr	z, -
-	ld	hl, LABEL_B12_BA82
+	ld	hl, DialogueSaveDeleteConfirmSlot_B12
 	call	ShowDialogue_B12
 	call	ShowYesNoPrompt
 	jr	nz, --
-	ld	hl, LABEL_B12_BE82
+	ld	hl, DialogueSaveBeenDeleted_B12
 	call	ShowDialogue_B12
 	ld	a, $08
 	ld	($FFFC), a
@@ -972,11 +972,14 @@ Menu_Delete:
 	ld	a, $80
 	ld	($FFFC), a
 	ld	hl, Game_mode
-	ld	(hl), $02 ; GameMode_LoadIntro
+	ld	(hl), $02 ; GameMode_LoadTitleScreen
 	ret
 
+
+; =================================================================
 LABEL_730:
 .db $C0, $10, $C0, $10, $C0, $10, $C0, $10, $C0, $10
+; =================================================================
 
 CheckSlotUsed:
 	ld	a, $08
@@ -990,18 +993,18 @@ CheckSlotUsed:
 	ld	($FFFC), a
 	ret
 
-GameMode_LoadIntro:
+GameMode_LoadTitleScreen:
 	call	FadeOut2
 	di
 	call	DisableDisplay
 	call	CallSndInit
 	call	ClearTilemap
 	ld	hl, Game_mode
-	inc	(hl) ; GameMode_Intro
+	inc	(hl) ; GameMode_TitleScreen
 	ld	hl, $258
 	ld	($C20E), hl
-	ld	hl, LABEL_7BA
-	ld	de, $C240
+	ld	hl, Palette_TitleScreen
+	ld	de, Target_palette
 	ld	bc, $20
 	ldir
 	ld	hl, $C260
@@ -1009,55 +1012,59 @@ GameMode_LoadIntro:
 	ld	bc, $9F
 	ld	(hl), 0
 	ldir
-	ld	hl, $C800
-	ld	de, $C801
+	ld	hl, Character_sprite_attributes
+	ld	de, Character_sprite_attributes+1
 	ld	bc, $FF
 	ld	(hl), l
 	ldir
 	ld	hl, $FFFF
 	ld	(hl), :Bank31
-	ld	hl, LABEL_B31_A8BD
+	ld	hl, TitleScreenTiles_B31
 	ld	de, $4000
 	call	LoadTiles4BitRLENoDI
 	ld	hl, $FFFF
 	ld	(hl), :Bank14
-	ld	hl, LABEL_B14_BC68
-	call	LABEL_6B62
+	ld	hl, TitleScreenTilemap_B14
+	call	DecompressTilemapData
 	xor	a
 	ld	(V_scroll), a
 	ld	(H_scroll), a
-	ld	a, $81
-	ld	($C004), a
-	ld	de, $8006
+	ld	a, $81		; title music
+	ld	(Music_to_play), a
+	ld	de, $8006        ; Enable stretch screen, no scroll lock/column mask/line int/desync
 	rst	$08
 	ei
 	ld	a, $0C
 	call	WaitForVInt
 	jp	ClearSpriteTableFadeIn
 
-LABEL_7BA:
-.db	$00, $00, $3F, $0F, $0B, $06
-.db $2B, $2A, $25, $27, $3B, $01, $3C, $34, $2F, $3C, $00, $00, $3C, $0F, $0B, $06
-.db $2B, $2A, $25, $27, $3B, $01, $3C, $34, $2F, $3C
+
+; =================================================================
+Palette_TitleScreen:
+.db	$00, $00, $3F, $0F, $0B, $06, $2B, $2A
+.db	$25, $27, $3B, $01, $3C, $34, $2F, $3C
+.db	$00, $00, $3C, $0F, $0B, $06, $2B, $2A
+.db	$25, $27, $3B, $01, $3C, $34, $2F, $3C
+; =================================================================
 
 CheckSRAM:
 	ld	a, $08
 	ld	($FFFC), a
 	ld	bc, $1000
-LABEL_7E2:
+---
 	push	bc
 	ld	hl, $8001
 	ld	de, SRAMIdentificationData+1
 	ld	bc, $20
-LABEL_7EC:
+-
 	ld	a, (de)
 	inc	de
 	cpi
-	jr	nz, LABEL_803
-	jp	pe, LABEL_7EC
+	jr	nz, +
+	jp	pe, -
 	pop	bc
-LABEL_7F6:
-	djnz	LABEL_7E2
+-
+	djnz	---
 	ld	a, c
 	cp	$08
 	jr	nc, InitSRAM
@@ -1065,10 +1072,10 @@ LABEL_7F6:
 	ld	($FFFC), a
 	ret
 
-LABEL_803:
++
 	pop	bc
 	inc	c
-	jr	LABEL_7F6
+	jr	-
 
 
 ; =================================================================
@@ -1086,7 +1093,7 @@ InitSRAM:
 	ld	bc, $1FFB
 	ld	(hl), l
 	ldir
-	ld	hl, LABEL_3AC4
+	ld	hl, DefaultSRAMData
 	ld	de, $8100
 	ld	bc, $D8
 	ldir
@@ -1100,7 +1107,7 @@ InitSRAM:
 
 
 GameMode_Ship:
-	ld	hl, $2009
+	ld	hl, $2009	; Fade out, 32 colors
 	ld	(Fade_timer), hl
 -
 	ld	a, (Game_is_paused)
@@ -1129,47 +1136,47 @@ __
 +
 	ld	hl, $FFFF
 	ld	(hl), :Bank23
-	ld	hl, LABEL_B23_B767
-	ld	de, $C240
+	ld	hl, Palette_Space_B23
+	ld	de, Target_palette
 	ld	bc, $11
 	ldir
-	call	LABEL_A31
-	ld	hl, LABEL_B23_B778
+	call	LoadPlanetPalette
+	ld	hl, Ship_SpaceTiles_B23
 	ld	de, $4000
 	call	LoadTiles4BitRLE
 	ld	hl, $FFFF
 	ld	(hl), :Bank28
-	ld	hl, LABEL_B28_BE88
-	call	LABEL_6B62
-	ld	hl, $D000
-	ld	de, $D300
+	ld	hl, Ship_TilemapBottomPlanet_B28
+	call	DecompressTilemapData
+	ld	hl, Tilemap_data
+	ld	de, Tilemap_data+$300
 	ld	bc, $300
 	ldir
-	ld	hl, $D000
+	ld	hl, Tilemap_data
 	ld	bc, $100
 	ldir
-	ld	hl, LABEL_B28_BE00
-	call	LABEL_6B62
+	ld	hl, Ship_TilemapSpace_B28
+	call	DecompressTilemapData
 	xor	a
 	ld	(H_scroll), a
 	ld	(V_scroll), a
-	ld	hl, $D000
+	ld	hl, Tilemap_data
 	ld	de, $7800
 	ld	bc, $700
 	di
 	call	DataToVRAM
 	ei
-	ld	hl, $D000
-	ld	de, $D300
+	ld	hl, Tilemap_data
+	ld	de, Tilemap_data+$300
 	ld	bc, $300
 	ldir
-	ld	a, $8F
-	ld	($C004), a
+	ld	a, $8F		; vehicle music
+	ld	(Music_to_play), a
 	call	FadeIn2
 	ld	hl, 0
 	ld	($C2F2), hl
 	ld	a, $08
-	ld	($C307), a
+	ld	(Scroll_screens), a
 -
 	ld	a, (Game_is_paused)
 	or	a
@@ -1179,8 +1186,8 @@ __
 	ld	a, (Ctrl_1_pressed)
 	and	Button_1_Mask|Button_2_Mask
 	jr	nz, +
-	call	LABEL_9E9
-	ld	a, ($C307)
+	call	Ship_ScrollToTopPlanet
+	ld	a, (Scroll_screens)
 	or	a
 	jr	nz, -
 +
@@ -1219,14 +1226,14 @@ __
 	add	a, l
 	ld	l, a
 	ld	h, 0
-	ld	de, LABEL_ABF-3
+	ld	de, WorldData-3
 	add	hl, de
 	xor	a
-	ld	($C265), a
-	ld	($C264), a
+	ld	(Rotate_palette_flag), a
+	ld	(Scroll_direction), a
 	ld	($C2E9), a
-	ld	($C30E), a
-	ld	($C307), a
+	ld	(Vehicle_movement_flags), a
+	ld	(Scroll_screens), a
 	call	LABEL_787B
 	ret
 
@@ -1247,14 +1254,14 @@ LABEL_998:
 	ld	h, a
 	ld	(V_scroll), a
 	ld	a, l
-	ld	($C307), a
+	ld	(Scroll_screens), a
 	ld	a, b
 	sub	h
 	and $0F
 	ret	z
 	ld	e, a
 	ld	d, 0
-	ld	hl, ($C305)
+	ld	hl, (V_location)
 	ld	b, h
 	ld	a, l
 	sub	e
@@ -1267,9 +1274,9 @@ LABEL_998:
 	ld	a, h
 	and	$07
 	ld	h, a
-	ld	($C305), hl
+	ld	(V_location), hl
 	cp	b
-	call	nz, LABEL_723D
+	call	nz, DecompressScrollTilemap
 	call	LABEL_733A
 	ld	a, ($C2F3)
 	cp	$07
@@ -1279,19 +1286,19 @@ LABEL_998:
 	call	nz, FadePaletteInRAM
 	ret
 
-LABEL_9E9:
+Ship_ScrollToTopPlanet:
 	ld	de, $02
 	ld	a, (V_scroll)
-	sub	e
+	sub	e             ; Scroll up by 2 lines
 	cp	$E0
 	jr	c, +
 	ld	d, $01
 	sub	$20
 +
 	ld	(V_scroll), a
-	ld	a, ($C307)
+	ld	a, (Scroll_screens)
 	sub	d
-	ld	($C307), a
+	ld	(Scroll_screens), a
 	cp	$01
 	ret	nz
 	ld	a, d
@@ -1306,19 +1313,19 @@ LABEL_9E9:
 	add	a, l
 	ld	l, a
 	ld	h, 0
-	ld	de, LABEL_ABF-6
+	ld	de, WorldData-6
 	add	hl, de
 	ld	a, (hl)
 	ld	($C308), a
-	call	LABEL_A31
+	call	LoadPlanetPalette
 	ld	hl, $C240
 	ld	de, Normal_palette
 	ld	bc, $20
 	ldir
-	ld	hl, LABEL_B28_BD00
-	jp	LABEL_6B62
+	ld	hl, Ship_TilemapTopPlanet_B28
+	jp	DecompressTilemapData
 
-LABEL_A31:
+LoadPlanetPalette:
 	ld	a, ($C308)
 	and	$03
 	add	a, a
@@ -1327,14 +1334,14 @@ LABEL_A31:
 	add	a, l
 	ld	d, 0
 	ld	e, a
-	ld	hl, LABEL_A4A
+	ld	hl, Palette_SpacePlanets
 	add	hl, de
-	ld	de, $C242
+	ld	de, Target_palette+2
 	ld	bc, $06
 	ldir
 	ret
 
-LABEL_A4A:
+Palette_SpacePlanets:
 .db	$3E, $38, $34, $30, $20
 .db $04, $2F, $1F, $0B, $06, $01, $06, $3F
 .db $3F, $3E, $3C, $39, $38
@@ -1350,7 +1357,7 @@ GameMode_LoadShip:
 	add	a, l
 	ld	l, a
 	ld	h, 0
-	ld	de, LABEL_ABF-9
+	ld	de, WorldData-9
 	add	hl, de
 	ld	de, LABEL_A8C
 	push	de
@@ -1366,7 +1373,7 @@ LABEL_A74:
 	add	a, l
 	ld	l, a
 	ld	h, 0
-	ld	de, LABEL_ABF-6
+	ld	de, WorldData-6
 	add	hl, de
 	ld	de, LABEL_A8C
 	push	de
@@ -1375,37 +1382,50 @@ LABEL_A74:
 LABEL_A8C:
 	xor	a
 	ld	(Ctrl_1_held), a
-	ld	($C264), a
+	ld	(Scroll_direction), a
 	ld	a, ($C2E9)
 	cp	$83
 	ld	a, $10
 	jr	c, +
 	inc a
 +
-	ld	($C30E), a
+	ld	(Vehicle_movement_flags), a
 	ld	hl, 0
 	ld	($C2F2), hl
 	call	GameMode_LoadMap
-	ld	hl, $C26F
-	ld	de, $C270
+	ld	hl, Anim_counters
+	ld	de, Anim_counters+1
 	ld	bc, $17
 	ld	(hl), 0
 	ldir
-	call	LABEL_576A
+	call	BuildSprites
 	ld	a, $01
-	ld	($C264), a
+	ld	(Scroll_direction), a
 	ret
 
-LABEL_ABF:
-.db $00, $39, $43, $01, $8B, $69, $10, $53
-.db $17, $01, $37, $69, $00, $91, $43, $05
-.db $17, $17, $00, $47, $35, $01, $27, $74
-.db $0F, $20, $58, $00, $47, $35, $02, $33
-.db $2D, $13, $18, $1B, $01, $53, $74, $00
-.db $1B, $35, $07, $25, $13, $01, $53, $74
-.db $02, $33, $2D, $13, $18, $1B, $02, $5B
-.db $2D, $00, $1B, $35, $07, $25, $13, $02
-.db $5B, $2D, $01, $27, $74, $0F, $20, $58
+
+; =================================================================
+; Byte 1 = World number - space?
+; Byte 2 = V location
+; Byte 3 = H location
+; Byte 4 = World number - planet?
+; Byte 5 = V location
+; Byte 6 = H location
+; Byte 7 = World number - ?
+; Byte 8 = V location
+; Byte 9 = H location
+; =================================================================
+WorldData:
+.db $00, $39, $43, $01, $8B, $69, $10, $53, $17
+.db $01, $37, $69, $00, $91, $43, $05, $17, $17
+.db $00, $47, $35, $01, $27, $74, $0F, $20, $58
+.db $00, $47, $35, $02, $33, $2D, $13, $18, $1B
+.db $01, $53, $74, $00, $1B, $35, $07, $25, $13
+.db $01, $53, $74, $02, $33, $2D, $13, $18, $1B
+.db $02, $5B, $2D, $00, $1B, $35, $07, $25, $13
+.db $02, $5B, $2D, $01, $27, $74, $0F, $20, $58
+; =================================================================
+
 
 GameMode_Nothing:
 	ret
@@ -1416,9 +1436,9 @@ GameMode_Map:
 	call	nz, PauseLoop
 	ld	a, $0E
 	call	WaitForVInt
-	call	LABEL_576A
+	call	BuildSprites
 	call	LABEL_77AC
-	ld	a, ($C265)
+	ld	a, (Rotate_palette_flag)
 	or	a
 	jr	nz, +
 	ld	a, ($C2D2)
@@ -1430,17 +1450,17 @@ GameMode_Map:
 	or	a
 	jr	z, +
 	ld	a, $FF
-	jp	LABEL_B41
+	jp	++
 +
 	ld	a, (Ctrl_1_held)
 	and	Button_1_Mask|Button_2_Mask
 	ret	z
-	ld	a, ($C265)
+	ld	a, (Rotate_palette_flag)
 	or	a
 	ret	nz
 	xor	a
 
-LABEL_B41:
+++
 	ld	($C29D), a
 	ld	hl, Game_mode
 	ld	(hl), $0C ; GameMode_LoadInteraction
@@ -1487,7 +1507,7 @@ GameMode_LoadMap:
 	call	LoadTiles4BitRLE
 ++
 	call	LABEL_CA6
-	call	LABEL_576A
+	call	BuildSprites
 	ld	b, $04
 -
 	push	bc
@@ -1588,7 +1608,7 @@ LABEL_C54:
 	ld	h, (hl)
 	ld	l, a
 	ld	(Dungeon_entrance_points_addr), hl
-	call	LABEL_723D
+	call	DecompressScrollTilemap
 	call	LABEL_744B
 	ld	a, $14
 	call	LABEL_7764
@@ -1752,7 +1772,7 @@ GameMode_Road:
 	jr	nz, +
 	ld	a, ($C2EA)
 	ld	(Ctrl_1_held), a
-	call	LABEL_576A
+	call	BuildSprites
 	ld	a, ($C265)
 	or	a
 	ret	nz
@@ -1889,7 +1909,7 @@ GameMode_LoadDungeon:
 	ret	nz
 	ld	hl, LABEL_B12_B392
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	call	LABEL_1BE1
 	ld	a, ($C315)
 	or	a
@@ -2134,7 +2154,7 @@ LABEL_1148:
 	ld	hl, LABEL_B12_B1FC
 +
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1188:
 	call	LABEL_2EAC
@@ -2220,7 +2240,7 @@ LABEL_120B:
 LABEL_1212:
 	ld	hl, LABEL_B12_BEA1
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	jr	LABEL_120B
 
 LABEL_121D:
@@ -2248,7 +2268,7 @@ LABEL_121D:
 	ld	($C004), a
 	ld	hl, LABEL_B12_B108
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1251:
 	call	UpdateRNGSeed
@@ -2315,7 +2335,7 @@ LABEL_128C:
 	ld	hl, LABEL_B12_B203
 +
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_12B9:
 	ld	a, ($C2E8)
@@ -2362,7 +2382,7 @@ LABEL_12FA:
 	ld	($C2EF), a
 	ld	hl, LABEL_B12_B1C1
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1305:
 	ld	a, ($C2EF)
@@ -2394,7 +2414,7 @@ LABEL_130C:
 	ld	hl, LABEL_B12_B118
 +
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 
 LABEL_1344:
 	pop	af
@@ -2424,7 +2444,7 @@ LABEL_1344:
 	call	ShowDialogue_B12
 
 LABEL_1376:
-	call	LABEL_3464
+	call	CloseTextBox
 
 LABEL_1379:
 	ld	b, $04
@@ -2448,7 +2468,7 @@ LABEL_1386:
 	jr	z, _f
 	ld	hl, LABEL_B12_B1B2
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 __
 	call	UpdateRNGSeed
 	and $03
@@ -2466,7 +2486,7 @@ __
 	ld	($C004), a
 	ld	hl, LABEL_B12_B1EE
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_13CC:
 	ld	a, (iy+1)
@@ -2492,7 +2512,7 @@ LABEL_13CC:
 	call	LABEL_3105
 	ld	hl, LABEL_B12_B1D8
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_13FF:
 	call	UpdateRNGSeed
@@ -2506,7 +2526,7 @@ LABEL_13FF:
 	ld	($C004), a
 	ld	hl, LABEL_B12_BCC2
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1421:
 	call	UpdateRNGSeed
@@ -2552,14 +2572,14 @@ LABEL_1443
 	jr	z, +
 	ld	hl, LABEL_B12_B1B2
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 +
 	ld	a, (CurrentCharacter)
 	call	IsCharacterAlive
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 +
 	ld	b, $04
 
@@ -2604,14 +2624,14 @@ LABEL_14A9:
 	jr	z, +
 	ld	hl, LABEL_B12_B1B2
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 +
 	ld	a, (CurrentCharacter)
 	call	IsCharacterAlive
 	jr	nz, +
 	ld	hl, LABEL_B12_B728
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 +
 	ld	b, $04
 
@@ -2667,7 +2687,7 @@ LABEL_152F:
 	call	LABEL_18CE
 	ld	hl, LABEL_B12_BE93
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	ld	b, $04
 
 -
@@ -2760,7 +2780,7 @@ LABEL_15DC:
 	ld	bc, $00FF
 	ld	(hl), $00
 	ldir
-	call	LABEL_576A
+	call	BuildSprites
 	ld	a, (Interaction_Type)
 	or	a
 	jp	nz, LABEL_15F9
@@ -2808,8 +2828,8 @@ LABEL_1613:
 	ld	hl, LABEL_B12_BD23
 	call	ShowDialogue_B12
 	ld	hl, Game_mode
-	ld	(hl), $02 ; GameMode_LoadIntro
-	jp	LABEL_3464
+	ld	(hl), $02 ; GameMode_LoadTitleScreen
+	jp	CloseTextBox
 
 LABEL_163E:
 	push	af
@@ -2897,7 +2917,7 @@ LABEL_16B2:
 	ldir
 	ld	a, $0D
 	ld	($C800), a
-	call	LABEL_576A
+	call	BuildSprites
 	ld	a, $16
 	call	WaitForVInt
 	ret
@@ -3155,7 +3175,7 @@ LABEL_188E:
 	ld	(CurrentCharacter), a
 	ld	hl, LABEL_B12_B730
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	pop	hl
 	pop	de
 	pop	bc
@@ -3175,7 +3195,7 @@ LABEL_18A9:
 LABEL_18B9:
 	ld	a, $08
 	call	WaitForVInt
-	call	LABEL_576A
+	call	BuildSprites
 	ld	a, ($C800)
 	or	a
 	jp	nz, LABEL_18B9
@@ -3193,7 +3213,7 @@ LABEL_18CE:
 LABEL_18DB:
 	ld	a, $08
 	call	WaitForVInt
-	call	LABEL_576A
+	call	BuildSprites
 	ld	a, ($C29F)
 	or	a
 	jp	nz, LABEL_18DB
@@ -3268,7 +3288,7 @@ LABEL_1951
 	ld	($C2D4), a
 	ld	hl, LABEL_B12_B13D
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1964:
 	ld	hl, LABEL_B12_B132
@@ -3291,7 +3311,7 @@ LABEL_1964:
 	call	ShowDialogue_B12
 	ld	a, $06
 	ld	($C267), a
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 
 LABEL_198A:
@@ -3336,7 +3356,7 @@ LABEL_19C5:
 	ld	($C267), a
 	ld	a, $FF
 	ld	($C2D4), a
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 BattleMenu_Magic:
 	ld	a, ($C267)
@@ -3345,7 +3365,7 @@ BattleMenu_Magic:
 	jp	nz, LABEL_19F2
 	ld	hl, LABEL_B12_B5BA
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_19F2:
 	ld	c, a
@@ -3403,12 +3423,12 @@ LABEL_1A3F:
 LABEL_1A42:
 	ld	hl, LABEL_B12_B5C8
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1A4B:
 	ld	hl, LABEL_B12_B6F7
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	jp	LABEL_34C9
 
 
@@ -3596,7 +3616,7 @@ LABEL_1B42:
 	ld	($C267), a
 	ld	a, $D5
 	ld	($C004), a
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 
 LABEL_1B73:
@@ -3822,7 +3842,7 @@ PlayerMenu_Save:
 	ld	hl, LABEL_B12_BA62
 	call	ShowDialogue_B12
 	call	LABEL_39A5
-	ld	hl, LABEL_B12_BA82
+	ld	hl, DialogueSaveDeleteConfirmSlot_B12
 	call	ShowDialogue_B12
 	call	ShowYesNoPrompt
 	jr	nz, LABEL_1D3B
@@ -3863,7 +3883,7 @@ PlayerMenu_Save:
 
 LABEL_1D3B:
 	call	LABEL_39DD
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1D41:
 	xor	a
@@ -3951,13 +3971,13 @@ LABEL_1DC5:
 
 LABEL_1DC8:
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	jp	LABEL_36BB
 
 LABEL_1DD1:
 	ld	hl, LABEL_B12_B6F7
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	jr	LABEL_1DB7
 
 
@@ -4100,7 +4120,7 @@ LABEL_1E5F:
 	ld	a, b
 +
 	ld	(ix+1), a
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1E8A:
 	ld	c, $06
@@ -4119,7 +4139,7 @@ LABEL_1E90:
 	ld	($C2EF), a
 	ld	hl, LABEL_B12_B18B
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1EA7:
 	ld	a, b
@@ -4263,7 +4283,7 @@ LABEL_1F76:
 
 LABEL_1F7A:
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1F80:
 	ld	a, b
@@ -4289,14 +4309,14 @@ LABEL_1F89:
 	ld	hl, LABEL_B12_B2CD
 +
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1FAC:
 	ld	a, $BC
 	ld	($C004), a
 	ld	hl, LABEL_B12_B25F
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	ld	a, $05
 	ld	($C267), a
 	ret
@@ -4314,7 +4334,7 @@ LABEL_1FC0:
 	set	7, (hl)
 	ld	hl, LABEL_B12_B22F
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_1FDF:
 	ld	a, b
@@ -4353,7 +4373,7 @@ LABEL_2011:
 
 LABEL_2016:
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_201C:
 	ld	a, b
@@ -4377,7 +4397,7 @@ LABEL_201C:
 	ld	hl, LABEL_B12_B28E
 +:
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 ++:
 	ld	a, ($C80F)
@@ -4400,14 +4420,14 @@ LABEL_2064:
 	jr	z, LABEL_2078
 	ld	hl, LABEL_B12_B172
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_2078:
 	ld	a, $BF
 	ld	($C004), a
 	ld	hl, LABEL_B12_B59C
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	ld	a, $FF
 	ld	($C2D8), a
 	ld	hl, Game_mode
@@ -4426,7 +4446,7 @@ LABEL_2091:
 -:
 	ld	hl, LABEL_B12_B172
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 +:
 	ld	b, $01
@@ -4470,7 +4490,7 @@ LABEL_20BF:
 	ld	hl, LABEL_B12_B5B0
 ++:
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 +++:
 	jp	LABEL_36CC
 
@@ -4496,7 +4516,7 @@ LABEL_2102:
 	call	ShowDialogue_B12
 	ld	a, $D5
 	ld	($C004), a
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 ++:
 	ld	a, ($C80F)
@@ -4521,12 +4541,12 @@ LABEL_2140:
 	jr	nz, LABEL_2159
 	ld	hl, LABEL_B12_B172
 	call	ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 LABEL_2159:
 	ld	hl, LABEL_B12_B59C
 	call	ShowDialogue_B12
-	call	LABEL_3464
+	call	CloseTextBox
 	ld	a, $08
 	ld	($C2D8), a
 	ret
@@ -4578,7 +4598,7 @@ PlayerMenu_Item:
 	ld hl, LABEL_B12_B30A
 +:
 	call ShowDialogue_B12
-	call LABEL_3464
+	call CloseTextBox
 	jp LABEL_21F5
 
 +++:
@@ -4697,7 +4717,7 @@ ItemUse_NoEffect:
 	call ShowDialogue_B12
 	ld hl, LABEL_B12_B2CD
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_Wand:
 	ld hl, LABEL_B12_B2AC
@@ -4707,7 +4727,7 @@ ItemUse_Wand:
 	jp nz, LABEL_1F89
 	ld hl, LABEL_B12_B312
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_LandRover:
 	ld hl, LABEL_B12_B2AC
@@ -4736,7 +4756,7 @@ LABEL_22B7:
 	ld hl, LABEL_B12_B305
 +:
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_Hovercraft:
 	ld hl, LABEL_B12_B2AC
@@ -4762,7 +4782,7 @@ ItemUse_Hovercraft:
 	ld hl, LABEL_B12_B305
 +:
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_IceDigger:
 	ld hl, LABEL_B12_B2AC
@@ -4773,7 +4793,7 @@ ItemUse_IceDigger:
 	jp z, LABEL_22B7
 	ld hl, LABEL_B12_B2E3
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_Cola:
 	ld d, 10	; heal 10
@@ -4822,14 +4842,14 @@ ItemUse_Flute:
 	ld a, (Interaction_Type)
 	or a
 	jp z, LABEL_2078
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld hl, LABEL_B12_B322
 	call ShowDialogue_B12
 	ld a, $D5
 	ld ($C004), a
-	jp LABEL_3464
+	jp CloseTextBox
 
 
 ItemUse_Flash:
@@ -4840,7 +4860,7 @@ ItemUse_Flash:
 	call ShowDialogue_B12
 	ld hl, LABEL_B12_B35C
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld a, (Interaction_Type)
@@ -4851,7 +4871,7 @@ ItemUse_Flash:
 	call ShowDialogue_B12
 	ld hl, LABEL_B12_B375
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld a, ($C315)
@@ -4859,7 +4879,7 @@ ItemUse_Flash:
 	jr nz, -
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
-	call LABEL_3464
+	call CloseTextBox
 	call Inventory_RemoveItem
 	ld a, $FF
 	ld ($C315), a
@@ -4880,7 +4900,7 @@ ItemUse_Transfer:
 	jr z, +
 	ld hl, LABEL_B12_B2CD
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld a, (Interaction_Type)
@@ -4891,7 +4911,7 @@ ItemUse_Transfer:
 	jp nz, LABEL_2159
 	ld hl, LABEL_B12_B312
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_MagicHat:
 	call Inventory_RemoveItem
@@ -4902,7 +4922,7 @@ ItemUse_MagicHat:
 	jp nz, LABEL_1B17
 	ld hl, LABEL_B12_B2CD
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_Alsulin:
 	ld hl, LABEL_B12_B366
@@ -4912,7 +4932,7 @@ ItemUse_Alsulin:
 	jr z, +
 	ld hl, LABEL_B12_B35C
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld a, ($C2DB)
@@ -4925,14 +4945,14 @@ ItemUse_Alsulin:
 	ld hl, LABEL_B12_B3E3
 +:
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ++:
 	call LABEL_24BE
 	jr z, -
 	ld hl, LABEL_B12_B3B1
 	call ShowDialogue_B12
-	call LABEL_3464
+	call CloseTextBox
 	call Inventory_RemoveItem
 	ld iy, Odin_stats
 	ld (iy+weapon), ItemID_IronAxe
@@ -4956,7 +4976,7 @@ ItemUse_Polymaterial:
 	jr z, +
 	ld hl, LABEL_B12_B35C
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld a, ($C2DB)
@@ -4968,7 +4988,7 @@ ItemUse_Polymaterial:
 	ld hl, LABEL_B12_B3F9
 +:
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_24BE:
 	ld a, (Alis_stats)	; get status
@@ -4985,14 +5005,14 @@ LABEL_24BE:
 	jr nz, +
 	ld hl, LABEL_B12_B3E3
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld hl, LABEL_B12_B3B1
 	call ShowDialogue_B12
 	call Inventory_RemoveItem
 	call LABEL_5546
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_DungeonKey:
 	ld a, (Interaction_Type)
@@ -5004,7 +5024,7 @@ LABEL_24EF:
 	call ShowDialogue_B12
 	ld hl, LABEL_B12_B569
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld hl, LABEL_B12_B2AC
@@ -5018,12 +5038,12 @@ LABEL_24EF:
 	jr nz, +
 	ld a, $03
 	ld ($C2D8), a
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld hl, LABEL_B12_B2CD
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 
 ItemUse_Sphere:
@@ -5043,7 +5063,7 @@ ItemUse_EclipseTorch:
 	jr z, +
 	ld hl, LABEL_B12_B431
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld a, ($C2DB)
@@ -5051,7 +5071,7 @@ ItemUse_EclipseTorch:
 	jr z, +
 	ld hl, LABEL_B12_B312
 	call ShowDialogue_B12
-	jp	LABEL_3464
+	jp	CloseTextBox
 
 +:
 	push bc
@@ -5062,13 +5082,13 @@ ItemUse_EclipseTorch:
 	jr z, +
 	ld hl, LABEL_B12_B49A
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B471
 	call ShowDialogue_B12
-	call LABEL_3464
+	call CloseTextBox
 	ld a, ItemID_Nuts
 	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
@@ -5083,7 +5103,7 @@ ItemUse_AeroPrism:
 	jr z, +
 	ld hl, LABEL_B12_B35C
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld a, ($C2DB)
@@ -5092,7 +5112,7 @@ ItemUse_AeroPrism:
 -:
 	ld hl, LABEL_B12_B312
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld a, ($C2DC)
@@ -5102,7 +5122,7 @@ ItemUse_AeroPrism:
 	call ShowDialogue_B12
 	ld a, $06
 	ld ($C2D8), a
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_Nuts:
 	ld a, (Myau_stats)
@@ -5125,7 +5145,7 @@ LABEL_25D7:
 	ld hl, LABEL_B12_B35C
 +:
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ++:
 	ld a, ($C2DC)
@@ -5134,7 +5154,7 @@ LABEL_25D7:
 -:
 	ld hl, LABEL_B12_B743
 	call ShowDialogue_B12
-	call LABEL_3464
+	call CloseTextBox
 	ld a, $07
 	ld ($C2D8), a
 	ret
@@ -5156,12 +5176,12 @@ ItemUse_Hapsby:
 	call ShowDialogue_B12
 	ld hl, LABEL_B12_B52C
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld hl, LABEL_B12_B544
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_Compass:
 	ld a, (Interaction_Type)
@@ -5177,7 +5197,7 @@ ItemUse_Compass:
 	ld hl, LABEL_B12_B35C
 +:
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ++:
 	ld a, ($C29D)
@@ -5198,7 +5218,7 @@ ItemUse_Compass:
 	ld hl, LABEL_B12_BCF7
 +:
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_MiracleKey:
 	ld a, (Interaction_Type)
@@ -5220,12 +5240,12 @@ ItemUse_MiracleKey:
 +:
 	ld a, b
 	ld ($C2D8), a
-	jp LABEL_3464
+	jp CloseTextBox
 
 ++:
 	ld hl, LABEL_B12_B2CD
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemUse_NoUse:
 	ld hl, LABEL_B12_B2AC
@@ -5237,7 +5257,7 @@ ItemUse_NoUse:
 	ld hl, LABEL_B12_B555
 +:
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 ItemAction_Equip:
 	ld hl, $FFFF
@@ -5258,7 +5278,7 @@ ItemAction_Equip:
 	jp nz, +
 	ld hl, LABEL_B12_B5F0
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld d, a
@@ -5307,7 +5327,7 @@ ItemAction_Equip:
 	call LABEL_3707
 	call WaitForButton1Or2
 	call LABEL_374D
-	call LABEL_3464
+	call CloseTextBox
 	pop af
 	or a
 	call z, Inventory_RemoveItem
@@ -5319,7 +5339,7 @@ LABEL_2741:
 +:
 	ld hl, LABEL_B12_B5DE
 	call ShowDialogue_B12
-	call LABEL_3464
+	call CloseTextBox
 	jr LABEL_2741
 
 ItemAction_Drop:
@@ -5337,13 +5357,13 @@ ItemAction_Drop:
 	jr z, +
 	ld hl, LABEL_B12_B6DE
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld hl, LABEL_B12_B2C2
 	call ShowDialogue_B12
 	call Inventory_RemoveItem
-	jp LABEL_3464
+	jp CloseTextBox
 
 Inventory_RemoveItem:
 	ld hl, ($C29B)
@@ -5531,7 +5551,7 @@ PlayerMenu_Search:
 	ld hl, LABEL_B12_B592
 	call ShowDialogue_B12
 	call Inventory_AddItem
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_28C5:
 	ld a, ($C2DB)
@@ -5541,7 +5561,7 @@ LABEL_28C5:
 	jp z, LABEL_558C
 	ld hl, LABEL_B12_B569
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_28DB:
 	ld	hl, LABEL_B12_B656
@@ -5549,7 +5569,7 @@ LABEL_28DB:
 	call	LABEL_37A3
 	push	af
 	call	LABEL_37C3
-	call	LABEL_3464
+	call	CloseTextBox
 	pop	af
 	or 	a
 	ret	nz
@@ -5578,7 +5598,7 @@ LABEL_28EE:
 	call ShowDialogue_B12
 	ld a, $D0
 	ld (Sprite_table), a
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld hl, ($C2DD)
@@ -5598,7 +5618,7 @@ LABEL_28EE:
 +:
 	ld a, $D0
 	ld (Sprite_table), a
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_2950:
 	ld a, ($C80F)
@@ -5682,7 +5702,7 @@ LABEL_2999:
 	jr nz, LABEL_2A48
 	ld hl, LABEL_B12_B964
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld a, (iy+6)
@@ -5736,7 +5756,7 @@ LABEL_2A52:
 LABEL_2A55:
 	ld hl, LABEL_B12_B951
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_2A5E:
 	call LABEL_3A12
@@ -5744,7 +5764,7 @@ LABEL_2A5E:
 	ld hl, LABEL_B12_BD57
 	call ShowDialogue_B12
 +:
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_2A6D:
 	ld bc, $04FF
@@ -5856,7 +5876,7 @@ LABEL_2B46:
 	ld hl, LABEL_B12_BA04
 	call ShowDialogue_B12
 	call +
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld iy, Alis_stats
@@ -5913,7 +5933,7 @@ LABEL_2BC6:
 	jr z, LABEL_2BD4
 	ld hl, LABEL_B12_B7E3
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_2BD4:
 	push bc
@@ -5967,7 +5987,7 @@ LABEL_2C2D:
 	call ShowDialogue_B12
 	call LABEL_3A12
 	call LABEL_3999
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_2C3C:
 	ld hl, LABEL_B12_B813
@@ -5991,7 +6011,7 @@ LABEL_2C46:
 	call ShowDialogue_B2
 	call LABEL_3A12
 	call LABEL_3999
-	jp LABEL_3464
+	jp CloseTextBox
 
 ++:
 	xor a
@@ -6009,7 +6029,7 @@ LABEL_2C46:
 	call ShowDialogue_B2
 	call LABEL_3A12
 	call LABEL_3999
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_2C8F:
 	ld hl, LABEL_B12_B832
@@ -6063,7 +6083,7 @@ LABEL_2CB1:
 LABEL_2CEA:
 	ld hl, LABEL_B12_B7E3
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 +:
 	ld hl, LABEL_B12_B89A
@@ -6294,7 +6314,7 @@ CursorBlink:
 	or a
 	ret z
 	ld a, (Game_mode)
-	cp $03 ; GameMode_Intro
+	cp $03 ; GameMode_TitleScreen
 	ld bc, $F0F3
 	jr nz, +
 	ld bc, $FF00
@@ -7190,7 +7210,7 @@ LABEL_345C:
 	djnz	LABEL_345C
 	ret
 
-LABEL_3464:
+CloseTextBox:
 	ld	hl, $C2D3
 	ld	a, (hl)
 	or	a
@@ -8095,7 +8115,8 @@ LABEL_3AB0:
 	ret
 
 
-LABEL_3AC4:
+; =================================================================
+DefaultSRAMData:
 .db $F1, $11, $F2, $11, $F2, $11, $F2, $11, $F2, $11, $F2, $11, $F2, $11, $F2, $11
 .db $F1, $13, $F3, $11, $C0, $10, $C0, $10, $C0, $10, $C0, $10, $C0, $10, $C0, $10
 .db $C0, $10, $F3, $13, $F3, $11, $C2, $10, $C0, $10, $C0, $10, $C0, $10, $C0, $10
@@ -8110,6 +8131,7 @@ LABEL_3AC4:
 .db $C0, $10, $F3, $13, $F3, $11, $C6, $10, $C0, $10, $C0, $10, $C0, $10, $C0, $10
 .db $C0, $10, $C0, $10, $F3, $13, $F1, $15, $F2, $15, $F2, $15, $F2, $15, $F2, $15
 .db $F2, $15, $F2, $15, $F2, $15, $F1, $17
+; =================================================================
 
 
 GameMode_Interaction:
@@ -8395,7 +8417,7 @@ LABEL_3D96:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	jp	LABEL_6B62
+	jp	DecompressTilemapData
 
 
 LABEL_3DA6:
@@ -9028,17 +9050,17 @@ GoToIntroSequence:
 	call FadeOut2
 	ld hl, $FFFF
 	ld (hl), :Bank23
-	ld hl, LABEL_B23_B767
+	ld hl, Palette_Space_B23
 	ld de, $C240
 	ld bc, $0011
 	ldir
-	ld hl, LABEL_B23_B778
+	ld hl, Ship_SpaceTiles_B23
 	ld de, $4000
 	call LoadTiles4BitRLE
 	ld hl, $FFFF
 	ld (hl), :Bank28
-	ld hl, LABEL_B28_BE00
-	call LABEL_6B62
+	ld hl, Ship_TilemapSpace_B28
+	call DecompressTilemapData
 	ld hl, $D000
 	ld de, $D300
 	ld bc, $0300
@@ -9141,8 +9163,8 @@ LABEL_43AA:
 	ld a, d
 	or a
 	ret z
-	ld hl, LABEL_B28_BE88
-	jp LABEL_6B62
+	ld hl, Ship_TilemapBottomPlanet_B28
+	jp DecompressTilemapData
 
 LABEL_43CF:
 	call GameMode_FadeToPicture
@@ -9272,7 +9294,7 @@ LABEL_4497:
 	call LABEL_5FFE
 	call LABEL_100F
 	ld a, (Game_mode)
-	cp $02 ; GameMode_LoadIntro
+	cp $02 ; GameMode_LoadTitleScreen
 	ret z
 	ld hl, LABEL_4511
 LABEL_4509:
@@ -9337,7 +9359,7 @@ LABEL_454E:
 	call ShowDialogue_B12
 	ld hl, LABEL_B12_BF21
 	call ShowDialogue_B12
-	call LABEL_3464
+	call CloseTextBox
 	call GameMode_FadeToPicture
 	ld a, $03
 	call LABEL_46D1
@@ -9429,7 +9451,7 @@ LABEL_454E:
 	ld ($C2F5), a
 	ld b, $B4
 	call LABEL_2D49
-	ld a, $02 ; GameMode_LoadIntro
+	ld a, $02 ; GameMode_LoadTitleScreen
 	ld (Game_mode), a
 	ret
 
@@ -9457,7 +9479,7 @@ GameMode_FadeToPicture:
 	ld de, $4000
 	call LoadTiles4BitRLE
 	ld hl, LABEL_B24_A484
-	call LABEL_6B62
+	call DecompressTilemapData
 	xor a
 	ld (V_scroll), a
 	ld (H_scroll), a
@@ -9531,8 +9553,8 @@ LABEL_474B:
 	call	LABEL_4769
 	ld	a, (Interaction_Type)
 	or	a
-	jp	nz, LABEL_3464
-	call	LABEL_3464
+	jp	nz, CloseTextBox
+	call	CloseTextBox
 	jp	LABEL_15DC
 
 
@@ -9907,7 +9929,7 @@ LABEL_49E6:
 	ld hl, $029A
 ++:
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	ld a, (Party_curr_num)
 	or a
 	jr z, +
@@ -10212,7 +10234,7 @@ LABEL_4C0D:
 	pop bc
 	ld hl, $009A
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	pop hl
 	ld iy, Myau_stats
 	call UnlockCharacter
@@ -10233,7 +10255,7 @@ LABEL_4C70:
 	jr z, +
 	ld hl, $02A6
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	pop hl
 	ld hl, $22E6
 	ld (Dungeon_position), hl
@@ -10248,7 +10270,7 @@ LABEL_4C70:
 +:
 	ld a, $35
 	call LABEL_617D
-	call LABEL_576A
+	call BuildSprites
 	ld a, (Party_curr_num)
 	cp $03
 	jr nc, +
@@ -10275,7 +10297,7 @@ LABEL_4C70:
 	ld hl, $029C
 	call ShowDialogue_B2
 	call FadeOut2
-	call LABEL_3464
+	call CloseTextBox
 	ld a, $20
 	ld (Interaction_Type), a
 	call LABEL_3D47
@@ -10290,7 +10312,7 @@ LABEL_4C70:
 	call FadeIn2
 	ld hl, $02A0
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	ld a, $A0
 	ld ($C004), a
 	call LABEL_2D47
@@ -10329,7 +10351,7 @@ LABEL_4C70:
 	call FadeIn2
 	ld a, $35
 	call LABEL_617D
-	call LABEL_576A
+	call BuildSprites
 	ld hl, $00AA
 	jp ShowDialogue_B2
 
@@ -10345,7 +10367,7 @@ LABEL_4D7A:
 	ld hl, $00B6
 	call ShowDialogue_B2
 	call FadeOut2
-	call LABEL_3464
+	call CloseTextBox
 	ld a, $A0
 	ld ($C004), a
 	call LABEL_2D47
@@ -10412,7 +10434,7 @@ LABEL_4DFB:
 	jp z, LABEL_4765
 	ld a, $34
 	call LABEL_617D
-	call LABEL_576A
+	call BuildSprites
 	ld a, ($C504)
 	cp $07
 	jr c, +
@@ -10493,7 +10515,7 @@ LABEL_4E9C:
 	jp c, LABEL_4765
 	ld a, $10
 	call LABEL_617D
-	call LABEL_576A
+	call BuildSprites
 	ld hl, $00DC
 	jp ShowDialogue_B2
 
@@ -10901,7 +10923,7 @@ LABEL_516F:
 	jp nc, LABEL_4765
 	ld a, $3B
 	call LABEL_617D
-	call LABEL_576A
+	call BuildSprites
 	ld hl, $00AE
 	call ShowDialogue_B2
 	ld a, ItemID_Letter
@@ -10909,7 +10931,7 @@ LABEL_516F:
 	ret nz
 	call Inventory_RemoveItem2
 	pop hl
-	call LABEL_3464
+	call CloseTextBox
 	call WaitForButton1Or2
 	ld a, $01
 	ld ($C506), a
@@ -10928,7 +10950,7 @@ LABEL_51B1:
 	jp nc, LABEL_4765
 	ld a, $10
 	call LABEL_617D
-	call LABEL_576A
+	call BuildSprites
 	ld hl, $C504
 	ld a, (hl)
 	cp $01
@@ -10950,7 +10972,7 @@ LABEL_51DC:
 	jp nz, LABEL_4765
 	ld a, $34
 	call LABEL_617D
-	call LABEL_576A
+	call BuildSprites
 	ld hl, $C503
 	ld a, (hl)
 	or a
@@ -10995,7 +11017,7 @@ LABEL_521D:
 +:
 	ld hl, $00E8
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	jp LABEL_5389
 
 LABEL_5249:
@@ -11141,7 +11163,7 @@ LABEL_534B:
 	jr nz, +
 	ld hl, $021E
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	pop hl
 	ld hl, $159C
 	ld (Dungeon_position), hl
@@ -11154,7 +11176,7 @@ LABEL_534B:
 +:
 	ld hl, $00E8
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 LABEL_5389:
 	call LABEL_100F
 	ld a, ($C800)
@@ -11220,7 +11242,7 @@ LABEL_53BF:
 	call ShowDialogue_B2
 ++:
 	pop hl
-	call LABEL_3464
+	call CloseTextBox
 	call LABEL_15DC
 	jp LABEL_688C
 
@@ -11287,7 +11309,7 @@ LABEL_5430:
 +:
 	ld hl, $024E
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	ld a, (Noah_stats+curr_hp)
 	push af
 	ld a, (Alis_stats)
@@ -11332,7 +11354,7 @@ LABEL_54D0:
 	call LABEL_5FFE
 	ld hl, $0262
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	call LABEL_54EF
 	ld a, $FF
 	ld ($C517), a
@@ -11342,7 +11364,7 @@ LABEL_54D0:
 LABEL_54EF:
 	call LABEL_100F
 	ld a, (Game_mode)
-	cp $02 ; GameMode_LoadIntro
+	cp $02 ; GameMode_LoadTitleScreen
 	ret nz
 	pop hl
 	pop hl
@@ -11363,7 +11385,7 @@ LABEL_54FB:
 	ld hl, $0270
 +:
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	call LABEL_54EF
 	ld a, $01
 	ld ($C516), a
@@ -11385,17 +11407,17 @@ LABEL_5538:
 LABEL_553D:
 	ld hl, LABEL_B12_B569
 	call ShowDialogue_B12
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_5546:
 	ld a, ItemID_Hapsby
 	ld (CurrentItem), a
 	call Inventory_FindFreeSlot
 	jr z, LABEL_553D
-	call LABEL_3464
+	call CloseTextBox
 	ld hl, $C801
 	inc (hl)
-	call LABEL_576A
+	call BuildSprites
 	call WaitForButton1Or2
 	ld hl, $012C
 	call ShowDialogue_B2
@@ -11415,13 +11437,13 @@ LABEL_5566:
 	jr z, LABEL_553D
 	ld hl, $0178
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	jp Inventory_AddItem
 
 LABEL_558C:
 	ld hl, $00FA
 	call ShowDialogue_B2
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_5595:
 	ld a, $2B
@@ -11517,13 +11539,13 @@ LABEL_5619:
 	ld a, $20
 	ld (Interaction_Type), a
 	call LABEL_54EF
-	call LABEL_3464
+	call CloseTextBox
 	ld a, (Char_stats)
 	or a
 	jr nz, LABEL_5666
 	ld hl, LABEL_B12_BF64
 	call ShowDialogue_B12
-	call LABEL_3464
+	call CloseTextBox
 
 LABEL_5666:
 	call FadeOut2
@@ -11535,7 +11557,7 @@ LABEL_5666:
 	call FadeIn2
 	ld a, $35
 	call LABEL_617D
-	call LABEL_576A
+	call BuildSprites
 	ld hl, $0272
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11544,7 +11566,7 @@ LABEL_5666:
 	ld hl, $0230
 +:
 	call ShowDialogue_B2
-	call LABEL_3464
+	call CloseTextBox
 	pop hl
 	jp LABEL_454E
 
@@ -11578,7 +11600,7 @@ LABEL_56A2:
 	jp LABEL_1602
 
 +:
-	jp LABEL_3464
+	jp CloseTextBox
 
 LABEL_56CD:
 	ld	hl, $23A
@@ -11676,7 +11698,7 @@ ShowDialogue_B2:
 	ld l, a
 	jp LABEL_31D4
 
-LABEL_576A:
+BuildSprites:
 	ld	hl, $C289
 	ld	($C287), hl
 	ld	de, $C28B
@@ -12870,8 +12892,8 @@ LABEL_6095:
 	ld	($C2E7), a
 	ld	hl, $C500
 	ld	($C2E1), hl
-	call	LABEL_576A
-	call	LABEL_576A
+	call	BuildSprites
+	call	BuildSprites
 	ld	hl, $C240
 	ld	de, Normal_palette
 	ld	bc, $0020
@@ -13030,7 +13052,7 @@ LABEL_617D:
 	ld	($FFFF), a
 	ld	de, $6000
 	call	LoadTiles4BitRLE
-	call	LABEL_576A
+	call	BuildSprites
 	ld	a, $16
 	jp	WaitForVInt
 
@@ -14036,7 +14058,7 @@ LABEL_68EC:
 	ld	de, $4000
 	call	LoadTiles4BitRLE
 	ld	hl, LABEL_B09_B130
-	call	LABEL_6B62
+	call	DecompressTilemapData
 	ld	a, $0F
 	ld	(Interaction_Type), a
 	xor	a
@@ -14323,7 +14345,7 @@ LABEL_6B1C:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	call	LABEL_6B62
+	call	DecompressTilemapData
 	pop	bc
 	call	LABEL_6C46
 	ret
@@ -14352,11 +14374,11 @@ LABEL_6B45:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	call	LABEL_6B62
+	call	DecompressTilemapData
 	pop	bc
 	jp	LABEL_6C46
 
-LABEL_6B62:
+DecompressTilemapData:
 	ld	b, $00
 	ld	de, $D000
 	call	LABEL_6B6E
@@ -15263,7 +15285,7 @@ LABEL_7143:
 	ld h, a
 	ld ($C305), hl
 	cp b
-	call nz, LABEL_723D
+	call nz, DecompressScrollTilemap
 	jp LABEL_733A
 
 ++++:
@@ -15302,7 +15324,7 @@ LABEL_7143:
 	ld h, a
 	ld ($C301), hl
 	cp b
-	jp nz, LABEL_723D
+	jp nz, DecompressScrollTilemap
 	jp LABEL_72A6
 
 +++:
@@ -15314,7 +15336,7 @@ LABEL_7143:
 	ld ($C265), a
 	ret
 
-LABEL_723D:
+DecompressScrollTilemap:
 	ld a, ($C262)
 	ld ($FFFF), a
 	ld a, ($C306)

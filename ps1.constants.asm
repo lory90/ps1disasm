@@ -436,6 +436,8 @@
 .define Word_Ould $FF
 
 ; RAM
+.define Music_to_play $C004
+
 .define VDP_reg_0 $C200
 .define VDP_reg_1 $C201
 
@@ -457,9 +459,14 @@
 .define	Fade_timer $C21B
 
 .define	Normal_palette $C220
+.define	Target_palette $C240
+
+.define	Scroll_direction $C264
+.define	Rotate_palette_flag $C265
 
 .define	Cursor_pos $C269
 .define	Option_total_num $C26E	; number of options available for an interactive menu (e.g. player menu)
+.define Anim_counters $C26F
 
 .define	Interaction_Type $C29E ; Background?
 
@@ -477,10 +484,12 @@
 .define	H_location $C301
 .define	V_scroll $C304
 .define	V_location $C305
+.define	Scroll_screens $C307
 
 .define	Dungeon_direction $C30A
 .define	Dungeon_position $C30C
 .define	Dungeon_index $C30D
+.define	Vehicle_movement_flags $C30E
 
 .define	Char_stats $C400
 .define	Alis_stats $C400
@@ -497,6 +506,8 @@
 .define Dialogue_flags $C500	; table holding flags for dialogues; if value is $FF, dialogue is not loaded
 .define Event_flags $C600	; used for chests and scripted encounters in dungeons
 .define Battle_flags $C6C0	; used for chests and scripted encounters in dungeons
+
+.define Character_sprite_attributes $C800
 
 .define Sprite_table $C900
 
@@ -516,3 +527,5 @@
 								;	$C = Exit door
 								;	$D = Exit locked door
 								;	$E = Ext magical door
+
+.define Tilemap_data = $D000
