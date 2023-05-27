@@ -2921,7 +2921,7 @@ DialogueBattleEnemyBlocksRetreat_B12:
 .db	Dialogue_EnemyName, " BLOCKS", Dialogue_NewLine
 .db Word_Any, " RETREAT.", Dialogue_Terminator63
 
-LABEL_B12_B172:
+DialoguePlayerSpellNoEffect_B12:
 .db Dialogue_CurrentCharacter, Dialogue_Apostrophe, "S ", Word_Magic_84, "IS", Dialogue_NewLine
 .db Word_Not, Word_Effective, ".", Dialogue_Terminator63
 
@@ -2929,7 +2929,7 @@ LABEL_B12_B172:
 .db Dialogue_EnemyName, Dialogue_Apostrophe, "S ", Word_Magic_EF, Dialogue_NewLine
 .db "IS ", Word_Not, Word_Effective, ".", Dialogue_Terminator63
 
-LABEL_B12_B18B:
+DialogueMagicWallActive_B12:
 .db	"AN INVISIBLE ", Word_Magic_EF, Word_Wall, " ARISES.", Dialogue_Terminator63
 
 DialogueBattleMagicWallDeflects_B12:
@@ -2953,7 +2953,7 @@ DialogueBattleEnemyHealed_B12:
 .db Dialogue_EnemyName, " IS", Dialogue_NewLine
 .db Word_Healed, ".", Dialogue_Terminator63
 
-LABEL_B12_B1E0:
+DialogueEnemyTiedUp_B12:
 .db Dialogue_EnemyName, " IS TIED", Dialogue_NewLine
 .db "UP.", Dialogue_Terminator63
 
@@ -2976,15 +2976,15 @@ DialogueBattleEnemyRemovedBindings_B12:
 .db Dialogue_EnemyName, " RE", Word_Move, "S", Dialogue_NewLine
 .db Word_The, "BINDINGS.", Dialogue_Terminator63
 
-LABEL_B12_B22F:
+DialogueCharacterStrengthUp_B12:
 .db Dialogue_CurrentCharacter, " IS BURSTING", Dialogue_NewLine
 .db "WITH STRENGTH.", Dialogue_Terminator63
 
-LABEL_B12_B24C:
+DialogueEnemyFear_B12:
 .db Dialogue_EnemyName, " RECOILS", Dialogue_NewLine
 .db "IN FEAR.", Dialogue_Terminator63
 
-LABEL_B12_B25F:
+DialogueCharactersEscape_B12:
 .db Word_Alis, " AND HER", Dialogue_NewLine
 .db "COMP", Word_Any, " ESCAPE", Dialogue_NewPage
 .db "QUICKLY.", Dialogue_Terminator63
@@ -2992,7 +2992,7 @@ LABEL_B12_B25F:
 LABEL_B12_B27F:
 .db Word_There, " WAS NO TRAP.", Dialogue_Terminator65
 
-LABEL_B12_B28E:
+DialogueTrapDisarmed_B12:
 .db Dialogue_CurrentCharacter, " SPOTTED AND", Dialogue_NewLine
 .db "DISARMED ", Word_The, "TRAP.", Dialogue_Terminator65
 
@@ -3067,11 +3067,11 @@ LABEL_B12_B3E3:
 LABEL_B12_B3F9:
 .db "IT STINKS!", Dialogue_Terminator65
 
-LABEL_B12_B404:
+DialogueCharacterFeelsSomething_B12:
 .db Dialogue_CurrentCharacter, " HAS A TERRI-", Dialogue_NewLine
 .db "BLE PREMONITION.", Dialogue_Terminator65
 
-LABEL_B12_B424:
+DialogueCharacterFeelsNothing_B12:
 .db Dialogue_CurrentCharacter, " FEELS", Dialogue_NewLine
 .db "NO", Word_Thing, ".", Dialogue_Terminator65
 
@@ -3119,7 +3119,7 @@ LABEL_B12_B555:
 .db Word_There_Is, " NO NEED", Dialogue_NewLine
 .db "TO USE ", Word_That, ".", Dialogue_Terminator65
 
-LABEL_B12_B569:
+DialogueNothingUnusualHere_B12:
 .db Word_There, " DOESN", Dialogue_Apostrophe, "T SEEMTO BE ", Word_Any, Word_Thing, Dialogue_NewPage
 .db "SPECIAL ABOUT IT.", Dialogue_Terminator65
 
@@ -3127,11 +3127,11 @@ LABEL_B12_B592:
 .db Word_You, "FOUND", Dialogue_NewLine
 .db Dialogue_CurrentItem, ".", Dialogue_Terminator65
 
-LABEL_B12_B59C:
+DialogueCharacterBecomesLight_B12:
 .db Dialogue_CurrentCharacter, " FEELS VERY", Dialogue_NewLine
 .db "LIGHT.", Dialogue_Terminator63
 
-LABEL_B12_B5B0:
+DialogueCharacterIsRevived_B12:
 .db Dialogue_CurrentCharacter, " IS", Dialogue_NewLine
 .db Word_Resurrect, "ED.", Dialogue_Terminator65
 
@@ -3207,7 +3207,7 @@ DialogueBattleNotEnoughPoints_B12:
 .db Word_Not, "ENOUGH ", Word_Magic_EF, Dialogue_NewLine
 .db "POINTS.", Dialogue_Terminator63
 
-LABEL_B12_B709:
+DialogueCharacterStillAlive_B12:
 .db Dialogue_CurrentCharacter, " IS STILL", Dialogue_NewLine
 .db "ALIVE.", Dialogue_Terminator63
 
@@ -3376,7 +3376,7 @@ LABEL_B12_BA3C:
 LABEL_B12_BA56:
 .db Dialogue_CurrentCharacter, " IS ALIVE.", Dialogue_Terminator62
 
-LABEL_B12_BA62:
+DialogueSaveSelectSlot_B12:
 .db Word_Will, " ", Word_Save, " ", Word_The, Word_Game, "IN PROGRESS.", Dialogue_NewPage
 .db Word_Please, Word_Select, Dialogue_NewLine
 .db "A NUMBER.", Dialogue_Terminator62
@@ -3385,10 +3385,10 @@ DialogueSaveDeleteConfirmSlot_B12:
 .db Word_You, Word_Select, "ED ", Dialogue_NumberFromC2C5, Dialogue_NewLine
 .db "IS ", Word_That, " O.K.", Dialogue_Terminator62
 
-LABEL_B12_BA93:
+DialogueSavingToSlot_B12:
 .db "WELL, SAVING ", Dialogue_NumberFromC2C5, ".", Dialogue_Terminator63
 
-LABEL_B12_BAA3:
+DialogueTextSavingComplete_B12:
 .db "COMPLETED.", Dialogue_Terminator65
 
 DialogueBattleWantToBeFriends_B12:
@@ -3426,54 +3426,54 @@ DialogueBattleWeAreOutcasts_B12:
 .db Word_We_Are, "OUTCASTS.", Dialogue_NewLine
 .db "FORGIVE US.", Dialogue_Terminator65
 
-LABEL_B12_BB5C:
+DialogueBattleSoundOfFlute_B12:
 .db Word_The, "SOUND OF ", Word_The, Dialogue_NewLine
 .db Word_Soothing_Flute, " IS", Dialogue_NewPage
 .db "A JOY TO BOTH ", Word_The, Dialogue_NewLine
 .db "EAR AND ", Word_The, "HEART.", Dialogue_Terminator65
 
-LABEL_B12_BB8D:
+DialogueBattleIceDigger_B12:
 .db Word_The, "VEHICLE ", Word_Know, "N", Dialogue_NewLine
 .db "AS \"ICE DIGGER\"", Dialogue_NewPage
 .db "LIVES UP TO ITS", Dialogue_NewLine
 .db "NAME.", Dialogue_Terminator65
 
-LABEL_B12_BBBF:
+DialogueBattleLassicLivesAbove_B12:
 .db Word_Lassic, " LIVES ABOVE", Word_The, "SKY.", Dialogue_Terminator65
 
-LABEL_B12_BBD2:
+DialogueBattleAbionDoctor_B12:
 .db Word_The, "MAD DOCTOR", Dialogue_NewLine
 .db "IN ABION HAS A", Dialogue_NewPage
 .db Word_Laconian_Pot, ".", Dialogue_Terminator65
 
-LABEL_B12_BBF0:
+DialogueBattlePlacesInSky_B12:
 .db Word_There_Are, " PLACES", Dialogue_NewLine
 .db "IN ", Word_The, "SKY", Dialogue_NewPage
 .db Word_Where, " EVEN SPACE-", Dialogue_NewLine
 .db "SHIP ", Word_Cannot, " GO.", Dialogue_Terminator65
 
-LABEL_B12_BC1A:
+DialogueBattleLaermaNeedsLight_B12:
 .db "A NUT OF ", Word_Laerma, Dialogue_NewLine
 .db "NEEDS SPECIAL", Dialogue_NewPage
 .db "LIGHT TO GLOW.", Dialogue_Terminator65
 
-LABEL_B12_BC42:
+DialogueBattleSecretDoorsInDungeon_B12:
 .db Word_There_Are, " ", Word_Secret, Dialogue_NewLine
 .db "DOORS IN THE", Dialogue_NewPage
 .db Word_Dungeon, " MAZE.", Dialogue_Terminator65
 
-LABEL_B12_BC5B:
+DialogueBattleMiracleKeyOpenDoors_B12:
 .db Word_The, "MIRACLE KEY", Dialogue_NewLine
 .db "CAN OPEN DOORS", Dialogue_NewPage
 .db "WHICH ", Word_Are, "SHUT", Dialogue_NewLine
 .db "BY ", Word_Magic_EF, ".", Dialogue_Terminator65
 
-LABEL_B12_BC89:
+DialogueBattleSomeDezoriansLie_B12:
 .db Word_Some, " ", Word_Dezorian, "S", Dialogue_NewLine
 .db "LIKE TO TELL LIES,", Dialogue_NewPage
 .db "SO BE ", Word_Careful, ".", Dialogue_Terminator65
 
-LABEL_B12_BCAA:
+DialogueBattleBraveToApproachMe_B12:
 .db Word_You, Word_Are, "BRAVE TO", Dialogue_NewLine
 .db "APPROACH ME!", Dialogue_Terminator65
 

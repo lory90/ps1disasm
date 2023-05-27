@@ -893,7 +893,7 @@ Menu_ContinueOrDelete:
 	call	ShowDialogue_B12
 -
 	push	bc
-	call	GetSaveGameSelection
+	call	GetSaveGameSelectionCont
 	pop	bc
 	call	CheckSlotUsed
 	jr	z, -
@@ -930,7 +930,7 @@ Menu_Delete:
 	call	ShowDialogue_B12
 -
 	push	bc
-	call	GetSaveGameSelection
+	call	GetSaveGameSelectionCont
 	bit	4, c
 	pop	bc
 	jr	nz, Menu_Delete
@@ -1461,7 +1461,7 @@ GameMode_Map:
 	xor	a
 
 ++
-	ld	($C29D), a
+	ld	(Battle_flag), a
 	ld	hl, Game_mode
 	ld	(hl), $0C ; GameMode_LoadInteraction
 	ld	a, ($C810)
@@ -2303,7 +2303,7 @@ LABEL_11DC:
 	ld	(CurrentCharacter), a
 	ld	a, b
 	and	$1F
-	ld	hl, LABEL_1A8A
+	ld	hl, BattleMagicActionPointers
 	call	GetPtrAndJump
 	jp	LABEL_120B
 
@@ -3271,7 +3271,7 @@ IsCharacterAlive:
 	bit  0, (hl)
 	ret
 
-LABEL_188E:
+ShowMessageIfDead:
 	push	hl
 	call	IsCharacterAlive
 	pop	hl
@@ -3384,13 +3384,13 @@ BattleMenu_Talk:
 	call	ShowDialogue_B12
 	ld	a, (Battle_enemy_action)
 	and	$80
-	jr	z, LABEL_1951
+	jr	z, Battle_EnemyDoesNotUnderstand
 	ld	a, ($C448)
 	ld	b, a
 	ld	a, (Alis_stats+attack)
 	cp	b
 	jr	nc, LABEL_1964
-LABEL_1951
+Battle_EnemyDoesNotUnderstand
 	ld	a, $04
 	ld	(Battle_current_player), a
 	ld	a, $FF
@@ -3593,25 +3593,25 @@ BattleMagicSelectPointers:
 
 
 ; =================================================================
-LABEL_1A8A:
-.dw	LABEL_1E24
-.dw	LABEL_1E46
-.dw	LABEL_1E4A
-.dw	LABEL_1E8A
-.dw	LABEL_1E8E
-.dw	LABEL_1EA7
-.dw	LABEL_1EE6
-.dw	LABEL_1F25
-.dw	LABEL_1F36
-.dw	LABEL_1F80
-.dw	LABEL_1FC0
-.dw	LABEL_1FDF
-.dw	LABEL_201C
-.dw	LABEL_2064
-.dw	LABEL_2091
-.dw	LABEL_20BF
-.dw	BattleMagicSelect_Chat
-.dw	BattleMagicSelect_Tele
+BattleMagicActionPointers:
+.dw	MagicAction_Nothing		; 0
+.dw	BattleMagicAction_Heal	; 1
+.dw	BattleMagicAction_Cure	; 2
+.dw	BattleMagicAction_Wall	; 3
+.dw	BattleMagicAction_Prot	; 4
+.dw	BattleMagicAction_Fire	; 5
+.dw	BattleMagicAction_Thun	; 6
+.dw	BattleMagicAction_Wind	; 7
+.dw	BattleMagicAction_Rope	; 8
+.dw	BattleMagicAction_Bye	; 9
+.dw	BattleMagicAction_Help	; $A
+.dw	BattleMagicAction_Terr	; $B
+.dw	BattleMagicAction_Trap	; $C
+.dw	BattleMagicAction_Exit	; $D
+.dw	BattleMagicAction_Open	; $E
+.dw	BattleMagicAction_Rise	; $F
+.dw	BattleMagicSelect_Chat	; $10
+.dw	BattleMagicSelect_Tele	; $11
 ; =================================================================
 
 
@@ -3620,11 +3620,11 @@ BattleMagicSelect_Nothing:
 
 BattleMagicSelect_Heal:
 	push	bc
-	call	LABEL_3682
+	call	PlayerSelect2
 	pop	de
 	bit	4, c
 	jr	nz, LABEL_1ACC
-	call	LABEL_188E
+	call	ShowMessageIfDead
 	jr	z, LABEL_1ACC
 	ld	c, $03
 	ld	b, d
@@ -3634,7 +3634,7 @@ BattleMagicSelect_Heal:
 	ld	(Battle_current_player), a
 
 LABEL_1ACC:
-	call	LABEL_36CC
+	call	HidePlayerSelect2Window
 	ret
 
 BattleMagicSelect_SelectEnemy:
@@ -3648,11 +3648,11 @@ BattleMagicSelect_SelectEnemy:
 
 BattleMagicSelect_Help:
 	push	bc
-	call	LABEL_3682
+	call	PlayerSelect2
 	pop	de
 	bit	4, c
 	jr	nz, LABEL_1AF9
-	call	LABEL_188E
+	call	ShowMessageIfDead
 	jr	z, LABEL_1AF9
 	ld	c, $03
 	ld	b, d
@@ -3662,7 +3662,7 @@ BattleMagicSelect_Help:
 	ld	(Battle_current_player), a
 
 LABEL_1AF9:
-	call	LABEL_36CC
+	call	HidePlayerSelect2Window
 	ret
 
 BattleMagicSelect_Advance:
@@ -3681,10 +3681,10 @@ BattleMagicSelect_Chat:
 	ld	a, $AB
 	ld	(Sound_index), a
 
-LABEL_1B17:
+BattleMagicSelect_ChatCont:
 	ld	a, (Battle_enemy_action)
 	and	$C0
-	jp	z, LABEL_1951
+	jp	z, Battle_EnemyDoesNotUnderstand
 	and	$40
 	jp	z, LABEL_1964
 	ld	a, ($C448)
@@ -3692,17 +3692,17 @@ LABEL_1B17:
 	ld	a, (Alis_stats+attack)
 	cp	b
 	jr	nc, LABEL_1B42
-	jp	LABEL_1951
+	jp	Battle_EnemyDoesNotUnderstand
 
 BattleMagicSelect_Tele:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
 
-LABEL_1B36:
+BattleMagicSelect_TeleCont:
 	ld	a, (Battle_enemy_action)
 	and	$C0
-	jp	z, LABEL_1951
+	jp	z, Battle_EnemyDoesNotUnderstand
 	and	$40
 	jp	z, LABEL_1964
 
@@ -3720,7 +3720,7 @@ LABEL_1B42:
 	ld	l, a
 	ld	h, $00
 	add	hl, hl
-	ld	de, LABEL_1B73
+	ld	de, BattleEnemyDialoguesPointers2
 	add	hl, de
 	ld	a, (hl)
 	inc	hl
@@ -3734,17 +3734,19 @@ LABEL_1B42:
 	jp	CloseTextBox
 
 
-LABEL_1B73:
-.dw	LABEL_B12_BB5C
-.dw	LABEL_B12_BB8D
-.dw	LABEL_B12_BBBF
-.dw	LABEL_B12_BBD2
-.dw	LABEL_B12_BBF0
-.dw	LABEL_B12_BC1A
-.dw	LABEL_B12_BC42
-.dw	LABEL_B12_BC5B
-.dw	LABEL_B12_BC89
-.dw	LABEL_B12_BCAA
+; =================================================================
+BattleEnemyDialoguesPointers2:
+.dw	DialogueBattleSoundOfFlute_B12
+.dw	DialogueBattleIceDigger_B12
+.dw	DialogueBattleLassicLivesAbove_B12
+.dw	DialogueBattleAbionDoctor_B12
+.dw	DialogueBattlePlacesInSky_B12
+.dw	DialogueBattleLaermaNeedsLight_B12
+.dw	DialogueBattleSecretDoorsInDungeon_B12
+.dw	DialogueBattleMiracleKeyOpenDoors_B12
+.dw	DialogueBattleSomeDezoriansLie_B12
+.dw	DialogueBattleBraveToApproachMe_B12
+; =================================================================
 
 
 CheckEnoughMP:
@@ -3767,8 +3769,8 @@ CheckEnoughMP:
 	ret
 
 BattleMenu_Item:
-	call	LABEL_34D5
-	call	LABEL_3656
+	call	SelectItemFromInventory
+	call	HideInventoryWindow
 	bit	4, c
 	ret	nz
 	ld	a, (CurrentItem)
@@ -3819,7 +3821,7 @@ LABEL_1BCE:
 
 LABEL_1BE1:
 	xor	a
-	ld	($C29D), a
+	ld	(Battle_flag), a
 	ld	($C2D8), a
 	call	LABEL_36DD
 	call	UpdatePartyStats
@@ -3848,7 +3850,7 @@ LABEL_1C15:
 	cp	$05
 	jr	z, +
 	xor	a
-	ld	($C800), a
+	ld	(Character_sprite_attributes), a
 	ld	a, $D0
 	ld	(Sprite_table), a
 +
@@ -3872,7 +3874,7 @@ LABEL_1C15:
 +
 	cp	$07
 	jr	nc, +
-	ld	a, $85
+	ld	a, $85		; Final dungeon music
 	call	Map_CheckMusic
 	call	LABEL_7CBB
 	ld	a, $FF
@@ -3886,21 +3888,30 @@ LABEL_1C15:
 	ld	hl, Game_mode
 	ld	(hl), $08 ; GameMode_LoadMap
 	xor	a
-	ld	($C30E), a
-	ld	a, ($C317)
+	ld	(Vehicle_movement_flags), a
+	ld	a, (Last_church_visited)
 	ld	l, a
 	add	a, a
 	add	a, l
 	ld	h, $00
 	ld	l, a
-	ld	de, LABEL_1C7C
+	ld	de, ChurchLocationData
 	add	hl, de
 	jp	LABEL_787B
 
-LABEL_1C7C:
-.db $04, $16, $69, $04, $27, $6B, $07
-.db	$29, $2A, $09, $19, $66, $0E, $29, $19, $0F, $15, $43, $11, $53, $52, $16, $15
-.db	$2C, $15, $28, $61
+
+; =================================================================
+ChurchLocationData:
+.db $04, $16, $69
+.db $04, $27, $6B ; Camineet
+.db $07, $29, $2A ; Gothic
+.db $09, $19, $66
+.db $0E, $29, $19 ; Camineet
+.db $0F, $15, $43 ; Uzo
+.db $11, $53, $52
+.db $16, $15, $2C
+.db $15, $28, $61
+; =================================================================
 
 
 ; =================================================================
@@ -3914,14 +3925,14 @@ PlayerMenu_OptionTbl:
 
 
 PlayerMenu_Stats:
-	call	LABEL_3665
+	call	PlayerSelect
 	bit  Button_1, c
 	jr	nz, LABEL_1CDC
-	call	LABEL_188E
+	call	ShowMessageIfDead
 	jr	z, LABEL_1CDC
 	push	af
-	call	LABEL_3707
-	call	LABEL_37CF
+	call	ShowEquippedItems
+	call	ShowCharacterStats
 	call	WaitForButton1Or2
 	pop	af
 	ld	c, a
@@ -3946,24 +3957,24 @@ PlayerMenu_Stats:
 	call	HideMagicMenu
 
 LABEL_1CD6:
-	call	LABEL_38C1
-	call	LABEL_374D
+	call	HideCharacterStats
+	call	HideEquippedItems
 
 LABEL_1CDC:
-	jp	LABEL_36BB
+	jp	ClosePlayerSelect
 
 
 PlayerMenu_Save:
-	ld	hl, LABEL_B12_BA62
+	ld	hl, DialogueSaveSelectSlot_B12
 	call	ShowDialogue_B12
-	call	LABEL_39A5
+	call	GetSaveGameSelection
 	ld	hl, DialogueSaveDeleteConfirmSlot_B12
 	call	ShowDialogue_B12
 	call	ShowYesNoPrompt
 	jr	nz, LABEL_1D3B
 	ld	a, (Game_mode)
 	ld	($C316), a
-	ld	hl, LABEL_B12_BA93
+	ld	hl, DialogueSavingToSlot_B12
 	call	ShowDialogue_B12
 	push	bc
 	ld	a, (CurrentDialogueNumber)
@@ -3993,7 +4004,7 @@ PlayerMenu_Save:
 	ld	($FFFC), a
 	pop	bc
 	jr	z, LABEL_1D41
-	ld	hl, LABEL_B12_BAA3
+	ld	hl, DialogueTextSavingComplete_B12
 	call	ShowDialogue_B12
 
 LABEL_1D3B:
@@ -4002,7 +4013,7 @@ LABEL_1D3B:
 
 LABEL_1D41:
 	xor	a
-	ld	($C780), a
+	ld	(Name_entry_mode), a
 	ld	hl, Game_mode
 	ld	(hl), $10 ; GameMode_LoadNameInput
 	pop	hl
@@ -4010,10 +4021,10 @@ LABEL_1D41:
 	ret
 
 PlayerMenu_Magic:
-	call	LABEL_3665
+	call	PlayerSelect
 	bit	Button_1, c
 	jp	nz, LABEL_1DBA
-	call	LABEL_188E
+	call	ShowMessageIfDead
 	jp	z, LABEL_1DBA
 	cp	$02	; is it Odin?
 	jp	z, LABEL_1DC5	; jump and display different message for Odin
@@ -4067,14 +4078,14 @@ PlayerMenu_Magic:
 	call	CheckEnoughMP
 	jp	c, LABEL_1DD1
 	ld	a, b
-	ld	hl, LABEL_1DFE
+	ld	hl, MapMagicActionPointers
 	call	GetPtrAndJump
 
 LABEL_1DB7:
 	call	HideMagicMenu
 
 LABEL_1DBA:
-	call	LABEL_36BB
+	call	ClosePlayerSelect
 	jp	LABEL_2F3C
 
 LABEL_1DC0:
@@ -4087,7 +4098,7 @@ LABEL_1DC5:
 LABEL_1DC8:
 	call	ShowDialogue_B12
 	call	CloseTextBox
-	jp	LABEL_36BB
+	jp	ClosePlayerSelect
 
 LABEL_1DD1:
 	ld	hl, DialogueBattleNotEnoughPoints_B12
@@ -4146,62 +4157,65 @@ MapMagicList:
 ; =================================================================
 
 
-LABEL_1DFE:
-.dw	LABEL_1E24
-.dw	LABEL_1E27
-.dw	LABEL_1E2B
-.dw	LABEL_1E8A
-.dw	LABEL_1E8E
-.dw	LABEL_1EA7
-.dw	LABEL_1EE6
-.dw	LABEL_1F25
-.dw	LABEL_1F36
-.dw	LABEL_1F80
-.dw	LABEL_1FC0
-.dw	LABEL_1FDF
-.dw	LABEL_201C
-.dw	LABEL_2064
-.dw	LABEL_2091
-.dw	LABEL_20BF
-.dw	LABEL_20F8
-.dw	LABEL_20F8
-.dw	LABEL_2140
+; =================================================================
+MapMagicActionPointers:
+.dw	MagicAction_Nothing	; 0
+.dw	MapMagicAction_Heal	; 1
+.dw	MapMagicAction_Cure	; 2
+.dw	BattleMagicAction_Wall	; 3
+.dw	BattleMagicAction_Prot	; 4
+.dw	BattleMagicAction_Fire	; 5
+.dw	BattleMagicAction_Thun	; 6
+.dw	BattleMagicAction_Wind	; 7
+.dw	BattleMagicAction_Rope	; 8
+.dw	BattleMagicAction_Bye	; 9
+.dw	BattleMagicAction_Help	; $A
+.dw	BattleMagicAction_Terr	; $B
+.dw	BattleMagicAction_Trap	; $C
+.dw	BattleMagicAction_Exit	; $D
+.dw	BattleMagicAction_Open	; $E
+.dw	BattleMagicAction_Rise	; $F
+.dw	MapMagicAction_Chat	; $10
+.dw	MapMagicAction_Chat	; $11
+.dw	MapMagicAction_Fly	; $12
+; =================================================================
 
-LABEL_1E24:
-	jp	LABEL_1E24
 
-LABEL_1E27:
-	ld	d, $14
+MagicAction_Nothing:
+	jp	MagicAction_Nothing
+
+MapMagicAction_Heal:
+	ld	d, 20
 	jr	LABEL_1E2D
 
-LABEL_1E2B:
-	ld	d, $50
+MapMagicAction_Cure:
+	ld	d, 80
 
 LABEL_1E2D:
 	push	bc
 	push	de
-	call	LABEL_3682
+	call	PlayerSelect2
 	pop	de
 	bit	4, c
 	pop	bc
 	jr	nz, +
 	ld	(CurrentCharacter), a
-	call	LABEL_188E
+	call	ShowMessageIfDead
 	jr	z, +
 	call	LABEL_1E53
 +
-	jp	LABEL_36CC
+	jp	HidePlayerSelect2Window
 
-LABEL_1E46:
-	ld	d, $14
+BattleMagicAction_Heal:
+	ld	d, 20
 	jr	LABEL_1E4C
 
-LABEL_1E4A:
-	ld	d, $50
+BattleMagicAction_Cure:
+	ld	d, 80
 
 LABEL_1E4C:
 	ld	a, (CurrentCharacter)
-	call	LABEL_188E
+	call	ShowMessageIfDead
 	ret	z
 
 LABEL_1E53:
@@ -4224,8 +4238,8 @@ LABEL_1E5F:
 	call	IsCharacterAlive
 	push	hl
 	pop	ix
-	ld	b, (ix+6)
-	ld	a, (ix+1)
+	ld	b, (ix+max_hp)
+	ld	a, (ix+curr_hp)
 	add	a, d
 	jr	nc, +
 	ld	a, $FF
@@ -4234,14 +4248,14 @@ LABEL_1E5F:
 	jr	c, +
 	ld	a, b
 +
-	ld	(ix+1), a
+	ld	(ix+curr_hp), a
 	jp	CloseTextBox
 
-LABEL_1E8A:
+BattleMagicAction_Wall:
 	ld	c, $06
 	jr	LABEL_1E90
 
-LABEL_1E8E:
+BattleMagicAction_Prot:
 	ld	c, $86
 
 LABEL_1E90:
@@ -4252,18 +4266,18 @@ LABEL_1E90:
 	ld	(Sound_index), a
 	ld	a, c
 	ld	(Magic_wall_active), a
-	ld	hl, LABEL_B12_B18B
+	ld	hl, DialogueMagicWallActive_B12
 	call	ShowDialogue_B12
 	jp	CloseTextBox
 
-LABEL_1EA7:
+BattleMagicAction_Fire:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
 	ld	de, $F610
-	call	LABEL_1EB2
+	call	BattleMagicAction_AttackRandomEnemy
 
-LABEL_1EB2:
+BattleMagicAction_AttackRandomEnemy:
 	ld	b, $08
 
 -
@@ -4297,13 +4311,15 @@ LABEL_1EC6:
 	pop	de
 	ret
 
-LABEL_1EE6:
+BattleMagicAction_Thun:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
 	ld	de, $D811
 
 DoGunOrThunderAttack:
+	; d = attach strength (negative number)
+    ; e = weapon number for sprites
 	ld	b, $08
 
 LABEL_1EF0:
@@ -4331,7 +4347,7 @@ LABEL_1EF0:
 	call	UpdateEnemyHP
 	pop	de
 	ld	a, (Battle_enemy_id)
-	cp	$49
+	cp	EnemyID_DarkFalz
 	jr	z, LABEL_1F23
 
 LABEL_1F1F:
@@ -4343,16 +4359,16 @@ LABEL_1F23:
 	pop	bc
 	ret
 
-LABEL_1F25:
+BattleMagicAction_Wind:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
 	ld	de, $F412
-	call	LABEL_1EB2
-	call	LABEL_1EB2
-	jp	LABEL_1EB2
+	call	BattleMagicAction_AttackRandomEnemy
+	call	BattleMagicAction_AttackRandomEnemy
+	jp	BattleMagicAction_AttackRandomEnemy
 
-LABEL_1F36:
+BattleMagicAction_Rope:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
@@ -4361,7 +4377,7 @@ LABEL_1F36:
 	ld	a, (Battle_enemy_action)
 	and	$20
 	jr	z, LABEL_1F71
-	ld	a, ($C448)
+	ld	a, (Enemy_stats+attack)
 	ld	b, a
 	ld	a, (Alis_stats+attack)
 	cp	b
@@ -4389,18 +4405,18 @@ LABEL_1F36:
 	djnz	-
 
 LABEL_1F71:
-	ld	hl, LABEL_B12_B172
+	ld	hl, DialoguePlayerSpellNoEffect_B12
 	jr	LABEL_1F7A
 
 LABEL_1F76:
 	ld	(hl), c
-	ld	hl, LABEL_B12_B1E0
+	ld	hl, DialogueEnemyTiedUp_B12
 
 LABEL_1F7A:
 	call	ShowDialogue_B12
 	jp	CloseTextBox
 
-LABEL_1F80:
+BattleMagicAction_Bye:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
@@ -4419,7 +4435,7 @@ LABEL_1F89:
 +
 	ld	a, (CurrentItem)
 	or	a
-	ld	hl, LABEL_B12_B172
+	ld	hl, DialoguePlayerSpellNoEffect_B12
 	jr	z, +
 	ld	hl, LABEL_B12_B2CD
 +
@@ -4429,35 +4445,35 @@ LABEL_1F89:
 LABEL_1FAC:
 	ld	a, $BC
 	ld	(Sound_index), a
-	ld	hl, LABEL_B12_B25F
+	ld	hl, DialogueCharactersEscape_B12
 	call	ShowDialogue_B12
 	call	CloseTextBox
 	ld	a, $05
 	ld	(Battle_current_player), a
 	ret
 
-LABEL_1FC0:
+BattleMagicAction_Help:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
 	ld	a, $AB
 	ld	(Sound_index), a
 	ld	a, (CurrentCharacter)
-	call	LABEL_188E
+	call	ShowMessageIfDead
 	ret	z
 	call	IsCharacterAlive
 	set	7, (hl)
-	ld	hl, LABEL_B12_B22F
+	ld	hl, DialogueCharacterStrengthUp_B12
 	call	ShowDialogue_B12
 	jp	CloseTextBox
 
-LABEL_1FDF:
+BattleMagicAction_Terr:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
 	ld	a, $AB
 	ld	(Sound_index), a
-	ld	a, ($C448)
+	ld	a, (Enemy_stats+attack)
 	ld	b, a
 	ld	a, (Alis_stats+attack)
 	cp	b
@@ -4479,37 +4495,37 @@ LABEL_1FDF:
 	djnz	-
 
 LABEL_200C:
-	ld	hl, LABEL_B12_B172
+	ld	hl, DialoguePlayerSpellNoEffect_B12
 	jr	LABEL_2016
 
 LABEL_2011:
 	set	6, (hl)
-	ld	hl, LABEL_B12_B24C
+	ld	hl, DialogueEnemyFear_B12
 
 LABEL_2016:
 	call	ShowDialogue_B12
 	jp	CloseTextBox
 
-LABEL_201C:
+BattleMagicAction_Trap:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
 	ld	a, $AB
 	ld	(Sound_index), a
-	ld	a, ($C800)
+	ld	a, (Character_sprite_attributes)
 	cp	$0E
 	jr	z, ++
 	ld	a, (Interaction_Type)
 	or	a
-	ld	hl, LABEL_B12_B569
+	ld	hl, DialogueNothingUnusualHere_B12
 	jr	nz, +
-	call	LABEL_684A
-	ld	hl, LABEL_B12_B569
+	call	CheckObjectInFront
+	ld	hl, DialogueNothingUnusualHere_B12
 	jr	z, +
 	ld	l, c
 	ld	h, $CB
 	ld	(hl), $00
-	ld	hl, LABEL_B12_B28E
+	ld	hl, DialogueTrapDisarmed_B12
 +:
 	call	ShowDialogue_B12
 	jp	CloseTextBox
@@ -4519,28 +4535,28 @@ LABEL_201C:
 	cp	$3D
 	ld	hl, LABEL_B12_B27F
 	jr	z, +
-	ld	hl, LABEL_B12_B28E
+	ld	hl, DialogueTrapDisarmed_B12
 +:
 	call	ShowDialogue_B12
 	ld	a, $3D
-	ld	($C80F), a
+	ld	(Character_sprite_attributes+$F), a
 	jp	LABEL_28EE
 
-LABEL_2064:
+BattleMagicAction_Exit:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
 	ld	a, (Interaction_Type)
 	or	a
 	jr	z, LABEL_2078
-	ld	hl, LABEL_B12_B172
+	ld	hl, DialoguePlayerSpellNoEffect_B12
 	call	ShowDialogue_B12
 	jp	CloseTextBox
 
 LABEL_2078:
 	ld	a, $BF
 	ld	(Sound_index), a
-	ld	hl, LABEL_B12_B59C
+	ld	hl, DialogueCharacterBecomesLight_B12
 	call	ShowDialogue_B12
 	call	CloseTextBox
 	ld	a, $FF
@@ -4549,7 +4565,7 @@ LABEL_2078:
 	ld	(hl), $08 ; GameMode_LoadMap
 	ret
 
-LABEL_2091:
+BattleMagicAction_Open:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
@@ -4559,27 +4575,27 @@ LABEL_2091:
 	or	a
 	jr	z, +
 -:
-	ld	hl, LABEL_B12_B172
+	ld	hl, DialoguePlayerSpellNoEffect_B12
 	call	ShowDialogue_B12
 	jp	CloseTextBox
 
 +:
 	ld	b, $01
-	call	LABEL_6BE9
+	call	Dungeon_GetRelativeSquare
 	and	$07
-	cp	$06
+	cp	$06 ; Magically locked door
 	jr	nz, -
-	bit	7, (hl)
+	bit	7, (hl) ; Mark as unlocked
 	jr	nz, -
 	ld	a, $04
 	ld	($C2D8), a
 	ret
 
-LABEL_20BF:
+BattleMagicAction_Rise:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
-	call	LABEL_3682
+	call	PlayerSelect2
 	bit	4, c
 	jr	nz, +++
 	push	af
@@ -4589,7 +4605,7 @@ LABEL_20BF:
 	ld	(CurrentCharacter), a
 	call	IsCharacterAlive
 	jr	z, +
-	ld	hl, LABEL_B12_B709
+	ld	hl, DialogueCharacterStillAlive_B12
 	jr	++
 
 +:
@@ -4602,31 +4618,31 @@ LABEL_20BF:
 	inc	de
 	ldi
 	ldi
-	ld	hl, LABEL_B12_B5B0
+	ld	hl, DialogueCharacterIsRevived_B12
 ++:
 	call	ShowDialogue_B12
 	call	CloseTextBox
 +++:
-	jp	LABEL_36CC
+	jp	HidePlayerSelect2Window
 
-LABEL_20F8:
+MapMagicAction_Chat:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
 	ld	a, $AC
 	ld	(Sound_index), a
-LABEL_2102:
-	ld	a, ($C800)
+MapMagicAction_ChatCont:
+	ld	a, (Character_sprite_attributes)
 	cp	$0E
 	jr	z, ++
 	ld	a, (Interaction_Type)
 	or	a
-	ld	hl, LABEL_B12_B424
+	ld	hl, DialogueCharacterFeelsNothing_B12
 	jr	nz, +
-	call	LABEL_684A
-	ld	hl, LABEL_B12_B424
+	call	CheckObjectInFront
+	ld	hl, DialogueCharacterFeelsNothing_B12
 	jr	z, +
-	ld	hl, LABEL_B12_B404
+	ld	hl, DialogueCharacterFeelsSomething_B12
 +:
 	call	ShowDialogue_B12
 	ld	a, $D5
@@ -4636,16 +4652,16 @@ LABEL_2102:
 ++:
 	ld	a, ($C80F)
 	cp	$3D
-	ld	hl, LABEL_B12_B424
+	ld	hl, DialogueCharacterFeelsNothing_B12
 	jr	z, +
-	ld	hl, LABEL_B12_B404
+	ld	hl, DialogueCharacterFeelsSomething_B12
 +:
 	call	ShowDialogue_B12
 	ld	a, $D5
 	ld	(Sound_index), a
 	jp	RunTreasureChest
 
-LABEL_2140:
+MapMagicAction_Fly:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
@@ -4654,12 +4670,12 @@ LABEL_2140:
 	ld	a, (Interaction_Type)
 	or	a
 	jr	nz, LABEL_2159
-	ld	hl, LABEL_B12_B172
+	ld	hl, DialoguePlayerSpellNoEffect_B12
 	call	ShowDialogue_B12
 	jp	CloseTextBox
 
 LABEL_2159:
-	ld	hl, LABEL_B12_B59C
+	ld	hl, DialogueCharacterBecomesLight_B12
 	call	ShowDialogue_B12
 	call	CloseTextBox
 	ld	a, $08
@@ -4670,11 +4686,11 @@ PlayerMenu_Item:
 	ld a, (Inventory_curr_num)
 	or a
 	jp nz, +
-	call LABEL_34D5
-	jp LABEL_3656
+	call SelectItemFromInventory
+	jp HideInventoryWindow
 
 +:
-	call LABEL_34D5
+	call SelectItemFromInventory
 	bit 4, c
 	jp nz, LABEL_21F5
 	ld a, (CurrentItem)
@@ -4687,7 +4703,7 @@ PlayerMenu_Item:
 	add a, a
 	add a, $04
 	ld b, a
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	or a
 	jr z, +++
 	cp b
@@ -4707,7 +4723,7 @@ PlayerMenu_Item:
 	ld hl, LABEL_B12_B2FB
 	jr nz, +
 	xor a
-	ld ($C30E), a
+	ld (Vehicle_movement_flags), a
 	dec a
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B30A
@@ -4742,7 +4758,7 @@ PlayerMenu_Item:
 +:
 	call LABEL_376B
 LABEL_21F5:
-	call LABEL_3656
+	call HideInventoryWindow
 	jp LABEL_2F3C
 
 
@@ -4837,7 +4853,7 @@ ItemUse_NoEffect:
 ItemUse_Wand:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jp nz, LABEL_1F89
 	ld hl, LABEL_B12_B312
@@ -4865,7 +4881,7 @@ LABEL_22B7:
 	ld hl, LABEL_B12_B2E3
 	jr nz, +
 	ld a, e
-	ld ($C30E), a
+	ld (Vehicle_movement_flags), a
 	ld a, $FF
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B305
@@ -4891,7 +4907,7 @@ ItemUse_Hovercraft:
 	ld hl, LABEL_B12_B2E3
 	jr nz, +
 	ld a, $08
-	ld ($C30E), a
+	ld (Vehicle_movement_flags), a
 	ld a, $FF
 	ld ($C2D8), a
 	ld hl, LABEL_B12_B305
@@ -4917,18 +4933,18 @@ ItemUse_Cola:
 ItemUse_Burger:
 	ld d, 40	; heal 40
 +:
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	ld a, (Battle_current_player)
 	jr nz, +
 	push de
-	call LABEL_3665
+	call PlayerSelect
 	pop de
 	bit Button_1, c
 	jr nz, ++
 +:
 	ld (CurrentCharacter), a
-	call LABEL_188E
+	call ShowMessageIfDead
 	jr z, ++
 	push de
 	ld hl, LABEL_B12_B2AC
@@ -4937,17 +4953,17 @@ ItemUse_Burger:
 	call LABEL_1E5F
 	call Inventory_RemoveItem
 ++:
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	ret nz
-	jp LABEL_36BB
+	jp ClosePlayerSelect
 
 ItemUse_Flute:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld a, $C2
 	ld (Sound_index), a
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jr nz, +
 	ld hl, LABEL_B12_BFC4
@@ -4968,7 +4984,7 @@ ItemUse_Flute:
 
 
 ItemUse_Flash:
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B366
@@ -5002,7 +5018,7 @@ ItemUse_Flash:
 	ret
 
 ItemUse_Escaper:
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	call nz, Inventory_RemoveItem
 	jp ItemUse_Wand
@@ -5010,7 +5026,7 @@ ItemUse_Escaper:
 ItemUse_Transfer:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B2CD
@@ -5032,9 +5048,9 @@ ItemUse_MagicHat:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
-	jp nz, LABEL_1B17
+	jp nz, BattleMagicSelect_ChatCont
 	ld hl, LABEL_B12_B2CD
 	call ShowDialogue_B12
 	jp CloseTextBox
@@ -5042,7 +5058,7 @@ ItemUse_MagicHat:
 ItemUse_Alsulin:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
@@ -5054,7 +5070,7 @@ ItemUse_Alsulin:
 	cp $A3
 	jr z, ++
 	call LABEL_24BE
-	ld hl, LABEL_B12_B569
+	ld hl, DialogueNothingUnusualHere_B12
 	jr nz, +
 -:
 	ld hl, LABEL_B12_B3E3
@@ -5086,7 +5102,7 @@ ItemUse_Alsulin:
 ItemUse_Polymaterial:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
@@ -5137,7 +5153,7 @@ ItemUse_DungeonKey:
 LABEL_24EF:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
-	ld hl, LABEL_B12_B569
+	ld hl, DialogueNothingUnusualHere_B12
 	call ShowDialogue_B12
 	jp CloseTextBox
 
@@ -5145,7 +5161,7 @@ LABEL_24EF:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld b, $01
-	call LABEL_6BE9
+	call Dungeon_GetRelativeSquare
 	and $07
 	cp $05
 	jr nz, +
@@ -5165,15 +5181,15 @@ ItemUse_Sphere:
 	call Inventory_RemoveItem
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
-	jp nz, LABEL_1B36
-	jp LABEL_2102
+	jp nz, BattleMagicSelect_TeleCont
+	jp MapMagicAction_ChatCont
 
 ItemUse_EclipseTorch:
 	ld hl, LABEL_B12_B458
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B431
@@ -5213,7 +5229,7 @@ ItemUse_EclipseTorch:
 ItemUse_AeroPrism:
 	ld hl, LABEL_B12_B458
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B35C
@@ -5253,7 +5269,7 @@ ItemUse_Nuts:
 LABEL_25D7:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	ld hl, LABEL_B12_B500
 	jr z, +
@@ -5278,13 +5294,13 @@ LABEL_25D7:
 	ld a, (Interaction_Type)
 	or a
 	jr z, LABEL_25D7
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jr nz, LABEL_25D7
 	jr -
 
 ItemUse_Hapsby:
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jr z, +
 	ld hl, LABEL_B12_B2AC
@@ -5305,7 +5321,7 @@ ItemUse_Compass:
 -:
 	ld hl, LABEL_B12_B366
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	ld hl, LABEL_B12_B375
 	jr z, +
@@ -5315,7 +5331,7 @@ ItemUse_Compass:
 	jp CloseTextBox
 
 ++:
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jr nz, -
 	ld hl, LABEL_B12_B2AC
@@ -5342,7 +5358,7 @@ ItemUse_MiracleKey:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
 	ld b, $01
-	call LABEL_6BE9
+	call Dungeon_GetRelativeSquare
 	bit 7, (hl)
 	jr nz, ++
 	and $07
@@ -5365,7 +5381,7 @@ ItemUse_MiracleKey:
 ItemUse_NoUse:
 	ld hl, LABEL_B12_B2AC
 	call ShowDialogue_B12
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	ld hl, LABEL_B12_B312
 	jr nz, +
@@ -5399,12 +5415,12 @@ ItemAction_Equip:
 	ld d, a
 	push de
 	push hl
-	call LABEL_3665
+	call PlayerSelect
 	pop hl
 	pop de
 	bit Button_1, c
 	jp nz, LABEL_2741
-	call LABEL_188E
+	call ShowMessageIfDead
 	jp z, LABEL_2741
 	ld (CurrentCharacter), a
 	ld c, a
@@ -5439,9 +5455,9 @@ ItemAction_Equip:
 	ld hl, LABEL_B12_B2B6
 	call ShowDialogue_B12
 	ld a, (CurrentCharacter)
-	call LABEL_3707
+	call ShowEquippedItems
 	call WaitForButton1Or2
-	call LABEL_374D
+	call HideEquippedItems
 	call CloseTextBox
 	pop af
 	or a
@@ -5449,7 +5465,7 @@ ItemAction_Equip:
 
 LABEL_2741:
 	call UpdateCharStats
-	jp LABEL_36BB
+	jp ClosePlayerSelect
 
 +:
 	ld hl, LABEL_B12_B5DE
@@ -5539,8 +5555,8 @@ LABEL_27D8:
 	push af
 	ld hl, LABEL_B12_B68C
 	call ShowDialogue_B12
-	call LABEL_34D5
-	call LABEL_3656
+	call SelectItemFromInventory
+	call HideInventoryWindow
 	bit 4, c
 	jr nz, ++
 	ld hl, $FFFF
@@ -5593,7 +5609,7 @@ PlayerMenu_Search:
 	cp $0E
 	jr nz, +
 	call HidePartyStats
-	ld hl, LABEL_B12_B569
+	ld hl, DialogueNothingUnusualHere_B12
 	call ShowDialogue_B12
 	call RunTreasureChest
 	jp UpdatePartyStats
@@ -5674,7 +5690,7 @@ LABEL_28C5:
 	jp z, LABEL_5566
 	cp $A3
 	jp z, LABEL_558C
-	ld hl, LABEL_B12_B569
+	ld hl, DialogueNothingUnusualHere_B12
 	call ShowDialogue_B12
 	jp CloseTextBox
 
@@ -5791,7 +5807,7 @@ LABEL_2999:
 	or a
 	ld hl, LABEL_B12_B925
 	call nz, ShowDialogue_B12
-	call LABEL_3665
+	call PlayerSelect
 	bit Button_1, c
 	jp nz, LABEL_2A52
 	ld (CurrentCharacter), a
@@ -5862,12 +5878,12 @@ LABEL_2999:
 	jr nz, LABEL_2A52
 
 LABEL_2A48:
-	call LABEL_36BB
+	call ClosePlayerSelect
 	ld a, (Party_curr_num)
 	or a
 	jp nz, LABEL_2999
 LABEL_2A52:
-	call LABEL_36BB
+	call ClosePlayerSelect
 LABEL_2A55:
 	ld hl, LABEL_B12_B951
 	call ShowDialogue_B12
@@ -5875,7 +5891,7 @@ LABEL_2A55:
 
 LABEL_2A5E:
 	call LABEL_3A12
-	call LABEL_36BB
+	call ClosePlayerSelect
 	ld hl, LABEL_B12_BD57
 	call ShowDialogue_B12
 +:
@@ -5902,7 +5918,7 @@ LABEL_2A6D:
 
 LABEL_2A85:
 	ld a, ($C2DB)
-	ld ($C317), a
+	ld (Last_church_visited), a
 	ld hl, LABEL_B12_B97F
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
@@ -5914,7 +5930,7 @@ LABEL_2A98:
 	jp z, LABEL_2B31
 	ld hl, LABEL_B12_B9D3
 	call ShowDialogue_B12
-	call LABEL_3665
+	call PlayerSelect
 	bit Button_1, c
 	jp nz, LABEL_2B43
 	call IsCharacterAlive
@@ -5966,7 +5982,7 @@ LABEL_2B15:
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
 	jr nz, LABEL_2B43
-	call LABEL_36BB
+	call ClosePlayerSelect
 	jp LABEL_2A98
 
 +:
@@ -5984,7 +6000,7 @@ LABEL_2B31:
 	jr nz, LABEL_2B15
 	call WaitForButton1Or2
 LABEL_2B43:
-	call LABEL_36BB
+	call ClosePlayerSelect
 LABEL_2B46:
 	ld hl, LABEL_B12_BA3C
 	call ShowDialogue_B12
@@ -6167,10 +6183,10 @@ LABEL_2C98:
 LABEL_2CB1:
 	ld hl, LABEL_B12_B882
 	call ShowDialogue_B12
-	call LABEL_34D5
+	call SelectItemFromInventory
 	bit 4, c
 	push af
-	call LABEL_3656
+	call HideInventoryWindow
 	pop af
 	jp nz, LABEL_2CEA
 	ld hl, $FFFF
@@ -7400,7 +7416,7 @@ HideMagicMenu:
 	ld bc, $0C0C
 	jp LABEL_3A57
 
-LABEL_34D5:
+SelectItemFromInventory:
 	ld a, (Inventory_curr_num)
 	dec a
 	and $18
@@ -7641,7 +7657,7 @@ LABEL_364D:
 	ret
 
 
-LABEL_3656:
+HideInventoryWindow:
 	push bc
 	ld hl, $DC04
 	ld de, $78AC
@@ -7651,7 +7667,7 @@ LABEL_3656:
 	ret
 
 
-LABEL_3665:
+PlayerSelect:
 	ld	a, (Party_curr_num)
 	or	a
 	ret  z	; return if there's only 1 party member
@@ -7666,7 +7682,7 @@ LABEL_3665:
 	jp	CheckOptionSelect
 
 
-LABEL_3682:
+PlayerSelect2:
 	ld a, (Party_curr_num)
 	or a
 	ret z
@@ -7695,7 +7711,7 @@ LABEL_369F:
 	ld	bc, $010C
 	jp	LABEL_3A57
 
-LABEL_36BB:
+ClosePlayerSelect:
 	ld	a, (Party_curr_num)
 	or	a
 	ret  z
@@ -7706,7 +7722,7 @@ LABEL_36BB:
 	jp	LABEL_3A57
 
 
-LABEL_36CC:
+HidePlayerSelect2Window:
 	ld a, (Party_curr_num)
 	or a
 	ret z
@@ -7736,7 +7752,7 @@ LABEL_36FB:
 	ld bc, $0B0C
 	jp LABEL_3A57
 
-LABEL_3707:
+ShowEquippedItems:
 	push	af
 	ld	hl, $D928
 	ld	de, $7A8C
@@ -7775,7 +7791,7 @@ LABEL_3735:
 	ret
 
 
-LABEL_374D:
+HideEquippedItems:
 	ld hl, $D928
 	ld de, $7A8C
 	ld bc, $0814
@@ -7833,7 +7849,7 @@ LABEL_37C3:
 	ld	bc, $050A
 	jp	LABEL_3A57
 
-LABEL_37CF:
+ShowCharacterStats:
 	add	a, a
 	add	a, a
 	add	a, a
@@ -7915,7 +7931,7 @@ LABEL_38B1:
 .db	$F3, $11, $D7, $10
 .db $CB, $10, $E2, $10, $C0, $10, $D7, $10, $DA, $10, $C0, $10
 
-LABEL_38C1:
+HideCharacterStats:
 	ld hl, $DC04
 	ld de, $7920
 	ld bc, $0E18
@@ -8062,13 +8078,13 @@ LABEL_3999:
 	ld bc, $0820
 	jp LABEL_3A57
 
-LABEL_39A5:
+GetSaveGameSelection:
 	ld hl, $D928
 	ld de, $786E
 	ld bc, $0C12
 	call LABEL_3AA6
 
-GetSaveGameSelection:
+GetSaveGameSelectionCont:
 	ld a, $08
 	ld ($FFFC), a
 	ld hl, $8100
@@ -8255,7 +8271,7 @@ GameMode_Interaction:
 	call nz, PauseLoop
 	ld a, $08
 	call WaitForVInt
-	ld a, ($C29D)
+	ld a, (Battle_flag)
 	or a
 	jp nz, LABEL_3C1A
 	ld a, ($C2DC)
@@ -8286,7 +8302,7 @@ LABEL_3BC5:
 	ld (Sound_index), a
 +:
 	xor a
-	ld ($C29D), a
+	ld (Battle_flag), a
 	ld (Interaction_Type), a
 	ld ($C2D5), a
 	ld hl, $0000
@@ -8643,7 +8659,7 @@ GameMode_NameInput:
 	cp $5E
 	jr z, ++++
 -:
-	ld a, ($C780)
+	ld a, (Name_entry_mode)
 	ld c, $00
 	rra
 	jr c, +
@@ -11520,7 +11536,7 @@ LABEL_5538:
 	ret
 
 LABEL_553D:
-	ld hl, LABEL_B12_B569
+	ld hl, DialogueNothingUnusualHere_B12
 	call ShowDialogue_B12
 	jp CloseTextBox
 
@@ -12125,7 +12141,7 @@ LABEL_5A4F:
 	ld (iy+2), $60
 	ld (iy+4), $80
 	ld (iy+1), $05
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	sub $04
 	ld (iy+16), a
 	ld (iy+17), $01
@@ -12150,7 +12166,7 @@ LABEL_5A70:
 	ld hl, LABEL_5A94
 	ld b, $00
 	add hl, bc
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	add a, (hl)
 	ld (iy+16), a
 	ret
@@ -12815,7 +12831,7 @@ Map_RunRandomBattles:
 	ld e, a
 	add hl, de
 	ld b, (hl)
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	or a
 	jr z, +
 	srl b
@@ -12873,7 +12889,7 @@ Dungeon_GetEncounter:
 
 LABEL_5FF9:
 	xor a
-	ld ($C29D), a
+	ld (Battle_flag), a
 	ret
 
 Dungeon_LoadEnemy:
@@ -13842,7 +13858,7 @@ LABEL_66E1:
 	bit  0, c
 	jp	z, LABEL_677A
 	ld	b, $01
-	call	LABEL_6BE9
+	call	Dungeon_GetRelativeSquare
 	ld	b, a
 	and	$07
 	jp	z, LABEL_6758
@@ -14016,7 +14032,7 @@ LABEL_6817:
 
 LABEL_681B:
 	ld	b, $01
-	call	LABEL_6BE9
+	call	Dungeon_GetRelativeSquare
 	bit  7, (hl)
 	ret  nz
 
@@ -14048,9 +14064,9 @@ LABEL_6830:
 	ret
 
 
-LABEL_684A:
+CheckObjectInFront:
 	ld b, $01
-	call LABEL_6BE9
+	call Dungeon_GetRelativeSquare
 	cp $08
 	jr nz, ++
 	ld c, l
@@ -14122,7 +14138,7 @@ Dungeon_RunAway:
 
 LABEL_68BC:
 	ld	b, $01
-	call	LABEL_6BE9
+	call	Dungeon_GetRelativeSquare
 	and	$08
 	ret  z
 
@@ -14219,7 +14235,7 @@ LABEL_6959:
 	jp	LABEL_691D
 
 Dungeon_CheckObjects:
-	call	LABEL_6BE9
+	call	Dungeon_GetRelativeSquare
 	cp	$08
 	ret  nz
 
@@ -14363,7 +14379,7 @@ LABEL_6A2F:
 	ld	(Sprite_table), a
 	xor	a
 	ld	($C800), a
-	ld	($C29D), a
+	ld	(Battle_flag), a
 	ld	(Interaction_Type), a
 	ld	($C2D5), a
 	ld	hl, $0000
@@ -14596,7 +14612,7 @@ Dungeon_GetRelativeSquareType:
 	pop	hl
 	ret
 
-LABEL_6BE9:
+Dungeon_GetRelativeSquare:
 	ld	a, (Dungeon_direction)
 	and	$03
 	add	a, a
@@ -14952,7 +14968,7 @@ LABEL_6E2F:
 
 LABEL_6E38:
 	ld	b, $01
-	call	LABEL_6BE9
+	call	Dungeon_GetRelativeSquare
 	and	$07
 	cp	$07
 	jr	z, LABEL_6E04
@@ -15324,7 +15340,7 @@ LABEL_7143:
 	and ButtonUp_Mask|ButtonDown_Mask|ButtonLeft_Mask|ButtonRight_Mask
 	or $80
 	ld c, a
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	or a
 	ld a, $0F
 	jr z, +
@@ -15333,7 +15349,7 @@ LABEL_7143:
 	ld ($C265), a
 ++:
 	ld de, $0001
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	or a
 	jr z, +
 	inc e
@@ -15931,7 +15947,7 @@ LABEL_74E4:
 	ld a, ($C2E9)
 	or a
 	jr nz, +
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	or a
 	jr nz, ++
 	ld b, $00
@@ -16134,7 +16150,7 @@ LABEL_7602:
 	ld a, ($C308)
 	cp $02
 	ret nz
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	cp $0C
 	ret nz
 	ld a, $0A
@@ -16447,7 +16463,7 @@ LABEL_77AC:
 	ld a, b
 	and $04
 	jp nz, LABEL_792A
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	or a
 	jr z, +
 	ld a, $12
@@ -16598,7 +16614,7 @@ LABEL_7897:
 	ld	($C301), hl
 	ld	($C313), hl
 	xor	a
-	ld	($C30E), a
+	ld	(Vehicle_movement_flags), a
 	jp	LABEL_7908
 
 
@@ -16619,7 +16635,7 @@ LABEL_78BD:
 	ld hl, ($C313)
 	ld ($C301), hl
 	xor a
-	ld ($C30E), a
+	ld (Vehicle_movement_flags), a
 	jp LABEL_7908
 
 +:
@@ -16636,7 +16652,7 @@ LABEL_78BD:
 	ld l, a
 	ld ($C2DB), hl
 	xor a
-	ld ($C29D), a
+	ld (Battle_flag), a
 	ld hl, ($C311)
 	ld ($C305), hl
 	ld hl, ($C313)
@@ -16684,7 +16700,7 @@ LABEL_792A:
 +:
 	cp $5E
 	jp nz, +
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	or a
 	ret nz
 	ld a, $35
@@ -16706,7 +16722,7 @@ LABEL_7972:
 	ret c
 	cp $64
 	jp nc, +
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	cp $08
 	ret z
 	call LABEL_7BC4
@@ -16735,11 +16751,11 @@ LABEL_7972:
 	ret c
 	cp $C7
 	jp nc, +
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	or a
 	ret nz
 	ld a, $FF
-	ld ($C29D), a
+	ld (Battle_flag), a
 	ld a, $19
 	ld (Battle_enemy_id), a
 	jp LABEL_7972
@@ -17033,7 +17049,7 @@ FlashPaletteInRAM:
 	ret
 
 Palette_Rotate:
-	ld a, ($C30E)
+	ld a, (Vehicle_movement_flags)
 	or a
 	ret z
 	cp $10

@@ -511,6 +511,7 @@
 .define	Dungeon_index $C30D
 .define	Vehicle_movement_flags $C30E
 .define	Dungeon_palette_index $C315
+.define	Last_church_visited $C317
 
 .define	Char_stats $C400
 .define	Alis_stats $C400
@@ -528,6 +529,8 @@
 .define Dialogue_flags $C500	; table holding flags for dialogues; if value is $FF, dialogue is not loaded
 .define Event_flags $C600	; used for chests and scripted encounters in dungeons
 .define Battle_flags $C6C0	; used for chests and scripted encounters in dungeons
+
+.define Name_entry_mode $C780
 
 .define Character_sprite_attributes $C800
 
