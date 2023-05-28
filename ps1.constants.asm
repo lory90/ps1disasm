@@ -457,6 +457,7 @@
 .define	Tile_map_high_byte $C210
 
 .define	Game_is_paused $C212
+.define	Palette_move_delay $C213
 .define	Fade_timer $C21B
 
 .define	Normal_palette $C220
@@ -465,13 +466,19 @@
 .define	Scroll_direction $C264
 .define	Rotate_palette_flag $C265
 .define	Battle_current_player $C267
-.define	Cursor_pos $C269
+.define	Cursor_enabled $C268
+.define	CursorTileMapAddress $C269
+.define	Cursor_pos $C26B
+.define	Cursor_old_pos $C26C
+.define	Cursor_counter $C26D
 .define	Option_total_num $C26E	; number of options available for an interactive menu (e.g. player menu)
 
 .define Anim_counters $C26F
 .define	Selected_inventory_item $C29B
 .define	Battle_flag $C29D
-.define	Interaction_Type $C29E ; Background?
+.define	Scene_type $C29E ; Background?
+
+.define	Anim_delay_counter $C2BC
 
 .define	CurrentCharacter $C2C2 ; Used for battle dialogue etc
 .define	CurrentItem $C2C4 ; Used in dialogue, Inventory_AddItem etc

@@ -112,7 +112,7 @@ _NMI_HANDLER:
 	jr	z, LABEL_7A
 	cp	$0B ; GameMode_Dungeon
 	jr	z, LABEL_7A
-	cp	$0D ; GameMode_Interaction
+	cp	$0D ; GameMode_Scene
 	jr	nz, LABEL_81
 LABEL_7A:
 	ld	a, (Game_is_paused)
@@ -169,8 +169,8 @@ GameModeTbl:
 .dw	GameMode_Map	; 9
 .dw	GameMode_LoadDungeon	; $A
 .dw	GameMode_Dungeon	; $B
-.dw	GameMode_LoadInteraction	; $C
-.dw	GameMode_Interaction	; $D
+.dw	GameMode_LoadScene	; $C
+.dw	GameMode_Scene	; $D
 .dw	GameMode_LoadRoad	; $E
 .dw	GameMode_Road	; $F
 .dw	GameMode_LoadNameInput	; $10
@@ -814,7 +814,7 @@ GameMode_InitTitleScreen:
 
 GameMode_TitleScreen:
 	ld	hl, $7C12
-	ld	(Cursor_pos), hl
+	ld	(CursorTileMapAddress), hl
 	ld	a, $01
 	ld	(Option_total_num), a
 	call	CheckOptionSelect
@@ -1463,7 +1463,7 @@ GameMode_Map:
 ++
 	ld	(Battle_flag), a
 	ld	hl, Game_mode
-	ld	(hl), $0C ; GameMode_LoadInteraction
+	ld	(hl), $0C ; GameMode_LoadScene
 	ld	a, ($C810)
 	ld	($C2D7), a
 	ld	hl, Anim_counters
@@ -1617,7 +1617,7 @@ GameMode_LoadMap:
 	rrca
 	rrca
 	and	$0F
-	ld	(Interaction_Type), a
+	ld	(Scene_type), a
 	ld	a, (Vehicle_movement_flags)
 	cp	$10
 	ld	c, $B8
@@ -2021,7 +2021,7 @@ LABEL_FF3:
 	ld	(Sprite_table), a
 	call	LoadDungeonMap
 	xor	a
-	ld	(Interaction_Type), a
+	ld	(Scene_type), a
 	jp	Dungeon_NextScreen
 
 Dungeon_EnterBattle:
@@ -2107,7 +2107,7 @@ LABEL_108A:
 	call	RefreshCombatMenu
 	call	LABEL_2EAC
 	ld	hl, $7882
-	ld	(Cursor_pos), hl
+	ld	(CursorTileMapAddress), hl
 	ld	a, $04
 	ld	(Option_total_num), a
 	call	CheckOptionSelect
@@ -2890,7 +2890,7 @@ LABEL_15DC:
 	ld	(hl), $00
 	ldir
 	call	BuildSprites
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	or	a
 	jp	nz, LABEL_15F9
 	call	LABEL_6B3A
@@ -2949,7 +2949,7 @@ LABEL_163E:
 	pop	af
 	cp	$05
 	ret	nz
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	or	a
 	ret	nz
 	jp	Dungeon_RunAway
@@ -3446,7 +3446,7 @@ BattleMenu_Run:
 	call	UpdateRNGSeed
 	cp	b
 	jr	nc, LABEL_19C5
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	or	a
 	jr	nz, +
 	call	LABEL_687A
@@ -3500,7 +3500,7 @@ LABEL_19F2:
 	push	hl
 	call	ShowMagicMenu
 	ld	hl, $7A8C
-	ld	(Cursor_pos), hl
+	ld	(CursorTileMapAddress), hl
 	pop	hl
 	ld	a, (hl)
 	dec	a
@@ -3831,7 +3831,7 @@ LABEL_1BEE:
 	or	a
 	jr	nz, LABEL_1C15
 	ld	hl, $7882
-	ld	(Cursor_pos), hl
+	ld	(CursorTileMapAddress), hl
 	ld	a, $04
 	ld	(Option_total_num), a
 	call	CheckOptionSelect
@@ -4053,7 +4053,7 @@ PlayerMenu_Magic:
 	push	hl
 	call	ShowMagicMenu
 	ld	hl, $7A8C
-	ld	(Cursor_pos), hl
+	ld	(CursorTileMapAddress), hl
 	pop	hl
 	ld	a, (hl)
 	dec	a
@@ -4427,7 +4427,7 @@ BattleMagicAction_ByeCont:
 	ld	a, (Battle_escape_rate)
 	or	a
 	jr	z, +
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	or	a
 	jr	nz, LABEL_1FAC
 	call	LABEL_687A
@@ -4515,7 +4515,7 @@ BattleMagicAction_Trap:
 	ld	a, (Character_sprite_attributes)
 	cp	$0E
 	jr	z, ++
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	or	a
 	ld	hl, DialogueNothingUnusualHere_B12
 	jr	nz, +
@@ -4546,7 +4546,7 @@ BattleMagicAction_Exit:
 	ld	a, b
 	call	CheckEnoughMP
 	ld	(de), a
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	or	a
 	jr	z, LABEL_2078
 	ld	hl, DialoguePlayerSpellNoEffect_B12
@@ -4571,7 +4571,7 @@ BattleMagicAction_Open:
 	ld	(de), a
 	ld	a, $AB
 	ld	(Sound_index), a
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	or	a
 	jr	z, +
 -:
@@ -4635,7 +4635,7 @@ MapMagicAction_ChatCont:
 	ld	a, (Character_sprite_attributes)
 	cp	$0E
 	jr	z, ++
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	or	a
 	ld	hl, DialogueCharacterFeelsNothing_B12
 	jr	nz, +
@@ -4667,7 +4667,7 @@ MapMagicAction_Fly:
 	ld	(de), a
 	ld	a, $AB
 	ld	(Sound_index), a
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	or	a
 	jr	nz, LABEL_2159
 	ld	hl, DialoguePlayerSpellNoEffect_B12
@@ -4747,7 +4747,7 @@ PlayerMenu_Item:
 	ld (CurrentCharacter), a
 	call LABEL_3759
 	ld hl, $7A72
-	ld (Cursor_pos), hl
+	ld (CursorTileMapAddress), hl
 	ld a, $02
 	ld (Option_total_num), a
 	call CheckOptionSelect
@@ -4870,7 +4870,7 @@ LABEL_22B7:
 	cp $04
 	ld hl, DialogueUseNoGood_B12
 	jr nc, +
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	jr z, +
 	push bc
@@ -4896,7 +4896,7 @@ ItemUse_Hovercraft:
 	cp $04
 	ld hl, DialogueUseNoGood_B12
 	jr nc, +
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	jr z, +
 	push bc
@@ -4970,7 +4970,7 @@ ItemUse_Flute:
 	call ShowDialogue_B12
 	ld a, $D5
 	ld (Sound_index), a
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	jp z, LABEL_2078
 	jp CloseTextBox
@@ -4994,7 +4994,7 @@ ItemUse_Flash:
 	jp CloseTextBox
 
 +:
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	jr z, +
 -:
@@ -5035,7 +5035,7 @@ ItemUse_Transfer:
 	jp CloseTextBox
 
 +:
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	push af
 	call nz, Inventory_RemoveItem
@@ -5147,7 +5147,7 @@ CheckCharAliveNotMyau:
 	jp CloseTextBox
 
 ItemUse_DungeonKey:
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	jr z, +
 
@@ -5292,7 +5292,7 @@ LABEL_25D7:
 	ret
 
 +++:
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	jr z, LABEL_25D7
 	ld a, (Battle_flag)
@@ -5316,7 +5316,7 @@ ItemUse_Hapsby:
 	jp CloseTextBox
 
 ItemUse_Compass:
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	jr z, ++
 -:
@@ -5353,7 +5353,7 @@ ItemUse_Compass:
 	jp CloseTextBox
 
 ItemUse_MiracleKey:
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	jp nz, ItemUse_DungeonKeyCont
 	ld hl, DialogueCharacterUsesItem_B12
@@ -5798,7 +5798,7 @@ LABEL_2989:
 	call	WaitForButton1Or2
 	ret
 
-LABEL_298D:
+Scene_Hospital:
 	ld hl, DialogueThisIsAHospital_B12
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
@@ -5918,7 +5918,7 @@ LABEL_2A6D:
 	djnz -
 	ret
 
-LABEL_2A85:
+Scene_Church:
 	ld a, (Room_index)
 	ld (Last_church_visited), a
 	ld hl, DialogueThisIsAChurch_B12
@@ -6060,7 +6060,7 @@ LABEL_2B46:
 	ld hl, DialogueChurchNeedEXP_B12
 	jp ShowDialogue_B12
 
-LABEL_2BC0:
+Scene_Armory:
 	ld hl, DialogueThisIsArmory_B12
 	call ShowDialogue_B12
 ShopMenus:
@@ -6166,12 +6166,12 @@ LABEL_2C46:
 	call LABEL_3999
 	jp CloseTextBox
 
-LABEL_2C8F:
+Scene_Pharmacy:
 	ld hl, DialoguePharmacy_B12
 	call ShowDialogue_B12
 	jp ShopMenus
 
-LABEL_2C98:
+Scene_ToolShop:
 	ld hl, DialogueToolShop_B12
 	call ShowDialogue_B12
 	call BuySellMenu
@@ -6282,53 +6282,53 @@ VIntDelay2:
 
 CheckOptionSelect:
 	ld	a, $FF
-	ld	($C268), a
+	ld	(Cursor_enabled), a  ; Enable cursor
 	ld	hl, $0000
-	ld	($C26B), hl
+	ld	(Cursor_pos), hl	; CursorPos, OldCursorPos = 0
 	xor	a
-	ld	($C26D), a
+	ld	(Cursor_counter), a
 OptionSelect_Loop:
 	ld	a, $08
 	call	WaitForVInt
 	ld	a, (Ctrl_1_pressed)
 	and	ButtonUp_Mask|ButtonDown_Mask
-	jp	z, LABEL_2D8B
+	jp	z, OptionSelect_Check1And2Buttons
 	ld	c, a
 	ld	hl, Option_total_num
-	ld	a, ($C26B)
+	ld	a, (Cursor_pos)
 	bit  ButtonUp, c
-	jr	z, LABEL_2D7D
-	sub	$01
-	jr	nc, LABEL_2D7D
+	jr	z, +
+	sub	$01	; if we pressed UP, subtract 1
+	jr	nc, +
 	ld	a, (hl)
-LABEL_2D7D:
++
 	bit  ButtonDown, c
-	jr	z, LABEL_2D88
-	inc	a
+	jr	z, +
+	inc	a	; if we pressed DOWN, increment by 1
 	cp	(hl)
-	jr	c, LABEL_2D88
-	jr	z, LABEL_2D88
+	jr	c, +
+	jr	z, +
 	xor	a
-LABEL_2D88:
-	ld	($C26B), a
-LABEL_2D8B:
++
+	ld	(Cursor_pos), a
+OptionSelect_Check1And2Buttons:
 	ld	a, (Ctrl_1_pressed)
 	and	Button_1_Mask|Button_2_Mask
 	jp	z, OptionSelect_Loop
 	ld	c, a
 	xor	a
-	ld	($C26D), a
+	ld	(Cursor_counter), a
 	ld	a, $08
 	call	WaitForVInt
 	xor	a
-	ld	($C268), a
-	ld	a, ($C26B)
+	ld	(Cursor_enabled), a
+	ld	a, (Cursor_pos)
 	ret
 
 
 LABEL_2DA5:
 	ld a, $FF
-	ld ($C268), a
+	ld (Cursor_enabled), a
 
 LABEL_2DAA:
 	ld a, $08
@@ -6339,7 +6339,7 @@ LABEL_2DAA:
 	jp z, ++
 	ld c, a
 	ld hl, Option_total_num
-	ld a, ($C26B)
+	ld a, (Cursor_pos)
 	bit 0, c
 	jr z, +
 	sub $01
@@ -6354,7 +6354,7 @@ LABEL_2DAA:
 	jr z, +
 	xor a
 +:
-	ld ($C26B), a
+	ld (Cursor_pos), a
 	jp +++
 
 ++:
@@ -6388,16 +6388,16 @@ LABEL_2DAA:
 	and $30
 	jr z, LABEL_2DAA
 	xor a
-	ld ($C26D), a
+	ld (Cursor_counter), a
 	ld a, $08
 	call WaitForVInt
 	xor a
-	ld ($C268), a
+	ld (Cursor_enabled), a
 	bit 4, c
 	ret nz
 	ld a, (Inventory_curr_num)
 	cp $09
-	ld a, ($C26B)
+	ld a, (Cursor_pos)
 	ret c
 	or a
 	jr z, +
@@ -6416,7 +6416,7 @@ LABEL_2DAA:
 	ld ($C299), a
 ++++:
 	xor a
-	ld ($C268), a
+	ld (Cursor_enabled), a
 	call LABEL_352D
 	ld a, ($C299)
 	ld l, a
@@ -6435,17 +6435,17 @@ LABEL_2DAA:
 	and $07
 	add a, h
 	ld (Option_total_num), a
-	ld hl, ($C26B)
+	ld hl, (Cursor_pos)
 	cp l
 	jr nc, +
 	ld l, a
 +:
 	ld h, l
-	ld ($C26B), hl
+	ld (Cursor_pos), hl
 	jp LABEL_2DA5
 
 CursorBlink:
-	ld a, ($C268)
+	ld a, (Cursor_enabled)
 	or a
 	ret z
 	ld a, (Game_mode)
@@ -6454,8 +6454,8 @@ CursorBlink:
 	jr nz, +
 	ld bc, $FF00
 +:
-	ld hl, (Cursor_pos)
-	ld a, ($C26C)
+	ld hl, (CursorTileMapAddress)
+	ld a, (Cursor_old_pos)
 	srl a
 	ld e, $00
 	rr e
@@ -6465,8 +6465,8 @@ CursorBlink:
 	rst $08
 	ld a, c
 	out (Port_VDPData), a
-	ld hl, (Cursor_pos)
-	ld a, ($C26B)
+	ld hl, (CursorTileMapAddress)
+	ld a, (Cursor_pos)
 	ld ($C26C), a
 	srl a
 	ld e, $00
@@ -6475,10 +6475,10 @@ CursorBlink:
 	add hl, de
 	ex de, hl
 	rst $08
-	ld a, ($C26D)
+	ld a, (Cursor_counter)
 	dec a
 	and $0F
-	ld ($C26D), a
+	ld (Cursor_counter), a
 	bit 3, a
 	ld a, b
 	jr nz, +
@@ -6491,7 +6491,7 @@ LABEL_2EAC:
 	ld hl, $D700
 	ld de, $7B02
 	ld bc, $030C
-	call LABEL_3AA6
+	call InputTilemapRect
 	ld a, (Battle_current_player)
 	add a, a
 	add a, a
@@ -6506,20 +6506,20 @@ LABEL_2EAC:
 	adc a, h
 	sub l
 	ld h, a
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 LABEL_2ECD:
 	ld hl, $D700
 	ld de, $7B02
 	ld bc, $030C
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 UpdatePartyStats:
 	ld hl, $D724
 	ld de, $7C80
 	ld bc, $0640
-	call LABEL_3AA6
-	ld hl, LABEL_B27_B4AB
+	call InputTilemapRect
+	ld hl, MenuBox8Top_B27
 	ld de, $7C80
 	ld ix, Alis_stats
 	call +
@@ -6539,19 +6539,19 @@ UpdatePartyStats:
 	ret z
 LABEL_2F1B:
 	ld bc, $0310
-	call LABEL_3A57
-	ld hl, LABEL_30A7
+	call OutputTilemapBoxB27
+	ld hl, Tiles_HP
 	ld a, (ix+curr_hp)
-	call LABEL_2FE1
-	ld hl, LABEL_30AF
+	call Output4CharsPlusStat
+	ld hl, Tiles_MP
 	ld a, (ix+curr_mp)
-	call LABEL_2FE1
-	ld hl, LABEL_B27_B49B
+	call Output4CharsPlusStat
+	ld hl, MenuBox8Bottom_B27
 	ld bc, $0110
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 LABEL_2F3C:
-	ld hl, LABEL_B27_B4AB
+	ld hl, MenuBox8Top_B27
 	ld de, $7C80
 	ld ix, Alis_stats
 	call +
@@ -6570,26 +6570,26 @@ LABEL_2F3C:
 	bit 0, (ix+status)
 	ret z
 	ld bc, $0310
-	call LABEL_3A83
-	ld hl, LABEL_30A7
+	call OutputTilemapRect
+	ld hl, Tiles_HP
 	ld a, (ix+curr_hp)
-	call LABEL_2FE1
-	ld hl, LABEL_30AF
+	call Output4CharsPlusStat
+	ld hl, Tiles_MP
 	ld a, (ix+curr_mp)
-	call LABEL_2FE1
-	ld hl, LABEL_B27_B49B
+	call Output4CharsPlusStat
+	ld hl, MenuBox8Bottom_B27
 	ld bc, $0110
-	jp LABEL_3A83
+	jp OutputTilemapRect
 
 ShowCharacterStatsBox:
 	push af
 	ld hl, $D724
 	ld de, $7C80
 	ld bc, $0640
-	call LABEL_3AA6
+	call InputTilemapRect
 	pop af
 LABEL_2FA1:
-	ld hl, LABEL_B27_B4AB
+	ld hl, MenuBox8Top_B27
 	ld de, $7C80
 	ld ix, Char_stats
 	or a
@@ -6609,7 +6609,7 @@ LABEL_2FA1:
 	ld ix, Noah_stats
 	jp LABEL_2F1B
 
-ClearSpriteTableFadeIn8:
+Output4CharsPlusStatWide:
 	di
 	push	de
 	push	af
@@ -6617,7 +6617,7 @@ ClearSpriteTableFadeIn8:
 	ld	b, $10
 	jp	LABEL_2FE7
 
-LABEL_2FE1:
+Output4CharsPlusStat:
 	di
 	push	de
 	push	af
@@ -6632,23 +6632,23 @@ LABEL_2FE7:
 	ld	bc, $C010
 	ld	d, $FF
 LABEL_2FF3:
-	sub	$64
+	sub	100
 	inc	d
 	jr	nc, LABEL_2FF3
-	add	a, $64
+	add	a, 100
 	ld	l, a
 	ld	a, d
-	call	LABEL_3645
+	call	OutputDigit
 	ld	d, $FF
 	ld	a, l
 LABEL_3002:
-	sub	$0A
+	sub	10
 	inc	d
 	jr	nc, LABEL_3002
-	add	a, $0A
+	add	a, 10
 	ld	l, a
 	ld	a, d
-	call	LABEL_3645
+	call	OutputDigit
 	ld	d, $FF
 	ld	a, l
 LABEL_3011:
@@ -6657,7 +6657,7 @@ LABEL_3011:
 	jr	nc, LABEL_3011
 	ld	a, d
 	ld	bc, $C110
-	call	LABEL_3645
+	call	OutputDigit
 	push	af
 	pop	af
 	ld	a, $F3
@@ -6675,7 +6675,7 @@ LABEL_3011:
 	call	WaitForVInt
 	ret
 
-LABEL_3036:
+ConvertToDec5Digits:
 	di
 	push	de
 	push	bc
@@ -6688,7 +6688,7 @@ LABEL_303C:
 	djnz	LABEL_303C
 	pop	hl
 	ld	bc, $C010
-	ld	de, $2710
+	ld	de, 10000
 	xor	a
 	dec  a
 LABEL_304B:
@@ -6696,33 +6696,33 @@ LABEL_304B:
 	inc	a
 	jr	nc, LABEL_304B
 	add	hl, de
-	call	LABEL_3645
-	ld	de, $03E8
+	call	OutputDigit
+	ld	de, 1000
 	ld	a, $FF
 LABEL_3059:
 	sbc  hl, de
 	inc	a
 	jr	nc, LABEL_3059
 	add	hl, de
-	call	LABEL_3645
-	ld	de, $0064
+	call	OutputDigit
+	ld	de, 100
 	ld	a, $FF
 LABEL_3067:
 	sbc  hl, de
 	inc	a
 	jr	nc, LABEL_3067
 	add	hl, de
-	call	LABEL_3645
+	call	OutputDigit
 	ld	d, $FF
 	ld	a, l
 LABEL_3073:
 	sub	$0A
 	inc	d
 	jr	nc, LABEL_3073
-	add	a, $0A
+	add	a, 10
 	ld	l, a
 	ld	a, d
-	call	LABEL_3645
+	call	OutputDigit
 	ld	d, $FF
 	ld	a, l
 LABEL_3082:
@@ -6731,7 +6731,7 @@ LABEL_3082:
 	jr	nc, LABEL_3082
 	ld	a, d
 	ld	bc, $C110
-	call	LABEL_3645
+	call	OutputDigit
 	push	af
 	pop	af
 	ld	a, $F3
@@ -6750,87 +6750,87 @@ LABEL_3082:
 	ret
 
 
-LABEL_30A7:
+Tiles_HP:
 .db $F3, $11, $F4, $11, $F5, $11, $C0, $10
 
-LABEL_30AF:
+Tiles_MP:
 .db	$F3, $11, $F6, $11, $F5, $11, $C0, $10
 
 HidePartyStats:
 	ld hl, $D724
 	ld de, $7C80
 	ld bc, $0640
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 ShowCombatMenu:
 	ld	hl, $D8A4
 	ld	de, $7842
 	ld	bc, $0B0C
-	call	LABEL_3AA6
-	ld	hl, LABEL_B27_B56B
-	jp	LABEL_3A57
+	call	InputTilemapRect
+	ld	hl, Tiles_MenuCombat_B27
+	jp	OutputTilemapBoxB27
 
 
 RefreshCombatMenu:
-	ld hl, LABEL_B27_B56B
+	ld hl, Tiles_MenuCombat_B27
 	ld de, $7842
 	ld bc, $0B0C
-	jp LABEL_3A83
+	jp OutputTilemapRect
 
 CloseMenu:
 	ld hl, $D8A4
 	ld de, $7842
 	ld bc, $0B0C
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 ShowEnemyData:
 	ld	hl, $D928
 	ld	de, $781C
 	ld	bc, $0414
-	call	LABEL_3AA6
+	call	InputTilemapRect
 	ld	hl, $D978
 	ld	de, $7830
 	ld	bc, $0A10
-	call	LABEL_3AA6
+	call	InputTilemapRect
 
 UpdateEnemyHP:
 	ld	hl, LABEL_B27_BACF
 	ld	de, $781C
 	ld	bc, $0114
-	call	LABEL_3A83
+	call	OutputTilemapRect
 	ld	hl, CurrentBattle_EnemyName
 	ld	c, $00
-	call	LABEL_315C
+	call	Output8CharMenuLine
 	ld	c, $01
-	call	LABEL_315C
+	call	Output8CharMenuLine
 	ld	hl, LABEL_B27_BAE3
 	ld	bc, $0114
-	call	LABEL_3A83
+	call	OutputTilemapRect
 	ld	a, (Battle_enemy_id)
 	cp	$49
 	ret  z
 
-	ld	hl, LABEL_B27_B4AB
+	ld	hl, MenuBox8Top_B27
 	ld	de, $7830
 	ld	bc, $0110
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	ld	ix, $C440
 	ld	a, ($C2C7)
 	ld	b, a
 LABEL_3141:
 	push	bc
-	ld	hl, LABEL_30A7
+	ld	hl, Tiles_HP
 	ld	a, (ix+1)
-	call	LABEL_2FE1
+	call	Output4CharsPlusStat
 	ld	bc, $0010
 	add	ix, bc
 	pop	bc
 	djnz	LABEL_3141
-	ld	hl, LABEL_B27_B49B
+	ld	hl, MenuBox8Bottom_B27
 	ld	bc, $0110
-	jp	LABEL_3A57
+	jp	OutputTilemapBoxB27
 
-LABEL_315C:
+Output8CharMenuLine:
 	di
 	push	bc
 	push	hl
@@ -6850,7 +6850,7 @@ LABEL_316F:
 	sub	$20
 	add	a, a
 	add	a, c
-	ld	de, LABEL_7D17
+	ld	de, TileCharacterTable
 	add	a, e
 	ld	e, a
 	adc	a, d
@@ -6887,11 +6887,11 @@ HideEnemyData:
 	ld	bc, $0A10
 	ld	a, (Battle_enemy_id)
 	cp	$49
-	call	nz, LABEL_3A57
+	call	nz, OutputTilemapBoxB27
 	ld	hl, $D928
 	ld	de, $781C
 	ld	bc, $0414
-	jp	LABEL_3A57
+	jp	OutputTilemapBoxB27
 
 
 CharacterNames:
@@ -6902,31 +6902,31 @@ CharacterNames:
 
 LABEL_31CB:
 	dec  hl
-	jp	LABEL_3235
+	jp	Dialogue_NextLine
 
 ShowDialogue_B12:
 	ld	a, :Bank12
 	ld	($FFFF), a
 
 LABEL_31D4:
-	ld	a, ($C2D3)
+	ld	a, (Text_box_open_flag)
 	or	a
 	jp	nz, LABEL_31CB
 	ld	a, $FF
-	ld	($C2D3), a
+	ld	(Text_box_open_flag), a
 	push	hl
 	ld	hl, $DA18
 	ld	de, $7C8C
 	ld	bc, $0628
-	call	LABEL_3AA6
+	call	InputTilemapRect
 	ld	hl, LABEL_B27_B5EF
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	pop	hl
-LABEL_31F4:
+Dialogue_ResetCursor:
 	ld	de, $7CCE
 	ld	bc, $1200
-LABEL_31FA:
-	ld	a, (hl)
+Dialogue_ReadData:
+	ld	a, (hl)	; get data
 	or	a
 	jp	m, LABEL_3332
 	cp	$65
@@ -6941,7 +6941,7 @@ LABEL_31FA:
 	cp	$61
 	jr	nz, LABEL_321B
 	call	WaitForButton1Or2
-	jp	LABEL_3235
+	jp	Dialogue_NextLine
 
 LABEL_321B:
 	cp	$5F
@@ -6950,22 +6950,22 @@ LABEL_321B:
 	ld	hl, LABEL_B27_B5EF
 	ld	de, $7C8C
 	ld	bc, $0628
-	call	LABEL_3A83
+	call	OutputTilemapRect
 	pop	hl
 	inc	hl
-	jp	LABEL_31F4
+	jp	Dialogue_ResetCursor
 
 LABEL_3231:
 	cp	$60
 	jr	nz, LABEL_3244
-LABEL_3235:
+Dialogue_NextLine:
 	ld	a, c
 	or	a
-	call	nz, LABEL_342C
+	call	nz, Dialogue_ScrollUp2Lines
 	ld	de, $7D4E
 	ld	bc, $1201
 	inc	hl
-	jp	LABEL_31FA
+	jp	Dialogue_ReadData
 
 LABEL_3244:
 	cp	Dialogue_CurrentCharacter
@@ -6985,7 +6985,7 @@ LABEL_3244:
 	call	Display65TerminatedString
 	pop	hl
 	inc	hl
-	jp	LABEL_31FA
+	jp	Dialogue_ReadData
 
 LABEL_3262:
 	cp	Dialogue_EnemyName
@@ -6996,7 +6996,7 @@ LABEL_3262:
 	call	Display65TerminatedString
 	pop	hl
 	inc	hl
-	jp	LABEL_31FA
+	jp	Dialogue_ReadData
 
 LABEL_3274:
 	cp	Dialogue_CurrentItem
@@ -7016,7 +7016,7 @@ LABEL_3274:
 	call	Display65TerminatedString
 	pop	hl
 	inc	hl
-	jp	LABEL_31FA
+	jp	Dialogue_ReadData
 
 LABEL_3292:
 	cp	Dialogue_NumberFromC2C5
@@ -7025,7 +7025,7 @@ LABEL_3292:
 	push	bc
 	push	de
 	ld	hl, (CurrentDialogueNumber)
-	ld	de, $2710
+	ld	de, 10000
 	xor	a
 	ld	c, a
 	dec  a
@@ -7035,9 +7035,9 @@ LABEL_32A2:
 	jr	nc, LABEL_32A2
 	add	hl, de
 	pop	de
-	call	LABEL_32FB
+	call	Dialogue_OutputDigitA
 	push	de
-	ld	de, $03E8
+	ld	de, 1000
 	ld	a, $FF
 LABEL_32B2:
 	sbc  hl, de
@@ -7045,9 +7045,9 @@ LABEL_32B2:
 	jr	nc, LABEL_32B2
 	add	hl, de
 	pop	de
-	call	LABEL_32FB
+	call	Dialogue_OutputDigitA
 	push	de
-	ld	de, $0064
+	ld	de, 100
 	ld	a, $FF
 LABEL_32C2:
 	sbc  hl, de
@@ -7055,19 +7055,19 @@ LABEL_32C2:
 	jr	nc, LABEL_32C2
 	add	hl, de
 	pop	de
-	call	LABEL_32FB
+	call	Dialogue_OutputDigitA
 	push	de
 	ld	d, $FF
 	ld	a, l
 LABEL_32D0:
-	sub	$0A
+	sub	10
 	inc	d
 	jr	nc, LABEL_32D0
-	add	a, $0A
+	add	a, 10
 	ld	l, a
 	ld	a, d
 	pop	de
-	call	LABEL_32FB
+	call	Dialogue_OutputDigitA
 	push	de
 	ld	d, $FF
 	ld	a, l
@@ -7078,19 +7078,19 @@ LABEL_32E1:
 	ld	a, d
 	ld	c, $01
 	pop	de
-	call	LABEL_32FB
+	call	Dialogue_OutputDigitA
 	ld	a, b
 	pop	bc
 	ld	b, a
 	pop	hl
 	inc	hl
-	jp	LABEL_31FA
+	jp	Dialogue_ReadData
 
 LABEL_32F5:
-	call	LABEL_33D6
-	jp	LABEL_31FA
+	call	Dialogue_DrawLetter
+	jp	Dialogue_ReadData
 
-LABEL_32FB:
+Dialogue_OutputDigitA:
 	or	a
 	jp	nz, LABEL_3302
 	bit  0, c
@@ -7135,7 +7135,7 @@ LABEL_3302:
 
 LABEL_3332:
 	call	LABEL_333E
-	jp	LABEL_31FA
+	jp	Dialogue_ReadData
 
 LABEL_3338:
 	call LABEL_333E
@@ -7160,7 +7160,7 @@ LABEL_333E:
 	ld	h, (hl)
 	ld	l, a
 LABEL_3357:
-	call	LABEL_33D6
+	call	Dialogue_DrawLetter
 	ld	a, (hl)
 	cp	Dialogue_Terminator65
 	jr	nz, LABEL_3357
@@ -7177,7 +7177,7 @@ LABEL_3357:
 
 Display65TerminatedString:
 	push	af
-	call	LABEL_33D6
+	call	Dialogue_DrawLetter
 	ld	a, (hl)
 	cp	Dialogue_Terminator65
 	jr	z, LABEL_337B
@@ -7191,7 +7191,7 @@ LABEL_337B:
 	ret
 
 
-LABEL_337D:
+ShowNarrativeText:
 	ld a, :Bank02
 	ld ($FFFF), a
 	ld de, $7C0C
@@ -7203,7 +7203,7 @@ LABEL_3389:
 	or a
 	jp m, LABEL_3338
 	cp $63
-	jr z, LABEL_33D1
+	jr z, Dialogue_ExitAfterPause
 	cp $65
 	jr z, +++
 	cp $61
@@ -7221,7 +7221,7 @@ LABEL_3389:
 	jp -
 
 +:
-	call LABEL_33D6
+	call Dialogue_DrawLetter
 	jr LABEL_3389
 
 ++:
@@ -7237,19 +7237,19 @@ LABEL_3389:
 	ei
 	pop hl
 	inc hl
-	jp LABEL_337D
+	jp ShowNarrativeText
 
 +++:
 	call WaitForButton1Or2
 	pop de
 	ret
 
-LABEL_33D1:
+Dialogue_ExitAfterPause:
 	call VIntDelay
 	pop de
 	ret
 
-LABEL_33D6:
+Dialogue_DrawLetter:
 	di
 	push	bc
 	push	de
@@ -7257,7 +7257,7 @@ LABEL_33D6:
 	ld	a, (hl)
 	sub	$20
 	add	a, a
-	ld	bc, LABEL_7D17
+	ld	bc, TileCharacterTable
 	add	a, c
 	ld	c, a
 	adc	a, b
@@ -7277,7 +7277,7 @@ LABEL_33D6:
 	ld	a, (hl)
 	sub	$20
 	add	a, a
-	ld	bc, LABEL_7D18
+	ld	bc, TileCharacterTable+1
 	add	a, c
 	ld	c, a
 	adc	a, b
@@ -7310,34 +7310,34 @@ LABEL_3419:
 LABEL_3420:
 	ld	a, c
 	or	a
-	call	nz, LABEL_342C
+	call	nz, Dialogue_ScrollUp2Lines
 	ld	de, $7D4E
 	ld	bc, $1201
 	ret
 
-LABEL_342C:
+Dialogue_ScrollUp2Lines:
 	push	bc
 	push	de
 	push	hl
-	call	LABEL_3439
-	call	LABEL_3439
+	call	Dialogue_ScrollUp1Line
+	call	Dialogue_ScrollUp1Line
 	pop	hl
 	pop	de
 	pop	bc
 	ret
 
-LABEL_3439:
+Dialogue_ScrollUp1Line:
 	ld	hl, $DB08
 	ld	de, $7D0E
 	ld	bc, $0324
-	call	LABEL_3AA6
+	call	InputTilemapRect
 	ld	hl, $DB08
 	ld	de, $7CCE
 	ld	bc, $0324
-	call	LABEL_3A83
+	call	OutputTilemapRect
 	ld	hl, LABEL_B27_B619
 	ld	bc, $0124
-	call	LABEL_3A83
+	call	OutputTilemapRect
 	ld	b, $04
 LABEL_345C:
 	ld	a, $0A
@@ -7346,7 +7346,7 @@ LABEL_345C:
 	ret
 
 CloseTextBox:
-	ld	hl, $C2D3
+	ld	hl, Text_box_open_flag
 	ld	a, (hl)
 	or	a
 	ret  z
@@ -7355,7 +7355,7 @@ CloseTextBox:
 	ld	hl, $DA18
 	ld	de, $7C8C
 	ld	bc, $0628
-	jp	LABEL_3A57
+	jp	OutputTilemapBoxB27
 
 
 ShowMagicMenu:
@@ -7364,7 +7364,7 @@ ShowMagicMenu:
 	ld hl, $DB74
 	ld de, $7A0C
 	ld bc, $0C0C
-	call LABEL_3AA6
+	call InputTilemapRect
 	pop bc
 	pop af
 	add a, a
@@ -7390,7 +7390,7 @@ ShowMagicMenu:
 	ld b, a
 	ld c, $0C
 	push bc
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	pop bc
 	ld a, b
 	add a, a
@@ -7407,18 +7407,18 @@ ShowMagicMenu:
 	ld a, $0C
 	sub b
 	ld b, a
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 +:
 	ld hl, LABEL_B27_BA3F
 	ld bc, $0C0C
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 HideMagicMenu:
 	ld hl, $DB74
 	ld de, $7A0C
 	ld bc, $0C0C
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 SelectItemFromInventory:
 	ld a, (Inventory_curr_num)
@@ -7442,11 +7442,11 @@ SelectItemFromInventory:
 	add a, l
 	ld (Option_total_num), a
 	ld hl, $796C
-	ld (Cursor_pos), hl
+	ld (CursorTileMapAddress), hl
 	ld hl, $0000
-	ld ($C26B), hl
+	ld (Cursor_pos), hl
 	xor a
-	ld ($C26D), a
+	ld (Cursor_counter), a
 	call LABEL_2DA5
 	ld l, a
 	ld a, ($C299)
@@ -7463,19 +7463,19 @@ LABEL_3521:
 	ld hl, $DC04
 	ld de, $78AC
 	ld bc, $1514
-	call LABEL_3AA6
+	call InputTilemapRect
 
 LABEL_352D:
 	ld hl, LABEL_B27_BACF
 	ld de, $78AC
 	ld bc, $0114
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	call LABEL_35C4
 	ld a, (Inventory_curr_num)
 	cp $09
 	ld hl, LABEL_B27_BAF7
 	ld bc, $0214
-	call nc, LABEL_3A57
+	call nc, OutputTilemapBoxB27
 	ld a, ($C299)
 	ld hl, Inventory
 	add a, l
@@ -7490,7 +7490,7 @@ LABEL_352D:
 	djnz -
 	ld hl, LABEL_B27_BAE3
 	ld bc, $0114
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	ret
 
 LABEL_356B:
@@ -7520,7 +7520,7 @@ LABEL_3588:
 	sub	$20
 	add	a, a
 	add	a, c
-	ld	de, LABEL_7D17
+	ld	de, TileCharacterTable
 	add	a, e
 	ld	e, a
 	adc	a, d
@@ -7576,9 +7576,9 @@ LABEL_35CC:
 	djnz	LABEL_35CC
 	ld	hl, (Current_money)
 
-LABEL_35D5:
+Draw5DigitNumAndRightBorder:
 	ld	bc, $C010
-	ld	de, $2710
+	ld	de, 10000
 	xor	a
 	cpl
 LABEL_35DD:
@@ -7586,8 +7586,8 @@ LABEL_35DD:
 	inc	a
 	jr	nc, LABEL_35DD
 	add	hl, de
-	call	LABEL_3645
-	ld	de, $03E8
+	call	OutputDigit
+	ld	de, 1000
 	xor	a
 	cpl
 LABEL_35EB:
@@ -7595,8 +7595,8 @@ LABEL_35EB:
 	inc	a
 	jr	nc, LABEL_35EB
 	add	hl, de
-	call	LABEL_3645
-	ld	de, $0064
+	call	OutputDigit
+	ld	de, 100
 	xor	a
 	cpl
 LABEL_35F9:
@@ -7604,17 +7604,17 @@ LABEL_35F9:
 	inc	a
 	jr	nc, LABEL_35F9
 	add	hl, de
-	call	LABEL_3645
+	call	OutputDigit
 	ld	d, $FF
 	ld	a, l
 LABEL_3605:
-	sub	$0A
+	sub	10
 	inc	d
 	jr	nc, LABEL_3605
-	add	a, $0A
+	add	a, 10
 	ld	l, a
 	ld	a, d
-	call	LABEL_3645
+	call	OutputDigit
 	ld	d, $FF
 	ld	a, l
 LABEL_3614:
@@ -7623,9 +7623,9 @@ LABEL_3614:
 	jr	nc, LABEL_3614
 	ld	a, d
 	ld	bc, $C110
-	call	LABEL_3645
+	call	OutputDigit
 
-LABEL_3620:
+DrawRightBorder:
 	push	af
 	pop	af
 	ld	a, $F3
@@ -7647,7 +7647,7 @@ LABEL_3620:
 LABEL_3639:
 .db $F3, $11, $D7, $10, $DD, $10, $DE, $10, $C0, $10, $C0, $10
 
-LABEL_3645:
+OutputDigit:
 	and	$0F
 	jp	z, LABEL_364D
 	ld	bc, $C110
@@ -7666,7 +7666,7 @@ HideInventoryWindow:
 	ld hl, $DC04
 	ld de, $78AC
 	ld bc, $1514
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	pop bc
 	ret
 
@@ -7679,10 +7679,10 @@ PlayerSelect:
 	ld	hl, $DDA8
 	ld	de, $7A44
 	ld	bc, $090C
-	call	LABEL_3AA6
+	call	InputTilemapRect
 	call	LABEL_369F
 	ld	hl, $7A84
-	ld	(Cursor_pos), hl
+	ld	(CursorTileMapAddress), hl
 	jp	CheckOptionSelect
 
 
@@ -7693,10 +7693,10 @@ PlayerSelect2:
 	ld hl, $DE14
 	ld de, $7A54
 	ld bc, $090C
-	call LABEL_3AA6
+	call InputTilemapRect
 	call LABEL_369F
 	ld hl, $7A94
-	ld (Cursor_pos), hl
+	ld (CursorTileMapAddress), hl
 	jp CheckOptionSelect
 
 LABEL_369F:
@@ -7710,10 +7710,10 @@ LABEL_369F:
 	ld	b, a
 	ld	c, $0C
 	ld	hl, LABEL_B27_BB1F
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	ld	hl, LABEL_B27_BB7F
 	ld	bc, $010C
-	jp	LABEL_3A57
+	jp	OutputTilemapBoxB27
 
 ClosePlayerSelect:
 	ld	a, (Party_curr_num)
@@ -7723,7 +7723,7 @@ ClosePlayerSelect:
 	ld	hl, $DDA8
 	ld	de, $7A44
 	ld	bc, $090C
-	jp	LABEL_3A57
+	jp	OutputTilemapBoxB27
 
 
 HidePlayerSelect2Window:
@@ -7733,39 +7733,39 @@ HidePlayerSelect2Window:
 	ld hl, $DE14
 	ld de, $7A54
 	ld bc, $090C
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 LABEL_36DD:
 	ld	hl, $D8A4
 	ld	de, $7842
 	ld	bc, $0B0C
-	call	LABEL_3AA6
+	call	InputTilemapRect
 	ld	hl, LABEL_B27_BB8B
-	jp	LABEL_3A57
+	jp	OutputTilemapBoxB27
 
 
 LABEL_36EF:
 	ld hl, LABEL_B27_BB8B
 	ld de, $7842
 	ld bc, $0B0C
-	jp LABEL_3A83
+	jp OutputTilemapRect
 
 LABEL_36FB:
 	ld hl, $D8A4
 	ld de, $7842
 	ld bc, $0B0C
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 ShowEquippedItems:
 	push	af
 	ld	hl, $D928
 	ld	de, $7A8C
 	ld	bc, $0814
-	call	LABEL_3AA6
+	call	InputTilemapRect
 	ld	hl, LABEL_B27_BACF
 	ld	de, $7A8C
 	ld	bc, $0114
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	pop	af
 	push	af
 	add	a, a
@@ -7790,7 +7790,7 @@ LABEL_3735:
 	djnz	LABEL_3735
 	ld	hl, LABEL_B27_BAE3
 	ld	bc, $0114
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	pop	af
 	ret
 
@@ -7799,31 +7799,31 @@ HideEquippedItems:
 	ld hl, $D928
 	ld de, $7A8C
 	ld bc, $0814
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 LABEL_3759:
 	ld hl, $DE14
 	ld de, $7A32
 	ld bc, $070A
-	call LABEL_3AA6
+	call InputTilemapRect
 	ld hl, LABEL_B27_BC0F
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 LABEL_376B:
 	ld hl, $DE14
 	ld de, $7A32
 	ld bc, $070A
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 BuySellMenu:
 	ld hl, $DE14
 	ld de, $7B48
 	ld bc, $050C
-	call LABEL_3AA6
+	call InputTilemapRect
 	ld hl, LABEL_B27_BC55
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	ld hl, $7B88
-	ld (Cursor_pos), hl
+	ld (CursorTileMapAddress), hl
 	ld a, $01
 	ld (Option_total_num), a
 	jp CheckOptionSelect
@@ -7832,17 +7832,17 @@ BuySellMenuClose:
 	ld hl, $DE14
 	ld de, $7B48
 	ld bc, $050C
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 ShowMenuYesNo:
 	ld	hl, $DE64
 	ld	de, $7B6A
 	ld	bc, $050A
-	call	LABEL_3AA6
+	call	InputTilemapRect
 	ld	hl, LABEL_B27_BC91
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	ld	hl, $7BAA
-	ld	(Cursor_pos), hl
+	ld	(CursorTileMapAddress), hl
 	ld	a, $01
 	ld	(Option_total_num), a
 	jp	CheckOptionSelect
@@ -7851,7 +7851,7 @@ HideMenuYesNo:
 	ld	hl, $DE64
 	ld	de, $7B6A
 	ld	bc, $050A
-	jp	LABEL_3A57
+	jp	OutputTilemapBoxB27
 
 ShowCharacterStats:
 	add	a, a
@@ -7869,48 +7869,48 @@ ShowCharacterStats:
 	ld	hl, $DC04
 	ld	de, $7920
 	ld	bc, $0E18
-	call	LABEL_3AA6
+	call	InputTilemapRect
 	ld	hl, LABEL_B27_BCC3
 	ld	bc, $0118
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	ld	hl, LABEL_3865
 	ld	a, (ix+5)
-	call	ClearSpriteTableFadeIn8
+	call	Output4CharsPlusStatWide
 	ld	hl, LABEL_3875
 	ld	c, (ix+3)
 	ld	b, (ix+4)
-	call	LABEL_3036
+	call	ConvertToDec5Digits
 	ld	hl, LABEL_B27_BCDB
 	ld	bc, $0118
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	ld	hl, LABEL_3881
 	ld	a, (ix+8)
-	call	ClearSpriteTableFadeIn8
+	call	Output4CharsPlusStatWide
 	ld	hl, LABEL_B27_BCDB
 	ld	bc, $0118
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	ld	hl, LABEL_3891
 	ld	a, (ix+9)
-	call	ClearSpriteTableFadeIn8
+	call	Output4CharsPlusStatWide
 	ld	hl, LABEL_B27_BCDB
 	ld	bc, $0118
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	ld	hl, LABEL_38A1
 	ld	a, (ix+6)
-	call	ClearSpriteTableFadeIn8
+	call	Output4CharsPlusStatWide
 	ld	hl, LABEL_B27_BCDB
 	ld	bc, $0118
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	ld	hl, LABEL_38B1
 	ld	a, (ix+7)
-	call	ClearSpriteTableFadeIn8
+	call	Output4CharsPlusStatWide
 	ld	hl, LABEL_B27_BCF3
 	ld	bc, $0118
-	call	LABEL_3A57
+	call	OutputTilemapBoxB27
 	call	LABEL_35BC
 	ld	hl, LABEL_B27_BD0B
 	ld	bc, $0118
-	jp	LABEL_3A57
+	jp	OutputTilemapBoxB27
 
 
 LABEL_3865:
@@ -7939,19 +7939,19 @@ HideCharacterStats:
 	ld hl, $DC04
 	ld de, $7920
 	ld bc, $0E18
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 ShopMesetaWindowCopy:
 	ld hl, $D8A4
 	ld de, $780C
 	ld bc, $0820
-	jp LABEL_3AA6
+	jp InputTilemapRect
 
 RunShop:
 	ld hl, LABEL_B27_BD23
 	ld de, $780C
 	ld bc, $0120
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	ld hl, $FFFF
 	ld (hl), :Bank03
 	ld a, (Room_index)
@@ -7988,9 +7988,9 @@ RunShop:
 	djnz -
 	ld hl, LABEL_B27_BD43
 	ld bc, $0120
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	ld hl, $788C
-	ld (Cursor_pos), hl
+	ld (CursorTileMapAddress), hl
 	call CheckOptionSelect
 	ld hl, $FFFF
 	ld (hl), :Bank03
@@ -8036,7 +8036,7 @@ RunShop:
 	sub $20
 	add a, a
 	add a, c
-	ld de, LABEL_7D17
+	ld de, TileCharacterTable
 	add a, e
 	ld e, a
 	adc a, d
@@ -8073,20 +8073,20 @@ LABEL_397D:
 	ld l, a
 	ld a, c
 	or a
-	jp nz, LABEL_35D5
-	jp LABEL_3620
+	jp nz, Draw5DigitNumAndRightBorder
+	jp DrawRightBorder
 
 LABEL_3999:
 	ld hl, $D8A4
 	ld de, $780C
 	ld bc, $0820
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 GetSaveGameSelection:
 	ld hl, $D928
 	ld de, $786E
 	ld bc, $0C12
-	call LABEL_3AA6
+	call InputTilemapRect
 
 GetSaveGameSelectionCont:
 	ld a, $08
@@ -8094,11 +8094,11 @@ GetSaveGameSelectionCont:
 	ld hl, $8100
 	ld de, $786E
 	ld bc, $0C12
-	call LABEL_3A68
+	call OutputTilemapBoxWipe
 	ld a, $80
 	ld ($FFFC), a
 	ld hl, $78EE
-	ld (Cursor_pos), hl
+	ld (CursorTileMapAddress), hl
 	ld a, $04
 	ld (Option_total_num), a
 	call CheckOptionSelect
@@ -8112,14 +8112,14 @@ LABEL_39DD:
 	ld hl, $D928
 	ld de, $786E
 	ld bc, $0C12
-	jp LABEL_3A57
+	jp OutputTilemapBoxB27
 
 ShopMesetaWindowDraw:
 	push bc
 	ld hl, $D700
 	ld de, $782C
 	ld bc, $0314
-	call LABEL_3AA6
+	call InputTilemapRect
 	pop bc
 
 LABEL_39F7:
@@ -8127,11 +8127,11 @@ LABEL_39F7:
 	ld hl, LABEL_B27_BACF
 	ld de, $782C
 	ld bc, $0114
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	call LABEL_35C4
 	ld hl, LABEL_B27_BAE3
 	ld bc, $0114
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	pop bc
 	ret
 
@@ -8140,7 +8140,7 @@ LABEL_3A12:
 	ld hl, $D700
 	ld de, $782C
 	ld bc, $0314
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	pop bc
 	ret
 
@@ -8148,13 +8148,13 @@ LABEL_3A21:
 	ld hl, $DE14
 	ld de, $7AE4
 	ld bc, $0710
-	call LABEL_3AA6
+	call InputTilemapRect
 	ld a, :Bank18
 	ld ($FFFF), a
 	ld hl, LABEL_B18_BE84
-	call LABEL_3A68
+	call OutputTilemapBoxWipe
 	ld hl, $7B24
-	ld (Cursor_pos), hl
+	ld (CursorTileMapAddress), hl
 	ld a, $02
 	ld (Option_total_num), a
 	call CheckOptionSelect
@@ -8163,22 +8163,22 @@ LABEL_3A21:
 	ld hl, $DE14
 	ld de, $7AE4
 	ld bc, $0710
-	call LABEL_3A57
+	call OutputTilemapBoxB27
 	pop bc
 	pop af
 	ret
 
-LABEL_3A57:
+OutputTilemapBoxB27:
 	ld	a, ($FFFF)
 	push	af
 	ld	a, :Bank27
 	ld	($FFFF), a
-	call	LABEL_3A68
+	call	OutputTilemapBoxWipe
 	pop	af
 	ld	($FFFF), a
 	ret
 
-LABEL_3A68:
+OutputTilemapBoxWipe:
 	push	bc
 	di
 	rst  $08
@@ -8195,10 +8195,10 @@ LABEL_3A6E:
 	ld	a, $0A
 	call	WaitForVInt
 	pop	bc
-	djnz	LABEL_3A68
+	djnz	OutputTilemapBoxWipe
 	ret
 
-LABEL_3A83:
+OutputTilemapRect:
 	ld	a, ($FFFF)
 	push	af
 	ld	a, :Bank27
@@ -8223,7 +8223,7 @@ LABEL_3A92:
 	ld	($FFFF), a
 	ret
 
-LABEL_3AA6:
+InputTilemapRect:
 	di
 	push	bc
 	push	de
@@ -8269,7 +8269,7 @@ DefaultSRAMData:
 ; =================================================================
 
 
-GameMode_Interaction:
+GameMode_Scene:
 	ld a, (Game_is_paused)
 	or a
 	call nz, PauseLoop
@@ -8279,17 +8279,17 @@ GameMode_Interaction:
 	or a
 	jp nz, LABEL_3C1A
 	ld a, ($C2DC)
-	call LABEL_617D
-	ld a, (Interaction_Type)
+	call LoadDialogueSprite
+	ld a, (Scene_type)
 	sub $10
 	jr nc, +
 	xor a
 +:
 	and $0F
-	ld hl, LABEL_3C2A
+	ld hl, GameModeScenePointers
 	call GetPtrAndJump
 LABEL_3BC5:
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	sub $0F
 	jr nc, +
 	xor a
@@ -8307,17 +8307,17 @@ LABEL_3BC5:
 +:
 	xor a
 	ld (Battle_flag), a
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	ld ($C2D5), a
 	ld hl, $0000
 	ld ($C2DB), hl
-	ld hl, $C800
-	ld de, $C801
+	ld hl, Character_sprite_attributes
+	ld de, Character_sprite_attributes+1
 	ld bc, $00FF
 	ld (hl), $00
 	ldir
 	ld a, (Game_mode)
-	cp $0D ; GameMode_Interaction
+	cp $0D ; GameMode_Scene
 	ret nz
 	ld a, ($C2E9)
 	bit 7, a
@@ -8344,84 +8344,86 @@ LABEL_3C1A:
 	jp LABEL_3BC5
 
 
-LABEL_3C2A:
-.dw	LABEL_474B
-.dw	LABEL_474B
-.dw	LABEL_298D
-.dw	LABEL_298D
-.dw	LABEL_2A85
-.dw	LABEL_2A85
-.dw	LABEL_2BC0
-.dw	LABEL_2BC0
-.dw LABEL_2C8F
-.dw	LABEL_2C8F
-.dw	LABEL_2C98
-.dw	LABEL_2C98
-.dw	LABEL_474B
-.dw	LABEL_474B
-.dw	LABEL_474B
-.dw	LABEL_474B
-.dw LABEL_474B
-.dw	LABEL_474B
-.dw	LABEL_474B
-.dw	LABEL_474B
+; =================================================================
+GameModeScenePointers:
+.dw	Scene_DoRoomScript
+.dw	Scene_DoRoomScript
+.dw	Scene_Hospital
+.dw	Scene_Hospital
+.dw	Scene_Church
+.dw	Scene_Church
+.dw	Scene_Armory
+.dw	Scene_Armory
+.dw Scene_Pharmacy
+.dw	Scene_Pharmacy
+.dw	Scene_ToolShop
+.dw	Scene_ToolShop
+.dw	Scene_DoRoomScript
+.dw	Scene_DoRoomScript
+.dw	Scene_DoRoomScript
+.dw	Scene_DoRoomScript
+.dw Scene_DoRoomScript
+.dw	Scene_DoRoomScript
+.dw	Scene_DoRoomScript
+.dw	Scene_DoRoomScript
+; =================================================================
 
 
-GameMode_LoadInteraction:
+GameMode_LoadScene:
 	ld a, $D6
 	ld (Sound_index), a
 	call FadeOut2
 	ld a, ($C308)
 	or a
 	jr nz, +
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	cp $05
 	jr nz, LABEL_3CAD
 	ld a, $04
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	jr LABEL_3CAD
 
 +:
 	cp $01
 	jr nz, +
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	cp $01
 	jr nz, LABEL_3CAD
 	ld a, $05
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	jr LABEL_3CAD
 
 +:
 	cp $07
 	jr nz, +
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	cp $01
 	jr nz, LABEL_3CAD
 	ld a, $05
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	jr LABEL_3CAD
 
 +:
 	cp $08
 	jr nz, +
 	ld a, $06
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	jr LABEL_3CAD
 
 +:
 	cp $0A
 	jr nz, LABEL_3CAD
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	cp $09
 	jr nz, LABEL_3CAD
 	ld a, $08
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 LABEL_3CAD:
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	jr nz, +
 	inc a
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 +:
 	call LABEL_3D47
 	ld hl, $FFFF
@@ -8435,18 +8437,18 @@ LABEL_3CAD:
 	xor a
 	ld (V_scroll), a
 	ld (H_scroll), a
-	ld ($C800), a
+	ld (Character_sprite_attributes), a
 	ld ($C2E9), a
 	dec a
-	ld ($C2D6), a
+	ld (Map_anim_flag), a
 	ld hl, $0000
-	ld ($C213), hl
+	ld (Palette_move_delay), hl
 	ld hl, $FF00
-	ld ($C2BC), hl
+	ld (Anim_delay_counter), hl
 	di
 	call AnimateEnemyTile
 	ei
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	sub $0F
 	jr nc, +
 	xor a
@@ -8462,7 +8464,7 @@ LABEL_3CAD:
 	ld (Sound_index), a
 +:
 	ld hl, Game_mode
-	inc (hl) ; GameMode_Interaction
+	inc (hl) ; GameMode_Scene
 	di
 	ld de, $8006
 	rst $08
@@ -8472,9 +8474,8 @@ LABEL_3CAD:
 	jp ClearSpriteTableFadeIn
 
 
-LABEL_3D1D:
-.db	$00, $00, $3F, $30, $38, $03, $0B
-.db $0F
+SpritePaletteStart:
+.db	$00, $00, $3F, $30, $38, $03, $0B, $0F
 
 LABEL_3D25:
 .db	$00, $00, $00, $00, $00, $8D, $8D, $8E, $8E, $8E, $8E, $8E, $8E, $00, $00
@@ -8488,12 +8489,12 @@ LABEL_3D36:
 	add	a, a
 	ld	l, a
 	ld	h, $00
-	ld	de, LABEL_3DA6-3
+	ld	de, SceneData-3
 	add	hl, de
 	jp	LABEL_3D96
 
 LABEL_3D47:
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	cp	$20
 	jr	c, LABEL_3D64
 LABEL_3D4E:
@@ -8506,7 +8507,7 @@ LABEL_3D4E:
 	dec  hl
 	ldir
 	xor	a
-	ld	($C2D3), a
+	ld	(Text_box_open_flag), a
 	ret
 
 LABEL_3D64:
@@ -8515,7 +8516,7 @@ LABEL_3D64:
 	add	a, a
 	ld	l, a
 	ld	h, $00
-	ld	de, LABEL_3DA6-8
+	ld	de, SceneData-8
 	add	hl, de
 	ld	a, (hl)
 	ld	($FFFF), a
@@ -8525,10 +8526,10 @@ LABEL_3D64:
 	push	hl
 	ld	h, (hl)
 	ld	l, a
-	ld	de, $C240
+	ld	de, Target_palette
 	ld	bc, $0010
 	ldir
-	ld	hl, LABEL_3D1D
+	ld	hl, SpritePaletteStart
 	ld	c, $08
 	ldir
 	pop	hl
@@ -8544,7 +8545,7 @@ LABEL_3D64:
 	inc	hl
 LABEL_3D96:
 	xor	a
-	ld	($C2D3), a
+	ld	(Text_box_open_flag), a
 	ld	a, (hl)
 	ld	($FFFF), a
 	inc	hl
@@ -8555,76 +8556,214 @@ LABEL_3D96:
 	jp	DecompressTilemapData
 
 
-LABEL_3DA6:
+; =================================================================
+; Byte 1 = Bank number
+; Bytes 2-3 = Palette
+; Bytes 4-5 = Tiles
+; Byte 6 = Bank number
+; Bytes 7-8 = Tilemap
+; =================================================================
+SceneData:
+
+; 01 Palma enemy (open)
 .db :Bank16
-.dw	LABEL_B16_8000, LABEL_B16_8020
+.dw	Palette_PalmaOpen_B16, Tiles_PalmaAndDezorisOpen_B16
 .db	:Bank15
-.dw	LABEL_B15_8000
+.dw	Tilemap_PalmaOpen_B15
+
+; 02 Palma enemy (forest)
 .db	:Bank16
 .dw	LABEL_B16_8F16, LABEL_B16_8F36
 .db	:Bank15
 .dw	LABEL_B15_8333
+
+; 03 Palma enemy (sea)
 .db :Bank16
 .dw	LABEL_B16_9C72, LABEL_B16_9C82
 .db	:Bank15
 .dw	LABEL_B15_86E9
+
+; 04 Palma enemy (coast)
 .db	:Bank16
 .dw	LABEL_B16_9C72, LABEL_B16_9C82
 .db	:Bank15
 .dw	LABEL_B15_89A0
+
+; 05 Motavia enemy
 .db :Bank16
 .dw	LABEL_B16_B3F6, LABEL_B16_B406
 .db	:Bank15
 .dw	LABEL_B15_8C80
+
+; 06 Dezoris enemy
 .db	:Bank16
-.dw	LABEL_B16_8010, LABEL_B16_8020
+.dw	LABEL_B16_8010, Tiles_PalmaAndDezorisOpen_B16
 .db	:Bank15
 .dw	LABEL_B15_8E46
+
+; 07 Palma enemy (lava pit)
 .db :Bank16
-.dw	LABEL_B16_8000, LABEL_B16_8020
+.dw	Palette_PalmaOpen_B16, Tiles_PalmaAndDezorisOpen_B16
 .db	:Bank15
 .dw	LABEL_B15_9116
+
+; 08 Palma town
 .db	:Bank17
 .dw	LABEL_B17_8640, LABEL_B17_8650
 .db	:Bank15
 .dw	LABEL_B15_947B
+
+; 09 Palma village
 .db :Bank17
 .dw	LABEL_B17_97C4, LABEL_B17_97D4
 .db	:Bank15
 .dw	LABEL_B15_970A
+
+; 10 Spaceport
 .db	:Bank17
 .dw	LABEL_B17_A4B1, LABEL_B17_A4C1
 .db	:Bank15
 .dw	LABEL_B15_9A2C
 
-LABEL_3DF6:
-.db $11, $58, $AF, $68, $AF, $0F, $11, $9C
-.db	$10, $26, $8F, $36, $8F, $0F, $33, $83
-.db	$16, $7D, $AC, $8D, $AC, $16, $32, $BC
-.db	$0B, $00, $80, $10, $80, $16, $2A, $BE
-.db $16, $9E, $3E, $8D, $AC, $16, $32, $BC
-.db	$17, $9F, $AA, $6F, $AB, $17, $00, $80
-.db $17, $AF, $AA, $6F, $AB, $17, $1E, $83
-.db	$17, $BF, $AA, $6F, $AB, $17, $54, $86
-.db $17, $CF, $AA, $6F, $AB, $17, $DD, $88
-.db	$17, $DF, $AA, $6F, $AB, $17, $A6, $8B
-.db $17, $EF, $AA, $6F, $AB, $17, $8E, $8F
-.db	$17, $FF, $AA, $6F, $AB, $17, $ED, $92
-.db $17, $0F, $AB, $6F, $AB, $17, $1B, $96
-.db	$17, $1F, $AB, $6F, $AB, $17, $49, $99
-.db $17, $2F, $AB, $6F, $AB, $17, $A3, $9C
-.db	$17, $3F, $AB, $6F, $AB, $17, $E3, $9F
-.db $17, $4F, $AB, $6F, $AB, $17, $10, $A3
-.db	$17, $5F, $AB, $6F, $AB, $17, $4C, $A6
+; 11 Dead trees (?)
+.db :Bank17
+.dw	LABEL_B17_AF58, LABEL_B17_AF68
+.db	:Bank15
+.dw	LABEL_B15_9C11
+
+; 12 Dezoris forest
+.db	:Bank16
+.dw	LABEL_B16_8F26, LABEL_B16_8F36
+.db	:Bank15
+.dw	LABEL_B15_8333
+
+; 13
+.db	:Bank22
+.dw	LABEL_B22_AC7D, LABEL_B22_AC8D
+.db	:Bank22
+.dw	LABEL_B22_BC32
+
+; 14
+.db	:Bank11
+.dw	LABEL_B11_8000, LABEL_B11_8010
+.db	:Bank22
+.dw	LABEL_B22_BE2A
+
+; 15
+.db :Bank22
+.dw	LABEL_3E9E, LABEL_B22_AC8D
+.db	:Bank22
+.dw	LABEL_B22_BC32
+
+; 16
+.db	:Bank23
+.dw	LABEL_B23_AA9F, LABEL_B23_AB6F
+.db	:Bank23
+.dw	LABEL_B23_8000
+
+; 17
+.db :Bank23
+.dw	LABEL_B23_AAAF, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$831E
+
+; 18
+.db	:Bank23
+.dw	LABEL_B23_AABF, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$8654
+
+; 19
+.db :Bank23
+.dw	LABEL_B23_AACF, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$88DD
+
+; 20
+.db	:Bank23
+.dw	LABEL_B23_AADF, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$8BA6
+
+; 21
+.db :Bank23
+.dw	LABEL_B23_AAEF, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$8F8E
+
+; 22
+.db	:Bank23
+.dw	LABEL_B23_AAFF, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$92ED
+
+; 23
+.db :Bank23
+.dw	LABEL_B23_AB0F, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$961B
+
+; 24
+.db	:Bank23
+.dw	LABEL_B23_AB1F, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$9949
+
+; 25
+.db :Bank23
+.dw	LABEL_B23_AB2F, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$9CA3
+
+; 26
+.db	:Bank23
+.dw	LABEL_B23_AB3F, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$9FE3
+
+; 27
+.db :Bank23
+.dw	LABEL_B23_AB4F, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$A310
+
+; 28
+.db	:Bank23
+.dw	LABEL_B23_AB5F, LABEL_B23_AB6F
+.db	:Bank23
+.dw	$A64C
+
+; 29
+.db :Bank09
+.dw	LABEL_B09_BB14, LABEL_B09_BB24
+.db	:Bank09
+.dw	LABEL_B09_B78B
+
+; 30
+.db	:Bank20
+.dw	LABEL_B20_A4DA, LABEL_B20_A4EA
+.db	:Bank27
+.dw	LABEL_B27_BD63
+
+; 31
+.db :Bank19
+.dw	LABEL_B19_8000, LABEL_B19_8010
+.db	:Bank13
+.dw	LABEL_B13_BDB1
+; =================================================================
 
 
-.db $09, $14, $BB, $24, $BB, $09, $8B, $B7
-.db	$14, $DA, $A4, $EA, $A4, $1B, $63, $BD
-.db $13, $00, $80, $10, $80, $0D, $B1, $BD
+; =================================================================
+LABEL_3E9E:
 .db	$30, $00, $3F, $0B, $06, $1A, $2F, $2A
 .db $08, $15, $15, $0B, $06, $1A, $2F, $28
-.db	$A6, $8B, $17, $EF, $AA, $6F, $AB, $17
-.db $8E, $8F, $17
+; =================================================================
+
+
+; =================================================================
+.db	$A6, $8B, $17, $EF, $AA, $6F, $AB, $17, $8E, $8F, $17
+; =================================================================
+
 
 GameMode_NameInput:
 	ld a, (Game_is_paused)
@@ -8719,7 +8858,7 @@ GameMode_NameInput:
 	cp $0B ; GameMode_Dungeon
 	ld a, $0A ; GameMode_LoadDungeon
 	jr z, +
-	ld a, $0C ; GameMode_LoadInteraction
+	ld a, $0C ; GameMode_LoadScene
 +:
 	ld (Game_mode), a
 	ret
@@ -8906,7 +9045,7 @@ GameMode_LoadNameInput:
 	xor a
 	ld (V_scroll), a
 	ld (H_scroll), a
-	ld ($C2D3), a
+	ld (Text_box_open_flag), a
 	ld de, $8006
 	di
 	rst $08
@@ -9240,7 +9379,7 @@ GoToIntroSequence:
 	ld ($C307), a
 	call FadeOut2
 	ld a, $08
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank16
@@ -9261,21 +9400,21 @@ GoToIntroSequence:
 	ld hl, LABEL_B18_BEF4
 	ld de, $7886
 	ld bc, $0528
-	call LABEL_3A68
+	call OutputTilemapBoxWipe
 	call VintDelayButtonPress2
 	call GameMode_FadeToPicture
 	ld a, $00
 	call LABEL_46D1
 	ld hl, LABEL_B49B
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $01
 	call LABEL_46D1
 	ld hl, LABEL_B4FC
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $02
 	call LABEL_46D1
 	ld hl, LABEL_B5D5
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $D7
 	ld (Sound_index), a
 	ret
@@ -9308,23 +9447,23 @@ LABEL_43CF:
 	ld a, $03
 	call LABEL_46D1
 	ld hl, LABEL_B617
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $04
 	call LABEL_46D1
 	ld hl, LABEL_B646
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $03
 	call LABEL_46D1
 	ld hl, LABEL_B64D
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $04
 	call LABEL_46D1
 	ld hl, LABEL_B66E
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $03
 	call LABEL_46D1
 	ld hl, LABEL_B6C1
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $D8
 	ld (Sound_index), a
 	ret
@@ -9336,23 +9475,23 @@ LABEL_4414:
 	ld a, $05
 	call LABEL_46D1
 	ld hl, LABEL_B6F3
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $03
 	call LABEL_46D1
 	ld hl, LABEL_B746
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $05
 	call LABEL_46D1
 	ld hl, LABEL_B786
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $03
 	call LABEL_46D1
 	ld hl, LABEL_B7B9
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $05
 	call LABEL_46D1
 	ld hl, LABEL_B7D1
-	call LABEL_337D
+	call ShowNarrativeText
 	call FadeOut2
 	call LABEL_FF3
 	ld a, $D8
@@ -9375,11 +9514,11 @@ LABEL_4461:
 +:
 	call LABEL_46D1
 	ld hl, LABEL_B85C
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $06
 	call LABEL_46D1
 	ld hl, LABEL_B884
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $D8
 	ld (Sound_index), a
 	ret
@@ -9399,14 +9538,14 @@ LABEL_4497:
 	ld a, $07
 	call LABEL_46D1
 	ld hl, LABEL_B929
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $08
 	call LABEL_46D1
 	ld hl, LABEL_B97C
-	call LABEL_337D
+	call ShowNarrativeText
 	call LABEL_4517
 	ld a, $0E
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
@@ -9448,7 +9587,7 @@ LABEL_4514:
 LABEL_4517:
 	call FadeOut2
 	ld a, $0F
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank22
@@ -9474,7 +9613,7 @@ LABEL_454E:
 	ld a, $8B
 	ld (Sound_index), a
 	ld a, $0D
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
@@ -9499,25 +9638,25 @@ LABEL_454E:
 	ld a, $03
 	call LABEL_46D1
 	ld hl, LABEL_B9E8
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $05
 	call LABEL_46D1
 	ld hl, LABEL_B9F0
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $06
 	call LABEL_46D1
 	ld hl, LABEL_B9FB
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $04
 	call LABEL_46D1
 	ld hl, LABEL_BA06
-	call LABEL_337D
+	call ShowNarrativeText
 	ld a, $03
 	call LABEL_46D1
 	ld hl, LABEL_BA12
-	call LABEL_337D
+	call ShowNarrativeText
 	ld hl, LABEL_BA54
-	call LABEL_337D
+	call ShowNarrativeText
 	call FadeOut2
 	ld hl, $FFFF
 	ld (hl), :Bank31
@@ -9543,7 +9682,7 @@ LABEL_454E:
 	call WaitForVInt
 	call FadeIn2
 	call VIntDelay
-	ld hl, LABEL_3DF6+1
+	ld hl, $3DF7
 	ld (Dungeon_position), hl
 	xor a
 	ld (Dungeon_direction), a
@@ -9618,7 +9757,7 @@ GameMode_FadeToPicture:
 	xor a
 	ld (V_scroll), a
 	ld (H_scroll), a
-	ld ($C2D3), a
+	ld (Text_box_open_flag), a
 	ld a, $0C
 	call WaitForVInt
 	jp ClearSpriteTableFadeIn
@@ -9680,13 +9819,13 @@ LABEL_471E:
 .db	:Bank30, $0C, $B3, $90, $B7
 
 
-LABEL_474B:
+Scene_DoRoomScript:
 	ld	a, (Room_index)
 	or	a
 	jp	z, LABEL_1BE1
 	ld	de, LABEL_4773-2
 	call	LABEL_4769
-	ld	a, (Interaction_Type)
+	ld	a, (Scene_type)
 	or	a
 	jp	nz, CloseTextBox
 	call	CloseTextBox
@@ -10404,7 +10543,7 @@ LABEL_4C70:
 
 +:
 	ld a, $35
-	call LABEL_617D
+	call LoadDialogueSprite
 	call BuildSprites
 	ld a, (Party_curr_num)
 	cp $03
@@ -10434,7 +10573,7 @@ LABEL_4C70:
 	call FadeOut2
 	call CloseTextBox
 	ld a, $20
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	call LABEL_3D47
 	ld a, $D0
 	ld (Sprite_table), a
@@ -10478,14 +10617,14 @@ LABEL_4C70:
 	call ShowDialogue_B2
 	call FadeOut2
 	ld a, $1D
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	call LABEL_3D47
 	call LABEL_2A6D
 	ld a, $0C
 	call WaitForVInt
 	call FadeIn2
 	ld a, $35
-	call LABEL_617D
+	call LoadDialogueSprite
 	call BuildSprites
 	ld hl, $00AA
 	jp ShowDialogue_B2
@@ -10568,7 +10707,7 @@ LABEL_4DFB:
 	or a
 	jp z, LABEL_4765
 	ld a, $34
-	call LABEL_617D
+	call LoadDialogueSprite
 	call BuildSprites
 	ld a, ($C504)
 	cp $07
@@ -10649,7 +10788,7 @@ LABEL_4E9C:
 	cp $02
 	jp c, LABEL_4765
 	ld a, $10
-	call LABEL_617D
+	call LoadDialogueSprite
 	call BuildSprites
 	ld hl, $00DC
 	jp ShowDialogue_B2
@@ -11057,7 +11196,7 @@ LABEL_516F:
 	cp $03
 	jp nc, LABEL_4765
 	ld a, $3B
-	call LABEL_617D
+	call LoadDialogueSprite
 	call BuildSprites
 	ld hl, $00AE
 	call ShowDialogue_B2
@@ -11084,7 +11223,7 @@ LABEL_51B1:
 	cp $02
 	jp nc, LABEL_4765
 	ld a, $10
-	call LABEL_617D
+	call LoadDialogueSprite
 	call BuildSprites
 	ld hl, $C504
 	ld a, (hl)
@@ -11106,7 +11245,7 @@ LABEL_51DC:
 	or a
 	jp nz, LABEL_4765
 	ld a, $34
-	call LABEL_617D
+	call LoadDialogueSprite
 	call BuildSprites
 	ld hl, $C503
 	ld a, (hl)
@@ -11656,7 +11795,7 @@ LABEL_5619:
 	ld (Sound_index), a
 	call VIntDelay
 	ld a, $1F
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank19
@@ -11672,7 +11811,7 @@ LABEL_5619:
 	call Dungeon_LoadEnemy
 	call VintDelayButtonPress
 	ld a, $20
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	call LABEL_54EF
 	call CloseTextBox
 	ld a, (Char_stats)
@@ -11685,13 +11824,13 @@ LABEL_5619:
 LABEL_5666:
 	call FadeOut2
 	ld a, $1D
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	call LABEL_3D47
 	ld a, $0C
 	call WaitForVInt
 	call FadeIn2
 	ld a, $35
-	call LABEL_617D
+	call LoadDialogueSprite
 	call BuildSprites
 	ld hl, $0272
 	call ShowDialogue_B2
@@ -13123,7 +13262,7 @@ LABEL_6176:
 	inc	de
 	jp	LABEL_6167
 
-LABEL_617D:
+LoadDialogueSprite:
 	or	a
 	ret  z
 
@@ -13457,7 +13596,7 @@ AnimateEnemyTile:
 	ld a, ($C2D6)
 	or a
 	ret z
-	ld a, (Interaction_Type)
+	ld a, (Scene_type)
 	or a
 	ret z
 	cp $0C
@@ -13634,7 +13773,7 @@ LABEL_64A3:
 	or a
 	ret nz
 	ld a, (Game_mode)
-	cp $0D ; GameMode_Interaction
+	cp $0D ; GameMode_Scene
 	ret nz
 	ld hl, $C213
 	dec (hl)
@@ -13662,7 +13801,7 @@ LABEL_64CF:
 	or a
 	ret nz
 	ld a, (Game_mode)
-	cp $0D ; GameMode_Interaction
+	cp $0D ; GameMode_Scene
 	ret nz
 	ld hl, $C213
 	dec (hl)
@@ -14195,7 +14334,7 @@ LABEL_68EC:
 	ld	hl, LABEL_B09_B130
 	call	DecompressTilemapData
 	ld	a, $0F
-	ld	(Interaction_Type), a
+	ld	(Scene_type), a
 	xor	a
 	ld	($C250), a
 LABEL_691D:
@@ -14234,7 +14373,7 @@ LABEL_6947:
 	jr	nz, LABEL_6925
 LABEL_6959:
 	ld	a, c
-	ld	(Interaction_Type), a
+	ld	(Scene_type), a
 	call	LABEL_3D47
 	jp	LABEL_691D
 
@@ -14377,14 +14516,14 @@ LABEL_6A2F:
 	ld	l, a
 	ld	($C2DB), hl
 	ld	a, ($C2DC)
-	call	LABEL_617D
-	call	LABEL_474B
+	call	LoadDialogueSprite
+	call	Scene_DoRoomScript
 	ld	a, $D0
 	ld	(Sprite_table), a
 	xor	a
 	ld	($C800), a
 	ld	(Battle_flag), a
-	ld	(Interaction_Type), a
+	ld	(Scene_type), a
 	ld	($C2D5), a
 	ld	hl, $0000
 	ld	($C2DB), hl
@@ -16460,7 +16599,7 @@ LABEL_77AC:
 	rrca
 	rrca
 	and $0F
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	ld a, b
 	and $08
 	jr nz, ++
@@ -16648,7 +16787,7 @@ LABEL_78BD:
 	ld (Game_mode), a
 	inc hl
 	ld a, (hl)
-	ld (Interaction_Type), a
+	ld (Scene_type), a
 	inc hl
 	ld a, (hl)
 	inc hl
@@ -16713,7 +16852,7 @@ LABEL_792A:
 	ld hl, $00A0
 	ld ($C2DB), hl
 LABEL_7972:
-	ld a, $0C ; GameMode_LoadInteraction
+	ld a, $0C ; GameMode_LoadScene
 	ld (Game_mode), a
 	ld hl, ($C311)
 	ld (V_location), hl
@@ -16791,7 +16930,7 @@ LABEL_79E2:
 	ld ($C2F0), a
 	ld hl, $00AE
 	ld ($C2DB), hl
-	ld a, $0C ; GameMode_LoadInteraction
+	ld a, $0C ; GameMode_LoadScene
 	ld (Game_mode), a
 	jp LABEL_7908
 
@@ -17207,28 +17346,79 @@ LABEL_7CF7:
 	ret
 
 
-LABEL_7D17:
-.db	$C0
-
-LABEL_7D18:
-.db $C0, $C0, $E8, $EB, $C0, $C0, $C0, $C0
-.db $C0, $C0, $C0, $C0, $C0, $E5, $C0, $C0
-.db $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
-.db $E5, $C0, $EA, $C0, $E7, $C0, $C0, $C0
-.db $C1, $C0, $C2, $C0, $C3, $C0, $C4, $C0
-.db $C5, $C0, $C6, $C0, $C7, $C0, $C8, $C0
-.db $C9, $C0, $CA, $C0, $C0, $C0, $E6, $C0
-.db $C0, $C0, $C0, $C0, $C0, $C0, $E9, $E5
-.db $C0, $C0, $CB, $C0, $CC, $C0, $CD, $C0
-.db $CE, $C0, $CF, $C0, $D0, $C0, $D1, $C0
-.db $D2, $C0, $D3, $C0, $D4, $C0, $D5, $C0
-.db $D6, $C0, $D7, $C0, $D8, $C0, $D9, $C0
-.db $DA, $C0, $DB, $C0, $DC, $C0, $DD, $C0
-.db $DE, $C0, $DF, $C0, $E0, $C0, $E1, $C0
-.db $E2, $C0, $E3, $C0, $E4, $C0, $C0, $C0
-.db $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
-.db $C0, $C0, $C0, $C0, $C0, $C0, $C0, $C0
-.db $C0, $C0, $C0
+; =================================================================
+TileCharacterTable:
+.db	$C0, $C0	; 0
+.db	$C0, $E8	; 1
+.db	$EB, $C0	; 2
+.db	$C0, $C0	; 3
+.db	$C0, $C0	; 4
+.db	$C0, $C0	; 5
+.db	$C0, $C0	; 6
+.db	$E5, $C0	; 7
+.db	$C0, $C0	; 8
+.db	$C0, $C0	; 9
+.db	$C0, $C0	; $A
+.db	$C0, $C0	; $B
+.db	$C0, $E5	; $C
+.db	$C0, $EA	; $D
+.db	$C0, $E7	; $E
+.db	$C0, $C0	; $F
+.db	$C0, $C1	; $10
+.db	$C0, $C2	; $11
+.db	$C0, $C3	; $12
+.db	$C0, $C4	; $13
+.db	$C0, $C5	; $14
+.db	$C0, $C6	; $15
+.db	$C0, $C7	; $16
+.db	$C0, $C8	; $17
+.db	$C0, $C9	; $18
+.db	$C0, $CA	; $19
+.db	$C0, $C0	; $1A
+.db	$C0, $E6	; $1B
+.db	$C0, $C0	; $1C
+.db	$C0, $C0	; $1D
+.db	$C0, $C0	; $1E
+.db	$C0, $E9	; $1F
+.db	$E5, $C0	; $20
+.db	$C0, $CB	; $21
+.db	$C0, $CC	; $22
+.db	$C0, $CD	; $23
+.db	$C0, $CE	; $24
+.db	$C0, $CF	; $25
+.db	$C0, $D0	; $26
+.db	$C0, $D1	; $27
+.db	$C0, $D2	; $28
+.db	$C0, $D3	; $29
+.db	$C0, $D4	; $2A
+.db	$C0, $D5	; $2B
+.db	$C0, $D6	; $2C
+.db	$C0, $D7	; $2D
+.db	$C0, $D8	; $2E
+.db	$C0, $D9	; $2F
+.db	$C0, $DA	; $30
+.db	$C0, $DB	; $31
+.db	$C0, $DC	; $32
+.db	$C0, $DD	; $33
+.db	$C0, $DE	; $34
+.db	$C0, $DF	; $35
+.db	$C0, $E0	; $36
+.db	$C0, $E1	; $37
+.db	$C0, $E2	; $38
+.db	$C0, $E3	; $39
+.db	$C0, $E4	; $3A
+.db	$C0, $C0	; $3B
+.db	$C0, $C0	; $3D
+.db	$C0, $C0	; $3E
+.db	$C0, $C0	; $3F
+.db	$C0, $C0	; $40
+.db	$C0, $C0	; $41
+.db	$C0, $C0	; $42
+.db	$C0, $C0	; $43
+.db	$C0, $C0	; $44
+.db	$C0, $C0	; $45
+.db	$C0, $C0	; $46
+; =================================================================
 
 
 ; =================================================================
