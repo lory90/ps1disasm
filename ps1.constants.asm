@@ -469,7 +469,7 @@
 .define	Option_total_num $C26E	; number of options available for an interactive menu (e.g. player menu)
 
 .define Anim_counters $C26F
-.define	Battle_selected_item $C29B
+.define	Selected_inventory_item $C29B
 .define	Battle_flag $C29D
 .define	Interaction_Type $C29E ; Background?
 
@@ -484,8 +484,10 @@
 .define Map_anim_flag $C2D6
 
 .define Dungeon_entrance_points_addr $C2D9
+.define Room_index $C2DB
 .define Enemy_money $C2DD
 .define Dungeon_item_index $C2DF
+.define Dungeon_obj_flag_addr $C2E1
 
 .define Battle_rate $C2E3
 .define Battle_enemy_pool_index $C2E4
@@ -505,7 +507,7 @@
 .define	V_scroll $C304
 .define	V_location $C305
 .define	Scroll_screens $C307
-
+.define	Location_index $C309
 .define	Dungeon_direction $C30A
 .define	Dungeon_position $C30C
 .define	Dungeon_index $C30D

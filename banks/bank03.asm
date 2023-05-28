@@ -4695,27 +4695,77 @@ B03_ShopData:
 ; =================================================================
 
 
-LABEL_B03_B82F:
-.db	$00
-.db $00, $0C, $00, $0F, $00, $25, $00, $58
-.db $02, $5E, $01, $20, $00, $A0, $00, $30
-.db $02, $C8, $00, $2A, $03, $02, $03, $D2
-.db $05, $0C, $08, $F4, $01, $86, $01, $0E
-.db $00, $27, $00, $91, $00, $2A, $00, $3B
-.db $01, $F4, $01, $4C, $1D, $EA, $01, $A4
-.db $01, $0F, $00, $9B, $00, $04, $01, $BC
-.db $02, $72, $06, $60, $09, $00, $00, $9A
-.db $01, $00, $00, $00, $00, $70, $17, $05
-.db $00, $14, $00, $A0, $00, $0A, $00, $05
-.db $00, $18, $00, $0A, $00, $00, $00, $20
-.db $03, $00, $00, $0F, $00, $00, $00, $00
-.db $00, $00, $00, $00, $00, $00, $00, $32
-.db $00, $00, $00, $8C, $00, $00, $00, $00
-.db $00, $BC, $02, $00, $00, $F4, $01
+; =================================================================
+; 0 means you can't sell the item
+ItemSellingPriceData_B03:
+.dw	0		; ItemID_Nothing
+.dw	12		; ItemID_WoodCane
+.dw	15		; ItemID_ShortSword
+.dw	37		; ItemID_IronSword
+.dw	600		; ItemID_Wand
+.dw	350		; ItemID_IronFang
+.dw	32		; ItemID_IronAxe
+.dw	160		; ItemID_TitaniumSword
+.dw	560		; ItemID_CeramicSword
+.dw	200		; ItemID_NeedleGun
+.dw	810		; ItemID_SilverFang
+.dw	770		; ItemID_HeatGun
+.dw	1490	; ItemID_LightSaber
+.dw	2060	; ItemID_LaserGun
+.dw	500		; ItemID_LaconiaSword
+.dw	390		; ItemID_LaconiaAxe
+.dw	14		; ItemID_LeatherArmor
+.dw	39		; ItemID_WhiteMantle
+.dw	145		; ItemID_LightSuit
+.dw	42		; ItemID_IronArmor
+.dw	315		; ItemID_ThickFur
+.dw	500		; ItemID_ZirconiaArmor
+.dw	7500	; ItemID_DiamondArmor
+.dw	490		; ItemID_LaconiaArmor
+.dw	420		; ItemID_FradeMantle
+.dw	15		; ItemID_LeatherShield
+.dw	155		; ItemID_BronzeShield
+.dw	260		; ItemID_IronShield
+.dw	700		; ItemID_CeramicShield
+.dw	1650	; ItemID_Gloves
+.dw	2400	; ItemID_LaserShield
+.dw	0		; ItemID_MirrorShield
+.dw	410		; ItemID_LaconiaShield
+.dw	0		; ItemID_Landrover
+.dw	0		; ItemID_Hovercraft
+.dw	6000	; ItemID_IceDigger
+.dw	5		; ItemID_Cola
+.dw	20		; ItemID_Burger
+.dw	160		; ItemID_Flute
+.dw	10		; ItemID_Flash
+.dw	5		; ItemID_Escaper
+.dw	24		; ItemID_Transfer
+.dw	10		; ItemID_MagicHat
+.dw	0		; ItemID_Alsulin
+.dw	800		; ItemID_Polymaterial
+.dw	0		; ItemID_DungeonKey
+.dw	15		; ItemID_Sphere
+.dw	0		; ItemID_EclipseTorch
+.dw	0		; ItemID_AeroPrism
+.dw	0		; ItemID_Nuts
+.dw	0		; ItemID_Hapsby
+.dw	0		; ItemID_RoadPass
+.dw	50		; ItemID_Passport
+.dw	0		; ItemID_Compass
+.dw	140		; ItemID_Cake
+.dw	0		; ItemID_Letter
+.dw	0		; ItemID_LaconiaPot
+.dw	700		; ItemID_MagicLamp
+.dw	0		; ItemID_AmberEye
+.dw	500		; ItemID_GasShield
+.dw	0		; ItemID_Crystal
+.dw	0		; ItemID_MSystem
+.dw	0		; ItemID_MiracleKey
+.dw	0		; ItemID_Zillion
+; =================================================================
 
-.db	$00, $00, $00, $00, $00, $00, $00, $00
 
-; -----------------------------------------------------------
+; -----------------------------------------------------------------
 ; Level tables
 ;
 ; 8 bytes per level
@@ -4727,9 +4777,9 @@ LABEL_B03_B82F:
 ; 5-6 = exp ; it's little endian so you need to read byte 6 first, byte 5 second
 ; 7 = number of spells available in battle
 ; 8 = number of spells available outside of battle
-; -----------------------------------------------------------
+; -----------------------------------------------------------------
 
-; =============================================================
+; =================================================================
 B03_AlisLevelTable:
 .db	$10, $08, $08, $00, $00, $00, $00, $00	; 1
 .db	$14, $0A, $0B, $00, $14, $00, $00, $00	; 2
@@ -4761,10 +4811,10 @@ B03_AlisLevelTable:
 .db	$D6, $36, $76, $1E, $C8, $AF, $05, $02	; 28
 .db	$D8, $37, $77, $20, $20, $CB, $05, $02	; 29
 .db	$DA, $38, $78, $20, $18, $F6, $05, $02	; 30
-; =============================================================
+; =================================================================
 
 
-; =============================================================
+; =================================================================
 B03_MyauLevelTable:
 .db	$16, $12, $16, $00, $00, $00, $00, $00	; 1
 .db	$1E, $15, $1A, $00, $32, $00, $00, $00	; 2
@@ -4796,10 +4846,10 @@ B03_MyauLevelTable:
 .db	$D4, $54, $74, $35, $10, $A4, $04, $03	; 28
 .db	$D5, $55, $75, $36, $50, $C3, $04, $03	; 29
 .db	$D6, $56, $76, $37, $60, $EA, $04, $03	; 30
-; =============================================================
+; =================================================================
 
 
-; =============================================================
+; =================================================================
 B03_OdinLevelTable:
 .db	$2A, $0D, $0D, $00, $00, $00, $00, $00	; 1
 .db	$2F, $0F, $0F, $00, $50, $00, $00, $00	; 2
@@ -4831,10 +4881,10 @@ B03_OdinLevelTable:
 .db	$BE, $2D, $48, $00, $28, $A0, $00, $00	; 28
 .db	$BF, $2E, $49, $00, $50, $C3, $00, $00	; 29
 .db	$C0, $2F, $4A, $00, $60, $EA, $00, $00	; 30
-; =============================================================
+; =================================================================
 
 
-; =============================================================
+; =================================================================
 B03_NoahLevelTable:
 .db	$2D, $12, $1E, $0C, $00, $00, $01, $01	; 1
 .db	$31, $16, $24, $12, $46, $00, $01, $01	; 2
@@ -4866,7 +4916,7 @@ B03_NoahLevelTable:
 .db	$C1, $49, $79, $51, $70, $94, $05, $05	; 28
 .db	$C2, $4A, $7A, $52, $C8, $AF, $05, $05	; 29
 .db	$C3, $4B, $7B, $53, $50, $C3, $05, $05	; 30
-; =============================================================
+; =================================================================
 
 
 
