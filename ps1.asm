@@ -8573,188 +8573,188 @@ SceneData:
 
 ; 02 Palma enemy (forest)
 .db	:Bank16
-.dw	LABEL_B16_8F16, LABEL_B16_8F36
+.dw	Palette_PalmaForest_B16, Tiles_PalmaForest_B16
 .db	:Bank15
-.dw	LABEL_B15_8333
+.dw	Tilemap_PalmaForest_B15
 
 ; 03 Palma enemy (sea)
 .db :Bank16
-.dw	LABEL_B16_9C72, LABEL_B16_9C82
+.dw	Palette_PalmaSea_B16, Tiles_PalmaSea_B16
 .db	:Bank15
-.dw	LABEL_B15_86E9
+.dw	Tilemap_PalmaSea_B15
 
 ; 04 Palma enemy (coast)
 .db	:Bank16
-.dw	LABEL_B16_9C72, LABEL_B16_9C82
+.dw	Palette_PalmaSea_B16, Tiles_PalmaSea_B16
 .db	:Bank15
-.dw	LABEL_B15_89A0
+.dw	Tilemap_PalmaCoast_B15
 
 ; 05 Motavia enemy
 .db :Bank16
-.dw	LABEL_B16_B3F6, LABEL_B16_B406
+.dw	Palette_MotaviaOpen_B16, Tiles_MotaviaOpen_B16
 .db	:Bank15
-.dw	LABEL_B15_8C80
+.dw	Tilemap_MotaviaOpen_B15
 
 ; 06 Dezoris enemy
 .db	:Bank16
-.dw	LABEL_B16_8010, Tiles_PalmaAndDezorisOpen_B16
+.dw	Palette_DezorisOpen_B16, Tiles_PalmaAndDezorisOpen_B16
 .db	:Bank15
-.dw	LABEL_B15_8E46
+.dw	Tilemap_DezorisOpen_B15
 
 ; 07 Palma enemy (lava pit)
 .db :Bank16
 .dw	Palette_PalmaOpen_B16, Tiles_PalmaAndDezorisOpen_B16
 .db	:Bank15
-.dw	LABEL_B15_9116
+.dw	Tilemap_PalmaLavaPit_B15
 
 ; 08 Palma town
 .db	:Bank17
-.dw	LABEL_B17_8640, LABEL_B17_8650
+.dw	Palette_PalmaTown_B17, Tiles_PalmaTown_B17
 .db	:Bank15
-.dw	LABEL_B15_947B
+.dw	Tilemap_PalmaTown_B15
 
 ; 09 Palma village
 .db :Bank17
-.dw	LABEL_B17_97C4, LABEL_B17_97D4
+.dw	Palette_PalmaVillage_B17, Tiles_PalmaVillage_B17
 .db	:Bank15
-.dw	LABEL_B15_970A
+.dw	Tilemap_PalmaVillage_B15
 
 ; 10 Spaceport
 .db	:Bank17
-.dw	LABEL_B17_A4B1, LABEL_B17_A4C1
+.dw	Palette_Spaceport_B17, Tiles_Spaceport_B17
 .db	:Bank15
-.dw	LABEL_B15_9A2C
+.dw	Tilemap_Spaceport_B15
 
 ; 11 Dead trees (?)
 .db :Bank17
-.dw	LABEL_B17_AF58, LABEL_B17_AF68
+.dw	Palette_DeadTrees_B17, Tiles_DeadTrees_B17
 .db	:Bank15
-.dw	LABEL_B15_9C11
+.dw	Tilemap_DeadTrees_B15
 
 ; 12 Dezoris forest
 .db	:Bank16
-.dw	LABEL_B16_8F26, LABEL_B16_8F36
+.dw	Palette_DezorisForest_B16, Tiles_PalmaForest_B16
 .db	:Bank15
-.dw	LABEL_B15_8333
+.dw	Tilemap_PalmaForest_B15
 
 ; 13
 .db	:Bank22
-.dw	LABEL_B22_AC7D, LABEL_B22_AC8D
+.dw	Palette_AirCastle_B22, Tiles_AirCastle_B22
 .db	:Bank22
-.dw	LABEL_B22_BC32
+.dw	Tilemap_AirCastle_B22
 
 ; 14
 .db	:Bank11
-.dw	LABEL_B11_8000, LABEL_B11_8010
+.dw	Palette_GoldDragon_B11, Tiles_GoldDragon_B11
 .db	:Bank22
-.dw	LABEL_B22_BE2A
+.dw	Tilemap_GoldDragon_B22
 
 ; 15
 .db :Bank22
-.dw	LABEL_3E9E, LABEL_B22_AC8D
+.dw	Palette_AirCastleFull, Tiles_AirCastle_B22
 .db	:Bank22
-.dw	LABEL_B22_BC32
+.dw	Tilemap_AirCastle_B22
 
 ; 16
 .db	:Bank23
-.dw	LABEL_B23_AA9F, LABEL_B23_AB6F
+.dw	Palette_BuildingEmpty_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	LABEL_B23_8000
+.dw	Tilemap_BuildingEmpty_B23
 
 ; 17
 .db :Bank23
-.dw	LABEL_B23_AAAF, LABEL_B23_AB6F
+.dw	Palette_BuildingWindows_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$831E
+.dw	Tilemap_BuildingWindows_B23
 
 ; 18
 .db	:Bank23
-.dw	LABEL_B23_AABF, LABEL_B23_AB6F
+.dw	Palette_BuildingHospital1_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$8654
+.dw	Tilemap_BuildingHospital1_B23
 
 ; 19
 .db :Bank23
-.dw	LABEL_B23_AACF, LABEL_B23_AB6F
+.dw	Palette_BuildingHospital2_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$88DD
+.dw	Tilemap_BuildingHospital2_B23
 
 ; 20
 .db	:Bank23
-.dw	LABEL_B23_AADF, LABEL_B23_AB6F
+.dw	Palette_BuildingChurch1_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$8BA6
+.dw	Tilemap_BuildingChurch1_B23
 
 ; 21
 .db :Bank23
-.dw	LABEL_B23_AAEF, LABEL_B23_AB6F
+.dw	Palette_BuildingChurch2_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$8F8E
+.dw	Tilemap_BuildingChurch2_B23
 
 ; 22
 .db	:Bank23
-.dw	LABEL_B23_AAFF, LABEL_B23_AB6F
+.dw	Palette_BuildingArmory1_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$92ED
+.dw	Tilemap_BuildingArmory1_B23
 
 ; 23
 .db :Bank23
-.dw	LABEL_B23_AB0F, LABEL_B23_AB6F
+.dw	Palette_BuildingArmory2_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$961B
+.dw	Tilemap_BuildingArmory2_B23
 
 ; 24
 .db	:Bank23
-.dw	LABEL_B23_AB1F, LABEL_B23_AB6F
+.dw	Palette_BuildingShop1_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$9949
+.dw	Tilemap_BuildingShop1_B23
 
 ; 25
 .db :Bank23
-.dw	LABEL_B23_AB2F, LABEL_B23_AB6F
+.dw	Palette_BuildingShop2_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$9CA3
+.dw	Tilemap_BuildingShop2_B23
 
 ; 26
 .db	:Bank23
-.dw	LABEL_B23_AB3F, LABEL_B23_AB6F
+.dw	Palette_BuildingShop3_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$9FE3
+.dw	Tilemap_BuildingShop3_B23
 
 ; 27
 .db :Bank23
-.dw	LABEL_B23_AB4F, LABEL_B23_AB6F
+.dw	Palette_BuildingShop4_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$A310
+.dw	Tilemap_BuildingShop4_B23
 
 ; 28
 .db	:Bank23
-.dw	LABEL_B23_AB5F, LABEL_B23_AB6F
+.dw	Palette_BuildingDestroyed_B23, Tiles_Building_B23
 .db	:Bank23
-.dw	$A64C
+.dw	Tilemap_BuildingDestroyed_B23
 
 ; 29
 .db :Bank09
-.dw	LABEL_B09_BB14, LABEL_B09_BB24
+.dw	Palette_Mansion_B09, Tiles_Mansion_B09
 .db	:Bank09
-.dw	LABEL_B09_B78B
+.dw	Tilemap_Mansion_B09
 
 ; 30
 .db	:Bank20
-.dw	LABEL_B20_A4DA, LABEL_B20_A4EA
+.dw	Palette_LassicRoom_B20, Tiles_LassicRoom_B20
 .db	:Bank27
-.dw	LABEL_B27_BD63
+.dw	Tilemap_LassicRoom_B27
 
 ; 31
 .db :Bank19
-.dw	LABEL_B19_8000, LABEL_B19_8010
+.dw	Palette_DarkForce_B19, Tiles_DarkForce_B19
 .db	:Bank13
-.dw	LABEL_B13_BDB1
+.dw	Tilemap_DarkForce_B13
 ; =================================================================
 
 
 ; =================================================================
-LABEL_3E9E:
+Palette_AirCastleFull:
 .db	$30, $00, $3F, $0B, $06, $1A, $2F, $2A
 .db $08, $15, $15, $0B, $06, $1A, $2F, $28
 ; =================================================================
@@ -9559,7 +9559,7 @@ LABEL_4497:
 	call VintDelayButtonPress
 	ld hl, $FFFF
 	ld (hl), :Bank11
-	ld hl, LABEL_B11_8000
+	ld hl, Palette_GoldDragon_B11
 	ld de, $C250
 	ld bc, $0008
 	ldir
@@ -11799,7 +11799,7 @@ LABEL_5619:
 	call LABEL_3D47
 	ld hl, $FFFF
 	ld (hl), :Bank19
-	ld hl, LABEL_B19_8000
+	ld hl, Palette_DarkForce_B19
 	ld de, $C250
 	ld bc, $0010
 	ldir

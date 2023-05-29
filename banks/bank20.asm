@@ -1188,13 +1188,13 @@ LABEL_B20_97C4:
 .db $00, $7F, $00, $7F, $00, $7F, $00, $59
 .db $00, $00
 
-LABEL_B20_A4DA:
+Palette_LassicRoom_B20:
 .db	$10, $00, $3F, $20, $25, $2A
 .db $02, $03, $01, $06, $30, $38, $2F, $0F
 .db $0B, $3F
 
 
-LABEL_B20_A4EA:
+Tiles_LassicRoom_B20:
 .db	$08, $00, $98, $F1, $E8, $F1
 .db $E8, $F1, $E8, $F1, $E8, $63, $E3, $63
 .db $E3, $63, $E3, $63, $E3, $47, $8F, $47
