@@ -3570,27 +3570,27 @@ DialogueBattleItemUsedUp_B12:
 .db Dialogue_CurrentItem, " IS USED", Dialogue_NewLine
 .db "BY ", Word_Some, Word_One, " NOW.", Dialogue_Terminator65
 
-LABEL_B12_BEB6:
+DialogueEnding1_B12:
 .db Word_The, "SKY GRADUALLY", Dialogue_NewLine
 .db "CLEARS AND", Dialogue_Terminator64
 
-LABEL_B12_BED0:
+DialogueEnding2_B12:
 .db Word_The, "PEACE IS", Dialogue_NewLine
 .db "RETURNED TO ", Word_The, Dialogue_Terminator64
 
-LABEL_B12_BEE8:
+DialogueEnding3_B12:
 .db Word_Algol, " ", Word_System, ".", Dialogue_NewLine
 .db "A GENTLE BREEZE", Dialogue_Terminator64
 
-LABEL_B12_BEFD:
+DialogueEnding4_B12:
 .db "CARESSES", Dialogue_NewLine
 .db Word_Baya_Malay, ".", Dialogue_Terminator64
 
-LABEL_B12_BF09:
+DialogueEnding5_B12:
 .db "BUT DOES ", Word_The, Dialogue_NewLine
 .db "BREEZE ", Word_Know, "S OF", Dialogue_Terminator64
 
-LABEL_B12_BF21:
+DialogueEnding6_B12:
 .db Word_The, "HARDSHIPS ", Word_That, "THEY ENDURED?", Dialogue_Terminator64
 
 DialogueBattleMyauDiesFlying_B12:

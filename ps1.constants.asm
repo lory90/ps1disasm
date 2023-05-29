@@ -540,6 +540,12 @@
 .define Battle_flags $C6C0	; used for chests and scripted encounters in dungeons
 
 .define Name_entry_mode $C780
+.define Name_entry_char_index $C781
+.define Name_entry_cursor_x $C784
+.define Name_entry_cursor_y $C785
+.define Name_entry_cursor_tilemap_addr $C786
+.define Name_entry_currently_pointed $C788
+.define Name_entry_key_repeat_counter $C789
 
 .define Character_sprite_attributes $C800
 

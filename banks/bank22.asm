@@ -1858,11 +1858,11 @@ Tiles_AirCastle_B22:
 .db $00, $01, $02, $10, $FF, $88, $F8, $F9
 .db $FE, $FF, $FE, $FC, $FC, $FF, $00, $38
 
-LABEL_B22_B9D8:
+Palette_MyauFlight_B22:
 .db $3F, $00, $38, $1F, $0B, $06, $3E, $00
 .db $00, $00, $00, $00, $00, $00, $00
 
-LABEL_B22_B9E7:
+Tiles_MyauFlight_B22:
 .db	$86
 .db $00, $78, $0E, $1F, $03, $07, $05, $00
 .db $94, $0A, $9C, $CB, $FD, $0E, $00, $1E

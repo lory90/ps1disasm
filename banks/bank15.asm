@@ -2214,7 +2214,7 @@ DungeonID_CreditsDungeon1F:
 ; =================================================================
 
 
-LABEL_B15_BDEE:
+Tiles_CreditsFont_B15:
 .db	$7F, $00
 .db $51, $00, $00, $8B, $0E, $06, $0A, $12
 .db $3E, $22, $42, $00, $78, $44, $7C, $03
@@ -2267,17 +2267,115 @@ LABEL_B15_BDEE:
 .db $50, $20, $40, $38, $54, $28, $50, $A8
 .db $80, $7E, $00, $7F, $FF, $51, $FF, $00
 
-LABEL_B15_BF80:
-.db $01, $01, $01, $0F, $08, $01, $01, $01
-.db $0F, $04, $01, $01, $08, $01, $0F, $04
-.db $04, $01, $08, $01, $01, $0F, $04, $01
-.db $01, $08, $01, $0F, $02, $02, $00, $08
-.db $01, $01, $0F, $04, $01, $01, $01, $01
-.db $02, $04, $0F, $02, $02, $02, $08, $01
-.db $01, $01, $01, $04, $0F, $08, $08, $0F
-.db $08, $01, $01, $08, $01, $01, $01, $01
-.db $01, $01, $01, $08, $02, $02, $04, $0F
-.db $04, $01, $01, $00, $0F, $04, $04, $01
-.db $01, $08, $01, $0F, $02, $02, $02, $02
-.db $08, $0F, $02, $04, $04, $01, $01, $01
-.db $08, $01, $01, $01, $01, $0F
+
+; =================================================================
+; Input data for moving around in the Credits screen.
+;
+; $0F = Pause
+; $FF = End
+; =================================================================
+EndingMovementData_B15:
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db $0F
+.db	ButtonRight_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db $0F
+.db	ButtonLeft_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonRight_Mask
+.db ButtonUp_Mask
+.db $0F
+.db	ButtonLeft_Mask
+.db ButtonLeft_Mask
+.db ButtonUp_Mask
+.db ButtonRight_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db $0F
+.db	ButtonLeft_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonRight_Mask
+.db ButtonUp_Mask
+.db $0F
+.db	ButtonDown_Mask
+.db ButtonDown_Mask
+.db $00
+.db ButtonRight_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db $0F
+.db	ButtonLeft_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonDown_Mask
+.db ButtonLeft_Mask
+.db $0F
+.db	ButtonDown_Mask
+.db ButtonDown_Mask
+.db ButtonDown_Mask
+.db ButtonRight_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonLeft_Mask
+.db $0F
+.db	ButtonRight_Mask
+.db ButtonRight_Mask
+.db $0F
+.db ButtonRight_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonRight_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonRight_Mask
+.db ButtonDown_Mask
+.db ButtonDown_Mask
+.db ButtonLeft_Mask
+.db $0F
+.db ButtonLeft_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db $00
+.db $0F
+.db	ButtonLeft_Mask
+.db ButtonLeft_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonRight_Mask
+.db ButtonUp_Mask
+.db $0F
+.db	ButtonDown_Mask
+.db ButtonDown_Mask
+.db ButtonDown_Mask
+.db ButtonDown_Mask
+.db ButtonRight_Mask
+.db $0F
+.db	ButtonDown_Mask
+.db ButtonLeft_Mask
+.db ButtonLeft_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonRight_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db ButtonUp_Mask
+.db $0F
+.db	$FF
+; =================================================================

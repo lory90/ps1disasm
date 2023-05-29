@@ -1242,7 +1242,7 @@ LABEL_998:
 	ld	a, (V_scroll)
 	ld	h, a
 	ld	b, a
-	ld	a, ($C307)
+	ld	a, (Scroll_screens)
 	ld	l, a
 	or	a
 	sbc	hl, de
@@ -1972,7 +1972,7 @@ GameMode_LoadDungeon:
 	ld	de, $7E00
 	call	LoadTiles4BitRLE
 	ld	a, $39
-	call	Inventory_FindFreeSlot
+	call	Inventory_FindItem
 	jr	nz, +
 	ld	a, $FF
 	ld	(Dungeon_palette_index), a
@@ -2314,7 +2314,7 @@ LABEL_11F1:
 	ld	(CurrentCharacter), a
 	ld	a, b
 	ld	(CurrentItem), a
-	call	Inventory_FindFreeSlot
+	call	Inventory_FindItem
 	jr nz, LABEL_1212
 	ld	(Selected_inventory_item), hl
 	call	ItemAction_Use
@@ -2806,7 +2806,7 @@ Battle_EnemyActionCrystal:
 	; +1 HP if you have the Crystal
 	ld	a, ItemID_Crystal
 	ld	(CurrentItem), a
-	call	Inventory_FindFreeSlot
+	call	Inventory_FindItem
 	ld	c, $01
 	jp	nz, Battle_EnemyAttackAll40Cont
 	ld	c, $FF
@@ -3870,7 +3870,7 @@ LABEL_1C15:
 	jr	nc, +
 	call	LABEL_7C85
 	call	WaitForButton1Or2
-	jp	LABEL_4414
+	jp	OdinIntro
 +
 	cp	$07
 	jr	nc, +
@@ -3882,7 +3882,7 @@ LABEL_1C15:
 	jp	LABEL_1BE1
 +
 	cp	$08
-	jp	c, LABEL_4497
+	jp	c, MyauTransformation
 	ld	a, $BF
 	ld	(Sound_index), a
 	ld	hl, Game_mode
@@ -5210,7 +5210,7 @@ ItemUse_EclipseTorch:
 	call Palette_Animate
 	pop bc
 	ld a, ItemID_LaconiaPot
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr z, +
 	ld hl, DialogueTakesNutButShrivelsUp_B12
 	call ShowDialogue_B12
@@ -5223,7 +5223,7 @@ ItemUse_EclipseTorch:
 	call CloseTextBox
 	ld a, ItemID_Nuts
 	ld (CurrentItem), a
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	ret z
 	jp Inventory_AddItem
 
@@ -5595,7 +5595,7 @@ Inventory_SelectItemToDrop:
 	ld (CurrentItem), a
 	jp Inventory_IsFull
 
-Inventory_FindFreeSlot:
+Inventory_FindItem:
 	ld hl, Inventory
 	ld b, InventoryMaxNum
 -:
@@ -5678,7 +5678,7 @@ PlayerMenu_Search:
 	jr z, LABEL_28C5
 ++:
 	ld (CurrentItem), a
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr z, LABEL_28C5
 	ld hl, DialogueYouFoundItem_B12
 	call ShowDialogue_B12
@@ -6106,7 +6106,7 @@ LABEL_2BDC:
 	jr c, +
 	cp ItemID_Cola
 	jr nc, +
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr z, ++
 +:
 	call Inventory_AddItem
@@ -6154,7 +6154,7 @@ LABEL_2C46:
 	push hl
 	ld a, ItemID_RoadPass
 	ld (CurrentItem), a
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	pop hl
 	jr z, LABEL_2C46
 	ld (Current_money), hl
@@ -8425,7 +8425,7 @@ LABEL_3CAD:
 	inc a
 	ld (Scene_type), a
 +:
-	call LABEL_3D47
+	call Scene_LoadData
 	ld hl, $FFFF
 	ld (hl), :Bank16
 	ld hl, TilesFont_B16
@@ -8493,7 +8493,7 @@ LABEL_3D36:
 	add	hl, de
 	jp	LABEL_3D96
 
-LABEL_3D47:
+Scene_LoadData:
 	ld	a, (Scene_type)
 	cp	$20
 	jr	c, LABEL_3D64
@@ -8637,115 +8637,115 @@ SceneData:
 .db	:Bank15
 .dw	Tilemap_PalmaForest_B15
 
-; 13
+; 13 Air Castle
 .db	:Bank22
 .dw	Palette_AirCastle_B22, Tiles_AirCastle_B22
 .db	:Bank22
 .dw	Tilemap_AirCastle_B22
 
-; 14
+; 14 Gold Dragon
 .db	:Bank11
 .dw	Palette_GoldDragon_B11, Tiles_GoldDragon_B11
 .db	:Bank22
 .dw	Tilemap_GoldDragon_B22
 
-; 15
+; 15 Air Castle
 .db :Bank22
 .dw	Palette_AirCastleFull, Tiles_AirCastle_B22
 .db	:Bank22
 .dw	Tilemap_AirCastle_B22
 
-; 16
+; 16 Building Empty
 .db	:Bank23
 .dw	Palette_BuildingEmpty_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingEmpty_B23
 
-; 17
+; 17 Building Windows
 .db :Bank23
 .dw	Palette_BuildingWindows_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingWindows_B23
 
-; 18
+; 18 Hospital 1
 .db	:Bank23
 .dw	Palette_BuildingHospital1_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingHospital1_B23
 
-; 19
+; 19 Hospital 2
 .db :Bank23
 .dw	Palette_BuildingHospital2_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingHospital2_B23
 
-; 20
+; 20 Church 1
 .db	:Bank23
 .dw	Palette_BuildingChurch1_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingChurch1_B23
 
-; 21
+; 21 Church 2
 .db :Bank23
 .dw	Palette_BuildingChurch2_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingChurch2_B23
 
-; 22
+; 22 Armory 1
 .db	:Bank23
 .dw	Palette_BuildingArmory1_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingArmory1_B23
 
-; 23
+; 23 Armory 2
 .db :Bank23
 .dw	Palette_BuildingArmory2_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingArmory2_B23
 
-; 24
+; 24 Shop 1
 .db	:Bank23
 .dw	Palette_BuildingShop1_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingShop1_B23
 
-; 25
+; 25 Shop 2
 .db :Bank23
 .dw	Palette_BuildingShop2_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingShop2_B23
 
-; 26
+; 26 Shop 3
 .db	:Bank23
 .dw	Palette_BuildingShop3_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingShop3_B23
 
-; 27
+; 27 Shop 4
 .db :Bank23
 .dw	Palette_BuildingShop4_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingShop4_B23
 
-; 28
+; 28 Building Destroyed
 .db	:Bank23
 .dw	Palette_BuildingDestroyed_B23, Tiles_Building_B23
 .db	:Bank23
 .dw	Tilemap_BuildingDestroyed_B23
 
-; 29
+; 29 Mansion
 .db :Bank09
 .dw	Palette_Mansion_B09, Tiles_Mansion_B09
 .db	:Bank09
 .dw	Tilemap_Mansion_B09
 
-; 30
+; 30 Lassic's Room
 .db	:Bank20
 .dw	Palette_LassicRoom_B20, Tiles_LassicRoom_B20
 .db	:Bank27
 .dw	Tilemap_LassicRoom_B27
 
-; 31
+; 31 Dark Force
 .db :Bank19
 .dw	Palette_DarkForce_B19, Tiles_DarkForce_B19
 .db	:Bank13
@@ -8769,29 +8769,29 @@ GameMode_NameInput:
 	ld a, (Game_is_paused)
 	or a
 	call nz, PauseLoop
-	ld ix, $C784
+	ld ix, Name_entry_cursor_x
 	ld a, $08
 	call WaitForVInt
-	call LABEL_40C5
+	call NameInput_DrawCursorSprites
 	ld a, (Ctrl_1_pressed)
 	and Button_1_Mask|Button_2_Mask
-	jp z, LABEL_3F73
-	and $10
+	jp z, NameInput_NoButtonPressed
+	and Button_1_Mask
 	jp nz, +++
-	ld a, ($C788)
+	ld a, (Name_entry_currently_pointed)
 	cp $5C
 	jr z, +
 	jr nc, ++
-	ld de, ($C781)
+	ld de, (Name_entry_char_index)
 	ld d, $C7
 	ld (de), a
-	call LABEL_4117
+	call NameInput_GetCharTilemapDataAddress
 	ld a, (de)
 	di
-	call LABEL_414F
+	call NameInput_WriteCharToTilemapData2
 	ei
 +:
-	ld hl, $C781
+	ld hl, Name_entry_char_index
 	ld a, (hl)
 	cp $25
 	ret z
@@ -8816,14 +8816,14 @@ GameMode_NameInput:
 	ret
 
 +++:
-	ld de, ($C781)
+	ld de, (Name_entry_char_index)
 	ld d, $C7
 	ld a, $20
 	ld (de), a
-	call LABEL_4117
+	call NameInput_GetCharTilemapDataAddress
 	ld a, (de)
 	di
-	call LABEL_414F
+	call NameInput_WriteCharToTilemapData2
 	ei
 	jp -
 
@@ -8834,7 +8834,7 @@ GameMode_NameInput:
 	ldir
 	ld hl, (CurrentDialogueNumber)
 	add hl, hl
-	ld de, LABEL_3F69-2
+	ld de, NameInputSaveSlotNameTileAddr-2
 	add hl, de
 	ld e, (hl)
 	inc hl
@@ -8863,10 +8863,18 @@ GameMode_NameInput:
 	ld (Game_mode), a
 	ret
 
-LABEL_3F69:
-.db $18, $81, $3C, $81, $60, $81, $84, $81, $A8, $81
 
-LABEL_3F73:
+; =================================================================
+NameInputSaveSlotNameTileAddr:
+.dw $8118
+.dw $813C
+.dw $8160
+.dw $8184
+.dw $81A8
+; =================================================================
+
+
+NameInput_NoButtonPressed:
 	ld a, (Ctrl_1_pressed)
 	rra
 	jr c, LABEL_3FB7
@@ -8885,62 +8893,62 @@ LABEL_3F73:
 	jr c, LABEL_3FD5
 	rra
 	ret nc
-	call LABEL_402C
+	call NameInput_DecrementKeyRepeatCounter
 	ret nz
 -:
 	ld bc, $C808
 	ld de, $0002
-	ld iy, $C784
+	ld iy, Name_entry_cursor_x
 	jr LABEL_3FF2
 
 +:
 	ld a, $18
-	ld ($C789), a
+	ld (Name_entry_key_repeat_counter), a
 	jr -
 
 ++:
-	call LABEL_402C
+	call NameInput_DecrementKeyRepeatCounter
 	ret nz
 -:
 	ld bc, $60F0
 	ld de, $FF80
-	ld iy, $C785
+	ld iy, Name_entry_cursor_y
 	jr LABEL_3FF2
 
 LABEL_3FB7:
 	ld a, $18
-	ld ($C789), a
+	ld (Name_entry_key_repeat_counter), a
 	jr -
 
 +++:
-	call LABEL_402C
+	call NameInput_DecrementKeyRepeatCounter
 	ret nz
 -:
 	ld bc, $9010
 	ld de, $0080
-	ld iy, $C785
+	ld iy, Name_entry_cursor_y
 	jr LABEL_3FF2
 
 LABEL_3FCE:
 	ld a, $18
-	ld ($C789), a
+	ld (Name_entry_key_repeat_counter), a
 	jr -
 
 LABEL_3FD5:
-	call LABEL_402C
+	call NameInput_DecrementKeyRepeatCounter
 	ret nz
 -:
 	ld bc, $28F8
-	ld a, ($C788)
+	ld a, (Name_entry_currently_pointed)
 	cp $5C
 	ret z
 	ld de, $FFFE
-	ld iy, $C784
+	ld iy, Name_entry_cursor_x
 	jr LABEL_3FF2
 
 LABEL_3FEB:
 	ld a, $18
-	ld ($C789), a
+	ld (Name_entry_key_repeat_counter), a
 	jr -
 
 LABEL_3FF2:
@@ -8949,10 +8957,10 @@ LABEL_3FF2:
 	ret	z
 	add	a, c
 	ld	(iy+0), a
-	ld	hl, ($C786)
+	ld	hl, (Name_entry_cursor_tilemap_addr)
 	add	hl, de
 
-; The next 3 bytes are translated as ld	($C786), hl, but since the instruction is split
+; The next 3 bytes are translated as ld	(Name_entry_cursor_tilemap_addr), hl, but since the instruction is split
 ;  across 2 banks, I can't use it. This will have to do until I find a workaround
 .db $22
 
@@ -8961,14 +8969,14 @@ LABEL_3FF2:
 .ORG $0000
 
 
-.db $86, $C7
+.dw Name_entry_cursor_tilemap_addr
 
 	ld a, (hl)
 	or a
 	jr z, LABEL_3FF2
 	cp (ix+4)
 	jr z, LABEL_3FF2
-	ld ($C788), a
+	ld (Name_entry_currently_pointed), a
 	cp $5C
 	ret c
 	ld c, $88
@@ -8981,13 +8989,13 @@ LABEL_3FF2:
 	ld c, $C8
 	ld l, $B2
 +:
-	ld ($C786), hl
+	ld (Name_entry_cursor_tilemap_addr), hl
 	ld a, c
-	ld ($C784), a
+	ld (Name_entry_cursor_x), a
 	ret
 
-LABEL_402C:
-	ld hl, $C789
+NameInput_DecrementKeyRepeatCounter:
+	ld hl, Name_entry_key_repeat_counter
 	dec (hl)
 	ret nz
 	ld (hl), $05
@@ -9003,9 +9011,9 @@ GameMode_LoadNameInput:
 	ei
 	ld hl, Game_mode
 	inc (hl) ; GameMode_NameInput
-	ld hl, $C781
+	ld hl, Name_entry_char_index
 	ld (hl), $00
-	ld de, $C782
+	ld de, Name_entry_char_index+1
 	ld bc, $007E
 	ldir
 	ld hl, $D000
@@ -9013,33 +9021,33 @@ GameMode_LoadNameInput:
 	ld bc, $0600
 	ld (hl), $00
 	ldir
-	call LABEL_4166
+	call NameInput_DecompressTilemapData
 	ld hl, $C700
 	ld de, $C701
 	ld bc, $0037
 	ld (hl), $00
 	ldir
 	ld a, $21
-	ld ($C781), a
+	ld (Name_entry_char_index), a
 	ld de, $78C0
 	ld hl, $D0C0
 	ld bc, $0540
 	di
 	call DataToVRAM
 	ei
-	call LABEL_41DB
-	ld hl, LABEL_41FC
-	ld de, $C240
+	call NameInput_LoadTilemapDataWithCharValues
+	ld hl, Palette_NameInput
+	ld de, Target_palette
 	ld bc, $0020
 	ldir
 	ld de, $6000
-	ld hl, LABEL_421C
+	ld hl, NameInputCursorSprite
 	ld bc, $0020
 	di
 	call DataToVRAM
 	ei
-	ld de, $C784
-	ld hl, LABEL_40C0
+	ld de, Name_entry_cursor_x
+	ld hl, NameInputCursorInitialValues
 	ld bc, $0005
 	ldir
 	xor a
@@ -9053,11 +9061,17 @@ GameMode_LoadNameInput:
 	jp ClearSpriteTableFadeIn
 
 
-LABEL_40C0:
-.db $28, $60, $0A, $D3, $41
+; =================================================================
+NameInputCursorInitialValues:
+.db $28	; selected char cursor sprite X
+.db $60 ; selected char cursor sprite Y
+.dw $D30A ; selected char TileMapData address
+.db $41 ; currently pointed char
+; =================================================================
 
-LABEL_40C5:
-	call LABEL_4117
+
+NameInput_DrawCursorSprites:
+	call NameInput_GetCharTilemapDataAddress
 	ld de, $3040
 	add hl, de
 	add hl, hl
@@ -9068,9 +9082,9 @@ LABEL_40C5:
 	add a, a
 	add a, a
 	ld (de), a
-	ld a, ($C788)
+	ld a, (Name_entry_currently_pointed)
 	cp $5C
-	ld a, ($C785)
+	ld a, (Name_entry_cursor_y)
 	inc de
 	ld (de), a
 	jr c, +
@@ -9100,8 +9114,8 @@ LABEL_40C5:
 	ret
 
 
-LABEL_4100:
-	ld	hl, $C781
+nameInput_DrawPassword:
+	ld	hl, Name_entry_char_index
 	ld	(hl), $38
 	ld	d, $C7
 
@@ -9110,16 +9124,16 @@ LABEL_4100:
 	ret	m
 	ld	e, (hl)
 	push	hl
-	call	LABEL_4117
+	call	NameInput_GetCharTilemapDataAddress
 	ld	a, (de)
 	push	de
-	call	LABEL_413A
+	call	NameInput_WriteCharToTilemapData
 	pop	de
 	pop	hl
 	jr	-
 
-LABEL_4117:
-	ld a, ($C781)
+NameInput_GetCharTilemapDataAddress:
+	ld a, (Name_entry_char_index)
 	ld hl, $D146
 	sub $18
 	jr c, +
@@ -9142,7 +9156,7 @@ LABEL_4117:
 	ld l, a
 	ret
 
-LABEL_413A:
+NameInput_WriteCharToTilemapData:
 	push hl
 	ex de, hl
 	ld hl, $7CD7
@@ -9160,8 +9174,8 @@ LABEL_413A:
 	pop hl
 	ret
 
-LABEL_414F:
-	call LABEL_413A
+NameInput_WriteCharToTilemapData2:
+	call NameInput_WriteCharToTilemapData
 	ld b, a
 	ld a, h
 	sub $58
@@ -9178,9 +9192,9 @@ LABEL_414F:
 	out (Port_VDPData), a
 	ret
 
-LABEL_4166:
-	ld hl, LABEL_423C
-	ld de, $D100
+NameInput_DecompressTilemapData:
+	ld hl, NameEntryTilemapData
+	ld de, Tilemap_data+$100
 --:
 	ld a, (hl)
 	inc hl
@@ -9261,8 +9275,8 @@ LABEL_41D5:
 	djnz LABEL_41D5
 	ret
 
-LABEL_41DB:
-	ld hl, LABEL_4280
+NameInput_LoadTilemapDataWithCharValues:
+	ld hl, NameEntryCharValues
 	ld de, $D30A
 	ld a, $04
 --:
@@ -9284,14 +9298,14 @@ LABEL_41DB:
 	jr nz, --
 	ret
 
-LABEL_41FC:
+Palette_NameInput:
 .db	$00, $00, $3F, $00
 .db $00, $00, $00, $00, $00, $00, $00, $00
 .db $00, $00, $00, $00, $00, $3C, $00, $00
 .db $00, $00, $00, $00, $00, $00, $00, $00
 .db $00, $00, $00, $00
 
-LABEL_421C:
+NameInputCursorSprite:
 .db	$FF, $00, $00, $00
 .db $00, $00, $00, $00, $00, $00, $00, $00
 .db $00, $00, $00, $00, $00, $00, $00, $00
@@ -9299,7 +9313,7 @@ LABEL_421C:
 
 .db $00, $00, $00, $00
 
-LABEL_423C:
+NameEntryTilemapData:
 .db	$03, $C0, $01, $F1
 .db $17, $F2, $01, $F1, $0C, $C0, $D0, $D3
 .db $D8, $DA, $DF, $DE, $C0, $E3, $D9, $DF
@@ -9310,7 +9324,7 @@ LABEL_423C:
 .db $DC, $DF, $CC, $C0, $CF, $D8, $CE, $09
 .db $C0, $01, $F1, $17, $F2, $01, $F1, $00
 
-LABEL_4280:
+NameEntryCharValues:
 .db $41, $42, $43, $44, $45, $46, $47, $48
 .db $49, $4A, $4B, $4C, $4D, $4E, $4F, $50
 .db $51, $52, $53, $54, $55, $56, $57, $58
@@ -9325,7 +9339,7 @@ GoToIntroSequence:
 	ld hl, $FFFF
 	ld (hl), :Bank23
 	ld hl, Palette_Space_B23
-	ld de, $C240
+	ld de, Target_palette
 	ld bc, $0011
 	ldir
 	ld hl, Ship_SpaceTiles_B23
@@ -9335,18 +9349,18 @@ GoToIntroSequence:
 	ld (hl), :Bank28
 	ld hl, Ship_TilemapSpace_B28
 	call DecompressTilemapData
-	ld hl, $D000
-	ld de, $D300
+	ld hl, Tilemap_data
+	ld de, Tilemap_data+$300
 	ld bc, $0300
 	ldir
-	ld hl, $D000
+	ld hl, Tilemap_data
 	ld bc, $0100
 	ldir
 	xor a
 	ld (H_scroll), a
 	ld a, $80
 	ld (V_scroll), a
-	ld hl, $D000
+	ld hl, Tilemap_data
 	ld de, $7800
 	ld bc, $0700
 	di
@@ -9356,17 +9370,17 @@ GoToIntroSequence:
 	ld (Sound_index), a
 	call FadeIn2
 	ld a, $02
-	ld ($C264), a
+	ld (Scroll_direction), a
 	ld a, $02
-	ld ($C307), a
+	ld (Scroll_screens), a
 -:
 	ld a, $0E
 	call WaitForVInt
 	ld a, (Ctrl_1_pressed)
 	and Button_1_Mask|Button_2_Mask
 	jr nz, +
-	call LABEL_43AA
-	ld a, ($C307)
+	call Intro_ScrollDown
+	ld a, (Scroll_screens)
 	cp $01
 	jr nz, -
 	ld a, (V_scroll)
@@ -9375,12 +9389,12 @@ GoToIntroSequence:
 	call VintDelayButtonPress2
 +:
 	xor a
-	ld ($C264), a
-	ld ($C307), a
+	ld (Scroll_direction), a
+	ld (Scroll_screens), a
 	call FadeOut2
 	ld a, $08
 	ld (Scene_type), a
-	call LABEL_3D47
+	call Scene_LoadData
 	ld hl, $FFFF
 	ld (hl), :Bank16
 	ld hl, TilesFont_B16
@@ -9397,29 +9411,29 @@ GoToIntroSequence:
 	call FadeIn2
 	ld hl, $FFFF
 	ld (hl), :Bank18
-	ld hl, LABEL_B18_BEF4
+	ld hl, IntroBox1_B18
 	ld de, $7886
 	ld bc, $0528
 	call OutputTilemapBoxWipe
 	call VintDelayButtonPress2
 	call GameMode_FadeToPicture
 	ld a, $00
-	call LABEL_46D1
-	ld hl, LABEL_B49B
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueIntro1
 	call ShowNarrativeText
 	ld a, $01
-	call LABEL_46D1
-	ld hl, LABEL_B4FC
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueIntro2
 	call ShowNarrativeText
 	ld a, $02
-	call LABEL_46D1
-	ld hl, LABEL_B5D5
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueIntro3
 	call ShowNarrativeText
 	ld a, $D7
 	ld (Sound_index), a
 	ret
 
-LABEL_43AA:
+Intro_ScrollDown:
 	ld de, $0001
 	ld a, (V_scroll)
 	add a, e
@@ -9429,9 +9443,9 @@ LABEL_43AA:
 	add a, $20
 +:
 	ld (V_scroll), a
-	ld a, ($C307)
+	ld a, (Scroll_screens)
 	sub d
-	ld ($C307), a
+	ld (Scroll_screens), a
 	cp $01
 	ret nz
 	ld a, d
@@ -9440,57 +9454,57 @@ LABEL_43AA:
 	ld hl, Ship_TilemapBottomPlanet_B28
 	jp DecompressTilemapData
 
-LABEL_43CF:
+MyauIntro:
 	call GameMode_FadeToPicture
 	ld a, $8A
 	ld (Sound_index), a
 	ld a, $03
-	call LABEL_46D1
-	ld hl, LABEL_B617
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueMyauIntro1
 	call ShowNarrativeText
 	ld a, $04
-	call LABEL_46D1
-	ld hl, LABEL_B646
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueMyauIntro2
 	call ShowNarrativeText
 	ld a, $03
-	call LABEL_46D1
-	ld hl, LABEL_B64D
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueMyauIntro3
 	call ShowNarrativeText
 	ld a, $04
-	call LABEL_46D1
-	ld hl, LABEL_B66E
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueMyauIntro4
 	call ShowNarrativeText
 	ld a, $03
-	call LABEL_46D1
-	ld hl, LABEL_B6C1
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueMyauIntro5
 	call ShowNarrativeText
 	ld a, $D8
 	ld (Sound_index), a
 	ret
 
-LABEL_4414:
+OdinIntro:
 	call GameMode_FadeToPicture
 	ld a, $8A
 	ld (Sound_index), a
 	ld a, $05
-	call LABEL_46D1
-	ld hl, LABEL_B6F3
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueOdinIntro1
 	call ShowNarrativeText
 	ld a, $03
-	call LABEL_46D1
-	ld hl, LABEL_B746
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueOdinIntro2
 	call ShowNarrativeText
 	ld a, $05
-	call LABEL_46D1
-	ld hl, LABEL_B786
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueOdinIntro3
 	call ShowNarrativeText
 	ld a, $03
-	call LABEL_46D1
-	ld hl, LABEL_B7B9
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueOdinIntro4
 	call ShowNarrativeText
 	ld a, $05
-	call LABEL_46D1
-	ld hl, LABEL_B7D1
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueOdinIntro5
 	call ShowNarrativeText
 	call FadeOut2
 	call LABEL_FF3
@@ -9498,12 +9512,13 @@ LABEL_4414:
 	ld (Sound_index), a
 	jp FadeIn2
 
-LABEL_4461:
+NoahIntro:
 	call GameMode_FadeToPicture
 	ld a, $8A
 	ld (Sound_index), a
+	; Pick an alive character to show
 	ld a, $03
-	ld hl, Char_stats
+	ld hl, Alis_stats
 	bit 0, (hl)
 	jr nz, +
 	ld a, $05
@@ -9512,22 +9527,22 @@ LABEL_4461:
 	jr nz, +
 	ld a, $04
 +:
-	call LABEL_46D1
-	ld hl, LABEL_B85C
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueNoahIntro1
 	call ShowNarrativeText
 	ld a, $06
-	call LABEL_46D1
-	ld hl, LABEL_B884
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueNoahIntro2
 	call ShowNarrativeText
 	ld a, $D8
 	ld (Sound_index), a
 	ret
 
-LABEL_4497:
+MyauTransformation:
 	ld a, (Location_index)
 	cp $17
 	jr nz, +
-	call LABEL_4517
+	call MyauFlight
 	ld hl, LABEL_4514
 	jp LABEL_4509
 
@@ -9536,17 +9551,17 @@ LABEL_4497:
 	ld a, $8A
 	ld (Sound_index), a
 	ld a, $07
-	call LABEL_46D1
-	ld hl, LABEL_B929
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueMyauTransformation1
 	call ShowNarrativeText
 	ld a, $08
-	call LABEL_46D1
-	ld hl, LABEL_B97C
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueMyauTransformation2
 	call ShowNarrativeText
-	call LABEL_4517
+	call MyauFlight
 	ld a, $0E
 	ld (Scene_type), a
-	call LABEL_3D47
+	call Scene_LoadData
 	ld a, $0C
 	call WaitForVInt
 	ld hl, $C250
@@ -9560,10 +9575,10 @@ LABEL_4497:
 	ld hl, $FFFF
 	ld (hl), :Bank11
 	ld hl, Palette_GoldDragon_B11
-	ld de, $C250
+	ld de, Target_palette+$10
 	ld bc, $0008
 	ldir
-	ld a, $46
+	ld a, EnemyID_GdDragn
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	call Dungeon_EnterBattle
@@ -9584,18 +9599,18 @@ LABEL_4511:
 LABEL_4514:
 .db $00 $40 $4C
 
-LABEL_4517:
+MyauFlight:
 	call FadeOut2
 	ld a, $0F
 	ld (Scene_type), a
-	call LABEL_3D47
+	call Scene_LoadData
 	ld hl, $FFFF
 	ld (hl), :Bank22
-	ld hl, LABEL_B22_B9D8
+	ld hl, Palette_MyauFlight_B22
 	ld de, $C251
 	ld bc, $000F
 	ldir
-	ld hl, LABEL_B22_B9E7
+	ld hl, Tiles_MyauFlight_B22
 	ld de, $6000
 	call LoadTiles4BitRLE
 	ld a, $0C
@@ -9606,7 +9621,7 @@ LABEL_4517:
 	call LABEL_18B9
 	jp FadeOut2
 
-LABEL_454E:
+EndingScreen:
 	call FadeOut2
 	ld a, $D0
 	ld (Sprite_table), a
@@ -9614,57 +9629,57 @@ LABEL_454E:
 	ld (Sound_index), a
 	ld a, $0D
 	ld (Scene_type), a
-	call LABEL_3D47
+	call Scene_LoadData
 	ld a, $0C
 	call WaitForVInt
 	call FadeIn2
 	ld b, $80
 	call VIntDelay2
-	call LABEL_7CE4
-	ld hl, LABEL_B12_BEB6
+	call Ending_FadeSky
+	ld hl, DialogueEnding1_B12
 	call ShowDialogue_B12
-	ld hl, LABEL_B12_BED0
+	ld hl, DialogueEnding2_B12
 	call ShowDialogue_B12
-	ld hl, LABEL_B12_BEE8
+	ld hl, DialogueEnding3_B12
 	call ShowDialogue_B12
-	ld hl, LABEL_B12_BEFD
+	ld hl, DialogueEnding4_B12
 	call ShowDialogue_B12
-	ld hl, LABEL_B12_BF09
+	ld hl, DialogueEnding5_B12
 	call ShowDialogue_B12
-	ld hl, LABEL_B12_BF21
+	ld hl, DialogueEnding6_B12
 	call ShowDialogue_B12
 	call CloseTextBox
 	call GameMode_FadeToPicture
 	ld a, $03
-	call LABEL_46D1
-	ld hl, LABEL_B9E8
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueEndingAlis
 	call ShowNarrativeText
 	ld a, $05
-	call LABEL_46D1
-	ld hl, LABEL_B9F0
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueEndingOdin
 	call ShowNarrativeText
 	ld a, $06
-	call LABEL_46D1
-	ld hl, LABEL_B9FB
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueEndingNoah
 	call ShowNarrativeText
 	ld a, $04
-	call LABEL_46D1
-	ld hl, LABEL_BA06
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueEndingMyau
 	call ShowNarrativeText
 	ld a, $03
-	call LABEL_46D1
-	ld hl, LABEL_BA12
+	call GameMode_FadeToNarrativePicture
+	ld hl, DialogueEndingEnd1
 	call ShowNarrativeText
-	ld hl, LABEL_BA54
+	ld hl, DialogueEndingEnd2
 	call ShowNarrativeText
 	call FadeOut2
 	ld hl, $FFFF
 	ld (hl), :Bank31
-	ld hl, LABEL_B31_9676
+	ld hl, Palette_Ending_B31
 	ld de, $C240
 	ld bc, $0011
 	ldir
-	ld hl, LABEL_B31_9687
+	ld hl, Tiles_Ending_B31
 	ld de, $4000
 	call LoadTiles4BitRLE
 	ld hl, $FFFF
@@ -9674,36 +9689,38 @@ LABEL_454E:
 	ld bc, $0600
 	ld (hl), $00
 	ldir
-	ld hl, LABEL_B24_A5E0
+	ld hl, Tilemap_Ending_B24
 	ld de, $D0D4
 	ld bc, $1316
-	call LABEL_6E64
+	call LoadTilemapRawRect
 	ld a, $0C
 	call WaitForVInt
 	call FadeIn2
 	call VIntDelay
+	
+	; Dungeon credits
 	ld hl, $3DF7
 	ld (Dungeon_position), hl
 	xor a
 	ld (Dungeon_direction), a
-	call LABEL_661C
+	call Dungeon_PitFall
 	ld hl, $FFFF
 	ld (hl), :Bank15
-	ld hl, LABEL_B15_BDEE
+	ld hl, Tiles_CreditsFont_B15
 	ld de, $5820
 	call LoadTiles4BitRLE
 	ld a, $01
 	ld ($C2F5), a
 	ld a, $91
 	ld (Sound_index), a
-	ld hl, LABEL_B15_BF80
+	ld hl, EndingMovementData_B15
 -:
 	ld a, :Bank15
 	ld ($FFFF), a
 	ld a, (hl)
-	cp $FF
+	cp $FF ; FF = End
 	jr z, ++
-	cp $0F
+	cp $0F ; F = pause
 	jr nz, +
 	ld b, $B4
 	call VIntDelay2
@@ -9741,18 +9758,18 @@ GameMode_FadeToPicture:
 	call LoadTiles4BitRLE
 	ld hl, $FFFF
 	ld (hl), :Bank24
-	ld hl, $C240
-	ld de, $C241
+	ld hl, Target_palette
+	ld de, Target_palette+1
 	ld (hl), $00
 	ld bc, $000F
 	ldir
-	ld hl, LABEL_B24_A57A
+	ld hl, Palette_Frame_B24
 	ld bc, $0010
 	ldir
-	ld hl, LABEL_B24_A58A
+	ld hl, Tiles_Frame_B24
 	ld de, $4000
 	call LoadTiles4BitRLE
-	ld hl, LABEL_B24_A484
+	ld hl, Tilemap_Frame_B24
 	call DecompressTilemapData
 	xor a
 	ld (V_scroll), a
@@ -9762,7 +9779,7 @@ GameMode_FadeToPicture:
 	call WaitForVInt
 	jp ClearSpriteTableFadeIn
 
-LABEL_46D1:
+GameMode_FadeToNarrativePicture:
 	push	af
 	call	FadeOut
 	pop	af
@@ -9772,7 +9789,7 @@ LABEL_46D1:
 	add	a, l
 	ld	l, a
 	ld	h, $00
-	ld	de, LABEL_471E
+	ld	de, NarrativeGraphicsTable
 	add	hl, de
 	ld	a, (hl)
 	ld	($FFFF), a
@@ -9807,24 +9824,44 @@ LABEL_46D1:
 	jp	FadeIn
 
 
-LABEL_471E:
-.db	:Bank31, $00, $80, $90, $A8
-.db	:Bank30, $00, $80, $70, $AA
-.db	:Bank30, $62, $8F, $50, $AC
-.db	:Bank30, $2B, $9C, $30, $AE
-.db	:Bank31, $DB, $8A, $10, $B0
-.db	:Bank29, $2A, $B6, $F0, $B1
-.db	:Bank18, $88, $B3, $D0, $B3
-.db	:Bank30, $4E, $AA, $B0, $B5
-.db	:Bank30, $0C, $B3, $90, $B7
+; =================================================================
+NarrativeGraphicsTable:
+.db	:Bank31
+.dw	Graphics_IntroNero1_B31, Tilemap_IntroNero1_B31
+
+.db	:Bank30
+.dw	Graphics_IntroNero2_B30, Tilemap_IntroNero2_B30
+
+.db	:Bank30
+.dw	Graphics_IntroAlis_B30, Tilemap_IntroAlis_B30
+
+.db	:Bank30
+.dw	Graphics_NarrativeAlis_B30, Tilemap_NarrativeAlis_B30
+
+.db	:Bank31
+.dw	Graphics_NarrativeMyau_B31, Tilemap_NarrativeMyau_B31
+
+.db	:Bank29
+.dw	Graphics_NarrativeOdin_B29, Tilemap_NarrativeOdin_B29
+
+.db	:Bank18
+.dw	Graphics_NarrativeNoah_B18, Tilemap_NarrativeNoah_B18
+
+.db	:Bank30
+.dw	Graphics_MyauWings1_B30, Tilemap_MyauWings1_B30
+
+.db	:Bank30
+.dw	Graphics_MyauWings2_B30, Tilemap_MyauWings2_B30
+; =================================================================
 
 
 Scene_DoRoomScript:
+	; Exit if room is 0
 	ld	a, (Room_index)
 	or	a
 	jp	z, LABEL_1BE1
-	ld	de, LABEL_4773-2
-	call	LABEL_4769
+	ld	de, SceneRoomScriptTable-2
+	call	Scene_GetPtrAndJump
 	ld	a, (Scene_type)
 	or	a
 	jp	nz, CloseTextBox
@@ -9832,11 +9869,11 @@ Scene_DoRoomScript:
 	jp	LABEL_15DC
 
 
-LABEL_4765:
+Scene_RoomScriptEnd:
 	pop	hl
 	jp	WaitForButton1Or2
 
-LABEL_4769:
+Scene_GetPtrAndJump:
 	ld	l, a
 	ld	h, $00
 	add	hl, hl
@@ -9848,196 +9885,200 @@ LABEL_4769:
 	jp	(hl)
 
 
-LABEL_4773:
-.dw	LABEL_48DF
-.dw	LABEL_48FC
-.dw	LABEL_4922
-.dw	LABEL_4928
-.dw	LABEL_492E
-.dw	LABEL_4934
-.dw	LABEL_493A
-.dw	LABEL_4940
-.dw	LABEL_495A
-.dw	LABEL_4960
-.dw	LABEL_4966
-.dw	LABEL_4973
-.dw	LABEL_4991
-.dw	LABEL_4997
-.dw	LABEL_499D
-.dw	LABEL_49A3
-.dw	LABEL_49A9
-.dw	LABEL_49AF
-.dw	LABEL_49B5
-.dw	LABEL_49B5
-.dw	LABEL_49E0
-.dw	LABEL_49E6
-.dw	LABEL_4A3E
-.dw	LABEL_4A44
-.dw	LABEL_4A4A
-.dw	LABEL_4A50
-.dw	LABEL_4AA9
-.dw	LABEL_4ABE
-.dw	LABEL_4AD3
-.dw	LABEL_4B43
-.dw	LABEL_4B52
-.dw	LABEL_4B61
-.dw	LABEL_4B67
-.dw	LABEL_4B6D
-.dw	LABEL_4B73
-.dw	LABEL_4B79
-.dw	LABEL_4B7F
-.dw	LABEL_4B85
-.dw	LABEL_4B8B
-.dw	LABEL_4B91
-.dw	LABEL_4B97
-.dw	LABEL_4B9D
-.dw	LABEL_4BBD
-.dw	LABEL_4BD1
-.dw	LABEL_4BD7
-.dw	LABEL_4BDD
-.dw	LABEL_4BE3
-.dw	LABEL_4BE9
-.dw	LABEL_4BEF
-.dw	LABEL_4BF5
-.dw	LABEL_4BFB
-.dw	LABEL_4C01
-.dw	LABEL_4C07
-.dw	LABEL_4C0D
-.dw	LABEL_4C70
-.dw	LABEL_4D74
-.dw	LABEL_4D7A
-.dw	LABEL_4D9F
-.dw	LABEL_4DA5
-.dw	LABEL_4DAB
-.dw	LABEL_4DD4
-.dw	LABEL_4DFB
-.dw	LABEL_4E9C
-.dw	LABEL_4EB3
-.dw	LABEL_4EB9
-.dw	LABEL_4EBF
-.dw	LABEL_4EC5
-.dw	LABEL_4ED9
-.dw	LABEL_4EDF
-.dw	LABEL_4EE5
-.dw	LABEL_4EEB
-.dw	LABEL_4EF1
-.dw	LABEL_4EF7
-.dw	LABEL_4EFD
-.dw	LABEL_4F03
-.dw	LABEL_4F09
-.dw	LABEL_4F0F
-.dw	LABEL_4F15
-.dw	LABEL_4F34
-.dw	LABEL_4F3A
-.dw	LABEL_4F40
-.dw	LABEL_4F46
-.dw	LABEL_4F4C
-.dw	LABEL_4F52
-.dw	LABEL_4F58
-.dw	LABEL_4F71
-.dw	LABEL_4F77
-.dw	LABEL_4F7D
-.dw	LABEL_4F83
-.dw	LABEL_4F89
-.dw	LABEL_4F8F
-.dw	LABEL_4F95
-.dw	LABEL_4F9B
-.dw	LABEL_4FD8
-.dw	LABEL_4FDE
-.dw	LABEL_4FE4
-.dw	LABEL_4FEA
-.dw	LABEL_4FF0
-.dw	LABEL_4FF6
-.dw	LABEL_4FFC
-.dw	LABEL_5002
-.dw	LABEL_5008
-.dw	LABEL_500E
-.dw	LABEL_5014
-.dw	LABEL_501A
-.dw	LABEL_5020
-.dw	LABEL_5026
-.dw	LABEL_502C
-.dw	LABEL_5040
-.dw	LABEL_5046
-.dw	LABEL_504C
-.dw	LABEL_5058
-.dw	LABEL_505E
-.dw	LABEL_5064
-.dw	LABEL_506A
-.dw	LABEL_5070
-.dw	LABEL_50A6
-.dw	LABEL_50BA
-.dw	LABEL_50C0
-.dw	LABEL_50C6
-.dw	LABEL_50DA
-.dw	LABEL_5101
-.dw	LABEL_5107
-.dw	LABEL_510D
-.dw	LABEL_5157
-.dw	LABEL_516F
-.dw	LABEL_51B1
-.dw	LABEL_51D6
-.dw	LABEL_51DC
-.dw	LABEL_521D
-.dw	LABEL_5249
-.dw	LABEL_5270
-.dw	LABEL_5284
-.dw	LABEL_528A
-.dw	LABEL_5290
-.dw	LABEL_52A4
-.dw	LABEL_52B2
-.dw	LABEL_52B8
-.dw	LABEL_52BE
-.dw	LABEL_52C4
-.dw	LABEL_52CA
-.dw	LABEL_52D0
-.dw	LABEL_5337
-.dw	LABEL_4F8F
-.dw	LABEL_4F95
-.dw	LABEL_4F9B
-.dw	LABEL_534B
-.dw	LABEL_5395
-.dw	LABEL_539B
-.dw	LABEL_53A1
-.dw	LABEL_53A7
-.dw	LABEL_53AD
-.dw	LABEL_53B3
-.dw	LABEL_53B9
-.dw	LABEL_53BF
-.dw	LABEL_5401
-.dw	LABEL_5430
-.dw	LABEL_54D0
-.dw	LABEL_54FB
-.dw	LABEL_552F
-.dw	LABEL_5535
-.dw	LABEL_5535
-.dw	LABEL_5538
-.dw	LABEL_5595
-.dw	LABEL_55A3
-.dw	LABEL_55A9
-.dw	LABEL_55BB
-.dw	LABEL_55CD
-.dw	LABEL_55E1
-.dw	LABEL_55EF
-.dw	LABEL_5619
-.dw	LABEL_5666
-.dw	LABEL_569C
-.dw	LABEL_56A2
-.dw	LABEL_5535
-.dw	LABEL_5535
-.dw	LABEL_56CD
-.dw	LABEL_56D3
-.dw	LABEL_56D9
-.dw	LABEL_56E9
-.dw	LABEL_56F9
-.dw	LABEL_5535
+; =================================================================
+SceneRoomScriptTable:
+.dw	SceneRoom_Suelo	; 1
+.dw	SceneRoom_Nekise	; 2
+.dw	SceneRoom_CamineetMan1	; 3
+.dw	SceneRoom_CamineetMan2	; 4
+.dw	SceneRoom_CamineetMan3	; 5
+.dw	SceneRoom_CamineetMan4	; 6
+.dw	SceneRoom_CamineetMan5	; 7
+.dw	SceneRoom_CamineetAlgolMan	; 8
+.dw	SceneRoom_CamineetGuard1	; 9
+.dw	SceneRoom_CamineetGuard2	; $A
+.dw	SceneRoom_CamineetGuard3	; $B
+.dw	SceneRoom_CamineetGuard4	; $C
+.dw	SceneRoom_ParolitWoman1	; $D
+.dw	SceneRoom_ParolitMan1	; $E
+.dw	SceneRoom_ParolitMan2	; $F
+.dw	SceneRoom_ParolitMan3	; $10
+.dw	SceneRoom_ParolitMan4	; $11
+.dw	SceneRoom_ParolitMan5	; $12
+.dw	SceneRoom_AirStripGuard	; $13
+.dw	SceneRoom_AirStripGuard	; $14
+.dw	SceneRoom_ShionMan1	; $15
+.dw	SceneRoom_MadDoctor	; $16
+.dw	SceneRoom_PalmaLuggageHandler1	; $17
+.dw	SceneRoom_PalmaLuggageHandler2	; $18
+.dw	SceneRoom_PalmaLuggageHandler3	; $19
+.dw	SceneRoom_AirStripGuard2	; $1A
+.dw	SceneRoom_RoadGuard1	; $1B
+.dw	SceneRoom_RoadGuard2	; $1C
+.dw	SceneRoom_PassportOffice	; $1D
+.dw	SceneRoom_ShionMan2	; $1E
+.dw	SceneRoom_ShionMan3	; $1F
+.dw	SceneRoom_ShionMan4	; $20
+.dw	SceneRoom_ShionMan5	; $21
+.dw	SceneRoom_ShionMan6	; $22
+.dw	SceneRoom_ShionMan7	; $23
+.dw	SceneRoom_ShionMan8	; $24
+.dw	SceneRoom_ShionMan9	; $25
+.dw	SceneRoom_EppiMan1	; $26
+.dw	SceneRoom_EppiMan2	; $27
+.dw	SceneRoom_EppiMan3	; $28
+.dw	SceneRoom_EppiMan4	; $29
+.dw	SceneRoom_EppiMan5	; $2A
+.dw	SceneRoom_EppiMan6	; $2B
+.dw	LABEL_4BD1	; $2C
+.dw	LABEL_4BD7	; $2D
+.dw	LABEL_4BDD	; $2E
+.dw	LABEL_4BE3	; $2F
+.dw	LABEL_4BE9	; $30
+.dw	LABEL_4BEF	; $31
+.dw	LABEL_4BF5	; $32
+.dw	LABEL_4BFB	; $33
+.dw	LABEL_4C01	; $34
+.dw	LABEL_4C07	; $35
+.dw	LABEL_4C0D	; $36
+.dw	LABEL_4C70	; $37
+.dw	LABEL_4D74	; $38
+.dw	LABEL_4D7A	; $39
+.dw	LABEL_4D9F	; $3A
+.dw	LABEL_4DA5	; $3B
+.dw	LABEL_4DAB	; $3C
+.dw	LABEL_4DD4	; $3D
+.dw	LABEL_4DFB	; $3E
+.dw	LABEL_4E9C	; $3F
+.dw	LABEL_4EB3	; $40
+.dw	LABEL_4EB9	; $41
+.dw	LABEL_4EBF	; $42
+.dw	LABEL_4EC5	; $43
+.dw	LABEL_4ED9	; $44
+.dw	LABEL_4EDF	; $45
+.dw	LABEL_4EE5	; $46
+.dw	LABEL_4EEB	; $47
+.dw	LABEL_4EF1	; $48
+.dw	LABEL_4EF7	; $49
+.dw	LABEL_4EFD	; $4A
+.dw	LABEL_4F03	; $4B
+.dw	LABEL_4F09	; $4C
+.dw	LABEL_4F0F	; $4D
+.dw	LABEL_4F15	; $4E
+.dw	LABEL_4F34	; $4F
+.dw	LABEL_4F3A	; $50
+.dw	LABEL_4F40	; $51
+.dw	LABEL_4F46	; $52
+.dw	LABEL_4F4C	; $53
+.dw	LABEL_4F52	; $54
+.dw	LABEL_4F58	; $55
+.dw	LABEL_4F71	; $56
+.dw	LABEL_4F77	; $57
+.dw	LABEL_4F7D	; $58
+.dw	LABEL_4F83	; $59
+.dw	LABEL_4F89	; $5A
+.dw	LABEL_4F8F	; $5B
+.dw	LABEL_4F95	; $5C
+.dw	LABEL_4F9B	; $5D
+.dw	LABEL_4FD8	; $5E
+.dw	LABEL_4FDE	; $5F
+.dw	LABEL_4FE4	; $60
+.dw	LABEL_4FEA	; $61
+.dw	LABEL_4FF0	; $62
+.dw	LABEL_4FF6	; $63
+.dw	LABEL_4FFC	; $64
+.dw	LABEL_5002	; $65
+.dw	LABEL_5008	; $66
+.dw	LABEL_500E	; $67
+.dw	LABEL_5014	; $68
+.dw	LABEL_501A	; $69
+.dw	LABEL_5020	; $6A
+.dw	LABEL_5026	; $6B
+.dw	LABEL_502C	; $6C
+.dw	LABEL_5040	; $6D
+.dw	LABEL_5046	; $6E
+.dw	LABEL_504C	; $6F
+.dw	LABEL_5058	; $70
+.dw	LABEL_505E	; $71
+.dw	LABEL_5064	; $72
+.dw	LABEL_506A	; $73
+.dw	LABEL_5070	; $74
+.dw	LABEL_50A6	; $75
+.dw	LABEL_50BA	; $76
+.dw	LABEL_50C0	; $77
+.dw	LABEL_50C6	; $78
+.dw	LABEL_50DA	; $79
+.dw	LABEL_5101	; $7A
+.dw	LABEL_5107	; $7B
+.dw	LABEL_510D	; $7C
+.dw	LABEL_5157	; $7D
+.dw	LABEL_516F	; $7E
+.dw	LABEL_51B1	; $7F
+.dw	LABEL_51D6	; $80
+.dw	LABEL_51DC	; $81
+.dw	LABEL_521D	; $82
+.dw	LABEL_5249	; $83
+.dw	LABEL_5270	; $84
+.dw	LABEL_5284	; $85
+.dw	LABEL_528A	; $86
+.dw	LABEL_5290	; $87
+.dw	LABEL_52A4	; $88
+.dw	LABEL_52B2	; $89
+.dw	LABEL_52B8	; $8A
+.dw	LABEL_52BE	; $8B
+.dw	LABEL_52C4	; $8C
+.dw	LABEL_52CA	; $8D
+.dw	LABEL_52D0	; $8E
+.dw	LABEL_5337	; $8F
+.dw	LABEL_4F8F	; $90
+.dw	LABEL_4F95	; $91
+.dw	LABEL_4F9B	; $92
+.dw	LABEL_534B	; $93
+.dw	LABEL_5395	; $94
+.dw	LABEL_539B	; $95
+.dw	LABEL_53A1	; $96
+.dw	LABEL_53A7	; $97
+.dw	LABEL_53AD	; $98
+.dw	LABEL_53B3	; $99
+.dw	LABEL_53B9	; $9A
+.dw	LABEL_53BF	; $9B
+.dw	LABEL_5401	; $9C
+.dw	LABEL_5430	; $9D
+.dw	LABEL_54D0	; $9E
+.dw	LABEL_54FB	; $9F
+.dw	LABEL_552F	; $A0
+.dw	LABEL_5535	; $A1
+.dw	LABEL_5535	; $A2
+.dw	LABEL_5538	; $A3
+.dw	LABEL_5595	; $A4
+.dw	LABEL_55A3	; $A5
+.dw	LABEL_55A9	; $A6
+.dw	LABEL_55BB	; $A7
+.dw	LABEL_55CD	; $A8
+.dw	LABEL_55E1	; $A9
+.dw	LABEL_55EF	; $AA
+.dw	LABEL_5619	; $AB
+.dw	LABEL_5666	; $AC
+.dw	LABEL_569C	; $AD
+.dw	LABEL_56A2	; $AE
+.dw	LABEL_5535	; $AF
+.dw	LABEL_5535	; $B0
+.dw	LABEL_56CD	; $B1
+.dw	LABEL_56D3	; $B2
+.dw	LABEL_56D9	; $B3
+.dw	LABEL_56E9	; $B4
+.dw	LABEL_56F9	; $B5
+.dw	LABEL_5535	; $B6
+; =================================================================
 
 
-LABEL_48DF:
-	ld hl, $C501
+
+SceneRoom_Suelo:
+	ld hl, Dialogue_flags+1	; Visisted Suelo flag
 	ld a, (hl)
 	or a
 	jr nz, +
+	; first time
 	ld (hl), $01
 	ld hl, $0002
 	call ShowDialogue_B2
@@ -10048,45 +10089,46 @@ LABEL_48DF:
 	ld (Sound_index), a
 	jp LABEL_2A6D
 
-LABEL_48FC:
-	ld a, ($C502)
+SceneRoom_Nekise:
+	ld a, (Dialogue_flags+2)	; Visisted Nekise flag
 	or a
 	jr nz, +
+	; first time
 	ld hl, $0008
 	call ShowDialogue_B2
 	ld a, ItemID_LaconiaPot
 	ld (CurrentItem), a
 	call Inventory_AddItem
 	ld a, $38
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, +
 	ld a, $01
-	ld ($C502), a
+	ld (Dialogue_flags+2), a
 +:
 	ld hl, $0010
 	jp ShowDialogue_B2
 
-LABEL_4922:
+SceneRoom_CamineetMan1:
 	ld	hl, $12
 	jp	ShowDialogue_B2
 
-LABEL_4928:
+SceneRoom_CamineetMan2:
 	ld	hl, $14
 	jp	ShowDialogue_B2
 
-LABEL_492E:
+SceneRoom_CamineetMan3:
 	ld	hl, $16
 	jp	ShowDialogue_B2
 
-LABEL_4934:
+SceneRoom_CamineetMan4:
 	ld	hl, $18
 	jp	ShowDialogue_B2
 
-LABEL_493A:
+SceneRoom_CamineetMan5:
 	ld	hl, $1A
 	jp	ShowDialogue_B2
 
-LABEL_4940:
+SceneRoom_CamineetAlgolMan:
 	ld hl, $0062
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10098,24 +10140,24 @@ LABEL_4940:
 +:
 	jp ShowDialogue_B2
 
-LABEL_495A:
+SceneRoom_CamineetGuard1:
 	ld	hl, $1C
 	jp	ShowDialogue_B2
 
-LABEL_4960:
+SceneRoom_CamineetGuard2:
 	ld	hl, $1E
 	jp	ShowDialogue_B2
 
-LABEL_4966:
-	ld a, $33
-	call Inventory_FindFreeSlot
+SceneRoom_CamineetGuard3:
+	ld a, ItemID_RoadPass
+	call Inventory_FindItem
 	jr z, +
 	ld hl, $0020
 	jp ShowDialogue_B2
 
-LABEL_4973:
-	ld a, $33
-	call Inventory_FindFreeSlot
+SceneRoom_CamineetGuard4:
+	ld a, ItemID_RoadPass
+	call Inventory_FindItem
 	jr z, +
 	ld hl, $0022
 	jp ShowDialogue_B2
@@ -10130,41 +10172,41 @@ LABEL_4973:
 	ld ($C2E9), a
 	ret
 
-LABEL_4991:
+SceneRoom_ParolitWoman1:
 	ld	hl, $26
 	jp	ShowDialogue_B2
 
-LABEL_4997:
+SceneRoom_ParolitMan1:
 	ld	hl, $28
 	jp	ShowDialogue_B2
 
-LABEL_499D:
+SceneRoom_ParolitMan2:
 	ld	hl, $2A
 	jp	ShowDialogue_B2
 
-LABEL_49A3:
+SceneRoom_ParolitMan3:
 	ld	hl, $2E
 	jp	ShowDialogue_B2
 
-LABEL_49A9:
+SceneRoom_ParolitMan4:
 	ld	hl, $30
 	jp	ShowDialogue_B2
 
-LABEL_49AF:
+SceneRoom_ParolitMan5:
 	ld	hl, $32
 	jp	ShowDialogue_B2
 
-LABEL_49B5:
-	ld a, ($C504)
+SceneRoom_AirStripGuard:
+	ld a, (Dialogue_flags+4)	; Luveno state
 	cp $07
-	jp nc, LABEL_4A8C
+	jp nc, SpaceportsClosed	; if we have Hapsby, jump
 	ld hl, $0070
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
 	ld hl, $0020
 	jr nz, +
 	ld a, $34
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	ld hl, $00CE
 	jr nz, +
 	ld a, $06
@@ -10173,12 +10215,12 @@ LABEL_49B5:
 +:
 	jp ShowDialogue_B2
 
-LABEL_49E0:
+SceneRoom_ShionMan1:
 	ld	hl, $286
 	jp	ShowDialogue_B2
 
-LABEL_49E6:
-	ld a, $47
+SceneRoom_MadDoctor:
+	ld a, EnemyID_DrMad
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld a, (Myau_stats)
@@ -10188,6 +10230,7 @@ LABEL_49E6:
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
 	jr nz, +
+	; Kill Myau
 	ld a, $AE
 	ld (Sound_index), a
 	ld a, $01
@@ -10206,33 +10249,33 @@ LABEL_49E6:
 	call CloseTextBox
 	ld a, (Party_curr_num)
 	or a
-	jr z, +
-	ld a, $38
-	call Inventory_FindFreeSlot
+	jr z, +	; We don't have Myau yet
+	ld a, ItemID_LaconiaPot
+	call Inventory_FindItem
 	jr z, +
 	ld hl, $C518
 	ld (Dungeon_obj_flag_addr), hl
-	ld a, $38
+	ld a, ItemID_LaconiaPot
 	ld (Dungeon_item_index), a
 +:
 	jp LABEL_5389
 
-LABEL_4A3E:
+SceneRoom_PalmaLuggageHandler1:
 	ld	hl, $6A
 	jp	ShowDialogue_B2
 
-LABEL_4A44:
+SceneRoom_PalmaLuggageHandler2:
 	ld	hl, $6C
 	jp	ShowDialogue_B2
 
-LABEL_4A4A:
+SceneRoom_PalmaLuggageHandler3:
 	ld	hl, $6E
 	jp	ShowDialogue_B2
 
-LABEL_4A50:
-	ld a, ($C504)
+SceneRoom_AirStripGuard2:
+	ld a, (Dialogue_flags+4)	; Luveno state
 	cp $07
-	jr nc, LABEL_4A8C
+	jr nc, SpaceportsClosed		; jump if we have Hapsby
 	ld hl, $0070
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10241,8 +10284,8 @@ LABEL_4A50:
 	jp ShowDialogue_B2
 
 +:
-	ld a, $34
-	call Inventory_FindFreeSlot
+	ld a, ItemID_Passport
+	call Inventory_FindItem
 	jr z, +
 	ld hl, $00CE
 	jp ShowDialogue_B2
@@ -10259,11 +10302,11 @@ LABEL_4A50:
 	call LABEL_787B
 	ret
 
-LABEL_4A8C:
+SpaceportsClosed:
 	ld hl, $019E
 	call ShowDialogue_B2
-	ld a, $34
-	call Inventory_FindFreeSlot
+	ld a, ItemID_Passport
+	call Inventory_FindItem
 	ret nz
 	push bc
 	call Inventory_RemoveItem2
@@ -10277,9 +10320,9 @@ LABEL_4AA3:
 LABEL_4AA6:
 .db	$05, $21, $15
 
-LABEL_4AA9:
-	ld a, $33
-	call Inventory_FindFreeSlot
+SceneRoom_RoadGuard1:
+	ld a, ItemID_RoadPass
+	call Inventory_FindItem
 	ld hl, $0020
 	jr nz, +
 	ld a, $04
@@ -10288,9 +10331,9 @@ LABEL_4AA9:
 +:
 	jp ShowDialogue_B2
 
-LABEL_4ABE:
-	ld a, $33
-	call Inventory_FindFreeSlot
+SceneRoom_RoadGuard2:
+	ld a, ItemID_RoadPass
+	call Inventory_FindItem
 	ld hl, $0022
 	jr nz, +
 	ld a, $05
@@ -10299,7 +10342,7 @@ LABEL_4ABE:
 +:
 	jp ShowDialogue_B2
 
-LABEL_4AD3:
+SceneRoom_PassportOffice:
 	ld hl, $0072
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10334,7 +10377,7 @@ LABEL_4AD3:
 	jp ShowDialogue_B2
 
 +:
-	ld de, $0064
+	ld de, 100
 	ld hl, (Current_money)
 	or a
 	sbc hl, de
@@ -10348,20 +10391,21 @@ LABEL_4AD3:
 	call ShowDialogue_B2
 	ld a, ItemID_Passport
 	ld (CurrentItem), a
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	ret z
 	jp Inventory_AddItem
 
-LABEL_4B43:
+SceneRoom_ShionMan2:
 	ld a, (Party_curr_num)
 	or a
+	; we don't have Myau yet
 	ld hl, $0034
 	jr z, +
 	ld hl, $003A
 +:
 	jp ShowDialogue_B2
 
-LABEL_4B52:
+SceneRoom_ShionMan3:
 	ld a, (Party_curr_num)
 	or a
 	ld hl, $003C
@@ -10370,63 +10414,63 @@ LABEL_4B52:
 +:
 	jp ShowDialogue_B2
 
-LABEL_4B61:
+SceneRoom_ShionMan4:
 	ld	hl, $42
 	jp	ShowDialogue_B2
 
-LABEL_4B67:
+SceneRoom_ShionMan5:
 	ld	hl, $44
 	jp	ShowDialogue_B2
 
-LABEL_4B6D:
+SceneRoom_ShionMan6:
 	ld	hl, $46
 	jp	ShowDialogue_B2
 
-LABEL_4B73:
+SceneRoom_ShionMan7:
 	ld	hl, $48
 	jp	ShowDialogue_B2
 
-LABEL_4B79:
+SceneRoom_ShionMan8:
 	ld	hl, $4A
 	jp	ShowDialogue_B2
 
-LABEL_4B7F:
+SceneRoom_ShionMan9:
 	ld	hl, $4C
 	jp	ShowDialogue_B2
 
-LABEL_4B85:
+SceneRoom_EppiMan1:
 	ld	hl, $4E
 	jp	ShowDialogue_B2
 
-LABEL_4B8B:
+SceneRoom_EppiMan2:
 	ld	hl, $50
 	jp	ShowDialogue_B2
 
-LABEL_4B91:
+SceneRoom_EppiMan3:
 	ld	hl, $52
 	jp	ShowDialogue_B2
 
-LABEL_4B97:
+SceneRoom_EppiMan4:
 	ld	hl, $54
 	jp	ShowDialogue_B2
 
-LABEL_4B9D:
+SceneRoom_EppiMan5:
 	ld hl, $0056
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
 	ld hl, $0060
 	jr nz, ++
-	ld a, $2D
-	call Inventory_FindFreeSlot
+	ld a, ItemID_DungeonKey
+	call Inventory_FindItem
 	jr z, +
-	ld hl, $C604
-	ld (hl), $00
+	ld hl, Event_flags+4
+	ld (hl), $00		; unlock Dungeon Key
 +:
 	ld hl, $0058
 ++:
 	jp ShowDialogue_B2
 
-LABEL_4BBD:
+SceneRoom_EppiMan6:
 	ld hl, $005C
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10495,7 +10539,7 @@ LABEL_4C0D:
 
 +:
 	ld a, ItemID_LaconiaPot
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, +
 	push hl
 	ld hl, $0096
@@ -10517,7 +10561,7 @@ LABEL_4C0D:
 	ld a, ItemID_Alsulin
 	ld (CurrentItem), a
 	call Inventory_AddItem
-	jp LABEL_43CF
+	jp MyauIntro
 
 +:
 	ld hl, $007C
@@ -10537,7 +10581,7 @@ LABEL_4C70:
 	ld (Dungeon_direction), a
 	ld hl, Game_mode
 	ld (hl), $0B ; GameMode_Dungeon
-	call LABEL_661C
+	call Dungeon_PitFall
 	ld a, $85
 	jp Map_CheckMusic
 
@@ -10549,7 +10593,7 @@ LABEL_4C70:
 	cp $03
 	jr nc, +
 	ld a, $37
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, ++
 +:
 	ld hl, $029E
@@ -10566,7 +10610,7 @@ LABEL_4C70:
 	call Inventory_AddItem
 	pop bc
 	ld a, $37
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	ret nz
 	ld hl, $029C
 	call ShowDialogue_B2
@@ -10574,7 +10618,7 @@ LABEL_4C70:
 	call CloseTextBox
 	ld a, $20
 	ld (Scene_type), a
-	call LABEL_3D47
+	call Scene_LoadData
 	ld a, $D0
 	ld (Sprite_table), a
 	ld a, $0C
@@ -10607,7 +10651,7 @@ LABEL_4C70:
 	pop af
 	ld (Char_stats), a
 	call FadeOut2
-	call LABEL_3D47
+	call Scene_LoadData
 	ld a, $D0
 	ld (Sprite_table), a
 	ld a, $0C
@@ -10618,7 +10662,7 @@ LABEL_4C70:
 	call FadeOut2
 	ld a, $1D
 	ld (Scene_type), a
-	call LABEL_3D47
+	call Scene_LoadData
 	call LABEL_2A6D
 	ld a, $0C
 	call WaitForVInt
@@ -10670,7 +10714,7 @@ LABEL_4DAB:
 
 +:
 	ld a, $24
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, +
 	push bc
 	call Inventory_RemoveItem2
@@ -10692,7 +10736,7 @@ LABEL_4DD4:
 
 +:
 	ld a, $24
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld hl, $00C4
@@ -10705,7 +10749,7 @@ LABEL_4DD4:
 LABEL_4DFB:
 	ld a, ($C504)
 	or a
-	jp z, LABEL_4765
+	jp z, Scene_RoomScriptEnd
 	ld a, $34
 	call LoadDialogueSprite
 	call BuildSprites
@@ -10765,13 +10809,13 @@ LABEL_4DFB:
 	ld hl, $00D2
 	call ShowDialogue_B2
 	ld a, $32
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr z, ++
 	ld hl, $00D6
 	call ShowDialogue_B2
 +:
 	ld a, $32
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr z, ++
 	ld hl, $0104
 	jp ShowDialogue_B2
@@ -10786,7 +10830,7 @@ LABEL_4E9C:
 	ld hl, $C504
 	ld a, (hl)
 	cp $02
-	jp c, LABEL_4765
+	jp c, Scene_RoomScriptEnd
 	ld a, $10
 	call LoadDialogueSprite
 	call BuildSprites
@@ -10960,7 +11004,7 @@ LABEL_4F9B:
 	call ShowDialogue_B2
 	ld a, ItemID_GasShield
 	ld (CurrentItem), a
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	ret z
 	jp Inventory_AddItem
 
@@ -11124,7 +11168,7 @@ LABEL_50DA:
 
 +:
 	ld a, $24
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld hl, $020A
@@ -11175,7 +11219,7 @@ LABEL_510D:
 	call ShowDialogue_B2
 	ld a, ItemID_Cake
 	ld (CurrentItem), a
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	ret z
 	jp Inventory_AddItem
 
@@ -11194,14 +11238,14 @@ LABEL_5157:
 LABEL_516F:
 	ld a, (Party_curr_num)
 	cp $03
-	jp nc, LABEL_4765
+	jp nc, Scene_RoomScriptEnd
 	ld a, $3B
 	call LoadDialogueSprite
 	call BuildSprites
 	ld hl, $00AE
 	call ShowDialogue_B2
 	ld a, ItemID_Letter
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	ret nz
 	call Inventory_RemoveItem2
 	pop hl
@@ -11215,13 +11259,13 @@ LABEL_516F:
 	call UnlockCharacter
 	ld a, $03
 	ld (Party_curr_num), a
-	jp LABEL_4461
+	jp NoahIntro
 
 LABEL_51B1:
 	ld hl, $C504
 	ld a, (hl)
 	cp $02
-	jp nc, LABEL_4765
+	jp nc, Scene_RoomScriptEnd
 	ld a, $10
 	call LoadDialogueSprite
 	call BuildSprites
@@ -11243,7 +11287,7 @@ LABEL_51D6:
 LABEL_51DC:
 	ld a, ($C504)
 	or a
-	jp nz, LABEL_4765
+	jp nz, Scene_RoomScriptEnd
 	ld a, $34
 	call LoadDialogueSprite
 	call BuildSprites
@@ -11283,7 +11327,7 @@ LABEL_521D:
 	call ShowYesNoPrompt
 	jr nz, +
 	ld a, $33
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, +
 	ld hl, $0024
 	jp ShowDialogue_B2
@@ -11304,7 +11348,7 @@ LABEL_5249:
 
 +:
 	ld a, $24
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld hl, $00EA
@@ -11410,7 +11454,7 @@ LABEL_52DB:
 	call ShowDialogue_B2
 	ld a, ItemID_Crystal
 	ld (CurrentItem), a
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	ret z
 	jp Inventory_AddItem
 
@@ -11433,7 +11477,7 @@ LABEL_534B:
 	call ShowYesNoPrompt
 	jr nz, +
 	ld a, $33
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, +
 	ld hl, $021E
 	call ShowDialogue_B2
@@ -11501,7 +11545,7 @@ LABEL_53BF:
 
 +:
 	ld a, ItemID_Cake
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, +
 	push bc
 	call Inventory_RemoveItem2
@@ -11530,7 +11574,7 @@ LABEL_5401:
 
 +:
 	ld a, ItemID_AmberEye
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, +
 	call Inventory_RemoveItem2
 	ld a, ItemID_EclipseTorch
@@ -11552,7 +11596,7 @@ LABEL_5430:
 	ld a, $18
 	cp b
 	jr z, +
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, ++
 +:
 	ld hl, $0258
@@ -11647,7 +11691,7 @@ LABEL_54EF:
 LABEL_54FB:
 	ld a, ($C516)
 	or a
-	jp nz, LABEL_4765
+	jp nz, Scene_RoomScriptEnd
 	ld a, $48
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
@@ -11686,7 +11730,7 @@ LABEL_553D:
 GetHapsby:
 	ld a, ItemID_Hapsby
 	ld (CurrentItem), a
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr z, LABEL_553D
 	call CloseTextBox
 	ld hl, $C801
@@ -11703,11 +11747,11 @@ LABEL_5566:
 	jr z, LABEL_553D
 	ld a, ItemID_Hapsby
 	ld (CurrentItem), a
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr nz, LABEL_553D
 	ld a, ItemID_Hovercraft
 	ld (CurrentItem), a
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	jr z, LABEL_553D
 	ld hl, $0178
 	call ShowDialogue_B2
@@ -11796,7 +11840,7 @@ LABEL_5619:
 	call VIntDelay
 	ld a, $1F
 	ld (Scene_type), a
-	call LABEL_3D47
+	call Scene_LoadData
 	ld hl, $FFFF
 	ld (hl), :Bank19
 	ld hl, Palette_DarkForce_B19
@@ -11825,7 +11869,7 @@ LABEL_5666:
 	call FadeOut2
 	ld a, $1D
 	ld (Scene_type), a
-	call LABEL_3D47
+	call Scene_LoadData
 	ld a, $0C
 	call WaitForVInt
 	call FadeIn2
@@ -11842,7 +11886,7 @@ LABEL_5666:
 	call ShowDialogue_B2
 	call CloseTextBox
 	pop hl
-	jp LABEL_454E
+	jp EndingScreen
 
 LABEL_569C:
 	ld	hl, $2A4
@@ -12298,7 +12342,7 @@ LABEL_5A70:
 
 +:
 	call LABEL_7143
-	ld a, ($C264)
+	ld a, (Scroll_direction)
 	and $0F
 	ret z
 	ld c, $FF
@@ -12332,7 +12376,7 @@ LABEL_5A98:
 	jp nz, +
 	ld a, (iy+18)
 	ld (iy+19), a
-	ld a, ($C264)
+	ld a, (Scroll_direction)
 	and $0F
 	jp z, LABEL_5AFC
 	ld b, $FF
@@ -12366,7 +12410,7 @@ LABEL_5A98:
 	jp LABEL_5B30
 
 LABEL_5AFC:
-	ld a, ($C264)
+	ld a, (Scroll_direction)
 	and $0F
 	jp nz, LABEL_5B30
 --:
@@ -13883,7 +13927,7 @@ LABEL_65EE:
 LABEL_660A:
 	ld	a, (hl)
 	cp	$FF
-	jr	z, LABEL_661C
+	jr	z, Dungeon_PitFall
 	inc	hl
 	cp	b
 	jr	nz, LABEL_6618
@@ -13894,7 +13938,7 @@ LABEL_6618:
 	add	hl, de
 	jp	LABEL_660A
 
-LABEL_661C:
+Dungeon_PitFall:
 	ld	de, $7E00
 	ld	hl, $00C0
 	ld	bc, $0080
@@ -14374,7 +14418,7 @@ LABEL_6947:
 LABEL_6959:
 	ld	a, c
 	ld	(Scene_type), a
-	call	LABEL_3D47
+	call	Scene_LoadData
 	jp	LABEL_691D
 
 Dungeon_CheckObjects:
@@ -14927,7 +14971,7 @@ LABEL_6D21:
 	push	hl
 	ld	h, (hl)
 	ld	l, a
-	call	nz, LABEL_6E64
+	call	nz, LoadTilemapRawRect
 	pop	hl
 	inc	hl
 	ret
@@ -14944,7 +14988,7 @@ LABEL_6D34:
 	push	hl
 	ld	h, (hl)
 	ld	l, a
-	call	z, LABEL_6E64
+	call	z, LoadTilemapRawRect
 	pop	hl
 	inc	hl
 	ret
@@ -14959,7 +15003,7 @@ LABEL_6D45:
 	push	hl
 	ld	h, (hl)
 	ld	l, a
-	call	z, LABEL_6E64
+	call	z, LoadTilemapRawRect
 	pop	hl
 	inc	hl
 	inc	hl
@@ -15137,7 +15181,7 @@ LABEL_6E4C:
 	ld	l, a
 	ld	de, $D114
 	ld	bc, $1218
-LABEL_6E64:
+LoadTilemapRawRect:
 	push	bc
 	push	de
 	ld	b, $00
@@ -15148,7 +15192,7 @@ LABEL_6E64:
 	add	hl, bc
 	ex   de, hl
 	pop	bc
-	djnz	LABEL_6E64
+	djnz	LoadTilemapRawRect
 	ret
 
 
@@ -15473,7 +15517,7 @@ LABEL_7143:
 	ld a, (hl)
 	dec (hl)
 	jp m, +
-	ld a, ($C264)
+	ld a, (Scroll_direction)
 	ld c, a
 	jp ++
 
@@ -15549,7 +15593,7 @@ LABEL_7143:
 	ld l, a
 	ld a, $02
 +++:
-	ld ($C264), a
+	ld (Scroll_direction), a
 	ld a, $FF
 	ld ($C2D2), a
 	ld a, d
@@ -15587,7 +15631,7 @@ LABEL_7143:
 	add hl, de
 	ld a, $08
 ++:
-	ld ($C264), a
+	ld (Scroll_direction), a
 	ld a, $FF
 	ld ($C2D2), a
 	ld a, l
@@ -15606,7 +15650,7 @@ LABEL_7143:
 	ld (Sound_index), a
 	xor a
 	ld ($C2D2), a
-	ld ($C264), a
+	ld (Scroll_direction), a
 	ld ($C265), a
 	ret
 
@@ -15686,7 +15730,7 @@ DecompressScrollTilemap:
 	jp --
 
 LABEL_72A6:
-	ld a, ($C264)
+	ld a, (Scroll_direction)
 	and $0C
 	ret z
 	ld b, a
@@ -15788,7 +15832,7 @@ LABEL_72A6:
 	ret
 
 LABEL_733A:
-	ld a, ($C264)
+	ld a, (Scroll_direction)
 	and $03
 	ret z
 	ld b, a
@@ -15893,7 +15937,7 @@ LABEL_733A:
 	ret
 
 UpdateScrollingTilemap:
-	ld a, ($C264)
+	ld a, (Scroll_direction)
 	and $0F
 	ret z
 	ld b, a
@@ -16847,7 +16891,7 @@ LABEL_792A:
 	or a
 	ret nz
 	ld a, $35
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	ret z
 	ld hl, $00A0
 	ld ($C2DB), hl
@@ -16909,7 +16953,7 @@ LABEL_7972:
 	cp $D2
 	ret nc
 	ld a, $3B
-	call Inventory_FindFreeSlot
+	call Inventory_FindItem
 	ret z
 	call LABEL_7BC4
 	ld c, $1E
@@ -17311,7 +17355,7 @@ LABEL_7CBB:
 	djnz --
 	ret
 
-LABEL_7CE4:
+Ending_FadeSky:
 	ld hl, $FFFF
 	ld (hl), :Bank03
 	ld hl, LABEL_B03_BED0
@@ -19350,7 +19394,7 @@ Dialogue_Index_02AA:
 .db "HEAVEN. HURRY TO", Dialogue_NewLine
 .db Word_The, Word_Governor, "!", Dialogue_Terminator65
 
-LABEL_B49B:
+DialogueIntro1:
 .db "SCUM! DO NOT SNIFF", Dialogue_NewLine
 .db "AROUND IN ", Word_Lassic, Dialogue_Apostrophe, "S", Dialogue_NewLine
 .db "AFFAIRS! LEARN", Dialogue_NewLine
@@ -19358,7 +19402,7 @@ LABEL_B49B:
 .db Word_Nero, "! WHAT HAPP-", Dialogue_NewLine
 .db "ENED! DON", Dialogue_Apostrophe, "T DIE!", Dialogue_Terminator65
 
-LABEL_B4FC:
+DialogueIntro2:
 .db Word_Alis, ",LISTEN!", Dialogue_NewLine
 .db Word_Lassic, " IS LEADING", Dialogue_NewLine
 .db "OUR ", Word_World, " TO", Dialogue_NewLine
@@ -19376,28 +19420,28 @@ LABEL_B4FC:
 .db Word_Alis, ",IT", Dialogue_Apostrophe, "S TOO LATE", Dialogue_NewLine
 .db "FOR ME. BE STRONG.", Dialogue_Terminator65
 
-LABEL_B5D5:
+DialogueIntro3:
 .db "I ", Word_Will, " MAKE SURE", Dialogue_NewLine
 .db Word_That, " ", Word_My_Brother, Dialogue_NewLine
 .db "DIED NOT IN VAIN!", Dialogue_NewLine
 .db "WATCH OVER AND", Dialogue_NewPage
 .db "PROTECT ME, ", Word_Nero, "!", Dialogue_Terminator65
 
-LABEL_B617:
+DialogueMyauIntro1:
 .db "WE ", Word_Will, " BE FELLOW", Dialogue_NewLine
 .db "TRAVELERS.", Dialogue_NewLine
 .db "I", Dialogue_Apostrophe, "M ", Word_Alis, "; WHAT", Dialogue_Apostrophe, "S", Dialogue_NewLine
 .db Word_Your, "NAME?", Dialogue_Terminator65
 
-LABEL_B646:
+DialogueMyauIntro2:
 .db "I", Dialogue_Apostrophe, "M ", Word_Myau, ".", Dialogue_Terminator65
 
-LABEL_B64D:
+DialogueMyauIntro3:
 .db Word_Myau, ", ", Word_Have, Word_You, Dialogue_NewLine
 .db "EVER HEARD OF A", Dialogue_NewLine
 .db "MAN ", Word_Named, "ODIN?", Dialogue_Terminator65
 
-LABEL_B66E:
+DialogueMyauIntro4:
 .db "YES, BUT HE IS", Dialogue_NewLine
 .db Word_Turned_To_Stone, "!", Dialogue_NewLine
 .db "IF HE DRINKS THIS", Dialogue_NewLine
@@ -19405,13 +19449,13 @@ LABEL_B66E:
 .db "O.K., BUT I ", Word_Cannot, Dialogue_NewLine
 .db "OPEN ", Word_The, "BOTTLE.", Dialogue_Terminator65
 
-LABEL_B6C1:
+DialogueMyauIntro5:
 .db "WELL, THEN, WE", Dialogue_Apostrophe, "D", Dialogue_NewLine
 .db "BETTER GO ", Word_Save, Dialogue_NewLine
 .db "ODIN TOGETHER,", Dialogue_NewLine
 .db "O.K.?", Dialogue_Terminator65
 
-LABEL_B6F3:
+DialogueOdinIntro1:
 .db Word_Thanks, " FOR SAVING", Dialogue_NewLine
 .db "ME. I GUESS IF", Dialogue_NewLine
 .db Word_Medusa, " CAN STOP", Dialogue_NewLine
@@ -19420,24 +19464,24 @@ LABEL_B6F3:
 .db "KILLING ", Word_Lassic, ",", Dialogue_NewLine
 .db "DO I?", Dialogue_Terminator65
 
-LABEL_B746:
+DialogueOdinIntro2:
 .db Word_My_Brother, " DIED", Dialogue_NewLine
 .db "TRYING TO KILL", Dialogue_NewLine
 .db Word_Lassic, ". BEFORE HE", Dialogue_NewLine
 .db "DIED, HE TOLD ME", Dialogue_NewPage
 .db "TO SEEK ", Word_Your, Word_Help, ".", Dialogue_Terminator65
 
-LABEL_B786:
+DialogueOdinIntro3:
 .db "IS ", Word_That, " SO? WELL,", Dialogue_NewLine
 .db "I ", Word_Must, " NOT LET", Dialogue_NewLine
 .db Word_Your, "BROTHER DIE", Dialogue_NewLine
 .db "UNAVENGED.", Dialogue_Terminator65
 
-LABEL_B7B9:
+DialogueOdinIntro4:
 .db "WHY DID ", Word_You, "TRY TO", Dialogue_NewLine
 .db "KILL ", Word_Medusa, "?", Dialogue_Terminator65
 
-LABEL_B7D1:
+DialogueOdinIntro5:
 .db "BECAUSE ", Word_Medusa, " HAS", Dialogue_NewLine
 .db "A MYSTIC AXE.", Dialogue_NewLine
 .db "UNFORTUNATELY, SHE", Dialogue_NewLine
@@ -19449,13 +19493,13 @@ LABEL_B7D1:
 .db "CAVE. LET", Dialogue_Apostrophe, "S GO AND", Dialogue_NewLine
 .db "GET IT", Dialogue_Terminator65
 
-LABEL_B85C:
+DialogueNoahIntro1:
 .db "I", Dialogue_Apostrophe, "VE RECEIVED A", Dialogue_NewLine
 .db "LETTER ", Word_From, Word_The, Dialogue_NewLine
 .db Word_Governor, ". ", Word_Please, Dialogue_NewLine
 .db "READ IT.", Dialogue_Terminator65
 
-LABEL_B884:
+DialogueNoahIntro2:
 .db "LET ME SEE IT.....", Dialogue_NewLine
 .db "OUR DUTY IS CLEAR;", Dialogue_NewLine
 .db "WE ", Word_Must, " PROTECT", Dialogue_NewLine
@@ -19471,14 +19515,14 @@ LABEL_B884:
 .db "MANHOLE IN THE", Dialogue_NewLine
 .db Word_Spaceport, ".", Dialogue_Terminator65
 
-LABEL_B929:
+DialogueMyauTransformation1:
 .db "WHEN ", Word_Myau, " EATS THE", Dialogue_NewLine
 .db "NUTS OF ", Word_Laerma, ", HE", Dialogue_NewLine
 .db "BECOMES CLOTHED IN", Dialogue_NewLine
 .db "FLAME AND EMITS A", Dialogue_NewPage
 .db "BLINDING LIGHT.", Dialogue_Terminator65
 
-LABEL_B97C:
+DialogueMyauTransformation2:
 .db "WHEN HE IS VISIBLE", Dialogue_NewLine
 .db "AGAIN, HE HAS BEEN", Dialogue_NewLine
 .db "TRANSFORMED INTO", Dialogue_NewPage
@@ -19487,29 +19531,29 @@ LABEL_B97C:
 .db Word_Myau, " FLAPS HIS", Dialogue_NewLine
 .db "WINGS PLOUDLY.", Dialogue_Terminator65
 
-LABEL_B9E8:
+DialogueEndingAlis:
 .db Dialogue_NewLine
 .db "     ", Word_Alis, Dialogue_Terminator63
 
-LABEL_B9F0:
+DialogueEndingOdin:
 .db Dialogue_NewLine
 .db "     ODIN", Dialogue_Terminator63
 
-LABEL_B9FB:
+DialogueEndingNoah:
 .db Dialogue_NewLine
 .db "     NOAH", Dialogue_Terminator63
 
-LABEL_BA06:
+DialogueEndingMyau:
 .db Dialogue_NewLine
 .db "     AND ", Word_Myau, Dialogue_Terminator63
 
-LABEL_BA12:
+DialogueEndingEnd1:
 .db "EVEN THOUGH THE", Dialogue_NewLine
 .db "MEMORIES OF EVIL", Dialogue_NewLine
 .db "FADE AWAY, THEIR", Dialogue_NewLine
 .db "NAMES ", Word_Will, " BE KEPT", Dialogue_Terminator63
 
-LABEL_BA54:
+DialogueEndingEnd2:
 .db $5F, "IN ", Word_The, "HEARTS OF", Dialogue_NewLine
 .db Word_The, "PEOPLE OF ", Word_The, Dialogue_NewLine
 .db "ALGOL FOREVER!!!", Dialogue_Terminator63
