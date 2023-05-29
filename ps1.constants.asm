@@ -436,6 +436,18 @@
 .define Word_From $FE
 .define Word_Ould $FF
 
+.define DialogueFlag_VisitedSuelo 1           ; 1 if you have been there
+.define DialogueFlag_PotFromNekise 2       ; 1 if you have
+.define DialogueFlag_LuvenoPrisonVisitCounter 3  ; 0 on first visit, 1 after
+.define DialogueFlag_LuvenoState 4               ; 0 -> in prison, 1 -> waiting for assistant, 2 -> have found assistant, 3 -> paid, 4..5 -> waiting, 6 -> built but no Hapsby, 7 -> all done
+.define DialogueFlag_NoahJoined 6                  ; 0 -> not joined yet,1 -> has joined party
+.define DialogueFlag_FluteUnhidden 7      ; 0 -> hidden,1 -> can find it
+.define DialogueFlag_HovercraftUnhidden 8      ; 0 -> hidden,1 -> can find it
+.define DialogueFlag_MirrorShieldUnhidden 9      ; 0 -> hidden,1 -> can find it
+.define DialogueFlag_StoneOdin $A
+.define DialogueFlag_BeatLassic $16
+.define DialogueFlag_ShadowWarrior $17
+
 ; RAM
 .define Sound_index $C004
 
@@ -482,7 +494,7 @@
 
 .define	CurrentCharacter $C2C2 ; Used for battle dialogue etc
 .define	CurrentItem $C2C4 ; Used in dialogue, Inventory_AddItem etc
-.define	CurrentDialogueNumber $C2C5 ; unsigned 2 bytes, little endian, used in dialogue, control character $5E
+.define	NumberToShowInText $C2C5 ; unsigned 2 bytes, little endian, used in dialogue, control character $5E
 .define	CurrentBattle_EnemyName $C2C8 ; 8 bytes
 .define	CurrentBattle_EXPReward $C2D0 ; unsigned 2 bytes, little endian
 

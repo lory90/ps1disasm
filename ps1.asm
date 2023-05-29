@@ -902,7 +902,7 @@ Menu_ContinueOrDelete:
 	call	CloseTextBox
 	ld	a, $08
 	ld	($FFFC), a
-	ld	a, (CurrentDialogueNumber)
+	ld	a, (NumberToShowInText)
 	ld	h, a
 	ld	l, 0
 	add	hl, hl
@@ -944,7 +944,7 @@ Menu_Delete:
 	call	ShowDialogue_B12
 	ld	a, $08
 	ld	($FFFC), a
-	ld	a, (CurrentDialogueNumber)
+	ld	a, (NumberToShowInText)
 	ld	h, $82
 	ld	l, a
 	ld	(hl), 0
@@ -984,7 +984,7 @@ LABEL_730:
 CheckSlotUsed:
 	ld	a, $08
 	ld	($FFFC), a
-	ld	a, (CurrentDialogueNumber)
+	ld	a, (NumberToShowInText)
 	ld	l, a
 	ld	h, $82
 	ld	a, (hl)
@@ -3047,7 +3047,7 @@ UnlockCharacter:
 
 AwardEXP:
 	ld	hl, (CurrentBattle_EXPReward)
-	ld	(CurrentDialogueNumber), hl
+	ld	(NumberToShowInText), hl
 	ld	a, l
 	or	h
 	ret	z
@@ -3977,7 +3977,7 @@ PlayerMenu_Save:
 	ld	hl, DialogueSavingToSlot_B12
 	call	ShowDialogue_B12
 	push	bc
-	ld	a, (CurrentDialogueNumber)
+	ld	a, (NumberToShowInText)
 	ld	h, a
 	ld	l, $00
 	add	hl, hl
@@ -5094,7 +5094,7 @@ ItemUse_Alsulin:
 	ld (Party_curr_num), a
 	ld hl, Event_flags
 	ld (hl), $00
-	ld hl, Dialogue_flags+$A
+	ld hl, Dialogue_flags+DialogueFlag_StoneOdin
 	ld (hl), $FF
 	ld a, $05
 	ld ($C2D8), a
@@ -5649,13 +5649,13 @@ PlayerMenu_Search:
 	ld a, h
 	cp $1E
 	jr nz, LABEL_28C5
-	ld a, (Dialogue_flags+7)	; Soothe Flute unhidden
+	ld a, (Dialogue_flags+DialogueFlag_FluteUnhidden)	; Soothe Flute unhidden
 	or a
 	jr z, LABEL_28C5
 	cp $FF
 	jr z, LABEL_28C5
 	ld a, $FF
-	ld (Dialogue_flags+7), a
+	ld (Dialogue_flags+DialogueFlag_FluteUnhidden), a
 	ld a, $26
 	jr ++
 
@@ -5668,7 +5668,7 @@ PlayerMenu_Search:
 	ld a, h
 	cp $48
 	jr nz, LABEL_28C5
-	ld a, (Dialogue_flags+9)	; Mirror Shield unhidden
+	ld a, (Dialogue_flags+DialogueFlag_MirrorShieldUnhidden)	; Mirror Shield unhidden
 	or a
 	jr z, LABEL_28C5
 	ld a, (Odin_stats+shield)
@@ -5688,9 +5688,9 @@ PlayerMenu_Search:
 LABEL_28C5:
 	ld a, (Room_index)
 	cp $A2
-	jp z, LABEL_5566
+	jp z, CheckHovercraft
 	cp $A3
-	jp z, LABEL_558C
+	jp z, FindOdin
 	ld hl, DialogueNothingUnusualHere_B12
 	call ShowDialogue_B12
 	jp CloseTextBox
@@ -5734,7 +5734,7 @@ LABEL_28EE:
 
 +:
 	ld hl, (Enemy_money)
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	call Shop_AddMeseta
 	ld a, h
 	or l
@@ -5846,7 +5846,7 @@ LABEL_2999:
 	add a, b
 	ld l, a
 	ld h, $00
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	ld hl, DialogueHealingFee_B12
 	call ShowDialogue_B12
 	call ShopMesetaWindowDraw
@@ -5855,7 +5855,7 @@ LABEL_2999:
 	call nz, LABEL_3A12
 	pop af
 	jr nz, LABEL_2A48
-	ld de, (CurrentDialogueNumber)
+	ld de, (NumberToShowInText)
 	ld hl, (Current_money)
 	or a
 	sbc hl, de
@@ -5951,7 +5951,7 @@ LABEL_2A98:
 	add hl, hl
 	add hl, hl
 	add hl, de
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	ld hl, DialogueChurchMesetaRequirement_B12
 	call ShowDialogue_B12
 	call ShopMesetaWindowDraw
@@ -5962,7 +5962,7 @@ LABEL_2A98:
 	jr nz, LABEL_2B15
 	ld hl, DialogueChurchCastSpell_B12
 	call ShowDialogue_B12
-	ld de, (CurrentDialogueNumber)
+	ld de, (NumberToShowInText)
 	ld hl, (Current_money)
 	or a
 	sbc hl, de
@@ -6056,7 +6056,7 @@ LABEL_2B46:
 	ld h, (ix+level)
 	or a
 	sbc hl, de
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	ld hl, DialogueChurchNeedEXP_B12
 	jp ShowDialogue_B12
 
@@ -6208,7 +6208,7 @@ LABEL_2CB1:
 	inc hl
 	ld h, (hl)
 	ld l, a
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	or h
 	jr nz, +
 	ld hl, DialogueToolShopComeInHandy_B12
@@ -6229,7 +6229,7 @@ LABEL_2CEA:
 
 +:
 	call Inventory_RemoveItem
-	ld hl, (CurrentDialogueNumber)
+	ld hl, (NumberToShowInText)
 	call Shop_AddMeseta
 	ld hl, DialogueToolShopAnythingElse_B12
 	call ShowDialogue_B12
@@ -7024,7 +7024,7 @@ LABEL_3292:
 	push	hl
 	push	bc
 	push	de
-	ld	hl, (CurrentDialogueNumber)
+	ld	hl, (NumberToShowInText)
 	ld	de, 10000
 	xor	a
 	ld	c, a
@@ -8105,7 +8105,7 @@ GetSaveGameSelectionCont:
 	ld l, a
 	inc l
 	ld h, $00
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	ret
 
 LABEL_39DD:
@@ -8832,7 +8832,7 @@ GameMode_NameInput:
 	ld de, $C778
 	ld bc, $0005
 	ldir
-	ld hl, (CurrentDialogueNumber)
+	ld hl, (NumberToShowInText)
 	add hl, hl
 	ld de, NameInputSaveSlotNameTileAddr-2
 	add hl, de
@@ -9930,151 +9930,151 @@ SceneRoomScriptTable:
 .dw	SceneRoom_EppiMan4	; $29
 .dw	SceneRoom_EppiMan5	; $2A
 .dw	SceneRoom_EppiMan6	; $2B
-.dw	LABEL_4BD1	; $2C
-.dw	LABEL_4BD7	; $2D
-.dw	LABEL_4BDD	; $2E
-.dw	LABEL_4BE3	; $2F
-.dw	LABEL_4BE9	; $30
-.dw	LABEL_4BEF	; $31
-.dw	LABEL_4BF5	; $32
-.dw	LABEL_4BFB	; $33
-.dw	LABEL_4C01	; $34
-.dw	LABEL_4C07	; $35
-.dw	LABEL_4C0D	; $36
-.dw	LABEL_4C70	; $37
-.dw	LABEL_4D74	; $38
-.dw	LABEL_4D7A	; $39
-.dw	LABEL_4D9F	; $3A
-.dw	LABEL_4DA5	; $3B
-.dw	LABEL_4DAB	; $3C
-.dw	LABEL_4DD4	; $3D
-.dw	LABEL_4DFB	; $3E
-.dw	LABEL_4E9C	; $3F
-.dw	LABEL_4EB3	; $40
-.dw	LABEL_4EB9	; $41
-.dw	LABEL_4EBF	; $42
-.dw	LABEL_4EC5	; $43
-.dw	LABEL_4ED9	; $44
-.dw	LABEL_4EDF	; $45
-.dw	LABEL_4EE5	; $46
-.dw	LABEL_4EEB	; $47
-.dw	LABEL_4EF1	; $48
-.dw	LABEL_4EF7	; $49
-.dw	LABEL_4EFD	; $4A
-.dw	LABEL_4F03	; $4B
-.dw	LABEL_4F09	; $4C
-.dw	LABEL_4F0F	; $4D
-.dw	LABEL_4F15	; $4E
-.dw	LABEL_4F34	; $4F
-.dw	LABEL_4F3A	; $50
-.dw	LABEL_4F40	; $51
-.dw	LABEL_4F46	; $52
-.dw	LABEL_4F4C	; $53
-.dw	LABEL_4F52	; $54
-.dw	LABEL_4F58	; $55
-.dw	LABEL_4F71	; $56
-.dw	LABEL_4F77	; $57
-.dw	LABEL_4F7D	; $58
-.dw	LABEL_4F83	; $59
-.dw	LABEL_4F89	; $5A
-.dw	LABEL_4F8F	; $5B
-.dw	LABEL_4F95	; $5C
-.dw	LABEL_4F9B	; $5D
-.dw	LABEL_4FD8	; $5E
-.dw	LABEL_4FDE	; $5F
-.dw	LABEL_4FE4	; $60
-.dw	LABEL_4FEA	; $61
-.dw	LABEL_4FF0	; $62
-.dw	LABEL_4FF6	; $63
-.dw	LABEL_4FFC	; $64
-.dw	LABEL_5002	; $65
-.dw	LABEL_5008	; $66
-.dw	LABEL_500E	; $67
-.dw	LABEL_5014	; $68
-.dw	LABEL_501A	; $69
-.dw	LABEL_5020	; $6A
-.dw	LABEL_5026	; $6B
-.dw	LABEL_502C	; $6C
-.dw	LABEL_5040	; $6D
-.dw	LABEL_5046	; $6E
-.dw	LABEL_504C	; $6F
-.dw	LABEL_5058	; $70
-.dw	LABEL_505E	; $71
-.dw	LABEL_5064	; $72
-.dw	LABEL_506A	; $73
-.dw	LABEL_5070	; $74
-.dw	LABEL_50A6	; $75
-.dw	LABEL_50BA	; $76
-.dw	LABEL_50C0	; $77
-.dw	LABEL_50C6	; $78
-.dw	LABEL_50DA	; $79
-.dw	LABEL_5101	; $7A
-.dw	LABEL_5107	; $7B
-.dw	LABEL_510D	; $7C
-.dw	LABEL_5157	; $7D
-.dw	LABEL_516F	; $7E
-.dw	LABEL_51B1	; $7F
-.dw	LABEL_51D6	; $80
-.dw	LABEL_51DC	; $81
-.dw	LABEL_521D	; $82
-.dw	LABEL_5249	; $83
-.dw	LABEL_5270	; $84
-.dw	LABEL_5284	; $85
-.dw	LABEL_528A	; $86
-.dw	LABEL_5290	; $87
-.dw	LABEL_52A4	; $88
-.dw	LABEL_52B2	; $89
-.dw	LABEL_52B8	; $8A
-.dw	LABEL_52BE	; $8B
-.dw	LABEL_52C4	; $8C
-.dw	LABEL_52CA	; $8D
-.dw	LABEL_52D0	; $8E
-.dw	LABEL_5337	; $8F
-.dw	LABEL_4F8F	; $90
-.dw	LABEL_4F95	; $91
-.dw	LABEL_4F9B	; $92
-.dw	LABEL_534B	; $93
-.dw	LABEL_5395	; $94
-.dw	LABEL_539B	; $95
-.dw	LABEL_53A1	; $96
-.dw	LABEL_53A7	; $97
-.dw	LABEL_53AD	; $98
-.dw	LABEL_53B3	; $99
-.dw	LABEL_53B9	; $9A
-.dw	LABEL_53BF	; $9B
-.dw	LABEL_5401	; $9C
-.dw	LABEL_5430	; $9D
-.dw	LABEL_54D0	; $9E
-.dw	LABEL_54FB	; $9F
-.dw	LABEL_552F	; $A0
-.dw	LABEL_5535	; $A1
-.dw	LABEL_5535	; $A2
-.dw	LABEL_5538	; $A3
-.dw	LABEL_5595	; $A4
-.dw	LABEL_55A3	; $A5
-.dw	LABEL_55A9	; $A6
-.dw	LABEL_55BB	; $A7
-.dw	LABEL_55CD	; $A8
-.dw	LABEL_55E1	; $A9
-.dw	LABEL_55EF	; $AA
-.dw	LABEL_5619	; $AB
-.dw	LABEL_5666	; $AC
-.dw	LABEL_569C	; $AD
-.dw	LABEL_56A2	; $AE
-.dw	LABEL_5535	; $AF
-.dw	LABEL_5535	; $B0
-.dw	LABEL_56CD	; $B1
-.dw	LABEL_56D3	; $B2
-.dw	LABEL_56D9	; $B3
-.dw	LABEL_56E9	; $B4
-.dw	LABEL_56F9	; $B5
-.dw	LABEL_5535	; $B6
+.dw	SceneRoom_PaseoLuggageHandler1	; $2C
+.dw	SceneRoom_PaseoLuggageHandler2	; $2D
+.dw	SceneRoom_PaseoSpaceport3	; $2E
+.dw	SceneRoom_Paseo1	; $2F
+.dw	SceneRoom_Paseo2	; $30
+.dw	SceneRoom_Paseo3	; $31
+.dw	SceneRoom_Paseo4	; $32
+.dw	SceneRoom_Paseo5	; $33
+.dw	SceneRoom_Paseo6	; $34
+.dw	SceneRoom_Paseo7	; $35
+.dw	SceneRoom_MyauSeller	; $36
+.dw	SceneRoom_GovernorGeneral	; $37
+.dw	SceneRoom_MansionGuard1	; $38
+.dw	SceneRoom_GuestHouseLady	; $39
+.dw	SceneRoom_BartevoVillager1	; $3A
+.dw	SceneRoom_BartevoVillager2	; $3B
+.dw	SceneRoom_GothicWoods1	; $3C
+.dw	SceneRoom_GothicWoods2	; $3D
+.dw	SceneRoom_DrLuveno	; $3E
+.dw	SceneRoom_Room3F	; $3F
+.dw	SceneRoom_LoreVillager1	; $40
+.dw	SceneRoom_LoreVillager2	; $41
+.dw	SceneRoom_LoreVillager3	; $42
+.dw	SceneRoom_LoreVillager4	; $43
+.dw	SceneRoom_LoreVillager5	; $44
+.dw	SceneRoom_AbionVillager1	; $45
+.dw	SceneRoom_AbionVillager2	; $46
+.dw	SceneRoom_AbionVillager3	; $47
+.dw	SceneRoom_AbionVillager4	; $48
+.dw	SceneRoom_AbionVillager5	; $49
+.dw	SceneRoom_UzoVillager1	; $4A
+.dw	SceneRoom_UzoVillager2	; $4B
+.dw	SceneRoom_UzoVillager3	; $4C
+.dw	SceneRoom_UzoVillager4	; $4D
+.dw	SceneRoom_UzoVillager5	; $4E
+.dw	SceneRoom_UzoVillager6	; $4F
+.dw	SceneRoom_CasbaVillager1	; $50
+.dw	SceneRoom_CasbaVillager2	; $51
+.dw	SceneRoom_AeroCastle1	; $52
+.dw	SceneRoom_CasbaVillager3	; $53
+.dw	SceneRoom_CasbaVillager4	; $54
+.dw	SceneRoom_CasbaVillager5	; $55
+.dw	SceneRoom_Drasgo1	; $56
+.dw	SceneRoom_Drasgo2	; $57
+.dw	SceneRoom_Drasgo3	; $58
+.dw	SceneRoom_Drasgo4	; $59
+.dw	SceneRoom_Drasgo5	; $5A
+.dw	SceneRoom_DrasgoCave1	; $5B
+.dw	SceneRoom_DrasgoCave2	; $5C
+.dw	SceneRoom_GasShieldSeller	; $5D
+.dw	SceneRoom_Skure1	; $5E
+.dw	SceneRoom_Skure2	; $5F
+.dw	SceneRoom_Skure3	; $60
+.dw	SceneRoom_Skure4	; $61
+.dw	SceneRoom_Skure5	; $62
+.dw	SceneRoom_Skure6	; $63
+.dw	SceneRoom_Skure7	; $64
+.dw	SceneRoom_Skure8	; $65
+.dw	SceneRoom_Skure9	; $66
+.dw	SceneRoom_Skure10	; $67
+.dw	SceneRoom_HonestDezorian1	; $68
+.dw	SceneRoom_HonestDezorian2	; $69
+.dw	SceneRoom_HonestDezorian3	; $6A
+.dw	SceneRoom_HonestDezorian4	; $6B
+.dw	SceneRoom_HonestDezorian5	; $6C
+.dw	SceneRoom_HonestDezorian6	; $6D
+.dw	SceneRoom_DishonestDezorian1	; $6E
+.dw	SceneRoom_DishonestDezorian2	; $6F
+.dw	SceneRoom_DishonestDezorian3	; $70
+.dw	SceneRoom_DishonestDezorian4	; $71
+.dw	SceneRoom_DishonestDezorian5	; $72
+.dw	SceneRoom_DishonestDezorian6	; $73
+.dw	SceneRoom_SopiaVillageChief	; $74
+.dw	SceneRoom_Miki	; $75
+.dw	SceneRoom_Sopia1	; $76
+.dw	SceneRoom_Sopia2	; $77
+.dw	SceneRoom_Sopia3	; $78
+.dw	SceneRoom_Sopia4	; $79
+.dw	SceneRoom_AeroCastle2	; $7A
+.dw	SceneRoom_AeroCastle3	; $7B
+.dw	SceneRoom_ShortCakeShop	; $7C
+.dw	SceneRoom_MahalCaveMotavianPeasant	; $7D
+.dw	SceneRoom_Noah	; $7E
+.dw	SceneRoom_LuvenoAssistant	; $7F
+.dw	SceneRoom_Room80	; $80
+.dw	SceneRoom_LuvenoPrison	; $81
+.dw	SceneRoom_TriadaPrisonGuard1	; $82
+.dw	SceneRoom_TriadaPrisoner1	; $83
+.dw	SceneRoom_TriadaPrisoner2	; $84
+.dw	SceneRoom_TriadaPrisoner3	; $85
+.dw	SceneRoom_TriadaPrisoner4	; $86
+.dw	SceneRoom_TriadaPrisoner5	; $87
+.dw	SceneRoom_TriadaPrisoner6	; $88
+.dw	SceneRoom_MedusaTower1	; $89
+.dw	SceneRoom_MedusaTower2	; $8A
+.dw	SceneRoom_MedusaTower3	; $8B
+.dw	SceneRoom_BartevoCave	; $8C
+.dw	SceneRoom_AbionTower	; $8D
+.dw	SceneRoom_Room8E	; $8E
+.dw	SceneRoom_Room8F	; $8F
+.dw	SceneRoom_DrasgoCave1	; $90
+.dw	SceneRoom_DrasgoCave2	; $91
+.dw	SceneRoom_GasShieldSeller	; $92
+.dw	SceneRoom_TriadaGuard	; $93
+.dw	SceneRoom_Room94	; $94
+.dw	SceneRoom_Room95	; $95
+.dw	SceneRoom_Room96	; $96
+.dw	SceneRoom_Room97	; $97
+.dw	SceneRoom_Room98	; $98
+.dw	SceneRoom_Room99	; $99
+.dw	SceneRoom_Room9A	; $9A
+.dw	SceneRoom_GiftCheck	; $9B
+.dw	SceneRoom_TorchBearer	; $9C
+.dw	SceneRoom_Tarzimal	; $9D
+.dw	SceneRoom_ShadowWarrior	; $9E
+.dw	SceneRoom_Lassic	; $9F
+.dw	SceneRoom_EppiWoodsNoCompass	; $A0
+.dw	SceneRoom_HapsbyScrapHeap	; $A1
+.dw	SceneRoom_HapsbyScrapHeap	; $A2
+.dw	SceneRoom_OdinStone	; $A3
+.dw	SceneRoom_CoronaTowerDezorian1	; $A4
+.dw	SceneRoom_GuaronMorgue	; $A5
+.dw	SceneRoom_CoronaTowerDishonestDezorian	; $A6
+.dw	SceneRoom_RoomA7	; $A7
+.dw	SceneRoom_BayaMalayPrisoner	; $A8
+.dw	SceneRoom_RoomA9	; $A9
+.dw	SceneRoom_LuvenoGuard	; $AA
+.dw	SceneRoom_DarkForce	; $AB
+.dw	SceneRoom_RoomAC	; $AC
+.dw	SceneRoom_RoomAD	; $AD
+.dw	SceneRoom_RoomAE	; $AE
+.dw	SceneRoom_HapsbyScrapHeap	; $AF
+.dw	SceneRoom_HapsbyScrapHeap	; $B0
+.dw	SceneRoom_RoomB1	; $B1
+.dw	SceneRoom_RoomB2	; $B2
+.dw	SceneRoom_FlightToMotavia	; $B3
+.dw	SceneRoom_FlightToPalma	; $B4
+.dw	SceneRoom_HapsbyTravel	; $B5
+.dw	SceneRoom_HapsbyScrapHeap	; $B6
 ; =================================================================
 
 
 
 SceneRoom_Suelo:
-	ld hl, Dialogue_flags+1	; Visisted Suelo flag
+	ld hl, Dialogue_flags+DialogueFlag_VisitedSuelo	; Visisted Suelo flag
 	ld a, (hl)
 	or a
 	jr nz, +
@@ -10090,7 +10090,7 @@ SceneRoom_Suelo:
 	jp LABEL_2A6D
 
 SceneRoom_Nekise:
-	ld a, (Dialogue_flags+2)	; Visisted Nekise flag
+	ld a, (Dialogue_flags+DialogueFlag_PotFromNekise)	; Visisted Nekise flag
 	or a
 	jr nz, +
 	; first time
@@ -10103,7 +10103,7 @@ SceneRoom_Nekise:
 	call Inventory_FindItem
 	jr nz, +
 	ld a, $01
-	ld (Dialogue_flags+2), a
+	ld (Dialogue_flags+DialogueFlag_PotFromNekise), a
 +:
 	ld hl, $0010
 	jp ShowDialogue_B2
@@ -10135,7 +10135,7 @@ SceneRoom_CamineetAlgolMan:
 	ld hl, $0060
 	jr z, +
 	ld hl, $0003
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	ld hl, $0064
 +:
 	jp ShowDialogue_B2
@@ -10197,7 +10197,7 @@ SceneRoom_ParolitMan5:
 	jp	ShowDialogue_B2
 
 SceneRoom_AirStripGuard:
-	ld a, (Dialogue_flags+4)	; Luveno state
+	ld a, (Dialogue_flags+DialogueFlag_LuvenoState)	; Luveno state
 	cp $07
 	jp nc, SpaceportsClosed	; if we have Hapsby, jump
 	ld hl, $0070
@@ -10273,7 +10273,7 @@ SceneRoom_PalmaLuggageHandler3:
 	jp	ShowDialogue_B2
 
 SceneRoom_AirStripGuard2:
-	ld a, (Dialogue_flags+4)	; Luveno state
+	ld a, (Dialogue_flags+DialogueFlag_LuvenoState)	; Luveno state
 	cp $07
 	jr nc, SpaceportsClosed		; jump if we have Hapsby
 	ld hl, $0070
@@ -10368,7 +10368,7 @@ SceneRoom_PassportOffice:
 
 +:
 	ld hl, $64
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	ld hl, $0078
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10480,47 +10480,47 @@ SceneRoom_EppiMan6:
 +:
 	jp ShowDialogue_B2
 
-LABEL_4BD1:
+SceneRoom_PaseoLuggageHandler1:
 	ld	hl, $80
 	jp	ShowDialogue_B2
 
-LABEL_4BD7:
+SceneRoom_PaseoLuggageHandler2:
 	ld	hl, $82
 	jp	ShowDialogue_B2
 
-LABEL_4BDD:
+SceneRoom_PaseoSpaceport3:
 	ld	hl, $84
 	jp	ShowDialogue_B2
 
-LABEL_4BE3:
+SceneRoom_Paseo1:
 	ld	hl, $86
 	jp	ShowDialogue_B2
 
-LABEL_4BE9:
+SceneRoom_Paseo2:
 	ld	hl, $88
 	jp	ShowDialogue_B2
 
-LABEL_4BEF:
+SceneRoom_Paseo3:
 	ld	hl, $8A
 	jp	ShowDialogue_B2
 
-LABEL_4BF5:
+SceneRoom_Paseo4:
 	ld	hl, $8C
 	jp	ShowDialogue_B2
 
-LABEL_4BFB:
+SceneRoom_Paseo5:
 	ld	hl, $8E
 	jp	ShowDialogue_B2
 
-LABEL_4C01:
+SceneRoom_Paseo6:
 	ld	hl, $90
 	jp	ShowDialogue_B2
 
-LABEL_4C07:
+SceneRoom_Paseo7:
 	ld	hl, $288
 	jp	ShowDialogue_B2
 
-LABEL_4C0D:
+SceneRoom_MyauSeller:
 	ld a, (Party_curr_num)
 	or a
 	jr z, +
@@ -10529,7 +10529,7 @@ LABEL_4C0D:
 
 +:
 	ld hl, $000A
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	ld hl, $0092
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10567,8 +10567,8 @@ LABEL_4C0D:
 	ld hl, $007C
 	jp ShowDialogue_B2
 
-LABEL_4C70:
-	ld a, ($C516)
+SceneRoom_GovernorGeneral:
+	ld a, (Dialogue_flags+DialogueFlag_BeatLassic)
 	or a
 	jr z, +
 	ld hl, $02A6
@@ -10592,7 +10592,7 @@ LABEL_4C70:
 	ld a, (Party_curr_num)
 	cp $03
 	jr nc, +
-	ld a, $37
+	ld a, ItemID_Letter
 	call Inventory_FindItem
 	jr nz, ++
 +:
@@ -10609,7 +10609,7 @@ LABEL_4C70:
 	ld (CurrentItem), a
 	call Inventory_AddItem
 	pop bc
-	ld a, $37
+	ld a, ItemID_Letter
 	call Inventory_FindItem
 	ret nz
 	ld hl, $029C
@@ -10623,8 +10623,8 @@ LABEL_4C70:
 	ld (Sprite_table), a
 	ld a, $0C
 	call WaitForVInt
-	ld hl, LABEL_4D6C
-	ld de, $C240
+	ld hl, Palette_GovernorGeneral
+	ld de, Target_palette
 	ld bc, $0008
 	ldir
 	call FadeIn2
@@ -10634,7 +10634,7 @@ LABEL_4C70:
 	ld a, $A0
 	ld (Sound_index), a
 	call VIntDelay
-	ld a, $4A
+	ld a, EnemyID_Saccubus
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld a, (Alis_stats)	; get status
@@ -10673,15 +10673,15 @@ LABEL_4C70:
 	ld hl, $00AA
 	jp ShowDialogue_B2
 
-LABEL_4D6C:
+Palette_GovernorGeneral:
 .db	$00, $00, $3F, $00, $00, $00, $00
 .db $00
 
-LABEL_4D74:
+SceneRoom_MansionGuard1:
 	ld	hl, $B4
 	jp	ShowDialogue_B2
 
-LABEL_4D7A:
+SceneRoom_GuestHouseLady:
 	ld hl, $00B6
 	call ShowDialogue_B2
 	call FadeOut2
@@ -10696,15 +10696,15 @@ LABEL_4D7A:
 	ld hl, $00B8
 	jp ShowDialogue_B2
 
-LABEL_4D9F:
+SceneRoom_BartevoVillager1:
 	ld	hl, $102
 	jp	ShowDialogue_B2
 
-LABEL_4DA5:
+SceneRoom_BartevoVillager2:
 	ld	hl, $106
 	jp	ShowDialogue_B2
 
-LABEL_4DAB:
+SceneRoom_GothicWoods1:
 	ld hl, $00BA
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10713,7 +10713,7 @@ LABEL_4DAB:
 	jp ShowDialogue_B2
 
 +:
-	ld a, $24
+	ld a, ItemID_Cola
 	call Inventory_FindItem
 	jr nz, +
 	push bc
@@ -10726,7 +10726,7 @@ LABEL_4DAB:
 	ld hl, $020E
 	jp ShowDialogue_B2
 
-LABEL_4DD4:
+SceneRoom_GothicWoods2:
 	ld hl, $00BA
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10735,7 +10735,7 @@ LABEL_4DD4:
 	jp ShowDialogue_B2
 
 +:
-	ld a, $24
+	ld a, ItemID_Cola
 	call Inventory_FindItem
 	jr nz, +
 	call Inventory_RemoveItem2
@@ -10746,14 +10746,14 @@ LABEL_4DD4:
 	ld hl, $020E
 	jp ShowDialogue_B2
 
-LABEL_4DFB:
-	ld a, ($C504)
+SceneRoom_DrLuveno:
+	ld a, (Dialogue_flags+DialogueFlag_LuvenoState)
 	or a
 	jp z, Scene_RoomScriptEnd
 	ld a, $34
 	call LoadDialogueSprite
 	call BuildSprites
-	ld a, ($C504)
+	ld a, (Dialogue_flags+DialogueFlag_LuvenoState)
 	cp $07
 	jr c, +
 	ld hl, $00D8
@@ -10769,7 +10769,7 @@ LABEL_4DFB:
 	cp $03
 	jr nc, ++
 	ld hl, $04B0
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	ld hl, $028C
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10778,7 +10778,7 @@ LABEL_4DFB:
 	jp ShowDialogue_B2
 
 +:
-	ld de, $04B0
+	ld de, 1200
 	ld hl, (Current_money)
 	or a
 	sbc hl, de
@@ -10789,7 +10789,7 @@ LABEL_4DFB:
 +:
 	ld (Current_money), hl
 	ld a, $03
-	ld ($C504), a
+	ld (Dialogue_flags+DialogueFlag_LuvenoState), a
 	ld hl, $0290
 	jp ShowDialogue_B2
 
@@ -10797,7 +10797,7 @@ LABEL_4DFB:
 	cp $05
 	jr nc, +
 	inc a
-	ld ($C504), a
+	ld (Dialogue_flags+DialogueFlag_LuvenoState), a
 	ld hl, $0292
 	jp ShowDialogue_B2
 
@@ -10805,7 +10805,7 @@ LABEL_4DFB:
 	cp $06
 	jr nc, +
 	inc a
-	ld ($C504), a
+	ld (Dialogue_flags+DialogueFlag_LuvenoState), a
 	ld hl, $00D2
 	call ShowDialogue_B2
 	ld a, $32
@@ -10814,7 +10814,7 @@ LABEL_4DFB:
 	ld hl, $00D6
 	call ShowDialogue_B2
 +:
-	ld a, $32
+	ld a, ItemID_Hapsby
 	call Inventory_FindItem
 	jr z, ++
 	ld hl, $0104
@@ -10822,12 +10822,12 @@ LABEL_4DFB:
 
 ++:
 	ld a, $07
-	ld ($C504), a
+	ld (Dialogue_flags+DialogueFlag_LuvenoState), a
 	ld hl, $0294
 	jp ShowDialogue_B2
 
-LABEL_4E9C:
-	ld hl, $C504
+SceneRoom_Room3F:
+	ld hl, Dialogue_flags+DialogueFlag_LuvenoState
 	ld a, (hl)
 	cp $02
 	jp c, Scene_RoomScriptEnd
@@ -10837,19 +10837,19 @@ LABEL_4E9C:
 	ld hl, $00DC
 	jp ShowDialogue_B2
 
-LABEL_4EB3:
+SceneRoom_LoreVillager1:
 	ld	hl, $118
 	jp	ShowDialogue_B2
 
-LABEL_4EB9:
+SceneRoom_LoreVillager2:
 	ld	hl, $10E
 	jp	ShowDialogue_B2
 
-LABEL_4EBF:
+SceneRoom_LoreVillager3:
 	ld	hl, $112
 	jp	ShowDialogue_B2
 
-LABEL_4EC5:
+SceneRoom_LoreVillager4:
 	ld hl, $0114
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10859,129 +10859,129 @@ LABEL_4EC5:
 +:
 	jp ShowDialogue_B2
 
-LABEL_4ED9:
+SceneRoom_LoreVillager5:
 	ld	hl, $10C
 	jp	ShowDialogue_B2
 
-LABEL_4EDF:
+SceneRoom_AbionVillager1:
 	ld	hl, $11C
 	jp	ShowDialogue_B2
 
-LABEL_4EE5:
+SceneRoom_AbionVillager2:
 	ld	hl, $11E
 	jp	ShowDialogue_B2
 
-LABEL_4EEB:
+SceneRoom_AbionVillager3:
 	ld	hl, $120
 	jp	ShowDialogue_B2
 
-LABEL_4EF1:
+SceneRoom_AbionVillager4:
 	ld	hl, $126
 	jp	ShowDialogue_B2
 
-LABEL_4EF7:
+SceneRoom_AbionVillager5:
 	ld	hl, $128
 	jp	ShowDialogue_B2
 
-LABEL_4EFD:
+SceneRoom_UzoVillager1:
 	ld	hl, $12E
 	jp	ShowDialogue_B2
 
-LABEL_4F03:
+SceneRoom_UzoVillager2:
 	ld	hl, $130
 	jp	ShowDialogue_B2
 
-LABEL_4F09:
+SceneRoom_UzoVillager3:
 	ld	hl, $132
 	jp	ShowDialogue_B2
 
-LABEL_4F0F:
+SceneRoom_UzoVillager4:
 	ld	hl, $134
 	jp	ShowDialogue_B2
 
-LABEL_4F15:
+SceneRoom_UzoVillager5:
 	ld hl, $013A
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
 	ld hl, $013C
 	jr z, ++
-	ld a, ($C507)
+	ld a, (Dialogue_flags+DialogueFlag_FluteUnhidden)
 	or a
 	jr nz, +
 	ld a, $01
-	ld ($C507), a
+	ld (Dialogue_flags+DialogueFlag_FluteUnhidden), a
 +:
 	ld hl, $013E
 ++:
 	jp ShowDialogue_B2
 
-LABEL_4F34:
+SceneRoom_UzoVillager6:
 	ld	hl, $136
 	jp	ShowDialogue_B2
 
-LABEL_4F3A:
+SceneRoom_CasbaVillager1:
 	ld	hl, $166
 	jp	ShowDialogue_B2
 
-LABEL_4F40:
+SceneRoom_CasbaVillager2:
 	ld	hl, $168
 	jp	ShowDialogue_B2
 
-LABEL_4F46:
+SceneRoom_AeroCastle1:
 	ld	hl, $16A
 	jp	ShowDialogue_B2
 
-LABEL_4F4C:
+SceneRoom_CasbaVillager3:
 	ld	hl, $16C
 	jp	ShowDialogue_B2
 
-LABEL_4F52:
+SceneRoom_CasbaVillager4:
 	ld	hl, $170
 	jp	ShowDialogue_B2
 
-LABEL_4F58:
+SceneRoom_CasbaVillager5:
 	ld hl, $0172
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
 	ld hl, $017C
 	jr nz, +
 	ld a, $01
-	ld ($C508), a
+	ld (Dialogue_flags+DialogueFlag_HovercraftUnhidden), a
 	ld hl, $0174
 +:
 	jp ShowDialogue_B2
 
-LABEL_4F71:
+SceneRoom_Drasgo1:
 	ld	hl, $17E
 	jp	ShowDialogue_B2
 
-LABEL_4F77:
+SceneRoom_Drasgo2:
 	ld	hl, $180
 	jp	ShowDialogue_B2
 
-LABEL_4F7D:
+SceneRoom_Drasgo3:
 	ld	hl, $184
 	jp	ShowDialogue_B2
 
-LABEL_4F83:
+SceneRoom_Drasgo4:
 	ld	hl, $186
 	jp	ShowDialogue_B2
 
-LABEL_4F89:
+SceneRoom_Drasgo5:
 	ld	hl, $188
 	jp	ShowDialogue_B2
 
-LABEL_4F8F:
+SceneRoom_DrasgoCave1:
 	ld	hl, $18C
 	jp	ShowDialogue_B2
 
-LABEL_4F95:
+SceneRoom_DrasgoCave2:
 	ld	hl, $190
 	jp	ShowDialogue_B2
 
-LABEL_4F9B:
-	ld hl, $03E8
-	ld (CurrentDialogueNumber), hl
+SceneRoom_GasShieldSeller:
+	ld hl, 1000
+	ld (NumberToShowInText), hl
 	ld hl, $0194
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -10990,7 +10990,7 @@ LABEL_4F9B:
 	jp ShowDialogue_B2
 
 +:
-	ld de, $03E8
+	ld de, 1000
 	ld hl, (Current_money)
 	or a
 	sbc hl, de
@@ -11008,63 +11008,63 @@ LABEL_4F9B:
 	ret z
 	jp Inventory_AddItem
 
-LABEL_4FD8:
+SceneRoom_Skure1:
 	ld	hl, $1A2
 	jp	ShowDialogue_B2
 
-LABEL_4FDE:
+SceneRoom_Skure2:
 	ld	hl, $1A4
 	jp	ShowDialogue_B2
 
-LABEL_4FE4:
+SceneRoom_Skure3:
 	ld	hl, $1A6
 	jp	ShowDialogue_B2
 
-LABEL_4FEA:
+SceneRoom_Skure4:
 	ld	hl, $1AA
 	jp	ShowDialogue_B2
 
-LABEL_4FF0:
+SceneRoom_Skure5:
 	ld	hl, $1B2
 	jp	ShowDialogue_B2
 
-LABEL_4FF6:
+SceneRoom_Skure6:
 	ld	hl, $1B8
 	jp	ShowDialogue_B2
 
-LABEL_4FFC:
+SceneRoom_Skure7:
 	ld	hl, $1BA
 	jp	ShowDialogue_B2
 
-LABEL_5002:
+SceneRoom_Skure8:
 	ld	hl, $1BC
 	jp	ShowDialogue_B2
 
-LABEL_5008:
+SceneRoom_Skure9:
 	ld	hl, $1BE
 	jp	ShowDialogue_B2
 
-LABEL_500E:
+SceneRoom_Skure10:
 	ld	hl, $1C4
 	jp	ShowDialogue_B2
 
-LABEL_5014:
+SceneRoom_HonestDezorian1:
 	ld	hl, $1C8
 	jp	ShowDialogue_B2
 
-LABEL_501A:
+SceneRoom_HonestDezorian2:
 	ld	hl, $1CA
 	jp	ShowDialogue_B2
 
-LABEL_5020:
+SceneRoom_HonestDezorian3:
 	ld	hl, $1CC
 	jp	ShowDialogue_B2
 
-LABEL_5026:
+SceneRoom_HonestDezorian4:
 	ld	hl, $1D0
 	jp	ShowDialogue_B2
 
-LABEL_502C:
+SceneRoom_HonestDezorian5:
 	ld hl, $01D6
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11074,39 +11074,39 @@ LABEL_502C:
 +:
 	jp ShowDialogue_B2
 
-LABEL_5040:
+SceneRoom_HonestDezorian6:
 	ld	hl, $1DC
 	jp	ShowDialogue_B2
 
-LABEL_5046:
+SceneRoom_DishonestDezorian1:
 	ld	hl, $1DE
 	jp	ShowDialogue_B2
 
-LABEL_504C:
+SceneRoom_DishonestDezorian2:
 	ld hl, $000A
-	ld (CurrentDialogueNumber), hl
+	ld (NumberToShowInText), hl
 	ld hl, $01E0
 	jp ShowDialogue_B2
 
-LABEL_5058:
+SceneRoom_DishonestDezorian3:
 	ld	hl, $1E2
 	jp	ShowDialogue_B2
 
-LABEL_505E:
+SceneRoom_DishonestDezorian4:
 	ld	hl, $1E4
 	jp	ShowDialogue_B2
 
-LABEL_5064:
+SceneRoom_DishonestDezorian5:
 	ld	hl, $1E6
 	jp	ShowDialogue_B2
 
-LABEL_506A:
+SceneRoom_DishonestDezorian6:
 	ld	hl, $1E8
 	jp	ShowDialogue_B2
 
-LABEL_5070:
-	ld hl, $0190
-	ld (CurrentDialogueNumber), hl
+SceneRoom_SopiaVillageChief:
+	ld hl, 400
+	ld (NumberToShowInText), hl
 	ld hl, $01EA
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11115,7 +11115,7 @@ LABEL_5070:
 	jp ShowDialogue_B2
 
 +:
-	ld de, $0190
+	ld de, 400
 	ld hl, (Current_money)
 	or a
 	sbc hl, de
@@ -11126,11 +11126,11 @@ LABEL_5070:
 +:
 	ld (Current_money), hl
 	ld a, $01
-	ld ($C509), a
+	ld (Dialogue_flags+DialogueFlag_MirrorShieldUnhidden), a
 	ld hl, $01F4
 	jp ShowDialogue_B2
 
-LABEL_50A6:
+SceneRoom_Miki:
 	ld hl, $01FA
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11140,15 +11140,15 @@ LABEL_50A6:
 +:
 	jp ShowDialogue_B2
 
-LABEL_50BA:
+SceneRoom_Sopia1:
 	ld	hl, $200
 	jp	ShowDialogue_B2
 
-LABEL_50C0:
+SceneRoom_Sopia2:
 	ld	hl, $202
 	jp	ShowDialogue_B2
 
-LABEL_50C6:
+SceneRoom_Sopia3:
 	ld hl, $0204
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11158,7 +11158,7 @@ LABEL_50C6:
 +:
 	jp ShowDialogue_B2
 
-LABEL_50DA:
+SceneRoom_Sopia4:
 	ld hl, $00BA
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11167,7 +11167,7 @@ LABEL_50DA:
 	jp ShowDialogue_B2
 
 +:
-	ld a, $24
+	ld a, ItemID_Cola
 	call Inventory_FindItem
 	jr nz, +
 	call Inventory_RemoveItem2
@@ -11179,17 +11179,17 @@ LABEL_50DA:
 	jp ShowDialogue_B2
 
 
-LABEL_5101:
+SceneRoom_AeroCastle2:
 	ld	hl, $210
 	jp	ShowDialogue_B2
 
-LABEL_5107:
+SceneRoom_AeroCastle3:
 	ld	hl, $26A
 	jp	ShowDialogue_B2
 
-LABEL_510D:
-	ld hl, $0118
-	ld (CurrentDialogueNumber), hl
+SceneRoom_ShortCakeShop:
+	ld hl, 280
+	ld (NumberToShowInText), hl
 	ld hl, $024A
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11198,7 +11198,7 @@ LABEL_510D:
 	jp ShowDialogue_B12
 
 +:
-	ld de, $0118
+	ld de, 280
 	ld hl, (Current_money)
 	or a
 	sbc hl, de
@@ -11223,8 +11223,8 @@ LABEL_510D:
 	ret z
 	jp Inventory_AddItem
 
-LABEL_5157:
-	ld a, $08
+SceneRoom_MahalCaveMotavianPeasant:
+	ld a, EnemyID_NFarmer
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld a, (Party_curr_num)
@@ -11235,7 +11235,7 @@ LABEL_5157:
 +:
 	jp ShowDialogue_B2
 
-LABEL_516F:
+SceneRoom_Noah:
 	ld a, (Party_curr_num)
 	cp $03
 	jp nc, Scene_RoomScriptEnd
@@ -11252,7 +11252,7 @@ LABEL_516F:
 	call CloseTextBox
 	call WaitForButton1Or2
 	ld a, $01
-	ld ($C506), a
+	ld (Dialogue_flags+DialogueFlag_NoahJoined), a
 	ld iy, Noah_stats
 	ld (iy+weapon), ItemID_WoodCane
 	ld (iy+armor), ItemID_WhiteMantle
@@ -11261,15 +11261,15 @@ LABEL_516F:
 	ld (Party_curr_num), a
 	jp NoahIntro
 
-LABEL_51B1:
-	ld hl, $C504
+SceneRoom_LuvenoAssistant:
+	ld hl, Dialogue_flags+DialogueFlag_LuvenoState
 	ld a, (hl)
 	cp $02
 	jp nc, Scene_RoomScriptEnd
 	ld a, $10
 	call LoadDialogueSprite
 	call BuildSprites
-	ld hl, $C504
+	ld hl, Dialogue_flags+DialogueFlag_LuvenoState
 	ld a, (hl)
 	cp $01
 	ld de, $00DC
@@ -11280,18 +11280,18 @@ LABEL_51B1:
 	ex de, hl
 	jp ShowDialogue_B2
 
-LABEL_51D6:
+SceneRoom_Room80:
 	ld	hl, $F8
 	jp	ShowDialogue_B2
 
-LABEL_51DC:
-	ld a, ($C504)
+SceneRoom_LuvenoPrison:
+	ld a, (Dialogue_flags+DialogueFlag_LuvenoState)
 	or a
 	jp nz, Scene_RoomScriptEnd
 	ld a, $34
 	call LoadDialogueSprite
 	call BuildSprites
-	ld hl, $C503
+	ld hl, Dialogue_flags+DialogueFlag_LuvenoPrisonVisitCounter
 	ld a, (hl)
 	or a
 	jr nz, +
@@ -11312,21 +11312,21 @@ LABEL_51DC:
 	call ShowYesNoPrompt
 	ld hl, $00D4
 	jr nz, +
-	ld hl, $C504
+	ld hl, Dialogue_flags+DialogueFlag_LuvenoState
 	ld (hl), $01
 	ld hl, $00E4
 +:
 	jp ShowDialogue_B2
 
-LABEL_521D:
-	ld a, $2E
+SceneRoom_TriadaPrisonGuard1:
+	ld a, EnemyID_RobotCop
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld hl, $00E6
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
 	jr nz, +
-	ld a, $33
+	ld a, ItemID_RoadPass
 	call Inventory_FindItem
 	jr nz, +
 	ld hl, $0024
@@ -11338,7 +11338,7 @@ LABEL_521D:
 	call CloseTextBox
 	jp LABEL_5389
 
-LABEL_5249:
+SceneRoom_TriadaPrisoner1:
 	ld hl, $00BA
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11347,7 +11347,7 @@ LABEL_5249:
 	jp ShowDialogue_B2
 
 +:
-	ld a, $24
+	ld a, ItemID_Cola
 	call Inventory_FindItem
 	jr nz, +
 	call Inventory_RemoveItem2
@@ -11358,7 +11358,7 @@ LABEL_5249:
 	ld hl, $00CE
 	jp ShowDialogue_B2
 
-LABEL_5270:
+SceneRoom_TriadaPrisoner2:
 	ld hl, $00EC
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11368,15 +11368,15 @@ LABEL_5270:
 +:
 	jp ShowDialogue_B2
 
-LABEL_5284:
+SceneRoom_TriadaPrisoner3:
 	ld	hl, $EE
 	jp	ShowDialogue_B2
 
-LABEL_528A:
+SceneRoom_TriadaPrisoner4:
 	ld	hl, $F0
 	jp	ShowDialogue_B2
 
-LABEL_5290:
+SceneRoom_TriadaPrisoner5:
 	ld hl, $00F2
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11386,34 +11386,34 @@ LABEL_5290:
 +:
 	jp ShowDialogue_B2
 
-LABEL_52A4:
-	ld a, $16
+SceneRoom_TriadaPrisoner6:
+	ld a, EnemyID_Tarantul
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld hl, $00F4
 	jp ShowDialogue_B2
 
-LABEL_52B2:
+SceneRoom_MedusaTower1:
 	ld	hl, $FC
 	jp	ShowDialogue_B2
 
-LABEL_52B8:
+SceneRoom_MedusaTower2:
 	ld	hl, $FE
 	jp	ShowDialogue_B2
 
-LABEL_52BE:
+SceneRoom_MedusaTower3:
 	ld	hl, $100
 	jp	ShowDialogue_B2
 
-LABEL_52C4:
+SceneRoom_BartevoCave:
 	ld	hl, $10A
 	jp	ShowDialogue_B2
 
-LABEL_52CA:
+SceneRoom_AbionTower:
 	ld	hl, $21A
 	jp	ShowDialogue_B2
 
-LABEL_52D0:
+SceneRoom_Room8E:
 	ld hl, $0148
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11458,7 +11458,7 @@ LABEL_52DB:
 	ret z
 	jp Inventory_AddItem
 
-LABEL_5337:
+SceneRoom_Room8F:
 	ld hl, $0160
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11468,15 +11468,15 @@ LABEL_5337:
 +:
 	jp ShowDialogue_B2
 
-LABEL_534B:
-	ld a, $2E
+SceneRoom_TriadaGuard:
+	ld a, EnemyID_RobotCop
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld hl, $021C
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
 	jr nz, +
-	ld a, $33
+	ld a, ItemID_RoadPass
 	call Inventory_FindItem
 	jr nz, +
 	ld hl, $021E
@@ -11503,36 +11503,36 @@ LABEL_5389:
 	pop hl
 	ret
 
-LABEL_5395:
+SceneRoom_Room94:
 	ld	hl, $222
 	jp	ShowDialogue_B2
 
-LABEL_539B:
+SceneRoom_Room95:
 	ld	hl, $224
 	jp	ShowDialogue_B2
 
-LABEL_53A1:
+SceneRoom_Room96:
 	ld	hl, $226
 	jp	ShowDialogue_B2
 
-LABEL_53A7:
+SceneRoom_Room97:
 	ld	hl, $22E
 	jp	ShowDialogue_B2
 
-LABEL_53AD:
+SceneRoom_Room98:
 	ld	hl, $232
 	jp	ShowDialogue_B2
 
-LABEL_53B3:
+SceneRoom_Room99:
 	ld	hl, $218
 	jp	ShowDialogue_B2
 
-LABEL_53B9:
+SceneRoom_Room9A:
 	ld	hl, $214
 	jp	ShowDialogue_B2
 
-LABEL_53BF:
-	ld a, $2E
+SceneRoom_GiftCheck:
+	ld a, EnemyID_RobotCop
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld hl, $009C
@@ -11564,7 +11564,7 @@ LABEL_53BF:
 	call LABEL_15DC
 	jp Dungeon_RunAway
 
-LABEL_5401:
+SceneRoom_TorchBearer:
 	ld hl, $023E
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11587,13 +11587,13 @@ LABEL_5401:
 	ld hl, $0248
 	jp ShowDialogue_B2
 
-LABEL_5430:
-	ld a, $31
+SceneRoom_Tarzimal:
+	ld a, EnemyID_Tarzimal
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld a, (Noah_stats+armor)
 	ld b, a
-	ld a, $18
+	ld a, ItemID_FradeMantle
 	cp b
 	jr z, +
 	call Inventory_FindItem
@@ -11666,8 +11666,8 @@ LABEL_5430:
 	ld (CurrentItem), a
 	jp Inventory_AddItem
 
-LABEL_54D0:
-	ld a, $3E
+SceneRoom_ShadowWarrior:
+	ld a, EnemyID_Shadow
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld hl, $0262
@@ -11675,7 +11675,7 @@ LABEL_54D0:
 	call CloseTextBox
 	call LABEL_54EF
 	ld a, $FF
-	ld ($C517), a
+	ld (Dialogue_flags+DialogueFlag_ShadowWarrior), a
 	ld hl, $0266
 	jp ShowDialogue_B2
 
@@ -11688,11 +11688,11 @@ LABEL_54EF:
 	pop hl
 	ret
 
-LABEL_54FB:
-	ld a, ($C516)
+SceneRoom_Lassic:
+	ld a, (Dialogue_flags+DialogueFlag_BeatLassic)
 	or a
 	jp nz, Scene_RoomScriptEnd
-	ld a, $48
+	ld a, EnemyID_Lassic
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld hl, $026C
@@ -11706,23 +11706,23 @@ LABEL_54FB:
 	call CloseTextBox
 	call LABEL_54EF
 	ld a, $01
-	ld ($C516), a
+	ld (Dialogue_flags+DialogueFlag_BeatLassic), a
 	ld hl, $02AA
 	jp ShowDialogue_B2
 
-LABEL_552F:
-	ld	hl, LABEL_B12_B7AA
+SceneRoom_EppiWoodsNoCompass:
+	ld	hl, DialogueWoodsPathUnclear_B12
 	jp	ShowDialogue_B12
 
-LABEL_5535:
+SceneRoom_HapsbyScrapHeap:
 	call	WaitForButton1Or2
 
-LABEL_5538:
+SceneRoom_OdinStone:
 	call LABEL_1BE1
 	pop hl
 	ret
 
-LABEL_553D:
+ShowNothingInterestingHere:
 	ld hl, DialogueNothingUnusualHere_B12
 	call ShowDialogue_B12
 	jp CloseTextBox
@@ -11731,7 +11731,7 @@ GetHapsby:
 	ld a, ItemID_Hapsby
 	ld (CurrentItem), a
 	call Inventory_FindItem
-	jr z, LABEL_553D
+	jr z, ShowNothingInterestingHere
 	call CloseTextBox
 	ld hl, $C801
 	inc (hl)
@@ -11741,41 +11741,41 @@ GetHapsby:
 	call ShowDialogue_B2
 	jp Inventory_AddItem
 
-LABEL_5566:
-	ld a, ($C508)
+CheckHovercraft:
+	ld a, (Dialogue_flags+DialogueFlag_HovercraftUnhidden)
 	or a
-	jr z, LABEL_553D
+	jr z, ShowNothingInterestingHere
 	ld a, ItemID_Hapsby
 	ld (CurrentItem), a
 	call Inventory_FindItem
-	jr nz, LABEL_553D
+	jr nz, ShowNothingInterestingHere
 	ld a, ItemID_Hovercraft
 	ld (CurrentItem), a
 	call Inventory_FindItem
-	jr z, LABEL_553D
+	jr z, ShowNothingInterestingHere
 	ld hl, $0178
 	call ShowDialogue_B2
 	call CloseTextBox
 	jp Inventory_AddItem
 
-LABEL_558C:
+FindOdin:
 	ld hl, $00FA
 	call ShowDialogue_B2
 	jp CloseTextBox
 
-LABEL_5595:
-	ld a, $2B
+SceneRoom_CoronaTowerDezorian1:
+	ld a, EnemyID_EvilHead
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld hl, $0234
 	jp ShowDialogue_B2
 
-LABEL_55A3:
+SceneRoom_GuaronMorgue:
 	ld	hl, $234
 	jp	ShowDialogue_B2
 
-LABEL_55A9:
-	ld a, $1B
+SceneRoom_CoronaTowerDishonestDezorian:
+	ld a, EnemyID_Dezorian
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	xor a
@@ -11783,16 +11783,16 @@ LABEL_55A9:
 	ld hl, $0238
 	jp ShowDialogue_B2
 
-LABEL_55BB:
-	ld a, $26
+SceneRoom_RoomA7:
+	ld a, EnemyID_Serpent
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	pop hl
-	ld hl, $0000
+	ld hl, 0
 	ld (Enemy_money), hl
 	jp Dungeon_EnterBattle
 
-LABEL_55CD:
+SceneRoom_BayaMalayPrisoner:
 	ld hl, $0228
 	call ShowDialogue_B2
 	call ShowYesNoPrompt
@@ -11802,14 +11802,14 @@ LABEL_55CD:
 +:
 	jp ShowDialogue_B2
 
-LABEL_55E1:
-	ld a, $08
+SceneRoom_RoomA9:
+	ld a, EnemyID_NFarmer
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	ld hl, $0212
 	jp ShowDialogue_B2
 
-LABEL_55EF:
+SceneRoom_LuvenoGuard:
 	ld a, ($C504)
 	cp $07
 	jr nc, +
@@ -11834,7 +11834,7 @@ LABEL_5613:
 LABEL_5616:
 .db	$07, $1B, $1D
 
-LABEL_5619:
+SceneRoom_DarkForce:
 	ld a, $93
 	ld (Sound_index), a
 	call VIntDelay
@@ -11844,13 +11844,13 @@ LABEL_5619:
 	ld hl, $FFFF
 	ld (hl), :Bank19
 	ld hl, Palette_DarkForce_B19
-	ld de, $C250
+	ld de, Target_palette+$10
 	ld bc, $0010
 	ldir
 	ld a, $0C
 	call WaitForVInt
 	call FadeIn2
-	ld a, $49
+	ld a, EnemyID_DarkFalz
 	ld (Battle_enemy_id), a
 	call Dungeon_LoadEnemy
 	call VintDelayButtonPress
@@ -11860,12 +11860,12 @@ LABEL_5619:
 	call CloseTextBox
 	ld a, (Char_stats)
 	or a
-	jr nz, LABEL_5666
+	jr nz, SceneRoom_RoomAC
 	ld hl, LABEL_B12_BF64
 	call ShowDialogue_B12
 	call CloseTextBox
 
-LABEL_5666:
+SceneRoom_RoomAC:
 	call FadeOut2
 	ld a, $1D
 	ld (Scene_type), a
@@ -11888,11 +11888,11 @@ LABEL_5666:
 	pop hl
 	jp EndingScreen
 
-LABEL_569C:
+SceneRoom_RoomAD:
 	ld	hl, $2A4
 	jp	ShowDialogue_B2
 
-LABEL_56A2:
+SceneRoom_RoomAE:
 	ld a, ($C2F0)
 	ld d, a
 	ld e, $00
@@ -11920,16 +11920,16 @@ LABEL_56A2:
 +:
 	jp CloseTextBox
 
-LABEL_56CD:
+SceneRoom_RoomB1:
 	ld	hl, $23A
 	jp	ShowDialogue_B2
 
-LABEL_56D3:
+SceneRoom_RoomB2:
 	ld	hl, $27A
 	jp	ShowDialogue_B2
 
-LABEL_56D9:
-	ld hl, LABEL_B12_BDCE
+SceneRoom_FlightToMotavia:
+	ld hl, DialogueBoundForMotavia_B12
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
 	ret nz
@@ -11937,8 +11937,8 @@ LABEL_56D9:
 	ld ($C2E9), a
 	ret
 
-LABEL_56E9:
-	ld hl, LABEL_B12_BDE6
+SceneRoom_FlightToPalma:
+	ld hl, DialogueBoundForPalma_B12
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
 	ret nz
@@ -11946,8 +11946,8 @@ LABEL_56E9:
 	ld ($C2E9), a
 	ret
 
-LABEL_56F9:
-	ld hl, LABEL_B12_B754
+SceneRoom_HapsbyTravel:
+	ld hl, DialogueChooseDestination_B12
 	call ShowDialogue_B12
 	push bc
 	call LABEL_3A21
@@ -11964,31 +11964,31 @@ LABEL_56F9:
 	cp d
 	jr nz, ++
 	or a
-	ld hl, LABEL_B12_B799
+	ld hl, DialogueWeAreAtGothic_B12
 	jr z, +
 	dec a
-	ld hl, LABEL_B12_B790
+	ld hl, DialogueWeAreAtUzo_B12
 	jr z, +
-	ld hl, LABEL_B12_B785
+	ld hl, DialogueWeAreAtSkure_B12
 +:
 	call ShowDialogue_B12
-	jr LABEL_56F9
+	jr SceneRoom_HapsbyTravel
 
 ++:
 	ld a, d
 	or a
-	ld hl, LABEL_B12_B77B
+	ld hl, DialogueHeadingForGothic_B12
 	jr z, +
 	dec a
-	ld hl, LABEL_B12_B76F
+	ld hl, DialogueHeadingForUzo_B12
 	jr z, +
-	ld hl, LABEL_B12_B761
+	ld hl, DialogueHeadingForSkure_B12
 +:
 	push de
 	call ShowDialogue_B12
 	call ShowYesNoPrompt
 	pop de
-	jr nz, LABEL_56F9
+	jr nz, SceneRoom_HapsbyTravel
 	ld a, e
 	add a, a
 	add a, e

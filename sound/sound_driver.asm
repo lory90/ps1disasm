@@ -3226,32 +3226,32 @@ DialogueMyauAteNut_B12:
 .db Word_Myau, " ATE ", Word_The, "NUT", Dialogue_NewLine
 .db "OF ", Word_Laerma, ".", Dialogue_Terminator65
 
-LABEL_B12_B754:
+DialogueChooseDestination_B12:
 .db Word_Where, " ", Word_Are, "WE", Dialogue_NewLine
 .db "GOING?", Dialogue_Terminator62
 
-LABEL_B12_B761:
+DialogueHeadingForSkure_B12:
 .db Word_We_Are, Word_Heading_For, "SKURE ON ", Word_Dezoris, "?", Dialogue_Terminator62
 
-LABEL_B12_B76F:
+DialogueHeadingForUzo_B12:
 .db Word_We_Are, Word_Heading_For, "UZO ON ", Word_Motavia, "?", Dialogue_Terminator62
 
-LABEL_B12_B77B:
+DialogueHeadingForGothic_B12:
 .db Word_We_Are, Word_Heading_For, Word_Gothic, " ON ", Word_Palma, "?", Dialogue_Terminator62
 
-LABEL_B12_B785:
+DialogueWeAreAtSkure_B12:
 .db Word_We_Are, "AT SKURE.", Dialogue_Terminator62
 
-LABEL_B12_B790:
+DialogueWeAreAtUzo_B12:
 .db Word_We_Are, "AT UZO.", Dialogue_Terminator62
 
-LABEL_B12_B799:
+DialogueWeAreAtGothic_B12:
 .db Word_We_Are, "AT ", Word_Gothic, ".", Dialogue_Terminator62
 
 ;LABEL_B12_B???
 .db "LET", Dialogue_Apostrophe, "S GO!", Dialogue_Terminator63
 
-LABEL_B12_B7AA:
+DialogueWoodsPathUnclear_B12:
 .db Word_The, "PATH IN ", Word_The, Dialogue_NewLine
 .db "WOODS IS UNCLEAR.", Dialogue_Terminator65
 
@@ -3529,10 +3529,10 @@ DialogueChurchFail_B12:
 .db "SORRY, I SEEM TO", Dialogue_NewLine
 .db Word_Have, "FAILED.", Dialogue_Terminator65
 
-LABEL_B12_BDCE:
+DialogueBoundForMotavia_B12:
 .db "BOUND FOR ", Word_Motavia, ".GETTING ON?", Dialogue_Terminator62
 
-LABEL_B12_BDE6:
+DialogueBoundForPalma_B12:
 .db "BOUND FOR ", Word_Palma, ".", Dialogue_NewLine
 .db "GETTING ON?", Dialogue_Terminator62
 
