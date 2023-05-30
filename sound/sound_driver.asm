@@ -3519,7 +3519,7 @@ DialogueToolShopComeInHandy_B12:
 .db Word_That, " ", Word_Will, " COME IN", Dialogue_NewLine
 .db "HANDY LATER.", Dialogue_Terminator65
 
-LABEL_B12_BD97:
+DialogueTreasureChestFound_B12:
 .db Word_There_Is, " A", Dialogue_NewLine
 .db Word_Treasure, Word_Chest, ".", Dialogue_Terminator62
 

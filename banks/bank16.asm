@@ -1330,7 +1330,7 @@ Tiles_PalmaSea_B16:
 .db $32, $40, $17, $FF, $FF, $4B, $D7, $B6
 .db $E3, $53, $0F, $02, $FF, $00
 
-LABEL_B16_A8F6:
+Tiles_AnimSea_B16:
 .db	$8A, $71
 .db $FF, $00, $26, $99, $FF, $00, $44, $20
 .db $FF, $00, $BB, $00, $FF, $00, $42, $10

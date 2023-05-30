@@ -470,6 +470,8 @@
 
 .define	Game_is_paused $C212
 .define	Palette_move_delay $C213
+.define	Next_sprite_y $C217
+.define	Next_sprite_x $C219
 .define	Fade_timer $C21B
 
 .define	Normal_palette $C220
@@ -495,17 +497,19 @@
 .define	CurrentCharacter $C2C2 ; Used for battle dialogue etc
 .define	CurrentItem $C2C4 ; Used in dialogue, Inventory_AddItem etc
 .define	NumberToShowInText $C2C5 ; unsigned 2 bytes, little endian, used in dialogue, control character $5E
+.define	Enemy_num $C2C7 ; 8 bytes
 .define	CurrentBattle_EnemyName $C2C8 ; 8 bytes
 .define	CurrentBattle_EXPReward $C2D0 ; unsigned 2 bytes, little endian
 
 .define Dungeon_moving_flag $C2D2
 .define Text_box_open_flag $C2D3
-.define Map_anim_flag $C2D6
+.define Scene_anim_flag $C2D6
 
 .define Dungeon_entrance_points_addr $C2D9
 .define Room_index $C2DB
 .define Enemy_money $C2DD
 .define Dungeon_item_index $C2DF
+.define Dungeon_obj_item_trapped $C2E0
 .define Dungeon_obj_flag_addr $C2E1
 
 .define Battle_rate $C2E3

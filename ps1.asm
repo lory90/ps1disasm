@@ -11,7 +11,7 @@
 ;
 ; - Isotarge for contributions on relabeling, documenting code, RAM constants.
 ;
-; - Maxim for lots of documentation, relabeling, constants, etc.
+; - Maxim for lots of documentation, relabeling, constants, decompression, pointers, etc.
 
 
 .MEMORYMAP
@@ -1486,7 +1486,7 @@ GameMode_LoadMap:
 	ld	hl, Game_mode
 	inc	(hl) ; GameMode_Map
 	xor	a
-	ld	(Map_anim_flag), a
+	ld	(Scene_anim_flag), a
 	ld	(Dungeon_palette_index), a
 	inc	a
 	ld	($C2D5), a
@@ -1982,7 +1982,7 @@ GameMode_LoadDungeon:
 	ld	(V_scroll), a
 	ld	(H_scroll), a
 	ld	($C2D5), a
-	ld	(Map_anim_flag), a
+	ld	(Scene_anim_flag), a
 	ld	(Text_box_open_flag), a
 	ld	de, $8006
 	di
@@ -6815,7 +6815,7 @@ UpdateEnemyHP:
 	ld	bc, $0110
 	call	OutputTilemapBoxB27
 	ld	ix, $C440
-	ld	a, ($C2C7)
+	ld	a, (Enemy_num)
 	ld	b, a
 LABEL_3141:
 	push	bc
@@ -8440,7 +8440,7 @@ LABEL_3CAD:
 	ld (Character_sprite_attributes), a
 	ld ($C2E9), a
 	dec a
-	ld (Map_anim_flag), a
+	ld (Scene_anim_flag), a
 	ld hl, $0000
 	ld (Palette_move_delay), hl
 	ld hl, $FF00
@@ -9703,7 +9703,7 @@ EndingScreen:
 	ld (Dungeon_position), hl
 	xor a
 	ld (Dungeon_direction), a
-	call Dungeon_PitFall
+	call Dungeon_Pitfall
 	ld hl, $FFFF
 	ld (hl), :Bank15
 	ld hl, Tiles_CreditsFont_B15
@@ -10581,7 +10581,7 @@ SceneRoom_GovernorGeneral:
 	ld (Dungeon_direction), a
 	ld hl, Game_mode
 	ld (hl), $0B ; GameMode_Dungeon
-	call Dungeon_PitFall
+	call Dungeon_Pitfall
 	ld a, $85
 	jp Map_CheckMusic
 
@@ -12027,21 +12027,21 @@ BuildSprites:
 	dec  hl
 	ldir
 	ld	hl, Sprite_table
-	ld	($C217), hl
+	ld	(Next_sprite_y), hl
 	ld	hl, $C980
-	ld	($C219), hl
-	ld	iy, $C800
+	ld	(Next_sprite_x), hl
+	ld	iy, Character_sprite_attributes
 	ld	bc, $0800
-LABEL_5791:
+BuildSprites_Loop:
 	ld	a, (iy+0)
 	and	$7F
-	jr	z, LABEL_57B1
+	jr	z, BuildSprites_Next
 	push	bc
 	ld	hl, LABEL_5827-2
 	call	GetPtrAndJump
 	pop	bc
 	or	a
-	jp	z, LABEL_57B1
+	jp	z, BuildSprites_Next
 	ld	hl, ($C287)
 	ld	a, (iy+2)
 	ld	(hl), a
@@ -12049,11 +12049,11 @@ LABEL_5791:
 	ld	(hl), c
 	inc	hl
 	ld	($C287), hl
-LABEL_57B1:
+BuildSprites_Next:
 	ld	de, $0020
 	add	iy, de
 	inc	c
-	djnz	LABEL_5791
+	djnz	BuildSprites_Loop
 	ld	de, $C289
 	ld	b, $03
 LABEL_57BE:
@@ -12102,26 +12102,26 @@ LABEL_57E2:
 	add	hl, hl
 	add	hl, hl
 	add	hl, hl
-	ld	de, $C800
+	ld	de, Character_sprite_attributes
 	add	hl, de
 	push	hl
 	pop	iy
 	cp	$04
 	ld	a, :Bank03
-	ld	bc, LABEL_B03_96F4
+	ld	bc, CharacterSpriteData_B03
 	jr	c, LABEL_5806
 	ld	a, :Bank21
-	ld	bc, LABEL_B21_8000
+	ld	bc, EnemySpriteData_B21
 LABEL_5806:
 	ld	($FFFF), a
-	call	LABEL_5853
+	call	UpdateSprites
 	pop	hl
 	pop	bc
 LABEL_580E:
 	inc	hl
 	inc	hl
 	djnz	LABEL_57E2
-	ld	hl, ($C217)
+	ld	hl, (Next_sprite_y)
 	ld	(hl), $D0
 	ret
 
@@ -12140,31 +12140,34 @@ LABEL_5818:
 	ret
 
 
+; =================================================================
 LABEL_5827:
-.dw	LABEL_599F
-.dw	LABEL_59D4
-.dw	LABEL_59E0
-.dw	LABEL_59E5
-.dw	LABEL_59F1
-.dw	LABEL_59F6
-.dw	LABEL_5A02
-.dw	LABEL_5A07
-.dw	LABEL_5A4F
-.dw	LABEL_5A70
-.dw	LABEL_5B87
-.dw	LABEL_5BCE
-.dw	LABEL_5C63
-.dw	LABEL_5C99
-.dw	LABEL_5DA0
-.dw	LABEL_5E2B
-.dw	LABEL_5E2E
-.dw	LABEL_5E72
-.dw	LABEL_5EAE
-.dw	LABEL_5EEA
-.dw	LABEL_5D30
-.dw	LABEL_5D5B
+.dw	LABEL_599F	; 1
+.dw	LABEL_59D4	; 2
+.dw	LABEL_59E0	; 3
+.dw	LABEL_59E5	; 4
+.dw	LABEL_59F1	; 5
+.dw	LABEL_59F6	; 6
+.dw	LABEL_5A02	; 7
+.dw	LABEL_5A07	; 8
+.dw	LABEL_5A4F	; 9
+.dw	LABEL_5A70	; $A
+.dw	LABEL_5B87	; $B
+.dw	LABEL_5BCE	; $C
+.dw	LABEL_5C63	; $D
+.dw	LABEL_5C99	; $E
+.dw	LABEL_5DA0	; $F
+.dw	LABEL_5E2B	; $10
+.dw	LABEL_5E2E	; $11
+.dw	LABEL_5E72	; $12
+.dw	LABEL_5EAE	; $13
+.dw	LABEL_5EEA	; $14
+.dw	LABEL_5D30	; $15
+.dw	LABEL_5D5B	; $16
+; =================================================================
 
-LABEL_5853:
+
+UpdateSprites:
 	ld	l, (iy+1)
 	ld	h, $00
 	add	hl, hl
@@ -12176,7 +12179,7 @@ LABEL_5853:
 	ld	b, (hl)
 	push	bc
 	inc	hl
-	ld	de, ($C217)
+	ld	de, (Next_sprite_y)
 	ld	c, (iy+2)
 LABEL_5868:
 	ld	a, (hl)
@@ -12185,9 +12188,9 @@ LABEL_5868:
 	inc	de
 	inc	hl
 	djnz	LABEL_5868
-	ld	($C217), de
+	ld	(Next_sprite_y), de
 	pop	bc
-	ld	de, ($C219)
+	ld	de, (Next_sprite_x)
 	ld	c, (iy+4)
 LABEL_587B:
 	ld	a, (hl)
@@ -12200,7 +12203,7 @@ LABEL_587B:
 	inc	hl
 	inc	de
 	djnz	LABEL_587B
-	ld	($C219), de
+	ld	(Next_sprite_x), de
 	ret
 
 
@@ -12366,7 +12369,7 @@ LABEL_5A98:
 	ld a, c
 	or a
 	call z, LABEL_7143
-	ld a, ($C265)
+	ld a, (Rotate_palette_flag)
 	or a
 	jp z, LABEL_5AFC
 	cp $0F
@@ -12586,7 +12589,7 @@ LABEL_5C63:
 	call UpdateRNGSeed
 	ld b, a
 	ld c, $3D
-	ld a, ($C2E0)
+	ld a, (Dungeon_obj_item_trapped)
 	or a
 	jr z, ++
 	cp $F0
@@ -12788,10 +12791,10 @@ LABEL_5DD8:
 	bit 7, (iy+10)
 	jr z, +
 	ld a, (Battle_enemy_id)
-	cp $48
+	cp EnemyID_Lassic
 	jr z, LABEL_5E1D
 	ld a, $11
-	ld ($C800), a
+	ld (Character_sprite_attributes), a
 	ret
 
 +:
@@ -13082,13 +13085,13 @@ LABEL_5FF9:
 Dungeon_LoadEnemy:
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
-	ld	hl, $C800
-	ld	de, $C801
+	ld	hl, Character_sprite_attributes
+	ld	de, Character_sprite_attributes+1
 	ld	bc, $00FF
 	ld	(hl), $00
 	ldir
-	ld	hl, $C440
-	ld	de, $C441
+	ld	hl, Enemy_stats
+	ld	de, Enemy_stats+1
 	ld	bc, $007F
 	ld	(hl), $00
 	ldir
@@ -13154,7 +13157,7 @@ LABEL_6075:
 LABEL_607F:
 	and	$0F
 	ld	b, a
-	ld	($C2C7), a
+	ld	(Enemy_num), a
 	inc	hl
 	ld	a, (hl)
 	inc	hl
@@ -13167,11 +13170,11 @@ LABEL_607F:
 	ld	ix, $C440
 	ld	de, $0010
 LABEL_6095:
-	ld	(ix+0), $01
-	ld	(ix+1), a
-	ld	(ix+6), a
-	ld	(ix+8), h
-	ld	(ix+9), l
+	ld	(ix+status), $01
+	ld	(ix+curr_hp), a
+	ld	(ix+max_hp), a
+	ld	(ix+attack), h
+	ld	(ix+defense), l
 	add	ix, de
 	djnz	LABEL_6095
 	pop	hl
@@ -13182,7 +13185,7 @@ LABEL_6095:
 	inc	hl
 	ld	d, (hl)
 	push	hl
-	ld	a, ($C2C7)
+	ld	a, (Enemy_num)
 	ld	c, a
 	ld	b, $00
 	call	Multiply16Bit
@@ -13190,13 +13193,13 @@ LABEL_6095:
 	pop	hl
 	inc	hl
 	ld	a, (hl)
-	ld	($C2E0), a
+	ld	(Dungeon_obj_item_trapped), a
 	inc	hl
 	ld	e, (hl)
 	inc	hl
 	ld	d, (hl)
 	push	hl
-	ld	a, ($C2C7)
+	ld	a, (Enemy_num)
 	ld	c, a
 	ld	b, $00
 	call	Multiply16Bit
@@ -13204,15 +13207,15 @@ LABEL_6095:
 	pop	hl
 	inc	hl
 	ld	a, (hl)
-	ld	($C2E8), a
+	ld	(Battle_enemy_action), a
 	inc	hl
 	ld	a, (hl)
-	ld	($C2E7), a
-	ld	hl, $C500
+	ld	(Battle_escape_rate), a
+	ld	hl, Dialogue_flags
 	ld	(Dungeon_obj_flag_addr), hl
 	call	BuildSprites
 	call	BuildSprites
-	ld	hl, $C240
+	ld	hl, Target_palette
 	ld	de, Normal_palette
 	ld	bc, $0020
 	ldir
@@ -13312,20 +13315,20 @@ LoadDialogueSprite:
 
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
-	ld	hl, $C800
-	ld	de, $C801
+	ld	hl, Character_sprite_attributes
+	ld	de, Character_sprite_attributes+1
 	ld	bc, $00FF
 	ld	(hl), $00
 	ldir
-	ld	hl, $C440
-	ld	de, $C441
+	ld	hl, Enemy_stats
+	ld	de, Enemy_stats+1
 	ld	bc, $007F
 	ld	(hl), $00
 	ldir
 	ld	l, a
 	ld	h, $00
 	add	hl, hl
-	ld	de, LABEL_B03_9540
+	ld	de, DialogueSpritesPaletteIndices_B03
 	add	hl, de
 	ld	a, (hl)
 	push	hl
@@ -13334,14 +13337,14 @@ LoadDialogueSprite:
 	add	hl, hl
 	add	hl, hl
 	add	hl, hl
-	ld	de, LABEL_B03_95BC
+	ld	de, DialogueSpritesPalettes_B03
 	add	hl, de
 	push	hl
-	ld	de, $C258
+	ld	de, Target_palette+$18
 	ld	bc, $0008
 	ldir
 	pop	hl
-	ld	de, $C238
+	ld	de, Normal_palette+$18
 	ld	bc, $0008
 	ldir
 	pop	hl
@@ -13352,7 +13355,7 @@ LoadDialogueSprite:
 	add	hl, hl
 	add	hl, hl
 	add	hl, hl
-	ld	de, LABEL_B03_966C
+	ld	de, DialogueSprites_B03
 	add	hl, de
 	ld	de, $C800
 	ld	bc, $0003
@@ -13378,7 +13381,7 @@ LoadDialogueSprite:
 AnimateCharacterSprites:
 	ld hl, $FFFF
 	ld (hl), :Bank28
-	ld ix, $C800
+	ld ix, Character_sprite_attributes
 	ld b, $04
 -:
 	ld a, (ix+16)
@@ -13388,7 +13391,7 @@ AnimateCharacterSprites:
 	ld d, a
 	ld a, (ix+1)
 	or a
-	ld hl, LABEL_621F-2
+	ld hl, CharacterSpritesTable-2
 	jp nz, GetPtrAndJump
 +:
 	ld de, $0020
@@ -13397,15 +13400,17 @@ AnimateCharacterSprites:
 	ret
 
 
-LABEL_621F:
-.dw	LABEL_6229
-.dw	LABEL_6246
-.dw	LABEL_6263
-.dw	LABEL_6280
-.dw	LABEL_6293
+; =================================================================
+CharacterSpritesTable:
+.dw	CharacterSprites_Alis
+.dw	CharacterSprites_Noah
+.dw	CharacterSprites_Odin
+.dw	CharacterSprites_Myau
+.dw	CharacterSprites_Vehicle
+; =================================================================
 
 
-LABEL_6229:
+CharacterSprites_Alis:
 	ld e, $00
 	srl d
 	rr e
@@ -13414,7 +13419,7 @@ LABEL_6229:
 	srl d
 	rr e
 	add hl, de
-	ld de, LABEL_B28_8000
+	ld de, AlisSprites_B28
 	add hl, de
 	ld de, $7540
 	rst $08
@@ -13422,7 +13427,7 @@ LABEL_6229:
 	call GoToOuti128
 	jp GoToOuti64
 
-LABEL_6246:
+CharacterSprites_Noah:
 	ld e, $00
 	srl d
 	rr e
@@ -13431,7 +13436,7 @@ LABEL_6246:
 	srl d
 	rr e
 	add hl, de
-	ld de, LABEL_B28_8A80
+	ld de, NoahSprites_B28
 	add hl, de
 	ld de, $7600
 	rst $08
@@ -13439,7 +13444,7 @@ LABEL_6246:
 	call GoToOuti128
 	jp GoToOuti64
 
-LABEL_6263:
+CharacterSprites_Odin:
 	ld e, $00
 	srl d
 	rr e
@@ -13448,7 +13453,7 @@ LABEL_6263:
 	srl d
 	rr e
 	add hl, de
-	ld de, LABEL_B28_9440
+	ld de, OdinSprites_B28
 	add hl, de
 	ld de, $76C0
 	rst $08
@@ -13456,18 +13461,18 @@ LABEL_6263:
 	call GoToOuti128
 	jp GoToOuti64
 
-LABEL_6280:
+CharacterSprites_Myau:
 	ld e, $00
 	srl d
 	rr e
-	ld hl, LABEL_B28_9EC0
+	ld hl, MyauSprites_B28
 	add hl, de
 	ld de, $7780
 	rst $08
 	ld c, $BE
 	jp GoToOuti128
 
-LABEL_6293:
+CharacterSprites_Vehicle:
 	ld a, (Game_mode)
 	cp $05 ; GameMode_Ship
 	jr z, +
@@ -13479,7 +13484,7 @@ LABEL_6293:
 	ld l, $00
 	ld h, d
 	add hl, hl
-	ld de, LABEL_B18_8000
+	ld de, VehicleSprites_B18
 	add hl, de
 	ld de, $7540
 	rst $08
@@ -13493,32 +13498,32 @@ AnimateMapTiles:
 	ld hl, $FFFF
 	ld (hl), :Bank14
 	ld hl, $C26F
-	ld de, LABEL_6345
+	ld de, MapAnimSeaShoreFrames
 	ld bc, $0C10
-	call LABEL_630A
+	call MapAnim_CountAndAnimate
 	ld hl, $C273
-	ld de, LABEL_6355
+	ld de, MapAnimSeaFrames
 	ld bc, $0340
-	call LABEL_630A
+	call MapAnim_CountAndAnimate
 	ld hl, $C277
-	ld de, LABEL_6365
+	ld de, MapAnimSmokeFrames
 	ld bc, $044C
-	call LABEL_630A
+	call MapAnim_CountAndAnimate
 	ld hl, $C27B
-	ld de, LABEL_6375
+	ld de, MapAnimRoadwayFrames
 	ld bc, $065C
-	call LABEL_630A
+	call MapAnim_CountAndAnimate
 	ld hl, $C27F
-	ld de, LABEL_6385
+	ld de, MapAnimLavaPitFrames
 	ld bc, $0874
-	call LABEL_630A
+	call MapAnim_CountAndAnimate
 	ld hl, $C283
-	ld de, LABEL_6395
+	ld de, MapAnimAntlionHillFrames
 	ld bc, $1094
-	call LABEL_630A
+	call MapAnim_CountAndAnimate
 	ret
 
-LABEL_630A:
+MapAnim_CountAndAnimate:
 	ld a, (hl)
 	or a
 	ret z
@@ -13570,7 +13575,7 @@ LABEL_630A:
 	ret
 
 
-LABEL_6345:
+MapAnimSeaShoreFrames:
 .dw	LABEL_B14_A3E8
 .dw	LABEL_B14_A3E8
 .dw	LABEL_B14_A568
@@ -13581,7 +13586,7 @@ LABEL_6345:
 .dw	LABEL_B14_A9E8
 
 
-LABEL_6355:
+MapAnimSeaFrames:
 .dw	LABEL_B14_AB68
 .dw	LABEL_B14_AB68
 .dw	LABEL_B14_ABC8
@@ -13592,7 +13597,7 @@ LABEL_6355:
 .dw	LABEL_B14_AC88
 
 
-LABEL_6365:
+MapAnimSmokeFrames:
 .dw	LABEL_B14_BAE8
 .dw	LABEL_B14_BAE8
 .dw	LABEL_B14_BB68
@@ -13603,7 +13608,7 @@ LABEL_6365:
 .dw	LABEL_B14_BB68
 
 
-LABEL_6375:
+MapAnimRoadwayFrames:
 .dw	LABEL_B14_ACE8
 .dw	LABEL_B14_ACE8
 .dw	LABEL_B14_ADA8
@@ -13614,7 +13619,7 @@ LABEL_6375:
 .dw	LABEL_B14_AF28
 
 
-LABEL_6385:
+MapAnimLavaPitFrames:
 .dw	LABEL_B14_AFE8
 .dw	LABEL_B14_AFE8
 .dw	LABEL_B14_B0E8
@@ -13625,7 +13630,7 @@ LABEL_6385:
 .dw	LABEL_B14_B0E8
 
 
-LABEL_6395:
+MapAnimAntlionHillFrames:
 .dw	LABEL_B14_B4E8
 .dw	LABEL_B14_B4E8
 .dw	LABEL_B14_B4E8
@@ -13637,7 +13642,7 @@ LABEL_6395:
 
 
 AnimateEnemyTile:
-	ld a, ($C2D6)
+	ld a, (Scene_anim_flag)
 	or a
 	ret z
 	ld a, (Scene_type)
@@ -13645,29 +13650,29 @@ AnimateEnemyTile:
 	ret z
 	cp $0C
 	ret nc
-	ld hl, LABEL_63B8-2
+	ld hl, EnemyTileAnimTable-2
 	jp GetPtrAndJump
 
 
-LABEL_63B8:
-.dw	LABEL_63CE
-.dw	LABEL_63CE
-.dw	LABEL_63CF
-.dw	LABEL_63F6
-.dw	LABEL_63CE
-.dw	LABEL_63CE
-.dw	LABEL_6442
-.dw	LABEL_63CE
-.dw	LABEL_63CE
-.dw	LABEL_63CE
+EnemyTileAnimTable:
+.dw	EnemyTileAnim_Nothing
+.dw	EnemyTileAnim_Nothing
+.dw	EnemyTileAnim_SeaWaveIn
+.dw	EnemyTileAnim_SeaInOut
+.dw	EnemyTileAnim_Nothing
+.dw	EnemyTileAnim_Nothing
+.dw	EnemyTileAnim_LavaPit
+.dw	EnemyTileAnim_Nothing
+.dw	EnemyTileAnim_Nothing
+.dw	EnemyTileAnim_Nothing
 .dw	LABEL_64CF
 
-LABEL_63CE:
+EnemyTileAnim_Nothing:
 	ret
 
-LABEL_63CF:
-	call LABEL_64A3
-	ld hl, $C2BC
+EnemyTileAnim_SeaWaveIn:
+	call AnimateWaterPalette
+	ld hl, Anim_delay_counter
 	dec (hl)
 	ret p
 	ld (hl), $0B
@@ -13681,7 +13686,7 @@ LABEL_63CF:
 	ld (hl), a
 	ld hl, $FFFF
 	ld (hl), :Bank16
-	ld hl, LABEL_6506
+	ld hl, AnimSeaWaveInFrames
 	add a, a
 	add a, a
 	add a, a
@@ -13689,11 +13694,11 @@ LABEL_63CF:
 	ld d, $00
 	add hl, de
 	ld b, $04
-	jp LABEL_641B
+	jp EnemyTileAnim_DoAnimation
 
-LABEL_63F6:
-	call LABEL_64A3
-	ld hl, $C2BC
+EnemyTileAnim_SeaInOut:
+	call AnimateWaterPalette
+	ld hl, Anim_delay_counter
 	dec (hl)
 	ret p
 	ld (hl), $0F
@@ -13707,7 +13712,7 @@ LABEL_63F6:
 	ld (hl), a
 	ld hl, $FFFF
 	ld (hl), :Bank16
-	ld hl, LABEL_654E
+	ld hl, AnimSeaInOutFrames
 	add a, a
 	ld e, a
 	add a, a
@@ -13717,7 +13722,7 @@ LABEL_63F6:
 	add hl, de
 	ld b, $03
 
-LABEL_641B:
+EnemyTileAnim_DoAnimation:
 	push bc
 	ld e, (hl)
 	ld d, $02
@@ -13736,7 +13741,7 @@ LABEL_641B:
 	ld e, $00
 	srl d
 	rr e
-	ld hl, LABEL_B16_A8F6
+	ld hl, Tiles_AnimSea_B16
 	add hl, de
 	ld bc, $8000|Port_VDPData
 -:
@@ -13744,11 +13749,11 @@ LABEL_641B:
 	jp nz, -
 	pop hl
 	pop bc
-	djnz LABEL_641B
+	djnz EnemyTileAnim_DoAnimation
 	ret
 
-LABEL_6442:
-	ld hl, $C2BC
+EnemyTileAnim_LavaPit:
+	ld hl, Anim_delay_counter
 	dec (hl)
 	ret p
 	ld (hl), $0F
@@ -13768,7 +13773,7 @@ LABEL_6442:
 	add a, b
 	ld e, a
 	ld d, $00
-	ld hl, LABEL_65A2
+	ld hl, AnimLavaPitFrames
 	add hl, de
 	ld de, $4020
 	rst $08
@@ -13812,7 +13817,7 @@ LABEL_6442:
 	djnz --
 	ret
 
-LABEL_64A3:
+AnimateWaterPalette:
 	ld a, (Fade_timer)
 	or a
 	ret nz
@@ -13832,7 +13837,7 @@ LABEL_64A3:
 	ld (hl), a
 	ld e, a
 	ld d, $00
-	ld hl, LABEL_65C6
+	ld hl, Palette_Water
 	add hl, de
 	ld bc, $0300|Port_VDPData
 -:
@@ -13875,7 +13880,7 @@ LABEL_64CF:
 	ret
 
 
-LABEL_6506:
+AnimSeaWaveInFrames:
 .db	$01, $15, $25, $09, $29, $0A, $29, $0A, $01, $00, $05, $0B, $01, $00, $05, $0B
 .db	$05, $01, $09, $0D, $05, $01, $09, $0D, $09, $02, $0D, $0D, $09, $02, $0D, $0D
 .db $0D, $03, $11, $0E, $0D, $03, $11, $0E, $11, $04, $15, $0E, $11, $04, $15, $0E
@@ -13883,7 +13888,7 @@ LABEL_6506:
 .db	$21, $08, $01, $10, $25, $0C, $29, $11
 
 
-LABEL_654E:
+AnimSeaInOutFrames:
 .db	$25, $09, $29, $0A, $29, $0A, $25, $09, $29, $0A, $29, $0A, $25, $09, $29, $0C
 .db	$29, $0C, $21, $08, $25, $0F, $29, $14, $21, $0F, $25, $13, $29, $14, $19, $06
 .db	$1D, $0F, $21, $12, $15, $05, $19, $0E, $1D, $12, $15, $0E, $19, $12, $19, $12
@@ -13891,13 +13896,13 @@ LABEL_654E:
 .db	$21, $12, $1D, $07, $21, $0F, $25, $13, $21, $08, $25, $0C, $29, $11, $25, $09
 .db	$29, $0C, $29, $0C
 
-LABEL_65A2:
+AnimLavaPitFrames:
 .db	$00, $02, $05, $08, $15, $18, $00, $03, $06, $09, $16, $14, $01, $04, $07, $05
 .db	$17, $14, $02, $00, $08, $05, $18, $15, $03, $00, $09, $06, $14, $16, $04, $01
 .db	$05, $07, $14, $17
 
 
-LABEL_65C6:
+Palette_Water:
 .db	$3F, $3C, $38, $38, $3F, $3C, $38, $38
 
 
@@ -13915,8 +13920,9 @@ LABEL_65EE:
 	ld	l, a
 	ld	h, $CB
 	ld	a, (hl)
-	cp	$08
+	cp	$08 ; Object or pitfall
 	jp	nz, LABEL_66E1
+	; Check if it's an object
 	ld	c, l
 	ld	a, (Dungeon_index)
 	ld	b, a
@@ -13927,7 +13933,7 @@ LABEL_65EE:
 LABEL_660A:
 	ld	a, (hl)
 	cp	$FF
-	jr	z, Dungeon_PitFall
+	jr	z, Dungeon_Pitfall	; jump if we reached the end of the list (it's a pitfall)
 	inc	hl
 	cp	b
 	jr	nz, LABEL_6618
@@ -13938,7 +13944,7 @@ LABEL_6618:
 	add	hl, de
 	jp	LABEL_660A
 
-Dungeon_PitFall:
+Dungeon_Pitfall:
 	ld	de, $7E00
 	ld	hl, $00C0
 	ld	bc, $0080
@@ -13974,6 +13980,7 @@ LABEL_6635:
 	ei
 	pop	bc
 	djnz	LABEL_6635
+	; Move down a floor
 	ld	a, (Dungeon_index)
 	sub	$01
 	jr	nc, LABEL_666A
@@ -13982,7 +13989,7 @@ LABEL_666A:
 	ld	(Dungeon_index), a
 	call	LoadDungeonMap
 	xor	a
-	call	LABEL_6AED
+	call	Dungeon_LoadScreen
 	ld	hl, $C240
 	ld	de, Normal_palette
 	ld	bc, $0020
@@ -14040,27 +14047,29 @@ LABEL_66C4:
 LABEL_66E1:
 	ld	a, (Ctrl_1_held)
 	and	ButtonUp_Mask|ButtonDown_Mask|ButtonLeft_Mask|ButtonRight_Mask
-	jp	z, LABEL_6802
+	jp	z, Dungeon_NotMoving
 	ld	c, a
 	bit  0, c
-	jp	z, LABEL_677A
+	jp	z, Dungeon_NotForward
+	; Check what's in front
 	ld	b, $01
 	call	Dungeon_GetRelativeSquare
 	ld	b, a
 	and	$07
-	jp	z, LABEL_6758
+	jp	z, Dungeon_MoveForward	; 0 means we can move
 	sub	$02
-	jp	c, LABEL_677A
+	jp	c, Dungeon_NotForward	; it's a wall
 	cp	$05
-	jp	z, LABEL_6755
+	jp	z, Dungeon_MoveForwardIntoFakeWall	; 7 means fake wall
 	cp	$02
 	jp	nc, LABEL_6729
+	; Stairs up or down
 	ld	c, a
 	ld	a, $C3
 	ld	(Sound_index), a
 	ld	a, c
 	bit  3, b
-	jp	nz, LABEL_68BC
+	jp	nz, Dungeon_Exit
 	or	a
 	ld	b, $01
 	jr	z, LABEL_671C
@@ -14077,12 +14086,12 @@ LABEL_6729:
 	ret  z
 
 	bit  3, b
-	jp	nz, LABEL_68BC
+	jp	nz, Dungeon_Exit
 LABEL_6731:
 	call	FadeOut2
 	ld	a, (Dungeon_direction)
 	and	$03
-	ld	hl, $6ADF
+	ld	hl, DungeonMovementTable
 	add	a, l
 	ld	l, a
 	adc	a, h
@@ -14098,14 +14107,14 @@ LABEL_6731:
 	ld	b, $01
 	jp	Dungeon_CheckObjects
 
-LABEL_6755:
-	call	LABEL_6758
-LABEL_6758:
+Dungeon_MoveForwardIntoFakeWall:
+	call	Dungeon_MoveForward
+Dungeon_MoveForward:
 	ld	a, $00
-	call	LABEL_6A58
+	call	Dungeon_Animate
 	ld	a, (Dungeon_direction)
 	and	$03
-	ld	hl, LABEL_6AE1-2
+	ld	hl, DungeonMovementTable
 	add	a, l
 	ld	l, a
 	adc	a, h
@@ -14119,22 +14128,22 @@ LABEL_6758:
 	ld	b, $01
 	jp	Dungeon_CheckObjects
 
-LABEL_677A:
+Dungeon_NotForward:
 	bit  1, c
 	jr	z, LABEL_67AB
 	ld	b, $0B
 	call	Dungeon_GetRelativeSquareType
 	jr	nz, LABEL_67AB
-	call	LABEL_6792
+	call	Dungeon_MoveBackwards
 	ld	b, $01
 	call	Dungeon_CheckObjects
 	ld	b, $0B
 	jp	Dungeon_CheckObjects
 
-LABEL_6792:
+Dungeon_MoveBackwards:
 	ld	a, (Dungeon_direction)
 	and	$03
-	ld	hl, LABEL_6AE1
+	ld	hl, DungeonMovementTable+2
 	add	a, l
 	ld	l, a
 	adc	a, h
@@ -14144,16 +14153,16 @@ LABEL_6792:
 	add	a, (hl)
 	ld	(Dungeon_position), a
 	ld	a, $01
-	jp	LABEL_6A58
+	jp	Dungeon_Animate
 
 LABEL_67AB:
 	bit  2, c
 	jr	z, LABEL_67D7
-	call	LABEL_67B7
+	call	Dungeon_TurnLeft
 	ld	b, $01
 	jp	Dungeon_CheckObjects
 
-LABEL_67B7:
+Dungeon_TurnLeft:
 	ld	a, (Dungeon_direction)
 	dec  a
 	and	$03
@@ -14171,16 +14180,16 @@ LABEL_67CB:
 	inc	h
 LABEL_67D3:
 	ld	a, h
-	jp	LABEL_6A58
+	jp	Dungeon_Animate
 
 LABEL_67D7:
 	bit  3, c
 	ret  z
-	call	LABEL_67E2
+	call	Dungeon_TurnRight
 	ld	b, $01
 	jp	Dungeon_CheckObjects
 
-LABEL_67E2:
+Dungeon_TurnRight:
 	ld	a, (Dungeon_direction)
 	inc	a
 	and	$03
@@ -14198,9 +14207,9 @@ LABEL_67F6:
 	inc	h
 LABEL_67FE:
 	ld	a, h
-	jp	LABEL_6A58
+	jp	Dungeon_Animate
 
-LABEL_6802:
+Dungeon_NotMoving:
 	ld	a, (Ctrl_1_pressed)
 	and	Button_1_Mask|Button_2_Mask
 	ret  z
@@ -14278,11 +14287,11 @@ CheckObjectInFront:
 	jp -
 
 ++:
-	xor a
+	xor a ; item found -> return 0
 	ret
 
 +++:
-	ld a, $FF
+	ld a, $FF; Item not found
 	or a
 	ret
 
@@ -14298,6 +14307,7 @@ LABEL_687A:
 	ret
 
 Dungeon_RunAway:
+; Move backwards if possible, else turn left or right to face a wall, else randomly turn left or right
 	ld b, $0B
 	call Dungeon_GetRelativeSquareType
 	jr z, +++
@@ -14311,19 +14321,19 @@ Dungeon_RunAway:
 	rrca
 	jr nc, ++
 +:
-	call LABEL_67E2
+	call Dungeon_TurnRight
 	jr +++
 
 ++:
-	call LABEL_67B7
+	call Dungeon_TurnLeft
 +++:
-	call LABEL_6792
+	call Dungeon_MoveBackwards
 	ld b, $01
 	call Dungeon_CheckObjects
 	ld b, $0B
 	jp Dungeon_CheckObjects
 
-LABEL_68BC:
+Dungeon_Exit:
 	ld	b, $01
 	call	Dungeon_GetRelativeSquare
 	and	$08
@@ -14372,7 +14382,7 @@ LABEL_68EC:
 	call	FadeOut2
 	ld	hl, $FFFF
 	ld	(hl), :Bank09
-	ld	hl, LABEL_B09_B471
+	ld	hl, Tiles_DungeonRooms_B09
 	ld	de, $4000
 	call	LoadTiles4BitRLE
 	ld	hl, LABEL_B09_B130
@@ -14380,7 +14390,7 @@ LABEL_68EC:
 	ld	a, $0F
 	ld	(Scene_type), a
 	xor	a
-	ld	($C250), a
+	ld	(Target_palette+$10), a
 LABEL_691D:
 	ld	a, $0C
 	call	WaitForVInt
@@ -14422,9 +14432,10 @@ LABEL_6959:
 	jp	LABEL_691D
 
 Dungeon_CheckObjects:
+; b = index of offset to player
 	call	Dungeon_GetRelativeSquare
-	cp	$08
-	ret  nz
+	cp	$08 ; Object
+	ret  nz	; return if not an object
 
 	ld	c, l
 	push	bc
@@ -14454,6 +14465,7 @@ LABEL_698C:
 
 LABEL_698E:
 	pop	bc
+	; Object found, hl points to its second byte
 	inc	hl
 	ld	e, (hl)
 	inc	hl
@@ -14464,24 +14476,27 @@ LABEL_698E:
 
 	ld	(Dungeon_obj_flag_addr), de
 	ld	a, $FF
-	ld	($C2D2), a
+	ld	(Dungeon_moving_flag), a
 	inc	hl
-	ld	a, (hl)
+	ld	a, (hl) ; Read object type
 	inc	hl
 	or	a
 	jr	nz, LABEL_69B8
-	ld	a, (hl)
+	
+	; Type 0: item
+	ld	a, (hl) ; Read item type
 	ld	(Dungeon_item_index), a
 	inc	hl
-	ld	a, (hl)
-	ld	($C2E0), a
-	ld	hl, $0000
+	ld	a, (hl) ; trapped byte
+	ld	(Dungeon_obj_item_trapped), a
+	ld	hl, 0
 	ld	(Enemy_money), hl
 	jp	LABEL_69C7
 
 LABEL_69B8:
 	cp	$01
 	jr	nz, LABEL_69E1
+	; Type 1: money
 	xor	a
 	ld	(Dungeon_item_index), a
 	ld	a, (hl)
@@ -14490,11 +14505,12 @@ LABEL_69B8:
 	ld	l, a
 	ld	(Enemy_money), hl
 LABEL_69C7:
+	; Treasure chest for item or money
 	ld	a, b
 	cp	$01
 	ret  nz
 
-	ld	hl, LABEL_B12_BD97
+	ld	hl, DialogueTreasureChestFound_B12
 	call	ShowDialogue_B12
 	push	bc
 	call	Battle_ShowTreasureChest
@@ -14508,12 +14524,13 @@ LABEL_69C7:
 LABEL_69E1:
 	cp	$02
 	jr	nz, LABEL_6A1A
+	; Type 2: battle
 	ld	a, b
 	cp	$01
 	jr	z, LABEL_69F7
 	push	hl
-	call	LABEL_67B7
-	call	LABEL_67B7
+	call	Dungeon_TurnLeft
+	call	Dungeon_TurnLeft
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
 	pop	hl
@@ -14524,7 +14541,7 @@ LABEL_69F7:
 	ret  z
 
 	inc	hl
-	ld	a, (hl)
+	ld	a, (hl) ; Enemy item drop
 	push	af
 	ld	hl, (Dungeon_obj_flag_addr)
 	push	hl
@@ -14534,7 +14551,7 @@ LABEL_69F7:
 	pop	af
 	ld	(Dungeon_item_index), a
 	call	Dungeon_EnterBattle
-	ld	a, ($C800)
+	ld	a, (Character_sprite_attributes)
 	or	a
 	ret  z
 
@@ -14543,13 +14560,13 @@ LABEL_69F7:
 LABEL_6A1A:
 	cp	$03
 	ret  nz
-
+	; Type 3: dialogue
 	ld	a, b
 	cp	$01
 	jr	z, LABEL_6A2F
 	push	hl
-	call	LABEL_67E2
-	call	LABEL_67E2
+	call	Dungeon_TurnRight
+	call	Dungeon_TurnRight
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
 	pop	hl
@@ -14558,33 +14575,33 @@ LABEL_6A2F:
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
-	ld	($C2DB), hl
+	ld	(Room_index), hl
 	ld	a, ($C2DC)
 	call	LoadDialogueSprite
 	call	Scene_DoRoomScript
-	ld	a, $D0
+	ld	a, $D0	; Turn off sprites
 	ld	(Sprite_table), a
 	xor	a
-	ld	($C800), a
+	ld	(Character_sprite_attributes), a
 	ld	(Battle_flag), a
 	ld	(Scene_type), a
 	ld	($C2D5), a
 	ld	hl, $0000
-	ld	($C2DB), hl
+	ld	(Room_index), hl
 	ret
 
-LABEL_6A58:
+Dungeon_Animate:
 	ld	l, a
 	ld	h, $00
 	add	hl, hl
-	ld	de, LABEL_6A76
+	ld	de, DungeonAnimTable
 	add	hl, de
 	ld	a, (hl)
 	inc	hl
 	ld	h, (hl)
 	ld	l, a
 	ld	a, $FF
-	ld	($C2D2), a
+	ld	(Dungeon_moving_flag), a
 
 -:
 	ld	a, (hl)
@@ -14596,24 +14613,46 @@ LABEL_6A58:
 	inc	hl
 	jp	-
 
-LABEL_6A76:
-.db	$8A, $6A, $90, $6A, $97, $6A, $A0, $6A, $A9, $6A, $B2
-.db $6A, $BB, $6A, $C4, $6A, $CD, $6A, $D6, $6A, $01, $02, $03, $04, $05, $FF, $05
-.db $04, $03, $02, $01, $00, $FF, $07, $08, $09, $0A, $0B, $0C, $0D, $00, $FF, $17
-.db $18, $19, $1A, $1B, $1C, $1D, $00, $FF, $1F, $20, $21, $22, $23, $24, $25, $00
-.db $FF, $0F, $10, $11, $12, $13, $14, $15, $00, $FF, $0D, $0C, $0B, $0A, $09, $08
-.db $07, $00, $FF, $25, $24, $23, $22, $21, $20, $1F, $00, $FF, $1D, $1C, $1B, $1A
-.db $19, $18, $17, $00, $FF, $15, $14, $13, $12, $11, $10, $0F, $00, $FF, $F0, $01
+; =================================================================
+DungeonAnimTable:
+.dw	DungeonAnimValues0
+.dw	DungeonAnimValues1
+.dw	DungeonAnimValues2
+.dw	DungeonAnimValues3
+.dw	DungeonAnimValues4
+.dw	DungeonAnimValues5
+.dw	DungeonAnimValues6
+.dw	DungeonAnimValues7
+.dw	DungeonAnimValues8
+.dw	DungeonAnimValues9
 
-LABEL_6AE1:
-.db $10, $FF, $F0, $01
+DungeonAnimValues0:	.db	$01, $02, $03, $04, $05, $FF				; 0 = Forward
+DungeonAnimValues1:	.db	$05, $04, $03, $02, $01, $00, $FF			; 1 = Backward
+DungeonAnimValues2:	.db	$07, $08, $09, $0A, $0B, $0C, $0D, $00, $FF	; 2 = turn corridor to corridor (left)
+DungeonAnimValues3:	.db	$17, $18, $19, $1A, $1B, $1C, $1D, $00, $FF	; 3 = turn corridor to wall (left)
+DungeonAnimValues4:	.db	$1F, $20, $21, $22, $23, $24, $25, $00, $FF ; 4 = turn wall to corridor (left)
+DungeonAnimValues5:	.db	$0F, $10, $11, $12, $13, $14, $15, $00, $FF ; 5 = turn wall to wall (left)
+DungeonAnimValues6:	.db	$0D, $0C, $0B, $0A, $09, $08, $07, $00, $FF ; 6 = turn corridor to corridor (right)
+DungeonAnimValues7:	.db	$25, $24, $23, $22, $21, $20, $1F, $00, $FF ; 7 = turn corridor to wall (right)
+DungeonAnimValues8:	.db	$1D, $1C, $1B, $1A, $19, $18, $17, $00, $FF ; 8 = turn wall to corridor (right)
+DungeonAnimValues9:	.db	$15, $14, $13, $12, $11, $10, $0F, $00, $FF ; 9 = turn wall to wall (right)
+; =================================================================
+
+; =================================================================
+; Values to add to Dungeon_position to move in certain directions:
+; - up, right, down, left, up, right
+; Indexed +2 for opposite movement
+DungeonMovementTable:
+.db	$F0, $01, $10, $FF, $F0, $01
+; =================================================================
+
 
 Dungeon_NextScreen:
-	call	LABEL_6AED
+	call	Dungeon_LoadScreen
 	ld	a, $0C
 	jp	WaitForVInt
 
-LABEL_6AED:
+Dungeon_LoadScreen:
 	and	$3F
 	jr	nz, LABEL_6AFC
 	ld	b, $01
@@ -14627,7 +14666,7 @@ LABEL_6AFC:
 	ld	b, a
 	add	a, a
 	add	a, b
-	ld	hl, LABEL_705F
+	ld	hl, DungeonTilesTable
 	add	a, l
 	ld	l, a
 	adc	a, h
@@ -14653,7 +14692,7 @@ LABEL_6B1C:
 	ld	a, d
 	out	(Port_VDPAddress), a
 	ei
-	call	LABEL_6B8E
+	call	DecodeDungeonTiles
 	pop	hl
 	inc	hl
 	ld	a, (hl)
@@ -14682,7 +14721,7 @@ LABEL_6B45:
 	add	a, e
 	ld	e, a
 	ld	d, $00
-	ld	hl, LABEL_705F+3
+	ld	hl, DungeonTilesTable+3
 	add	hl, de
 	push	bc
 	ld	a, (hl)
@@ -14696,12 +14735,21 @@ LABEL_6B45:
 	pop	bc
 	jp	LABEL_6C46
 
+
+; Copies data from (hl) to TileMapData
+; with RLE decompression and 2-interleaving
+; data format:
+; Header: $fccccccc
+;   f = flag: 1 = not RLE, 0 = RLE
+;   ccccccc = count
+; Then [count] bytes are copied to even bytes starting at TileMapData
+; Then the process is repeated for the odd bytes
 DecompressTilemapData:
 	ld	b, $00
-	ld	de, $D000
+	ld	de, Tilemap_data
 	call	LABEL_6B6E
 	inc	hl
-	ld	de, $D001
+	ld	de, Tilemap_data+1
 LABEL_6B6E:
 	ld	a, (hl)
 	or	a
@@ -14728,7 +14776,7 @@ LABEL_6B85:
 	jp	pe, LABEL_6B85
 	jp	LABEL_6B6E
 
-LABEL_6B8E:
+DecodeDungeonTiles:
 	ld	c, $BE
 LABEL_6B90:
 	ld	a, (hl)
@@ -14786,7 +14834,7 @@ Dungeon_GetRelativeSquareType:
 	add	a, a
 	ld	e, a
 	ld	d, $00
-	ld	hl, LABEL_6C06
+	ld	hl, DungeonRelativeSquareOffsets
 	add	hl, de
 	ld	e, b
 	add	hl, de
@@ -14808,7 +14856,7 @@ Dungeon_GetRelativeSquare:
 	add	a, a
 	ld	e, a
 	ld	d, $00
-	ld	hl, LABEL_6C06
+	ld	hl, DungeonRelativeSquareOffsets
 	add	hl, de
 	ld	e, b
 	add	hl, de
@@ -14821,11 +14869,19 @@ Dungeon_GetRelativeSquare:
 	ret
 
 
-LABEL_6C06:
-.db $00, $F0, $EF, $F1, $E0, $DF, $E1, $D0, $CF, $D1, $C0, $10, $FF, $01, $00, $00
-.db $00, $01, $F1, $11, $02, $F2, $12, $03, $F3, $13, $04, $FF, $F0, $10, $00, $00
-.db $00, $10, $11, $0F, $20, $21, $1F, $30, $31, $2F, $40, $F0, $01, $FF, $00, $00
-.db $00, $FF, $0F, $EF, $FE, $0E, $EE, $FD, $0D, $ED, $FC, $01, $10, $F0, $00, $00
+; =================================================================
+; Offsets of tile a certain distance away in the map. For a player at X facing right:
+;
+;      $0c $02 $05 $07
+;  $0b [X] $01 $04 $08 $0a
+;      $0d $03 $06 $09
+DungeonRelativeSquareOffsets:
+.db $00, $F0, $EF, $F1, $E0, $DF, $E1, $D0, $CF, $D1, $C0, $10, $FF, $01, $00, $00	; Up
+.db $00, $01, $F1, $11, $02, $F2, $12, $03, $F3, $13, $04, $FF, $F0, $10, $00, $00	; Right
+.db $00, $10, $11, $0F, $20, $21, $1F, $30, $31, $2F, $40, $F0, $01, $FF, $00, $00	; Down
+.db $00, $FF, $0F, $EF, $FE, $0E, $EE, $FD, $0D, $ED, $FC, $01, $10, $F0, $00, $00	; Left
+; =================================================================
+
 
 LABEL_6C46:
 	ld	a, c
@@ -15041,8 +15097,8 @@ LABEL_6D6E:
 Dungeon_LoadData:
 	ld	hl, $FFFF
 	ld	(hl), :Bank03
-	ld	hl, LABEL_6DF7
-	ld	de, $C251
+	ld	hl, Palette_DungeonSprites
+	ld	de, Target_palette+$11
 	ld	bc, $0007
 	ldir
 	ld	a, (Dungeon_index)
@@ -15050,12 +15106,12 @@ Dungeon_LoadData:
 	add	a, a
 	ld	l, a
 	ld	h, $00
-	ld	de, LABEL_B03_B619
+	ld	de, DungeonData_B03
 	add	hl, de
-	ld	e, (hl)
+	ld	e, (hl) ; First byte = battle probability
 	inc	hl
-	ld	d, (hl)
-	ld	($C2E3), de
+	ld	d, (hl) ; Second byte = Battle_enemy_pool_index
+	ld	(Battle_rate), de
 	inc	hl
 	ld	a, (Dungeon_palette_index)
 	or	a
@@ -15077,17 +15133,17 @@ LABEL_6DBB:
 	add	a, a
 	ld	l, a
 	ld	h, $00
-	ld	de, LABEL_B03_B5B9
+	ld	de, Palette_Dungeons_B03
 	add	hl, de
 	ld	a, (hl)
-	ld	($C240), a
-	ld	de, $C248
+	ld	(Target_palette), a
+	ld	de, Target_palette+8
 	ld	bc, $0008
 	ldir
-	ld	a, ($C249)
-	ld	($C248), a
-	ld	a, ($C24D)
-	ld	($C250), a
+	ld	a, (Target_palette+9)
+	ld	(Target_palette+8), a
+	ld	a, (Target_palette+$D)
+	ld	(Target_palette+$10), a
 	ret
 
 
@@ -15099,12 +15155,12 @@ Dungeon_ChangeMusic:
 	add a, a
 	ld l, a
 	ld h, $00
-	ld de, LABEL_B03_B61C
+	ld de, DungeonSoundData_B03
 	add hl, de
 	ld a, (hl)
 	jp Map_CheckMusic
 
-LABEL_6DF7:
+Palette_DungeonSprites:
 .db	$00, $3F, $30, $38, $03, $0B, $0F
 
 LABEL_6DFE:
@@ -15272,7 +15328,7 @@ LABEL_6E8B:
 .db $20, $A6, $50, $A6, $24, $D2, $38, $A6
 .db $68, $A6
 
-LABEL_705F:
+DungeonTilesTable:
 .db	:Bank07
 .dw	LABEL_B07_8000
 
@@ -15513,7 +15569,7 @@ LABEL_7143:
 	ret
 
 +:
-	ld hl, $C265
+	ld hl, Rotate_palette_flag
 	ld a, (hl)
 	dec (hl)
 	jp m, +
@@ -15665,7 +15721,7 @@ DecompressScrollTilemap:
 	add a, a
 	add a, e
 	ld e, a
-	ld a, ($C302)
+	ld a, (H_location+1)
 	add a, a
 	add a, e
 	ld e, a
